@@ -71,6 +71,9 @@ The modules automatically create the following sheets:
 These sheets map one-to-one with the JSON described in `docs/unified_project_schema.md`. AutoBericht can now read/write the workbook directly using SheetJS without translating from ad-hoc helper tables.
 
 ### PhotoSorter Form
-- Replace the existing `PhotoSorterForm` code-behind with `macros/PhotoSorterForm.frm` and import `CPhotoTagButton.bas`.
+- Replace the existing `PhotoSorterForm` code-behind with `macros/PhotoSorterForm.frm` and import `CPhotoTagButton.cls`.
 - The form now reads tag button definitions from the `Lists` sheet, displays photos from the `Photos` sheet, and updates tag assignments via `modABPhotosRepository`.
 - Directory scanning (`ScanImagesIntoSheet`) populates new photo rows; toggles and counts operate solely on the structured tables.
+
+
+- Class modules must be stored as `.cls` files (e.g. `CPhotoTagButton.cls`). If you export from Excel and receive a `.bas`, rename it before committing so it re-imports as a class.
