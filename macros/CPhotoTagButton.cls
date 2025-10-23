@@ -1,4 +1,13 @@
+VERSION 1.0 CLASS
+BEGIN
+  MultiUse = -1  'True
+END
 Attribute VB_Name = "CPhotoTagButton"
+Attribute VB_GlobalNameSpace = False
+Attribute VB_Creatable = False
+Attribute VB_PredeclaredId = False
+Attribute VB_Exposed = False
+
 Option Explicit
 
 Public WithEvents btn As MSForms.CommandButton
@@ -7,9 +16,7 @@ Public TagField As String
 Public TagValue As String
 Public ListName As String
 Public CaptionText As String
-
 Private m_isActive As Boolean
-
 Public Sub Initialize(ByVal formRef As PhotoSorterForm, _
                       ByVal buttonRef As MSForms.CommandButton, _
                       ByVal fieldName As String, _
@@ -26,12 +33,10 @@ Public Sub Initialize(ByVal formRef As PhotoSorterForm, _
     btn.Tag = fieldName & "|" & value
     SetActive False
 End Sub
-
 Private Sub btn_Click()
     ParentForm.ToggleTag TagField, TagValue
     ParentForm.Controls("InvisibleTextBox").SetFocus
 End Sub
-
 Public Sub SetActive(ByVal isActive As Boolean)
     m_isActive = isActive
     If isActive Then
@@ -40,11 +45,9 @@ Public Sub SetActive(ByVal isActive As Boolean)
         btn.BackColor = vbButtonFace
     End If
 End Sub
-
 Public Property Get IsActive() As Boolean
     IsActive = m_isActive
 End Property
-
 Public Sub ShowCount(ByVal countValue As Long)
     btn.Caption = "(" & CStr(countValue) & ") " & CaptionText
     If countValue > 0 Then
@@ -53,7 +56,6 @@ Public Sub ShowCount(ByVal countValue As Long)
         btn.Font.Bold = False
     End If
 End Sub
-
 Public Sub ResetCaption()
     btn.Caption = CaptionText
     If m_isActive Then
