@@ -29,7 +29,7 @@ Public Sub RefreshProjectMacros(Optional ByVal sourceFolder As String = "")
     Dim preserved As Object
     Set preserved = BuildPreserveDictionary()
 
-    RemoveExistingComponents vbProj, preserved
+    RemoveExistingComponents vbProj, preserved, folderPath
     ImportFolderComponents vbProj, folderPath, "*.bas"
     ImportFolderComponents vbProj, folderPath, "*.cls"
     ImportFolderComponents vbProj, folderPath, "*.frm" ' imports any .frm/.frx pairs
@@ -79,12 +79,15 @@ Private Function BuildPreserveDictionary() As Object
     Set BuildPreserveDictionary = dict
 End Function
 
-Private Sub RemoveExistingComponents(ByVal vbProj As VBIDE.VBProject, ByVal preserved As Object)
+Private Sub RemoveExistingComponents(ByVal vbProj As VBIDE.VBProject, ByVal preserved As Object, ByVal exportFolder As String)
     Dim components As New Collection
     Dim vbComp As VBIDE.VBComponent
 
     For Each vbComp In vbProj.VBComponents
         If ShouldRemoveComponent(vbComp, preserved) Then
+            If exportFolder <> "" Then
+                ExportComponent vbComp, exportFolder
+            End If
             components.Add vbComp
         End If
     Next vbComp
@@ -92,6 +95,21 @@ Private Sub RemoveExistingComponents(ByVal vbProj As VBIDE.VBProject, ByVal pres
     For Each vbComp In components
         vbProj.VBComponents.Remove vbComp
     Next vbComp
+End Sub
+
+Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolder As String)
+    On Error GoTo CleanExit
+    If vbComp.Type <> vbext_ct_MSForm Then Exit Sub
+    If Len(exportFolder) = 0 Then Exit Sub
+    If Dir(exportFolder, vbDirectory) = vbNullString Then
+        On Error Resume Next
+        MkDir exportFolder
+        On Error GoTo CleanExit
+    End If
+    Dim targetPath As String
+    targetPath = exportFolder & "\" & vbComp.Name & ".frm"
+    vbComp.Export targetPath
+CleanExit:
 End Sub
 
 Private Function ShouldRemoveComponent(ByVal vbComp As VBIDE.VBComponent, ByVal preserved As Object) As Boolean
