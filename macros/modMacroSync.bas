@@ -117,6 +117,8 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
     Dim baseName As String
     baseName = exportDir & "\" & vbComp.Name & "_export"
 
+    Dim importExtension As String
+    importExtension = ""
     Select Case vbComp.Type
         Case vbext_ct_MSForm
             Dim frmTemp As String, frxTemp As String
@@ -126,6 +128,7 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
             Dim frmTarget As String, frxTarget As String
             frmTarget = exportFolder & "\" & vbComp.Name & ".frm"
             frxTarget = exportFolder & "\" & vbComp.Name & ".frx"
+            importExtension = ".frm"
 
             On Error Resume Next
             Kill frmTemp
@@ -143,16 +146,30 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
 
         Case vbext_ct_ClassModule
             ExportTextComponent vbComp, baseName & ".cls"
+            importExtension = ".cls"
         Case vbext_ct_StdModule
             ExportTextComponent vbComp, baseName & ".bas"
+            importExtension = ".bas"
         Case Else
             ' Sheets / ThisWorkbook ignored
     End Select
 CleanExit:
+    If importExtension <> "" And importExtension <> ".frm" Then
+        Dim exportPath As String
+        exportPath = baseName & importExtension
+        Dim repoPath As String
+        repoPath = exportFolder & "\" & vbComp.Name & importExtension
+        If Len(Dir(exportPath)) > 0 Then
+            Kill repoPath
+            Name exportPath As repoPath
+        End If
+    End If
 End Sub
 
 
 Private Function ShouldRemoveComponent(ByVal vbComp As VBIDE.VBComponent, ByVal preserved As Object) As Boolean
+    Dim importExtension As String
+    importExtension = ""
     Select Case vbComp.Type
         Case vbext_ct_StdModule, vbext_ct_ClassModule, vbext_ct_MSForm
             If preserved.Exists(vbComp.Name) Then
