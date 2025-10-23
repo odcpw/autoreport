@@ -134,8 +134,7 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
     On Error GoTo CleanExit
 
     If Len(Dir(frmTemp)) > 0 Then
-        Kill frmTarget
-        Name frmTemp As frmTarget
+        Kill frmTemp ' keep tracked .frm (repo version)
     End If
     If Len(Dir(frxTemp)) > 0 Then
         Kill frxTarget
