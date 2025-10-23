@@ -14,6 +14,7 @@ Option Explicit
 
 Private Const DEFAULT_SOURCE_FOLDER As String = "C:\\Autobericht\\macros"
 Private Const PRESERVE_COMPONENTS_LIST As String = "modMacroSync|RunRefreshMacros|ThisWorkbook|modMacroSync1"
+Private Const EXPORT_SUBFOLDER As String = "_export"
 
 Public Sub RunRefreshMacros()
     RefreshProjectMacros
@@ -105,14 +106,28 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
     On Error GoTo CleanExit
     If vbComp.Type <> vbext_ct_MSForm Then Exit Sub
     If Len(exportFolder) = 0 Then Exit Sub
-    If Dir(exportFolder, vbDirectory) = vbNullString Then
+
+    Dim exportDir As String
+    exportDir = exportFolder & "\" & EXPORT_SUBFOLDER
+    If Dir(exportDir, vbDirectory) = vbNullString Then
         On Error Resume Next
-        MkDir exportFolder
+        MkDir exportDir
         On Error GoTo CleanExit
     End If
-    Dim targetPath As String
-    targetPath = exportFolder & "\" & vbComp.Name & ".frm"
-    vbComp.Export targetPath
+
+    Dim baseName As String
+    baseName = exportDir & "\" & vbComp.Name & "_export"
+    Dim frmPath As String
+    frmPath = baseName & ".frm"
+    Dim frxPath As String
+    frxPath = baseName & ".frx"
+
+    On Error Resume Next
+    Kill frmPath
+    Kill frxPath
+    On Error GoTo CleanExit
+
+    vbComp.Export frmPath
 CleanExit:
 End Sub
 
