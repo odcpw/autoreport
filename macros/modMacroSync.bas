@@ -18,8 +18,6 @@ Public Sub RunRefreshMacros()
     RefreshProjectMacros
 End Sub
 
-Private Const PRESERVE_COMPONENTS_LIST As String = "modMacroSync|ThisWorkbook"
-
 Public Sub RefreshProjectMacros(Optional ByVal sourceFolder As String = "")
     Dim folderPath As String
     folderPath = ResolveSourceFolder(sourceFolder)
