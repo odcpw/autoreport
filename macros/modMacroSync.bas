@@ -13,6 +13,11 @@ Option Explicit
 '=============================================================
 
 Private Const DEFAULT_SOURCE_FOLDER As String = "C:\\Autobericht\\macros"
+
+Public Sub RunRefreshMacros()
+    RefreshProjectMacros
+End Sub
+
 Private Const PRESERVE_COMPONENTS_LIST As String = "modMacroSync|ThisWorkbook"
 
 Public Sub RefreshProjectMacros(Optional ByVal sourceFolder As String = "")
