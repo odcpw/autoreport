@@ -104,7 +104,6 @@ End Sub
 
 Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolder As String)
     On Error GoTo CleanExit
-    If vbComp.Type <> vbext_ct_MSForm Then Exit Sub
     If Len(exportFolder) = 0 Then Exit Sub
 
     Dim exportDir As String
@@ -117,31 +116,41 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
 
     Dim baseName As String
     baseName = exportDir & "\" & vbComp.Name & "_export"
-    Dim frmTemp As String
-    frmTemp = baseName & ".frm"
-    Dim frxTemp As String
-    frxTemp = baseName & ".frx"
 
-    Dim frmTarget As String
-    frmTarget = exportFolder & "\" & vbComp.Name & ".frm"
-    Dim frxTarget As String
-    frxTarget = exportFolder & "\" & vbComp.Name & ".frx"
+    Select Case vbComp.Type
+        Case vbext_ct_MSForm
+            Dim frmTemp As String, frxTemp As String
+            frmTemp = baseName & ".frm"
+            frxTemp = baseName & ".frx"
 
-    On Error Resume Next
-    Kill frmTemp
-    Kill frxTemp
-    vbComp.Export frmTemp
-    On Error GoTo CleanExit
+            Dim frmTarget As String, frxTarget As String
+            frmTarget = exportFolder & "\" & vbComp.Name & ".frm"
+            frxTarget = exportFolder & "\" & vbComp.Name & ".frx"
 
-    If Len(Dir(frmTemp)) > 0 Then
-        Kill frmTemp ' keep tracked .frm (repo version)
-    End If
-    If Len(Dir(frxTemp)) > 0 Then
-        Kill frxTarget
-        Name frxTemp As frxTarget
-    End If
+            On Error Resume Next
+            Kill frmTemp
+            Kill frxTemp
+            vbComp.Export frmTemp
+            On Error GoTo CleanExit
+
+            If Len(Dir(frmTemp)) > 0 Then
+                Kill frmTemp ' keep tracked .frm (repo version)
+            End If
+            If Len(Dir(frxTemp)) > 0 Then
+                Kill frxTarget
+                Name frxTemp As frxTarget
+            End If
+
+        Case vbext_ct_ClassModule
+            ExportTextComponent vbComp, baseName & ".cls"
+        Case vbext_ct_StdModule
+            ExportTextComponent vbComp, baseName & ".bas"
+        Case Else
+            ' Sheets / ThisWorkbook ignored
+    End Select
 CleanExit:
 End Sub
+
 
 Private Function ShouldRemoveComponent(ByVal vbComp As VBIDE.VBComponent, ByVal preserved As Object) As Boolean
     Select Case vbComp.Type
@@ -163,4 +172,11 @@ Private Sub ImportFolderComponents(ByVal vbProj As VBIDE.VBProject, ByVal folder
         vbProj.VBComponents.Import folderPath & "\" & file
         file = Dir
     Loop
+End Sub
+
+Private Sub ExportTextComponent(ByVal vbComp As VBIDE.VBComponent, ByVal targetPath As String)
+    On Error Resume Next
+    Kill targetPath
+    vbComp.Export targetPath
+    On Error GoTo 0
 End Sub
