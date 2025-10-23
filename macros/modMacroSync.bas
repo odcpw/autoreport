@@ -108,7 +108,7 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
     If Len(exportFolder) = 0 Then Exit Sub
 
     Dim exportDir As String
-    exportDir = exportFolder & "\" & EXPORT_SUBFOLDER
+    exportDir = exportFolder & "\_export"
     If Dir(exportDir, vbDirectory) = vbNullString Then
         On Error Resume Next
         MkDir exportDir
@@ -117,17 +117,30 @@ Private Sub ExportComponent(ByVal vbComp As VBIDE.VBComponent, ByVal exportFolde
 
     Dim baseName As String
     baseName = exportDir & "\" & vbComp.Name & "_export"
-    Dim frmPath As String
-    frmPath = baseName & ".frm"
-    Dim frxPath As String
-    frxPath = baseName & ".frx"
+    Dim frmTemp As String
+    frmTemp = baseName & ".frm"
+    Dim frxTemp As String
+    frxTemp = baseName & ".frx"
+
+    Dim frmTarget As String
+    frmTarget = exportFolder & "\" & vbComp.Name & ".frm"
+    Dim frxTarget As String
+    frxTarget = exportFolder & "\" & vbComp.Name & ".frx"
 
     On Error Resume Next
-    Kill frmPath
-    Kill frxPath
+    Kill frmTemp
+    Kill frxTemp
+    vbComp.Export frmTemp
     On Error GoTo CleanExit
 
-    vbComp.Export frmPath
+    If Len(Dir(frmTemp)) > 0 Then
+        Kill frmTarget
+        Name frmTemp As frmTarget
+    End If
+    If Len(Dir(frxTemp)) > 0 Then
+        Kill frxTarget
+        Name frxTemp As frxTarget
+    End If
 CleanExit:
 End Sub
 
