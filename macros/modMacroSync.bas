@@ -35,9 +35,9 @@ Public Sub RefreshProjectMacros(Optional ByVal sourceFolder As String = "")
     Set preserved = BuildPreserveDictionary()
 
     RemoveExistingComponents vbProj, preserved, folderPath
-    ImportFolderComponents vbProj, folderPath, "*.bas"
-    ImportFolderComponents vbProj, folderPath, "*.cls"
-    ImportFolderComponents vbProj, folderPath, "*.frm" ' imports any .frm/.frx pairs
+    ImportFolderComponents vbProj, folderPath, "*.bas", preserved
+    ImportFolderComponents vbProj, folderPath, "*.cls", preserved
+    ImportFolderComponents vbProj, folderPath, "*.frm", preserved ' imports any .frm/.frx pairs
 
     Application.ScreenUpdating = True
     MsgBox "Macros refreshed from " & folderPath, vbInformation
@@ -74,6 +74,7 @@ End Function
 Private Function BuildPreserveDictionary() As Object
     Dim dict As Object:
     Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare
     Dim items() As String
     items = Split(PRESERVE_COMPONENTS_LIST, "|")
     Dim entry As Variant
@@ -167,11 +168,15 @@ Private Function ShouldRemoveComponent(ByVal vbComp As VBIDE.VBComponent, ByVal 
     End Select
 End Function
 
-Private Sub ImportFolderComponents(ByVal vbProj As VBIDE.VBProject, ByVal folderPath As String, ByVal pattern As String)
+Private Sub ImportFolderComponents(ByVal vbProj As VBIDE.VBProject, ByVal folderPath As String, ByVal pattern As String, ByVal preserved As Object)
     Dim file As String
     file = Dir(folderPath & "\" & pattern)
     Do While Len(file) > 0
-        vbProj.VBComponents.Import folderPath & "\" & file
+        Dim componentName As String
+        componentName = GetComponentBaseName(file)
+        If ShouldImportComponent(componentName, file, preserved) Then
+            vbProj.VBComponents.Import folderPath & "\" & file
+        End If
         file = Dir
     Loop
 End Sub
