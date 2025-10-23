@@ -13,7 +13,7 @@ Option Explicit
 '=============================================================
 
 Private Const DEFAULT_SOURCE_FOLDER As String = "C:\\Autobericht\\macros"
-Private Const PRESERVE_COMPONENTS_LIST As String = "modMacroSync|RunRefreshMacros|ThisWorkbook|modMacroSync1"
+Private Const PRESERVE_COMPONENTS_LIST As String = "modMacroSync|ThisWorkbook"
 Private Const EXPORT_SUBFOLDER As String = "_export"
 
 Public Sub RunRefreshMacros()
