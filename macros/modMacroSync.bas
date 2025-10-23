@@ -187,3 +187,29 @@ Private Sub ExportTextComponent(ByVal vbComp As VBIDE.VBComponent, ByVal targetP
     vbComp.Export targetPath
     On Error GoTo 0
 End Sub
+
+Private Function GetComponentBaseName(ByVal fileName As String) As String
+    Dim pos As Long
+    pos = InStrRev(fileName, ".")
+    If pos > 0 Then
+        GetComponentBaseName = Left$(fileName, pos - 1)
+    Else
+        GetComponentBaseName = fileName
+    End If
+End Function
+
+Private Function ShouldImportComponent(ByVal componentName As String, ByVal fileName As String, ByVal preserved As Object) As Boolean
+    If Len(componentName) = 0 Then
+        ShouldImportComponent = False
+        Exit Function
+    End If
+    If Right$(componentName, 7) = "_export" Then
+        ShouldImportComponent = False
+        Exit Function
+    End If
+    If preserved.Exists(componentName) Then
+        ShouldImportComponent = False
+        Exit Function
+    End If
+    ShouldImportComponent = True
+End Function
