@@ -23,7 +23,6 @@ End Function
 
 Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     If Len(baseDirectory) = 0 Then Exit Sub
-    modABPhotosRepository.EnsurePhotoSchema
     Dim images As Collection
     Set images = EnumerateImages(baseDirectory)
 
@@ -54,14 +53,6 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
                     End If
                 Case "capturedAt"
                     record(header) = item("capturedAt")
-                Case "tagTopics"
-                    If Not record.Exists(header) Or Len(NzString(record(header))) = 0 Then
-                        If record.Exists(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY) Then
-                            record(header) = NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY))
-                        Else
-                            record(header) = ""
-                        End If
-                    End If
                 Case Else
                     If Not record.Exists(header) Then
                         record(header) = ""

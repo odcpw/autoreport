@@ -15,45 +15,7 @@ Public Function ListsSheet() As Worksheet
     Set ListsSheet = ThisWorkbook.Worksheets(SHEET_LISTS)
 End Function
 
-Public Sub EnsurePhotoSchema()
-    EnsureAutoBerichtSheets
-
-    Dim wsPhotos As Worksheet
-    Set wsPhotos = PhotosSheet()
-
-    Dim legacyTopicsCol As Long
-    legacyTopicsCol = HeaderIndex(wsPhotos, modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY)
-    If legacyTopicsCol > 0 Then
-        wsPhotos.Cells(ROW_HEADER_ROW, legacyTopicsCol).Value = modABPhotoConstants.PHOTO_TAG_TOPICS
-    End If
-
-    Dim topicsCol As Long
-    topicsCol = HeaderIndex(wsPhotos, modABPhotoConstants.PHOTO_TAG_TOPICS)
-    If topicsCol = 0 Then
-        Dim newCol As Long
-        newCol = wsPhotos.Cells(ROW_HEADER_ROW, wsPhotos.Columns.Count).End(xlToLeft).Column + 1
-        wsPhotos.Cells(ROW_HEADER_ROW, newCol).Value = modABPhotoConstants.PHOTO_TAG_TOPICS
-    End If
-
-    Dim wsLists As Worksheet
-    Set wsLists = ListsSheet()
-
-    Dim listCol As Long
-    listCol = HeaderIndex(wsLists, "listName")
-    If listCol > 0 Then
-        Dim lastRow As Long
-        lastRow = wsLists.Cells(wsLists.Rows.Count, listCol).End(xlUp).Row
-        Dim r As Long
-        For r = ROW_HEADER_ROW + 1 To lastRow
-            If StrComp(NzString(wsLists.Cells(r, listCol).Value), modABPhotoConstants.PHOTO_LIST_TOPICS_LEGACY, vbTextCompare) = 0 Then
-                wsLists.Cells(r, listCol).Value = modABPhotoConstants.PHOTO_LIST_TOPICS
-            End If
-        Next r
-    End If
-End Sub
-
 Public Sub EnsurePhotoRecord(fileName As String)
-    EnsurePhotoSchema
     Dim entry As Scripting.Dictionary
     Set entry = GetPhotoEntry(fileName)
     If entry Is Nothing Then
@@ -73,7 +35,6 @@ Public Sub EnsurePhotoRecord(fileName As String)
 End Sub
 
 Public Function GetPhotoEntry(fileName As String) As Scripting.Dictionary
-    EnsurePhotoSchema
     Dim ws As Worksheet
     Set ws = PhotosSheet()
     Dim rowIndex As Long
@@ -168,7 +129,6 @@ Public Function GetTagList(fileName As String, tagField As String) As Collection
 End Function
 
 Public Function GetButtonList(listName As String, locale As String) As Collection
-    EnsurePhotoSchema
     Dim ws As Worksheet
     Set ws = ListsSheet()
 
@@ -274,7 +234,6 @@ Public Function JoinTags(tags As Variant) As String
 End Function
 
 Public Function BuildFolderTagLookup() As Scripting.Dictionary
-    EnsurePhotoSchema
     Dim map As New Scripting.Dictionary
     map.CompareMode = TextCompare
 
@@ -314,10 +273,6 @@ Public Function BuildFolderTagLookup() As Scripting.Dictionary
     For r = ROW_HEADER_ROW + 1 To lastRow
         Dim listName As String
         listName = NzString(ws.Cells(r, colListName).Value)
-        If StrComp(listName, modABPhotoConstants.PHOTO_LIST_TOPICS_LEGACY, vbTextCompare) = 0 Then
-            listName = modABPhotoConstants.PHOTO_LIST_TOPICS
-            ws.Cells(r, colListName).Value = listName
-        End If
         If Not listToField.Exists(listName) Then GoTo ContinueRow
 
         Dim tagField As String
@@ -346,10 +301,6 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
     If folderMap Is Nothing Then Exit Sub
     If folderMap.Count = 0 Then Exit Sub
     If record Is Nothing Then Exit Sub
-
-    If record.Exists(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY) Then
-        record.Remove modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY
-    End If
 
     Dim normalizedPath As String
     normalizedPath = Replace(relativePath, "/", "\")

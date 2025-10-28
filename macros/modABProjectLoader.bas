@@ -251,7 +251,7 @@ Private Sub WritePhotos(photoDict As Variant)
         ws.Cells(rowIndex, HeaderIndex(ws, "tagChapters")).Value = JoinVariant(GetDictValue(tags, "chapters", Array()))
         ws.Cells(rowIndex, HeaderIndex(ws, "tagCategories")).Value = JoinVariant(GetDictValue(tags, "categories", Array()))
         ws.Cells(rowIndex, HeaderIndex(ws, "tagTraining")).Value = JoinVariant(GetDictValue(tags, "training", Array()))
-        ws.Cells(rowIndex, HeaderIndex(ws, "tagTopics")).Value = JoinVariant(GetDictValue(tags, "topics", GetDictValue(tags, "subfolders", Array())))
+        ws.Cells(rowIndex, HeaderIndex(ws, "tagTopics")).Value = JoinVariant(GetDictValue(tags, "topics", Array()))
         ws.Cells(rowIndex, HeaderIndex(ws, "preferredLocale")).Value = NzString(GetDictValue(payload, "preferredLocale", ""))
         ws.Cells(rowIndex, HeaderIndex(ws, "capturedAt")).Value = NzString(GetDictValue(payload, "capturedAt", ""))
         rowIndex = rowIndex + 1
