@@ -10,11 +10,16 @@ Import the `.bas` files under `macros/` into the macro-enabled workbook. All rea
 | `modABWorkbookSetup` | Ensures required worksheets exist, writes header rows, and clears tables when needed. |
 | `modABTableUtils` | Generic helpers to resolve column indexes, read/write tables, and upsert rows. |
 | `modABRowsRepository` | Convenience functions for manipulating a single finding row, recording override history, and touching metadata. |
+| `modABPhotoConstants` | Shared identifiers for PhotoSorter list names and tag fields. |
 | `modABPhotosRepository` | Helpers for reading/writing photo metadata and PhotoSorter button lists. |
 | `PhotoSorter` | Directory import helpers and folder utilities for the PhotoSorter experience. |
 | `CPhotoTagButton` (class) | Wraps dynamic PhotoSorter buttons, tracks tag state, updates styling/counts. |
+| `modABIdUtils` | Normalises hierarchical report IDs and resolves parent chapter IDs. |
+| `modReportData` | Lightweight cache for the Structured `Rows` table used by the Bericht form (master text, overrides, selections). |
 | `modABProjectLoader` | Reads `project.json` and populates all structured sheets (`Meta`, `Chapters`, `Rows`, `Photos`, `Lists`, `OverridesHistory`). |
 | `modABProjectExport` | Builds the JSON snapshot (`project.json`) from the structured sheets. |
+| `ImportMyMaster` | Imports master findings & levels from Word tables straight into `Rows`. |
+| `ImportSelbstbeurteilungKunde` | Imports customer answers/remarks into `Rows`, creating missing row entries. |
 
 ## Typical Workflow
 

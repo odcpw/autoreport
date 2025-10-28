@@ -122,20 +122,24 @@ End Sub
 Private Sub LoadChapterData(ByVal chapterNumber As Long)
     Set chapterItems = New Collection
     
-    Dim lo As ListObject
-    Set lo = ThisWorkbook.Worksheets("SelbstbeurteilungKunde").ListObjects("TableSelbstbeurteilung")
+    Dim ws As Worksheet
+    Set ws = modABRowsRepository.RowsSheet()
+
+    Dim colRowId As Long
+    colRowId = HeaderIndex(ws, "rowId")
+    If colRowId = 0 Then Exit Sub
+
     Dim prefix As String: prefix = CStr(chapterNumber) & "."
-    
-    Dim r As ListRow, id As String
-    For Each r In lo.ListRows
-        id = modReportData.CleanID(CStr(r.Range.Cells(1, 1).Value))
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colRowId).End(xlUp).Row
+
+    Dim r As Long, id As String
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        id = modReportData.CleanID(CStr(ws.Cells(r, colRowId).Value))
         If Len(id) = 0 Then GoTo NextRow
-        
         If Left$(id, Len(prefix)) <> prefix Then GoTo NextRow
         If Not IsLevel3Leaf(id) Then GoTo NextRow
-        
         chapterItems.Add id
-        
 NextRow:
     Next r
     
@@ -284,8 +288,22 @@ Private Sub WireRowControls(ByVal fra As MSForms.Frame, ByVal lineNo As Long, _
         Set row.BtnPromoteMaster = FindButton(fra, modBerichtUI.CN_BtnPromote)
         On Error GoTo 0
         
+        Dim overrideFinding As String
+        Dim useOverrideFinding As Boolean
+        overrideFinding = modReportData.GetOverrideFindingText(id)
+        useOverrideFinding = modReportData.IsOverrideFindingEnabled(id)
+        
+        Dim levelOverrideTexts(1 To 4) As String
+        Dim levelOverrideEnabled(1 To 4) As Boolean
+        Dim lvl As Long
+        For lvl = 1 To 4
+            levelOverrideTexts(lvl) = modReportData.GetOverrideLevelText(id, lvl)
+            levelOverrideEnabled(lvl) = modReportData.IsOverrideLevelEnabled(id, lvl)
+        Next lvl
+        
         row.Init id, s.antwort, s.selected, initLevel, _
                  modReportData.GetMasterFinding(id), levelTxt
+        row.ConfigureOverrides overrideFinding, useOverrideFinding, levelOverrideTexts, levelOverrideEnabled
         
         RowUIs.Add row
     Else

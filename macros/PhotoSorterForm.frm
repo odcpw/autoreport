@@ -22,16 +22,6 @@ Private Const FILTER_ALL As String = "Show All"
 Private Const FILTER_UNSORTED As String = "Show Only Unsorted"
 Private Const FILTER_SORTED As String = "Show Only Sorted"
 
-Private Const LIST_BERICHT As String = "photo.berichtsbuttons"
-Private Const LIST_AUDIT As String = "photo.auditbuttons"
-Private Const LIST_TRAINING As String = "photo.trainingbuttons"
-Private Const LIST_SUBFOLDERS As String = "photo.subfolders"
-
-Private Const TAG_FIELD_CHAPTERS As String = "tagChapters"
-Private Const TAG_FIELD_CATEGORIES As String = "tagCategories"
-Private Const TAG_FIELD_TRAINING As String = "tagTraining"
-Private Const TAG_FIELD_SUBFOLDERS As String = "tagSubfolders"
-
 Private imageFiles As Collection
 Private photoCache As Scripting.Dictionary
 Private buttonCollection As Collection
@@ -115,10 +105,10 @@ Private Function ShouldIncludeRecord(ByVal record As Scripting.Dictionary, ByVal
 End Function
 
 Private Function RecordHasAnyTag(ByVal record As Scripting.Dictionary) As Boolean
-    RecordHasAnyTag = (Len(NzString(record(TAG_FIELD_CHAPTERS))) > 0) _
-        Or (Len(NzString(record(TAG_FIELD_CATEGORIES))) > 0) _
-        Or (Len(NzString(record(TAG_FIELD_TRAINING))) > 0) _
-        Or (Len(NzString(record(TAG_FIELD_SUBFOLDERS))) > 0)
+    RecordHasAnyTag = (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))) > 0) _
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))) > 0) _
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))) > 0) _
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_SUBFOLDERS))) > 0)
 End Function
 
 Private Sub SortImageFiles()
@@ -153,9 +143,9 @@ Private Sub LoadTagButtons()
     ClearTagButtonFrame ButtonsVGSeminar
     ClearTagButtonFrame ButtonsSubfolders
     Set buttonCollection = New Collection
-    CreateTagButtons ButtonsBericht, LIST_BERICHT, TAG_FIELD_CHAPTERS
-    CreateTagButtons ButtonsVGSeminar, LIST_AUDIT, TAG_FIELD_CATEGORIES
-    CreateTagButtons ButtonsSubfolders, LIST_SUBFOLDERS, TAG_FIELD_SUBFOLDERS
+    CreateTagButtons ButtonsBericht, modABPhotoConstants.PHOTO_LIST_BERICHT, modABPhotoConstants.PHOTO_TAG_CHAPTERS
+    CreateTagButtons ButtonsVGSeminar, modABPhotoConstants.PHOTO_LIST_AUDIT, modABPhotoConstants.PHOTO_TAG_CATEGORIES
+    CreateTagButtons ButtonsSubfolders, modABPhotoConstants.PHOTO_LIST_SUBFOLDERS, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS
 End Sub
 
 Private Sub ClearTagButtonFrame(ByVal targetFrame As MSForms.Frame)
@@ -275,10 +265,10 @@ Private Sub btnClearSheets_Click()
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
     fileName = imageFiles(currentIndex)
-    SetPhotoTags fileName, TAG_FIELD_CHAPTERS, Array()
-    SetPhotoTags fileName, TAG_FIELD_CATEGORIES, Array()
-    SetPhotoTags fileName, TAG_FIELD_TRAINING, Array()
-    SetPhotoTags fileName, TAG_FIELD_SUBFOLDERS, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CHAPTERS, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CATEGORIES, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TRAINING, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS, Array()
     photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
@@ -289,7 +279,7 @@ Private Sub cmdCreateAllFolders_Click()
         MsgBox "Bitte zuerst einen Wurzelordner auswählen.", vbExclamation
         Exit Sub
     End If
-    CreateFoldersForList rootPath, LIST_SUBFOLDERS, GetActiveLocale()
+    CreateFoldersForList rootPath, modABPhotoConstants.PHOTO_LIST_SUBFOLDERS, GetActiveLocale()
 End Sub
 
 Private Sub cmdRemoveEmptyFolders_Click()
@@ -428,10 +418,10 @@ Private Function ComputeTagCounts() As Scripting.Dictionary
     For Each key In photoCache.Keys
         Dim record As Scripting.Dictionary
         Set record = photoCache(key)
-        AddCounts counts, TAG_FIELD_CHAPTERS, NzString(record(TAG_FIELD_CHAPTERS))
-        AddCounts counts, TAG_FIELD_CATEGORIES, NzString(record(TAG_FIELD_CATEGORIES))
-        AddCounts counts, TAG_FIELD_TRAINING, NzString(record(TAG_FIELD_TRAINING))
-        AddCounts counts, TAG_FIELD_SUBFOLDERS, NzString(record(TAG_FIELD_SUBFOLDERS))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_CHAPTERS, NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_CATEGORIES, NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_TRAINING, NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS, NzString(record(modABPhotoConstants.PHOTO_TAG_SUBFOLDERS))
     Next key
     Set ComputeTagCounts = counts
 End Function

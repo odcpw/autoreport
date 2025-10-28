@@ -2,39 +2,53 @@ Attribute VB_Name = "ImportMyMaster"
 Option Explicit
 
 ' ================================================================
-' Import MyMaster from DOCX with STRICT headers (first row only)
-'   Required headers (exact tokens, case-insensitive):
-'     ReportItemID | Feststellung | Level1 | Level2 | Level3 | Level4
-'   Sheet/Table required:
-'     Sheet "MyMaster" with Table "TableMyMaster"
-'     Columns: ReportItemID, Feststellung, Level1, Level2, Level3, Level4
+' Import MyMaster from DOCX into structured AutoBericht sheets
+'   Required DOCX headers (exact tokens, case-insensitive):
+'       ReportItemID | Feststellung | Level1 | Level2 | Level3 | Level4
+'   Writes into sheet "Rows" (JSON-aligned layout)
 ' ================================================================
+
+Private Type RowColumns
+    rowId As Long
+    chapterId As Long
+    masterFinding As Long
+    masterLevel(1 To 4) As Long
+    overrideFinding As Long
+    overrideLevel(1 To 4) As Long
+    useOverrideFinding As Long
+    useOverrideLevel(1 To 4) As Long
+    includeFinding As Long
+    includeRecommendation As Long
+    selectedLevel As Long
+    overwriteMode As Long
+    done As Long
+    notes As Long
+    customerAnswer As Long
+    customerRemark As Long
+    customerPriority As Long
+    lastEditedBy As Long
+    lastEditedAt As Long
+End Type
+
 Public Sub ImportMyMaster()
-    Const CLEAR_EXISTING As Boolean = True ' set False to append/update
+    Const REMOVE_MISSING_ROWS As Boolean = False ' True removes Rows entries not present in DOCX
 
-    Dim ws As Worksheet, lo As ListObject
-    Dim fd As fileDialog, docPath As String
-    Dim wApp As Object, wDoc As Object, wTbl As Object
-    Dim imported As Long, updated As Long
+    Dim rowsWs As Worksheet
+    Set rowsWs = modABRowsRepository.RowsSheet()
 
-    ' Locate Excel table
-    On Error Resume Next
-    Set ws = ThisWorkbook.Worksheets("MyMaster")
-    Set lo = ws.ListObjects("TableMyMaster")
-    On Error GoTo 0
-    If lo Is Nothing Then
-        MsgBox "Excel table 'TableMyMaster' not found on sheet 'MyMaster'." & vbCrLf & _
-               "Create it with columns: ReportItemID, Feststellung, Level1, Level2, Level3, Level4.", vbCritical
-        Exit Sub
-    End If
-    If Not HeadersMatchExcel(lo) Then
-        MsgBox "TableMyMaster columns must be exactly:" & vbCrLf & _
-               "ReportItemID, Feststellung, Level1, Level2, Level3, Level4", vbCritical
-        Exit Sub
-    End If
+    Dim cols As RowColumns
+    If Not ResolveRowColumns(rowsWs, cols) Then Exit Sub
+
+    Dim rowIndexMap As Scripting.Dictionary
+    Set rowIndexMap = BuildExistingRowIndex(rowsWs, cols)
+
+    Dim importedIds As Scripting.Dictionary
+    Set importedIds = New Scripting.Dictionary
+    importedIds.CompareMode = TextCompare
 
     ' Pick DOCX
-    Set fd = Application.fileDialog(msoFileDialogFilePicker)
+    Dim fd As FileDialog, docPath As String
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
     With fd
         .Title = "Select Master DOCX (MyMaster source)"
         .Filters.Clear
@@ -44,6 +58,7 @@ Public Sub ImportMyMaster()
     End With
 
     ' Start Word (late binding)
+    Dim wApp As Object, wDoc As Object
     On Error Resume Next
     Set wApp = CreateObject("Word.Application")
     On Error GoTo 0
@@ -53,41 +68,28 @@ Public Sub ImportMyMaster()
     End If
     wApp.Visible = False
 
+    Dim imported As Long, updated As Long
+    imported = 0: updated = 0
+
     On Error GoTo CLEANUP
     Set wDoc = wApp.Documents.Open(FileName:=docPath, ReadOnly:=True, AddToRecentFiles:=False)
 
-    ' Build index of existing IDs if appending/updating
-    Dim idRowIndex As Object: Set idRowIndex = CreateObject("Scripting.Dictionary")
-    If Not lo.DataBodyRange Is Nothing Then
-        Dim r As Long, last As Long: last = lo.DataBodyRange.Rows.Count
-        Dim k$: For r = 1 To last
-            k = CStr(lo.DataBodyRange.Cells(r, 1).Value)
-            If Len(k) > 0 Then idRowIndex(k) = r
-        Next r
-    End If
-
-    ' Clear existing data if desired
-    If CLEAR_EXISTING Then
-        If Not lo.DataBodyRange Is Nothing Then lo.DataBodyRange.Delete
-        idRowIndex.RemoveAll
-    End If
-
-    ' Scan Word tables strictly
-    Dim idxID&, idxFest&, idxL1&, idxL2&, idxL3&, idxL4&
-    Dim insThis As Long, updThis As Long
-    imported = 0: updated = 0
-
+    Dim wTbl As Object
     For Each wTbl In wDoc.Tables
+        Dim idxID&, idxFest&, idxL1&, idxL2&, idxL3&, idxL4&
         If DetectExactHeadersStrict(wTbl, idxID, idxFest, idxL1, idxL2, idxL3, idxL4) Then
-            ImportOneStrict wTbl, idxID, idxFest, idxL1, idxL2, idxL3, idxL4, lo, idRowIndex, insThis, updThis
-            imported = imported + insThis
-            updated = updated + updThis
+            ImportTableStrict wTbl, idxID, idxFest, idxL1, idxL2, idxL3, idxL4, _
+                              rowsWs, cols, rowIndexMap, importedIds, imported, updated
         End If
-    Next
+    Next wTbl
+
+    If REMOVE_MISSING_ROWS Then
+        DeleteRowsNotInSet rowsWs, cols, importedIds
+    End If
 
     If imported = 0 And updated = 0 Then
         MsgBox "No compatible tables found in Word with exact headers on row 1." & vbCrLf & _
-               "Open the Immediate Window (Ctrl+G) to see detected headers per table.", vbExclamation
+               "Open the Immediate Window (Ctrl+G) to inspect detected headers.", vbExclamation
     Else
         MsgBox "MyMaster import complete." & vbCrLf & _
                "Inserted: " & imported & "   Updated: " & updated, vbInformation
@@ -100,20 +102,187 @@ CLEANUP:
     Set wDoc = Nothing: Set wApp = Nothing
 End Sub
 
-' ---------- Helpers (STRICT) ----------
+' ---------- Structured sheet helpers ----------
 
-Private Function HeadersMatchExcel(lo As ListObject) As Boolean
-    ' Expect exactly 6 columns in order:
-    ' ReportItemID, Feststellung, Level1, Level2, Level3, Level4
-    If lo.ListColumns.Count <> 6 Then Exit Function
-    HeadersMatchExcel = ( _
-        SameToken(lo.ListColumns(1).Name, "ReportItemID") And _
-        SameToken(lo.ListColumns(2).Name, "Feststellung") And _
-        SameToken(lo.ListColumns(3).Name, "Level1") And _
-        SameToken(lo.ListColumns(4).Name, "Level2") And _
-        SameToken(lo.ListColumns(5).Name, "Level3") And _
-        SameToken(lo.ListColumns(6).Name, "Level4"))
+Private Function ResolveRowColumns(ws As Worksheet, cols As RowColumns) As Boolean
+    cols.rowId = HeaderIndex(ws, "rowId")
+    cols.chapterId = HeaderIndex(ws, "chapterId")
+    cols.masterFinding = HeaderIndex(ws, "masterFinding")
+    cols.masterLevel(1) = HeaderIndex(ws, "masterLevel1")
+    cols.masterLevel(2) = HeaderIndex(ws, "masterLevel2")
+    cols.masterLevel(3) = HeaderIndex(ws, "masterLevel3")
+    cols.masterLevel(4) = HeaderIndex(ws, "masterLevel4")
+    cols.overrideFinding = HeaderIndex(ws, "overrideFinding")
+    cols.useOverrideFinding = HeaderIndex(ws, "useOverrideFinding")
+    cols.overrideLevel(1) = HeaderIndex(ws, "overrideLevel1")
+    cols.overrideLevel(2) = HeaderIndex(ws, "overrideLevel2")
+    cols.overrideLevel(3) = HeaderIndex(ws, "overrideLevel3")
+    cols.overrideLevel(4) = HeaderIndex(ws, "overrideLevel4")
+    cols.useOverrideLevel(1) = HeaderIndex(ws, "useOverrideLevel1")
+    cols.useOverrideLevel(2) = HeaderIndex(ws, "useOverrideLevel2")
+    cols.useOverrideLevel(3) = HeaderIndex(ws, "useOverrideLevel3")
+    cols.useOverrideLevel(4) = HeaderIndex(ws, "useOverrideLevel4")
+    cols.includeFinding = HeaderIndex(ws, "includeFinding")
+    cols.includeRecommendation = HeaderIndex(ws, "includeRecommendation")
+    cols.selectedLevel = HeaderIndex(ws, "selectedLevel")
+    cols.overwriteMode = HeaderIndex(ws, "overwriteMode")
+    cols.done = HeaderIndex(ws, "done")
+    cols.notes = HeaderIndex(ws, "notes")
+    cols.customerAnswer = HeaderIndex(ws, "customerAnswer")
+    cols.customerRemark = HeaderIndex(ws, "customerRemark")
+    cols.customerPriority = HeaderIndex(ws, "customerPriority")
+    cols.lastEditedBy = HeaderIndex(ws, "lastEditedBy")
+    cols.lastEditedAt = HeaderIndex(ws, "lastEditedAt")
+
+    ResolveRowColumns = ValidateColumns(cols)
 End Function
+
+Private Function ValidateColumns(cols As RowColumns) As Boolean
+    Dim missing As String
+    missing = ""
+
+    If cols.rowId = 0 Then missing = missing & "rowId" & vbCrLf
+    If cols.chapterId = 0 Then missing = missing & "chapterId" & vbCrLf
+    If cols.masterFinding = 0 Then missing = missing & "masterFinding" & vbCrLf
+
+    Dim i As Long
+    For i = 1 To 4
+        If cols.masterLevel(i) = 0 Then missing = missing & "masterLevel" & CStr(i) & vbCrLf
+        If cols.overrideLevel(i) = 0 Then missing = missing & "overrideLevel" & CStr(i) & vbCrLf
+        If cols.useOverrideLevel(i) = 0 Then missing = missing & "useOverrideLevel" & CStr(i) & vbCrLf
+    Next i
+
+    If cols.overrideFinding = 0 Then missing = missing & "overrideFinding" & vbCrLf
+    If cols.useOverrideFinding = 0 Then missing = missing & "useOverrideFinding" & vbCrLf
+    If cols.includeFinding = 0 Then missing = missing & "includeFinding" & vbCrLf
+    If cols.includeRecommendation = 0 Then missing = missing & "includeRecommendation" & vbCrLf
+    If cols.selectedLevel = 0 Then missing = missing & "selectedLevel" & vbCrLf
+    If cols.overwriteMode = 0 Then missing = missing & "overwriteMode" & vbCrLf
+    If cols.done = 0 Then missing = missing & "done" & vbCrLf
+    If cols.notes = 0 Then missing = missing & "notes" & vbCrLf
+    If cols.customerAnswer = 0 Then missing = missing & "customerAnswer" & vbCrLf
+    If cols.customerRemark = 0 Then missing = missing & "customerRemark" & vbCrLf
+    If cols.customerPriority = 0 Then missing = missing & "customerPriority" & vbCrLf
+    If cols.lastEditedBy = 0 Then missing = missing & "lastEditedBy" & vbCrLf
+    If cols.lastEditedAt = 0 Then missing = missing & "lastEditedAt" & vbCrLf
+
+    If Len(missing) > 0 Then
+        MsgBox "Rows sheet is missing required columns:" & vbCrLf & missing, vbCritical
+        ValidateColumns = False
+    Else
+        ValidateColumns = True
+    End If
+End Function
+
+Private Function BuildExistingRowIndex(ws As Worksheet, cols As RowColumns) As Scripting.Dictionary
+    Dim map As New Scripting.Dictionary
+    map.CompareMode = TextCompare
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, cols.rowId).End(xlUp).Row
+    Dim r As Long
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        Dim key As String
+        key = NormalizeReportItemId(ws.Cells(r, cols.rowId).Value)
+        If Len(key) > 0 Then map(key) = r
+    Next r
+    Set BuildExistingRowIndex = map
+End Function
+
+Private Sub ImportTableStrict(ByVal tbl As Object, _
+    ByVal idxID As Long, ByVal idxFest As Long, _
+    ByVal idxL1 As Long, ByVal idxL2 As Long, ByVal idxL3 As Long, ByVal idxL4 As Long, _
+    ByVal rowsWs As Worksheet, ByRef cols As RowColumns, _
+    ByRef rowIndexMap As Scripting.Dictionary, ByRef importedIds As Scripting.Dictionary, _
+    ByRef insertedOut As Long, ByRef updatedOut As Long)
+
+    Dim lastR As Long
+    lastR = tbl.Rows.Count
+    If lastR < 2 Then Exit Sub
+
+    Dim r As Long
+    For r = 2 To lastR
+        Dim idRaw As String
+        idRaw = CleanHeader(GetCellText(tbl.Cell(r, idxID)))
+        If Len(idRaw) = 0 Then GoTo ContinueRow
+
+        Dim id As String
+        id = NormalizeReportItemId(idRaw)
+        If Not IsValidReportItemId(id) Then GoTo ContinueRow
+
+        Dim fest As String
+        Dim l1 As String, l2 As String, l3 As String, l4 As String
+        fest = CleanBody(GetCellText(tbl.Cell(r, idxFest)))
+        l1 = CleanBody(GetCellText(tbl.Cell(r, idxL1)))
+        l2 = CleanBody(GetCellText(tbl.Cell(r, idxL2)))
+        l3 = CleanBody(GetCellText(tbl.Cell(r, idxL3)))
+        l4 = CleanBody(GetCellText(tbl.Cell(r, idxL4)))
+
+        UpsertMasterRow rowsWs, cols, rowIndexMap, importedIds, id, fest, Array(l1, l2, l3, l4), insertedOut, updatedOut
+
+ContinueRow:
+    Next r
+End Sub
+
+Private Sub UpsertMasterRow(ByVal rowsWs As Worksheet, ByRef cols As RowColumns, _
+    ByRef rowIndexMap As Scripting.Dictionary, ByRef importedIds As Scripting.Dictionary, _
+    ByVal rowId As String, ByVal fest As String, ByVal levels As Variant, _
+    ByRef insertedOut As Long, ByRef updatedOut As Long)
+
+    Dim existed As Boolean
+    existed = rowIndexMap.Exists(rowId)
+
+    Dim rowIndex As Long
+    rowIndex = modABRowsRepository.EnsureRowRecord(rowId, ParentChapterId(rowId))
+    If rowIndex = 0 Then Exit Sub
+
+    rowsWs.Cells(rowIndex, cols.masterFinding).Value = fest
+
+    Dim i As Long
+    For i = 1 To 4
+        rowsWs.Cells(rowIndex, cols.masterLevel(i)).Value = NzLevel(levels, i)
+    Next i
+
+    importedIds(rowId) = True
+    If existed Then
+        updatedOut = updatedOut + 1
+    Else
+        rowIndexMap(rowId) = rowIndex
+        insertedOut = insertedOut + 1
+    End If
+End Sub
+
+Private Sub DeleteRowsNotInSet(ByVal ws As Worksheet, ByRef cols As RowColumns, _
+    ByRef importedIds As Scripting.Dictionary)
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, cols.rowId).End(xlUp).Row
+    Dim r As Long
+    For r = lastRow To ROW_HEADER_ROW + 1 Step -1
+        Dim id As String
+        id = NormalizeReportItemId(ws.Cells(r, cols.rowId).Value)
+        If Len(id) = 0 Then
+            ws.Rows(r).Delete
+        ElseIf Not importedIds.Exists(id) Then
+            ws.Rows(r).Delete
+        End If
+    Next r
+End Sub
+
+Private Function NzLevel(levels As Variant, position As Long) As String
+    On Error GoTo CLEANUP
+    NzLevel = ""
+    If IsArray(levels) Then
+        If LBound(levels) <= position - 1 And UBound(levels) >= position - 1 Then
+            NzLevel = Trim$(CStr(levels(position - 1)))
+        End If
+    End If
+    Exit Function
+CLEANUP:
+    NzLevel = ""
+End Function
+
+' ---------- Helpers (STRICT) ----------
 
 Private Function DetectExactHeadersStrict(ByVal tbl As Object, _
     ByRef idxID As Long, ByRef idxFest As Long, _
@@ -123,7 +292,6 @@ Private Function DetectExactHeadersStrict(ByVal tbl As Object, _
     idxID = 0: idxFest = 0: idxL1 = 0: idxL2 = 0: idxL3 = 0: idxL4 = 0
     If tbl.Rows.Count = 0 Then Exit Function
 
-    ' Print the headers we see (helps debugging if it fails)
     Dim hdrDebug As String: hdrDebug = ""
 
     For c = 1 To tbl.Columns.Count
@@ -144,123 +312,30 @@ Private Function DetectExactHeadersStrict(ByVal tbl As Object, _
     DetectExactHeadersStrict = (idxID > 0 And idxFest > 0 And idxL1 > 0 And idxL2 > 0 And idxL3 > 0 And idxL4 > 0)
 End Function
 
-Private Sub ImportOneStrict(ByVal tbl As Object, _
-    ByVal idxID As Long, ByVal idxFest As Long, _
-    ByVal idxL1 As Long, ByVal idxL2 As Long, ByVal idxL3 As Long, ByVal idxL4 As Long, _
-    ByVal lo As ListObject, ByVal idRowIndex As Object, _
-    ByRef insertedOut As Long, ByRef updatedOut As Long)
-
-    Dim r As Long, lastR As Long
-    Dim idRaw$, id$, fest$, l1$, l2$, l3$, l4$
-    insertedOut = 0: updatedOut = 0
-    lastR = tbl.Rows.Count
-    If lastR < 2 Then Exit Sub ' no data
-
-    For r = 2 To lastR
-        idRaw = CleanHeader(GetCellText(tbl.Cell(r, idxID))) ' reuse CleanHeader to strip NBSP/CR/chr(7)
-        If Len(idRaw) = 0 Then
-            ' Layout-only row ? skip
-        Else
-            id = NormalizeReportItemID(idRaw)  ' strip trailing dots/spaces, collapse ..
-            If IsValidReportItemID_Lax(id) Then
-                ' Keep row even if texts are blank
-                fest = CleanBody(GetCellText(tbl.Cell(r, idxFest)))
-                l1 = CleanBody(GetCellText(tbl.Cell(r, idxL1)))
-                l2 = CleanBody(GetCellText(tbl.Cell(r, idxL2)))
-                l3 = CleanBody(GetCellText(tbl.Cell(r, idxL3)))
-                l4 = CleanBody(GetCellText(tbl.Cell(r, idxL4)))
-
-                If idRowIndex.Exists(id) Then
-                    Dim erow&: erow = idRowIndex(id)
-                    With lo.DataBodyRange.Rows(erow)
-                        .Cells(1, 1).Value = id
-                        .Cells(1, 2).Value = fest
-                        .Cells(1, 3).Value = l1
-                        .Cells(1, 4).Value = l2
-                        .Cells(1, 5).Value = l3
-                        .Cells(1, 6).Value = l4
-                    End With
-                    updatedOut = updatedOut + 1
-                Else
-                    Dim newRow As ListRow
-                    Set newRow = lo.ListRows.Add
-                    With newRow.Range
-                        .Cells(1, 1).Value = id
-                        .Cells(1, 2).Value = fest
-                        .Cells(1, 3).Value = l1
-                        .Cells(1, 4).Value = l2
-                        .Cells(1, 5).Value = l3
-                        .Cells(1, 6).Value = l4
-                    End With
-                    idRowIndex(id) = newRow.Index
-                    insertedOut = insertedOut + 1
-                End If
-            Else
-                ' Not a valid ID (e.g., "Kapitel") ? skip
-            End If
-        End If
-    Next r
-End Sub
-
-' -------- text/ID helpers --------
-
 Private Function GetCellText(ByVal cellObj As Object) As String
-    ' Word table cell text ends with Chr(13) & Chr(7)
-    Dim s$: s = cellObj.Range.Text
+    Dim s As String
+    s = cellObj.Range.Text
     s = Replace$(s, Chr$(13), vbLf)
     s = Replace$(s, Chr$(7), "")
     GetCellText = s
 End Function
 
 Private Function CleanHeader(ByVal s As String) As String
-    ' Strict header cleaner: remove control chars and NBSP, trim spaces; do NOT alter words
     s = Replace$(s, vbCr, vbLf)
     s = Replace$(s, vbLf, " ")
     s = Replace$(s, vbTab, " ")
-    s = Replace$(s, Chr$(160), " ") ' NBSP
+    s = Replace$(s, Chr$(160), " ")
     Do While InStr(s, "  ") > 0
         s = Replace$(s, "  ", " ")
     Loop
     CleanHeader = Trim$(s)
 End Function
 
+Private Function CleanBody(ByVal s As String) As String
+    s = Replace$(s, vbCr, vbLf)
+    CleanBody = Trim$(s)
+End Function
+
 Private Function SameToken(ByVal a As String, ByVal b As String) As Boolean
     SameToken = (LCase$(CleanHeader(a)) = LCase$(b))
 End Function
-
-Private Function CleanBody(ByVal s As String) As String
-    ' Keep content; normalize line breaks; trim
-    s = Replace$(s, vbCr, vbLf)
-    s = Trim$(s)
-    CleanBody = s
-End Function
-
-Private Function NormalizeReportItemID(ByVal s As String) As String
-    ' Canonicalize: strip trailing dots/spaces, collapse double dots
-    Dim t$: t = Trim$(s)
-    Do While Len(t) > 0 And (Right$(t, 1) = "." Or Right$(t, 1) = " ")
-        t = Left$(t, Len(t) - 1)
-    Loop
-    Do While InStr(t, "..") > 0
-        t = Replace$(t, "..", ".")
-    Loop
-    NormalizeReportItemID = t
-End Function
-
-Private Function IsValidReportItemID_Lax(ByVal s As String) As Boolean
-    ' Accept IDs with >=1 segments: 1, 1.1, 1.1.1, 2.3.4.5, and with optional a/b suffixes
-    Dim parts() As String, i&, seg$
-    If Len(s) = 0 Then Exit Function
-    parts = Split(s, ".")
-    If UBound(parts) < 0 Then Exit Function ' need at least "1"
-    For i = LBound(parts) To UBound(parts)
-        seg = parts(i)
-        If Len(seg) = 0 Then Exit Function
-        ' allow digits with optional trailing letters (e.g., "1", "1a")
-        ' reject blatant non-IDs like "Kapitel"
-        If Not seg Like "*[0-9]*" Then Exit Function
-    Next i
-    IsValidReportItemID_Lax = True
-End Function
-
-

@@ -119,23 +119,23 @@ Private Sub PrepareMappings()
     ReDim LegacyMappings(0 To 3)
 
     LegacyMappings(0).ColumnIndex = 1
-    LegacyMappings(0).ListName = LIST_BERICHT
-    LegacyMappings(0).TagField = TAG_FIELD_CHAPTERS
+    LegacyMappings(0).ListName = modABPhotoConstants.PHOTO_LIST_BERICHT
+    LegacyMappings(0).TagField = modABPhotoConstants.PHOTO_TAG_CHAPTERS
     LegacyMappings(0).UseChapterId = True
 
     LegacyMappings(1).ColumnIndex = 2
-    LegacyMappings(1).ListName = LIST_AUDIT
-    LegacyMappings(1).TagField = TAG_FIELD_CATEGORIES
+    LegacyMappings(1).ListName = modABPhotoConstants.PHOTO_LIST_AUDIT
+    LegacyMappings(1).TagField = modABPhotoConstants.PHOTO_TAG_CATEGORIES
     LegacyMappings(1).UseChapterId = False
 
     LegacyMappings(2).ColumnIndex = 3
-    LegacyMappings(2).ListName = LIST_TRAINING
-    LegacyMappings(2).TagField = TAG_FIELD_TRAINING
+    LegacyMappings(2).ListName = modABPhotoConstants.PHOTO_LIST_TRAINING
+    LegacyMappings(2).TagField = modABPhotoConstants.PHOTO_TAG_TRAINING
     LegacyMappings(2).UseChapterId = False
 
     LegacyMappings(3).ColumnIndex = 4
-    LegacyMappings(3).ListName = LIST_SUBFOLDERS
-    LegacyMappings(3).TagField = TAG_FIELD_SUBFOLDERS
+    LegacyMappings(3).ListName = modABPhotoConstants.PHOTO_LIST_SUBFOLDERS
+    LegacyMappings(3).TagField = modABPhotoConstants.PHOTO_TAG_SUBFOLDERS
     LegacyMappings(3).UseChapterId = False
 End Sub
 

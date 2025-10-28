@@ -46,6 +46,10 @@ Public TxtLevelMaster As MSForms.TextBox
 ' Data
 Public reportItemID   As String
 Private mLevel        As Long              ' 1..4 current level
+Private mFindingOverride As String
+Private mFindingOverrideEnabled As Boolean
+Private mLevelOverrideText(1 To 4) As String
+Private mLevelOverrideEnabled(1 To 4) As Boolean
 
 ' ---------- Init ----------
 Public Sub Init(ByVal id As String, ByVal antwort As String, ByVal selected As Boolean, _
@@ -75,15 +79,41 @@ Public Sub Init(ByVal id As String, ByVal antwort As String, ByVal selected As B
 
     If Not TxtLevelMaster Is Nothing Then
         TxtLevelMaster.Locked = True
-        TxtLevelMaster.Text = levelMaster
+       TxtLevelMaster.Text = levelMaster
     End If
-
-    ' Override toggles start OFF
-    If Not ChkUseFestOverride Is Nothing Then ChkUseFestOverride.Value = False
-    If Not ChkUseLevelOverride Is Nothing Then ChkUseLevelOverride.Value = False
 
     ' Ensure right preview is consistent with current level/override
     RefreshLevelPreview
+End Sub
+
+Public Sub ConfigureOverrides(ByVal findingText As String, ByVal findingEnabled As Boolean, _
+                              ByVal levelTexts As Variant, ByVal levelEnabled As Variant)
+    mFindingOverride = findingText
+    mFindingOverrideEnabled = findingEnabled
+    If Not TxtFestEdit Is Nothing Then TxtFestEdit.Text = mFindingOverride
+    If Not ChkUseFestOverride Is Nothing Then ChkUseFestOverride.Value = findingEnabled
+
+    Dim i As Long
+    For i = 1 To 4
+        mLevelOverrideText(i) = ""
+        mLevelOverrideEnabled(i) = False
+        If IsArray(levelTexts) Then
+            If ArrayHasIndex(levelTexts, i) Then
+                mLevelOverrideText(i) = modABTableUtils.NzString(levelTexts(i))
+            ElseIf ArrayHasIndex(levelTexts, i - 1) Then
+                mLevelOverrideText(i) = modABTableUtils.NzString(levelTexts(i - 1))
+            End If
+        End If
+        If IsArray(levelEnabled) Then
+            If ArrayHasIndex(levelEnabled, i) Then
+                mLevelOverrideEnabled(i) = modABTableUtils.NzBool(levelEnabled(i))
+            ElseIf ArrayHasIndex(levelEnabled, i - 1) Then
+                mLevelOverrideEnabled(i) = modABTableUtils.NzBool(levelEnabled(i - 1))
+            End If
+        End If
+    Next i
+
+    ApplyLevelOverrideState
 End Sub
 
 ' ---------- Level selection ----------
@@ -97,6 +127,7 @@ Private Sub HandleLevelClick(ByVal newLevel As Long)
     ' Selecting a level implies "include"
     If Not ChkInclude Is Nothing Then ChkInclude.Value = True
     modReportData.SaveSBState reportItemID, True, mLevel
+    ApplyLevelOverrideState
     RefreshLevelPreview
 End Sub
 
@@ -109,18 +140,26 @@ End Sub
 Private Sub ChkUseFestOverride_Click()
     ' Save/clear the Finding override
     If ChkUseFestOverride.Value Then
-        modReportData.SaveOverride reportItemID, ctFinding, 0, NzTB(TxtFestEdit)
+        mFindingOverrideEnabled = True
+        mFindingOverride = NzTB(TxtFestEdit)
+        modReportData.SaveOverride reportItemID, ctFinding, 0, mFindingOverride, True
     Else
-        modReportData.SaveOverride reportItemID, ctFinding, 0, ""
+        mFindingOverrideEnabled = False
+        mFindingOverride = ""
+        modReportData.SaveOverride reportItemID, ctFinding, 0, "", False
     End If
 End Sub
 
 Private Sub ChkUseLevelOverride_Click()
     ' Save/clear the Level-N override (and refresh preview)
     If ChkUseLevelOverride.Value Then
-        modReportData.SaveOverride reportItemID, ctRecommendation, mLevel, NzTB(TxtLevelEdit)
+        mLevelOverrideEnabled(mLevel) = True
+        mLevelOverrideText(mLevel) = NzTB(TxtLevelEdit)
+        modReportData.SaveOverride reportItemID, ctRecommendation, mLevel, mLevelOverrideText(mLevel), True
     Else
-        modReportData.SaveOverride reportItemID, ctRecommendation, mLevel, ""
+        mLevelOverrideEnabled(mLevel) = False
+        mLevelOverrideText(mLevel) = ""
+        modReportData.SaveOverride reportItemID, ctRecommendation, mLevel, "", False
     End If
     RefreshLevelPreview
 End Sub
@@ -128,12 +167,15 @@ End Sub
 Private Sub TxtLevelEdit_Change()
     ' Live preview while typing when override is ON
     If Not ChkUseLevelOverride Is Nothing And ChkUseLevelOverride.Value Then
+        mLevelOverrideText(mLevel) = NzTB(TxtLevelEdit)
         RefreshLevelPreview
     End If
 End Sub
 
 Private Sub TxtFestEdit_Change()
-    ' (no live preview on left; stored on toggle)
+    If Not ChkUseFestOverride Is Nothing And ChkUseFestOverride.Value Then
+        mFindingOverride = NzTB(TxtFestEdit)
+    End If
 End Sub
 
 Private Sub BtnPromoteMaster_Click()
@@ -160,11 +202,28 @@ Private Sub RefreshLevelPreview()
 End Sub
 
 ' ---------- Small utility ----------
+Private Sub ApplyLevelOverrideState()
+    If mLevel < 1 Or mLevel > 4 Then Exit Sub
+    If Not TxtLevelEdit Is Nothing Then TxtLevelEdit.Text = mLevelOverrideText(mLevel)
+    If Not ChkUseLevelOverride Is Nothing Then ChkUseLevelOverride.Value = mLevelOverrideEnabled(mLevel)
+End Sub
+
 Private Function NzTB(tb As MSForms.TextBox) As String
     If tb Is Nothing Then
         NzTB = ""
     Else
         NzTB = tb.Text
     End If
+End Function
+
+Private Function ArrayHasIndex(ByVal source As Variant, ByVal index As Long) As Boolean
+    On Error GoTo FAIL
+    Dim lb As Long, ub As Long
+    lb = LBound(source)
+    ub = UBound(source)
+    ArrayHasIndex = (index >= lb And index <= ub)
+    Exit Function
+FAIL:
+    ArrayHasIndex = False
 End Function
 
