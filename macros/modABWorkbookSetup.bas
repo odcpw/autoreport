@@ -30,8 +30,10 @@ Public Function EnsureSheetWithHeaders(ByVal sheetName As String, _
     End If
 
     If Not IsEmpty(headers) Then
+        Dim cols As Long
+        cols = UBound(headers) - LBound(headers) + 1
         Dim existingHeader As Variant
-        existingHeader = ws.Range(ws.Cells(ROW_HEADER_ROW, 1), ws.Cells(ROW_HEADER_ROW, UBound(headers) + 1)).Value
+        existingHeader = ws.Cells(ROW_HEADER_ROW, 1).Resize(1, cols).Value
         If clearExisting Or Not HeaderMatches(existingHeader, headers) Then
             WriteHeaderRow ws, headers
         End If
@@ -45,7 +47,7 @@ End Function
 Public Sub WriteHeaderRow(ws As Worksheet, headers As Variant)
     Dim i As Long
     For i = LBound(headers) To UBound(headers)
-        ws.Cells(ROW_HEADER_ROW, i + 1).Value = headers(i)
+        ws.Cells(ROW_HEADER_ROW, (i - LBound(headers)) + 1).Value = headers(i)
     Next i
 End Sub
 
@@ -57,12 +59,12 @@ Private Function HeaderMatches(existing As Variant, headers As Variant) As Boole
     If TypeName(existing) = "Variant()" Then
         If UBound(existing, 2) - LBound(existing, 2) + 1 <> cols Then GoTo Mismatch
         For i = 1 To cols
-            If CStr(existing(1, i)) <> CStr(headers(i - 1)) Then GoTo Mismatch
+            If CStr(existing(1, i)) <> CStr(headers(LBound(headers) + i - 1)) Then GoTo Mismatch
         Next i
         HeaderMatches = True
         Exit Function
     ElseIf Not IsEmpty(existing) Then
-        HeaderMatches = (cols = 1 And CStr(existing) = CStr(headers(0)))
+        HeaderMatches = (cols = 1 And CStr(existing) = CStr(headers(LBound(headers))))
         Exit Function
     End If
 Mismatch:
@@ -91,4 +93,3 @@ Public Function SheetExists(ByVal sheetName As String) As Boolean
     SheetExists = Not ws Is Nothing
     On Error GoTo 0
 End Function
-

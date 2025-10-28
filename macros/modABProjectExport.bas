@@ -214,7 +214,7 @@ Private Sub SortChapterCollection(col As Collection)
             Dim a As Dictionary, b As Dictionary
             Set a = col(i)
             Set b = col(j)
-            If NzNumber(a("orderIndex")) > NzNumber(b("orderIndex")) Then
+            If NzNumber(a("orderIndex"), 99999) > NzNumber(b("orderIndex"), 99999) Then
                 col.Remove j
                 col.Add b, , i
             End If
@@ -351,15 +351,6 @@ Private Sub WriteTextFile(ByVal filePath As String, ByVal content As String)
     Print #fileNum, content
     Close #fileNum
 End Sub
-
-Private Function NzNumber(value As Variant) As Double
-    If IsNumeric(value) Then
-        NzNumber = CDbl(value)
-    Else
-        NzNumber = 99999
-    End If
-End Function
-
 
 Private Function GetParentChapterId(childId As String) As String
     Dim trimmed As String
