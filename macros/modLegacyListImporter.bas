@@ -18,8 +18,8 @@ Option Explicit
 
 Private Type LegacyColumnMap
     ColumnIndex As Long
-    ListName As String
-    TagField As String
+    listName As String
+    tagField As String
     UseChapterId As Boolean
 End Type
 
@@ -51,7 +51,7 @@ Public Sub ImportLegacyCategoryLabels()
     PrepareMappings
 
     Dim lastRow As Long
-    lastRow = wsLegacy.Cells(wsLegacy.Rows.Count, 1).End(xlUp).Row
+    lastRow = wsLegacy.Cells(wsLegacy.Rows.count, 1).End(xlUp).row
 
     Dim chapterMap As Scripting.Dictionary
     Set chapterMap = BuildChapterLookup(wsChapters)
@@ -67,20 +67,20 @@ Public Sub ImportLegacyCategoryLabels()
             Dim map As LegacyColumnMap
             map = LegacyMappings(mapIndex)
             Dim labelText As String
-            labelText = Trim$(NzAny(wsLegacy.Cells(r, map.ColumnIndex).Value))
+            labelText = Trim$(NzAny(wsLegacy.Cells(r, map.ColumnIndex).value))
             If Len(labelText) = 0 Then GoTo NextLabel
 
             Dim key As String
-            key = map.ListName & "|" & r
+            key = map.listName & "|" & r
             Dim entry As Scripting.Dictionary
             If output.Exists(key) Then
                 Set entry = output(key)
             Else
                 Set entry = CreateObject("Scripting.Dictionary")
                 entry.CompareMode = vbTextCompare
-                entry("listName") = map.ListName
+                entry("listName") = map.listName
                 entry("sortOrder") = r
-                output(key) = entry
+                Set output(key) = entry
             End If
 
             entry("label_de") = labelText
@@ -94,7 +94,7 @@ Public Sub ImportLegacyCategoryLabels()
             chapterId = ""
 
             If map.UseChapterId Then
-                chapterId = NormalizeChapterId(Trim$(NzAny(wsLegacy.Cells(r, 1).Value)))
+                chapterId = NormalizeChapterId(Trim$(NzAny(wsLegacy.Cells(r, 1).value)))
                 If Len(chapterId) = 0 And Not chapterMap Is Nothing Then
                     chapterId = chapterMapLookup(chapterMap, labelText)
                 End If
@@ -106,7 +106,7 @@ Public Sub ImportLegacyCategoryLabels()
 
             entry("value") = value
             entry("chapterId") = chapterId
-            entry("group") = map.ListName
+            entry("group") = map.listName
 NextLabel:
         Next mapIndex
     Next r
@@ -119,23 +119,23 @@ Private Sub PrepareMappings()
     ReDim LegacyMappings(0 To 3)
 
     LegacyMappings(0).ColumnIndex = 1
-    LegacyMappings(0).ListName = modABPhotoConstants.PHOTO_LIST_BERICHT
-    LegacyMappings(0).TagField = modABPhotoConstants.PHOTO_TAG_CHAPTERS
+    LegacyMappings(0).listName = modABPhotoConstants.PHOTO_LIST_BERICHT
+    LegacyMappings(0).tagField = modABPhotoConstants.PHOTO_TAG_CHAPTERS
     LegacyMappings(0).UseChapterId = True
 
     LegacyMappings(1).ColumnIndex = 2
-    LegacyMappings(1).ListName = modABPhotoConstants.PHOTO_LIST_AUDIT
-    LegacyMappings(1).TagField = modABPhotoConstants.PHOTO_TAG_CATEGORIES
+    LegacyMappings(1).listName = modABPhotoConstants.PHOTO_LIST_AUDIT
+    LegacyMappings(1).tagField = modABPhotoConstants.PHOTO_TAG_CATEGORIES
     LegacyMappings(1).UseChapterId = False
 
     LegacyMappings(2).ColumnIndex = 3
-    LegacyMappings(2).ListName = modABPhotoConstants.PHOTO_LIST_TRAINING
-    LegacyMappings(2).TagField = modABPhotoConstants.PHOTO_TAG_TRAINING
+    LegacyMappings(2).listName = modABPhotoConstants.PHOTO_LIST_TRAINING
+    LegacyMappings(2).tagField = modABPhotoConstants.PHOTO_TAG_TRAINING
     LegacyMappings(2).UseChapterId = False
 
     LegacyMappings(3).ColumnIndex = 4
-    LegacyMappings(3).ListName = modABPhotoConstants.PHOTO_LIST_SUBFOLDERS
-    LegacyMappings(3).TagField = modABPhotoConstants.PHOTO_TAG_SUBFOLDERS
+    LegacyMappings(3).listName = modABPhotoConstants.PHOTO_LIST_SUBFOLDERS
+    LegacyMappings(3).tagField = modABPhotoConstants.PHOTO_TAG_SUBFOLDERS
     LegacyMappings(3).UseChapterId = False
 End Sub
 
@@ -150,14 +150,14 @@ Private Function BuildChapterLookup(wsChapters As Worksheet) As Object
     lookup.CompareMode = vbTextCompare
 
     Dim lastRow As Long
-    lastRow = wsChapters.Cells(wsChapters.Rows.Count, 1).End(xlUp).Row
+    lastRow = wsChapters.Cells(wsChapters.Rows.count, 1).End(xlUp).row
 
     Dim r As Long
     For r = ROW_HEADER_ROW + 1 To lastRow
         Dim chapterId As String
-        chapterId = Trim$(NzAny(wsChapters.Cells(r, HeaderIndex(wsChapters, "chapterId")).Value))
+        chapterId = Trim$(NzAny(wsChapters.Cells(r, HeaderIndex(wsChapters, "chapterId")).value))
         Dim title As String
-        title = Trim$(NzAny(wsChapters.Cells(r, HeaderIndex(wsChapters, "defaultTitle_de")).Value))
+        title = Trim$(NzAny(wsChapters.Cells(r, HeaderIndex(wsChapters, "defaultTitle_de")).value))
         If Len(chapterId) > 0 Then
             lookup(chapterId) = chapterId
         End If
@@ -168,6 +168,18 @@ Private Function BuildChapterLookup(wsChapters As Worksheet) As Object
 
     Set BuildChapterLookup = lookup
 End Function
+
+Private Function HeaderIndex(ws As Worksheet, headerName As String, Optional headerRow As Long = 1) As Long
+    ' Finds the column number of the header name (case-insensitive, exact match)
+    Dim f As Range
+    Set f = ws.Rows(headerRow).Find(What:=headerName, LookIn:=xlValues, LookAt:=xlWhole, MatchCase:=False)
+    If f Is Nothing Then
+        Err.Raise vbObjectError + 5000, "HeaderIndex", _
+            "Header '" & headerName & "' not found in row " & headerRow & " on sheet '" & ws.Name & "'."
+    End If
+    HeaderIndex = f.column
+End Function
+
 
 Private Function chapterMapLookup(ByVal dict As Object, ByVal key As String) As String
     If dict Is Nothing Then Exit Function
@@ -182,15 +194,15 @@ Private Sub WriteListsFromEntries(ByVal ws As Worksheet, ByVal entries As Object
     For Each key In entries.Keys
         Dim entry As Scripting.Dictionary
         Set entry = entries(key)
-        ws.Cells(rowIndex, HeaderIndex(ws, "listName")).Value = entry("listName")
-        ws.Cells(rowIndex, HeaderIndex(ws, "value")).Value = NzAny(entry("value"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "label_de")).Value = NzAny(entry("label_de"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "label_fr")).Value = NzAny(entry("label_fr"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "label_it")).Value = NzAny(entry("label_it"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "label_en")).Value = NzAny(entry("label_en"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "group")).Value = NzAny(entry("group"))
-        ws.Cells(rowIndex, HeaderIndex(ws, "sortOrder")).Value = entry("sortOrder")
-        ws.Cells(rowIndex, HeaderIndex(ws, "chapterId")).Value = NzAny(entry("chapterId"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "listName")).value = entry("listName")
+        ws.Cells(rowIndex, HeaderIndex(ws, "value")).value = NzAny(entry("value"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "label_de")).value = NzAny(entry("label_de"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "label_fr")).value = NzAny(entry("label_fr"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "label_it")).value = NzAny(entry("label_it"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "label_en")).value = NzAny(entry("label_en"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "group")).value = NzAny(entry("group"))
+        ws.Cells(rowIndex, HeaderIndex(ws, "sortOrder")).value = entry("sortOrder")
+        ws.Cells(rowIndex, HeaderIndex(ws, "chapterId")).value = NzAny(entry("chapterId"))
         rowIndex = rowIndex + 1
     Next key
 End Sub
