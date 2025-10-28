@@ -286,7 +286,6 @@ Public Function BuildFolderTagLookup() As Scripting.Dictionary
         End If
         If Len(tagValue) = 0 Then GoTo ContinueRow
 
-        AddFolderMapping map, tagValue, tagField, tagValue
         AddFolderMapping map, NzString(ws.Cells(r, colLabelDe).Value), tagField, tagValue
         AddFolderMapping map, NzString(ws.Cells(r, colLabelFr).Value), tagField, tagValue
         AddFolderMapping map, NzString(ws.Cells(r, colLabelIt).Value), tagField, tagValue

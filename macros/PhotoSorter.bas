@@ -94,14 +94,21 @@ Public Sub RemoveEmptyFolders(ByVal baseDirectory As String)
     If Not fso.FolderExists(baseDirectory) Then Exit Sub
     Dim rootFld As Object
     Set rootFld = fso.GetFolder(baseDirectory)
-    Dim i As Long
-    For i = rootFld.SubFolders.Count To 1 Step -1
-        Dim subFld As Object
-        Set subFld = rootFld.SubFolders(i)
+
+    Dim deleteList As Collection
+    Set deleteList = New Collection
+
+    Dim subFld As Object
+    For Each subFld In rootFld.SubFolders
         If subFld.Files.Count = 0 And subFld.SubFolders.Count = 0 Then
-            fso.DeleteFolder subFld.Path, True
+            deleteList.Add subFld.Path
         End If
-    Next i
+    Next subFld
+
+    Dim target As Variant
+    For Each target In deleteList
+        fso.DeleteFolder CStr(target), True
+    Next target
     MsgBox "Leere Ordner entfernt.", vbInformation
 End Sub
 
@@ -149,9 +156,11 @@ Private Function IsImageFile(fileName As String) As Boolean
 End Function
 
 Private Function BuildPath(ByVal baseDirectory As String, ByVal segment As String) As String
-    If Right$(baseDirectory, 1) = "" Or Right$(baseDirectory, 1) = "/" Then
+    If Len(baseDirectory) = 0 Then
+        BuildPath = segment
+    ElseIf Right$(baseDirectory, 1) = "\" Or Right$(baseDirectory, 1) = "/" Then
         BuildPath = baseDirectory & segment
     Else
-        BuildPath = baseDirectory & "" & segment
+        BuildPath = baseDirectory & "\" & segment
     End If
 End Function
