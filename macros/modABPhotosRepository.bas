@@ -433,5 +433,3 @@ Private Function JoinDictionaryKeys(ByVal dict As Scripting.Dictionary) As Strin
         JoinDictionaryKeys = Join(keys, ", ")
     End If
 End Function
-
-EOF
