@@ -245,7 +245,14 @@ Private Function ReadPhotos() As Dictionary
         tags("chapters") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagChapters")).Value)
         tags("categories") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagCategories")).Value)
         tags("training") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagTraining")).Value)
-        tags("subfolders") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagSubfolders")).Value)
+        Dim tagTopicsCol As Long
+        tagTopicsCol = HeaderIndex(ws, "tagTopics")
+        If tagTopicsCol = 0 Then tagTopicsCol = HeaderIndex(ws, "tagSubfolders")
+        If tagTopicsCol > 0 Then
+            tags("topics") = SplitTags(ws.Cells(r, tagTopicsCol).Value)
+        Else
+            tags("topics") = SplitTags("")
+        End If
         photo("tags") = tags
         photo("preferredLocale") = NzString(ws.Cells(r, HeaderIndex(ws, "preferredLocale")).Value)
         photo("capturedAt") = NzString(ws.Cells(r, HeaderIndex(ws, "capturedAt")).Value)

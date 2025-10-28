@@ -125,7 +125,7 @@
 - `version`: Increment when schema changes; enables backward-compatible upgrades.
 - `meta`: Excel owns IDs and timestamps; AutoBericht updates `author` and `createdAt` on export if needed.
 - `lists`: Free-text tag libraries shared between PhotoSorter and report rows.
-- `photos`: Only metadata (notes, logical tags for chapters/categories/training/subfolders). Physical files remain on disk; VBA handles moving/renaming post-export.
+- `photos`: Only metadata (notes, logical tags for chapters/categories/training/topics). Physical files remain on disk; VBA handles moving/renaming post-export.
 - `chapters`: Ordered list matching the master structure. `pageSize` controls “rows per page” navigation.
 - `rows.id`: Canonical identifier from the master (e.g., `1.3.10`). Newly added UI rows use a generated suffix (`4.8.custom-001`) so Excel/VBA can track them.
 - `master`: Raw template content, never edited in place.

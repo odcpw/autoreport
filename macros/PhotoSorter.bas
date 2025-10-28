@@ -23,14 +23,18 @@ End Function
 
 Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     If Len(baseDirectory) = 0 Then Exit Sub
+    modABPhotosRepository.EnsurePhotoSchema
     Dim images As Collection
     Set images = EnumerateImages(baseDirectory)
+
+    Dim folderTagMap As Scripting.Dictionary
+    Set folderTagMap = modABPhotosRepository.BuildFolderTagLookup()
     Dim item As Variant
     For Each item In images
         Dim relativePath As String
         relativePath = item("relativePath")
         Dim record As Scripting.Dictionary
-        Set record = GetPhotoEntry(relativePath)
+        Set record = modABPhotosRepository.GetPhotoEntry(relativePath)
         If record Is Nothing Then
             Set record = New Scripting.Dictionary
             record.CompareMode = TextCompare
@@ -50,13 +54,22 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
                     End If
                 Case "capturedAt"
                     record(header) = item("capturedAt")
+                Case "tagTopics"
+                    If Not record.Exists(header) Or Len(NzString(record(header))) = 0 Then
+                        If record.Exists(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY) Then
+                            record(header) = NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY))
+                        Else
+                            record(header) = ""
+                        End If
+                    End If
                 Case Else
                     If Not record.Exists(header) Then
                         record(header) = ""
                     End If
             End Select
         Next header
-        UpsertPhoto record
+        modABPhotosRepository.ApplyFolderTags record, relativePath, folderTagMap
+        modABPhotosRepository.UpsertPhoto record
     Next item
 End Sub
 
@@ -70,8 +83,8 @@ Public Sub CreateFoldersForList(ByVal baseDirectory As String, ByVal listName As
     Dim entry As Scripting.Dictionary
     For Each entry In entries
         Dim folderName As String
-        folderName = NzString(entry("value"))
-        If Len(folderName) = 0 Then folderName = NzString(entry("label"))
+        folderName = NzString(entry("label"))
+        If Len(folderName) = 0 Then folderName = NzString(entry("value"))
         If Len(folderName) = 0 Then GoTo ContinueLoop
         Dim targetPath As String
         targetPath = BuildPath(baseDirectory, folderName)

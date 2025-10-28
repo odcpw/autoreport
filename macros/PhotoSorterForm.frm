@@ -76,7 +76,7 @@ Private Sub LoadPhotoCache()
         Dim fileKey As String
         fileKey = NzString(entry("fileName"))
         If Len(fileKey) > 0 Then
-            photoCache(fileKey) = entry
+            Set photoCache(fileKey) = entry
         End If
     Next entry
 End Sub
@@ -108,7 +108,7 @@ Private Function RecordHasAnyTag(ByVal record As Scripting.Dictionary) As Boolea
     RecordHasAnyTag = (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))) > 0) _
         Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))) > 0) _
         Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))) > 0) _
-        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_SUBFOLDERS))) > 0)
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS))) > 0)
 End Function
 
 Private Sub SortImageFiles()
@@ -142,10 +142,11 @@ Private Sub LoadTagButtons()
     ClearTagButtonFrame ButtonsBericht
     ClearTagButtonFrame ButtonsVGSeminar
     ClearTagButtonFrame ButtonsSubfolders
+    ButtonsSubfolders.Caption = "Topics"
     Set buttonCollection = New Collection
     CreateTagButtons ButtonsBericht, modABPhotoConstants.PHOTO_LIST_BERICHT, modABPhotoConstants.PHOTO_TAG_CHAPTERS
     CreateTagButtons ButtonsVGSeminar, modABPhotoConstants.PHOTO_LIST_AUDIT, modABPhotoConstants.PHOTO_TAG_CATEGORIES
-    CreateTagButtons ButtonsSubfolders, modABPhotoConstants.PHOTO_LIST_SUBFOLDERS, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS
+    CreateTagButtons ButtonsSubfolders, modABPhotoConstants.PHOTO_LIST_TOPICS, modABPhotoConstants.PHOTO_TAG_TOPICS
 End Sub
 
 Private Sub ClearTagButtonFrame(ByVal targetFrame As MSForms.Frame)
@@ -268,8 +269,8 @@ Private Sub btnClearSheets_Click()
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CHAPTERS, Array()
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CATEGORIES, Array()
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TRAINING, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS, Array()
-    photoCache(fileName) = GetPhotoEntry(fileName)
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPICS, Array()
+    Set photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
 End Sub
@@ -279,7 +280,7 @@ Private Sub cmdCreateAllFolders_Click()
         MsgBox "Bitte zuerst einen Wurzelordner auswählen.", vbExclamation
         Exit Sub
     End If
-    CreateFoldersForList rootPath, modABPhotoConstants.PHOTO_LIST_SUBFOLDERS, GetActiveLocale()
+    CreateFoldersForList rootPath, modABPhotoConstants.PHOTO_LIST_TOPICS, GetActiveLocale()
 End Sub
 
 Private Sub cmdRemoveEmptyFolders_Click()
@@ -323,7 +324,7 @@ Private Sub UpdateImageDisplay()
         Exit Sub
     End If
 
-    photoCache(fileName) = record
+    Set photoCache(fileName) = record
     Dim displayName As String
     displayName = NzString(record("displayName"))
     If Len(displayName) = 0 Then displayName = fileName
@@ -386,7 +387,7 @@ Public Sub ToggleTag(ByVal tagField As String, ByVal tagValue As String)
     Dim fileName As String
     fileName = imageFiles(currentIndex)
     TogglePhotoTag fileName, tagField, tagValue
-    photoCache(fileName) = GetPhotoEntry(fileName)
+    Set photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
 End Sub
@@ -421,7 +422,7 @@ Private Function ComputeTagCounts() As Scripting.Dictionary
         AddCounts counts, modABPhotoConstants.PHOTO_TAG_CHAPTERS, NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))
         AddCounts counts, modABPhotoConstants.PHOTO_TAG_CATEGORIES, NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))
         AddCounts counts, modABPhotoConstants.PHOTO_TAG_TRAINING, NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))
-        AddCounts counts, modABPhotoConstants.PHOTO_TAG_SUBFOLDERS, NzString(record(modABPhotoConstants.PHOTO_TAG_SUBFOLDERS))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_TOPICS, NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS))
     Next key
     Set ComputeTagCounts = counts
 End Function

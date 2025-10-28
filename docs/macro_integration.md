@@ -46,7 +46,7 @@ Import the `.bas` files under `macros/` into the macro-enabled workbook. All rea
    ```
    Produces a schema-compliant JSON payload:
    - `meta`, `chapters` (each with `rows` and override/customer/workstate blocks),
-   - `photos` (with tagged chapter/category/training/subfolder arrays),
+   - `photos` (with tagged chapter/category/training/topic arrays),
    - `lists` (button definitions for the PhotoSorter/filters),
    - `history` (override change log).
 
@@ -63,7 +63,7 @@ The modules automatically create the following sheets:
 - `Meta`: key/value pairs (projectId, company, locale, createdAt, author).
 - `Chapters`: hierarchy with localisation columns (`defaultTitle_{de,fr,it,en}`), `parentId`, `orderIndex`, `pageSize`, `isActive`.
 - `Rows`: one record per finding, including master texts, override fields (`overrideLevel1..4`, `useOverrideLevel1..4`), customer answers, inclusion toggles, and general workstate metadata.
-- `Photos`: filename → display name, notes, chapter/category/training/subfolder tags, locale/capture metadata.
+- `Photos`: filename → display name, notes, chapter/category/training/topic tags, locale/capture metadata.
 - `Lists`: vocabulary for PhotoSorter buttons / filters (supports localisation + chapter references).
 - `ExportLog` (empty placeholder for future renumber tracking).
 - `OverridesHistory`: append-only change log automatically filled by `modABRowsRepository.UpdateRowField`.

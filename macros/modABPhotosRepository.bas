@@ -15,7 +15,45 @@ Public Function ListsSheet() As Worksheet
     Set ListsSheet = ThisWorkbook.Worksheets(SHEET_LISTS)
 End Function
 
+Public Sub EnsurePhotoSchema()
+    EnsureAutoBerichtSheets
+
+    Dim wsPhotos As Worksheet
+    Set wsPhotos = PhotosSheet()
+
+    Dim legacyTopicsCol As Long
+    legacyTopicsCol = HeaderIndex(wsPhotos, modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY)
+    If legacyTopicsCol > 0 Then
+        wsPhotos.Cells(ROW_HEADER_ROW, legacyTopicsCol).Value = modABPhotoConstants.PHOTO_TAG_TOPICS
+    End If
+
+    Dim topicsCol As Long
+    topicsCol = HeaderIndex(wsPhotos, modABPhotoConstants.PHOTO_TAG_TOPICS)
+    If topicsCol = 0 Then
+        Dim newCol As Long
+        newCol = wsPhotos.Cells(ROW_HEADER_ROW, wsPhotos.Columns.Count).End(xlToLeft).Column + 1
+        wsPhotos.Cells(ROW_HEADER_ROW, newCol).Value = modABPhotoConstants.PHOTO_TAG_TOPICS
+    End If
+
+    Dim wsLists As Worksheet
+    Set wsLists = ListsSheet()
+
+    Dim listCol As Long
+    listCol = HeaderIndex(wsLists, "listName")
+    If listCol > 0 Then
+        Dim lastRow As Long
+        lastRow = wsLists.Cells(wsLists.Rows.Count, listCol).End(xlUp).Row
+        Dim r As Long
+        For r = ROW_HEADER_ROW + 1 To lastRow
+            If StrComp(NzString(wsLists.Cells(r, listCol).Value), modABPhotoConstants.PHOTO_LIST_TOPICS_LEGACY, vbTextCompare) = 0 Then
+                wsLists.Cells(r, listCol).Value = modABPhotoConstants.PHOTO_LIST_TOPICS
+            End If
+        Next r
+    End If
+End Sub
+
 Public Sub EnsurePhotoRecord(fileName As String)
+    EnsurePhotoSchema
     Dim entry As Scripting.Dictionary
     Set entry = GetPhotoEntry(fileName)
     If entry Is Nothing Then
@@ -27,7 +65,7 @@ Public Sub EnsurePhotoRecord(fileName As String)
         newEntry("tagChapters") = ""
         newEntry("tagCategories") = ""
         newEntry("tagTraining") = ""
-        newEntry("tagSubfolders") = ""
+        newEntry("tagTopics") = ""
         newEntry("preferredLocale") = ""
         newEntry("capturedAt") = ""
         UpsertPhoto newEntry
@@ -35,6 +73,7 @@ Public Sub EnsurePhotoRecord(fileName As String)
 End Sub
 
 Public Function GetPhotoEntry(fileName As String) As Scripting.Dictionary
+    EnsurePhotoSchema
     Dim ws As Worksheet
     Set ws = PhotosSheet()
     Dim rowIndex As Long
@@ -129,6 +168,7 @@ Public Function GetTagList(fileName As String, tagField As String) As Collection
 End Function
 
 Public Function GetButtonList(listName As String, locale As String) As Collection
+    EnsurePhotoSchema
     Dim ws As Worksheet
     Set ws = ListsSheet()
 
@@ -231,6 +271,217 @@ Public Function JoinTags(tags As Variant) As String
     End If
 
     JoinTags = result
+End Function
+
+Public Function BuildFolderTagLookup() As Scripting.Dictionary
+    EnsurePhotoSchema
+    Dim map As New Scripting.Dictionary
+    map.CompareMode = TextCompare
+
+    Dim ws As Worksheet
+    Set ws = ListsSheet()
+
+    Dim colListName As Long
+    Dim colValue As Long
+    Dim colLabelDe As Long
+    Dim colLabelFr As Long
+    Dim colLabelIt As Long
+    Dim colLabelEn As Long
+
+    colListName = HeaderIndex(ws, "listName")
+    colValue = HeaderIndex(ws, "value")
+    colLabelDe = HeaderIndex(ws, "label_de")
+    colLabelFr = HeaderIndex(ws, "label_fr")
+    colLabelIt = HeaderIndex(ws, "label_it")
+    colLabelEn = HeaderIndex(ws, "label_en")
+
+    If colListName = 0 Then
+        Set BuildFolderTagLookup = map
+        Exit Function
+    End If
+
+    Dim listToField As New Scripting.Dictionary
+    listToField.CompareMode = TextCompare
+    listToField(PHOTO_LIST_BERICHT) = PHOTO_TAG_CHAPTERS
+    listToField(PHOTO_LIST_AUDIT) = PHOTO_TAG_CATEGORIES
+    listToField(PHOTO_LIST_TRAINING) = PHOTO_TAG_TRAINING
+    listToField(PHOTO_LIST_TOPICS) = PHOTO_TAG_TOPICS
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colListName).End(xlUp).Row
+
+    Dim r As Long
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        Dim listName As String
+        listName = NzString(ws.Cells(r, colListName).Value)
+        If StrComp(listName, modABPhotoConstants.PHOTO_LIST_TOPICS_LEGACY, vbTextCompare) = 0 Then
+            listName = modABPhotoConstants.PHOTO_LIST_TOPICS
+            ws.Cells(r, colListName).Value = listName
+        End If
+        If Not listToField.Exists(listName) Then GoTo ContinueRow
+
+        Dim tagField As String
+        tagField = CStr(listToField(listName))
+
+        Dim tagValue As String
+        If colValue > 0 Then
+            tagValue = NzString(ws.Cells(r, colValue).Value)
+        Else
+            tagValue = ""
+        End If
+        If Len(tagValue) = 0 Then GoTo ContinueRow
+
+        AddFolderMapping map, tagValue, tagField, tagValue
+        AddFolderMapping map, NzString(ws.Cells(r, colLabelDe).Value), tagField, tagValue
+        AddFolderMapping map, NzString(ws.Cells(r, colLabelFr).Value), tagField, tagValue
+        AddFolderMapping map, NzString(ws.Cells(r, colLabelIt).Value), tagField, tagValue
+        AddFolderMapping map, NzString(ws.Cells(r, colLabelEn).Value), tagField, tagValue
+ContinueRow:
+    Next r
+
+    Set BuildFolderTagLookup = map
+End Function
+
+Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As String, folderMap As Scripting.Dictionary)
+    If folderMap Is Nothing Then Exit Sub
+    If folderMap.Count = 0 Then Exit Sub
+    If record Is Nothing Then Exit Sub
+
+    If record.Exists(modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY) Then
+        record.Remove modABPhotoConstants.PHOTO_TAG_TOPICS_LEGACY
+    End If
+
+    Dim normalizedPath As String
+    normalizedPath = Replace(relativePath, "/", "\")
+
+    Dim segments() As String
+    segments = Split(normalizedPath, "\")
+    If UBound(segments) < 1 Then Exit Sub
+
+    Dim tagBuckets As New Scripting.Dictionary
+    tagBuckets.CompareMode = TextCompare
+
+    Dim fields As Variant
+    fields = Array(PHOTO_TAG_CHAPTERS, PHOTO_TAG_CATEGORIES, PHOTO_TAG_TRAINING, PHOTO_TAG_TOPICS)
+
+    Dim field As Variant
+    For Each field In fields
+        Dim bucket As Scripting.Dictionary
+        Set bucket = ExistingTagDictionary(record, CStr(field))
+        tagBuckets(field) = bucket
+    Next field
+
+    Dim i As Long
+    For i = LBound(segments) To UBound(segments) - 1
+        Dim folderToken As String
+        folderToken = NormalizeFolderName(segments(i))
+        If Len(folderToken) = 0 Then GoTo ContinueSegment
+        Dim lookupKey As String
+        lookupKey = LCase$(folderToken)
+        If folderMap.Exists(lookupKey) Then
+            Dim entries As Collection
+            Set entries = folderMap(lookupKey)
+            Dim desc As Scripting.Dictionary
+            For Each desc In entries
+                tagBuckets(desc("field"))(desc("value")) = True
+            Next desc
+        End If
+ContinueSegment:
+    Next i
+
+    For Each field In tagBuckets.Keys
+        Dim bucket As Scripting.Dictionary
+        Set bucket = tagBuckets(field)
+        record(CStr(field)) = JoinDictionaryKeys(bucket)
+    Next field
+End Sub
+
+Private Sub AddFolderMapping(ByRef map As Scripting.Dictionary, ByVal labelValue As Variant, ByVal tagField As String, ByVal tagValue As String)
+    Dim token As String
+    token = NormalizeFolderName(labelValue)
+    If Len(token) = 0 Then Exit Sub
+
+    Dim key As String
+    key = LCase$(token)
+
+    Dim entries As Collection
+    If map.Exists(key) Then
+        Set entries = map(key)
+    Else
+        Set entries = New Collection
+        map(key) = entries
+    End If
+
+    Dim existing As Scripting.Dictionary
+    For Each existing In entries
+        If StrComp(existing("field"), tagField, vbTextCompare) = 0 _
+            And StrComp(existing("value"), tagValue, vbTextCompare) = 0 Then
+            Exit Sub
+        End If
+    Next existing
+
+    Dim descriptor As New Scripting.Dictionary
+    descriptor.CompareMode = TextCompare
+    descriptor("field") = tagField
+    descriptor("value") = tagValue
+    entries.Add descriptor
+End Sub
+
+Private Function NormalizeFolderName(ByVal rawValue As Variant) As String
+    Dim textValue As String
+    textValue = NzString(rawValue)
+    textValue = Replace(textValue, Chr$(160), " ")
+    textValue = Trim$(textValue)
+    Do While InStr(textValue, "  ") > 0
+        textValue = Replace(textValue, "  ", " ")
+    Loop
+    NormalizeFolderName = textValue
+End Function
+
+Private Function ExistingTagDictionary(ByVal record As Scripting.Dictionary, ByVal fieldName As String) As Scripting.Dictionary
+    Dim dict As New Scripting.Dictionary
+    dict.CompareMode = TextCompare
+
+    If Not record Is Nothing Then
+        If record.Exists(fieldName) Then
+            Dim raw As String
+            raw = NzString(record(fieldName))
+            If Len(raw) > 0 Then
+                Dim parts() As String
+                parts = Split(raw, ",")
+                Dim idx As Long
+                For idx = LBound(parts) To UBound(parts)
+                    Dim trimmed As String
+                    trimmed = Trim$(parts(idx))
+                    If Len(trimmed) > 0 Then dict(trimmed) = True
+                Next idx
+            End If
+        End If
+    End If
+
+    Set ExistingTagDictionary = dict
+End Function
+
+Private Function JoinDictionaryKeys(ByVal dict As Scripting.Dictionary) As String
+    If dict Is Nothing Then Exit Function
+    If dict.Count = 0 Then
+        JoinDictionaryKeys = ""
+    Else
+        Dim keys As Variant
+        keys = dict.Keys
+        Dim i As Long, j As Long
+        For i = LBound(keys) To UBound(keys) - 1
+            For j = i + 1 To UBound(keys)
+                If StrComp(keys(i), keys(j), vbTextCompare) > 0 Then
+                    Dim tmp As Variant
+                    tmp = keys(i)
+                    keys(i) = keys(j)
+                    keys(j) = tmp
+                End If
+            Next j
+        Next i
+        JoinDictionaryKeys = Join(keys, ", ")
+    End If
 End Function
 
 EOF

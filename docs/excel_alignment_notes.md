@@ -21,7 +21,7 @@ The XLSX exposes how data is currently organised before being consumed by VBA an
 | `ReportOverrides` | Consultant edits captured by VBA UI. | Columns: `ReportItemID`, `Component` (`Finding` / `Recommendation`), `LevelNum`, `OverrideText`, `Status`, `LastEdited`, `PromotedToMaster`. |
 | `OutputChapterMapping` | Placeholder for renumbered output. | Only header row: `ReportItemID`, `ChapterItemID`, `HasFindings`, `HasPictures`. |
 | `PSHelperSheet` | Working table for PhotoSorter tagging. | Column A = file name (e.g., `DSC00700.JPG`); subsequent columns correspond to chapter buttons. Cell value `1` marks the assignment. |
-| `PSCategoryLabels` | Labels for PhotoSorter button groups. | Columns hold headings for Bericht buttons, Audit/VGSeminar buttons, and subfolder labels. Each row aligns to a chapter (same order as `BerichtKapitel`). |
+| `PSCategoryLabels` | Labels for PhotoSorter button groups. | Columns hold headings for Bericht buttons, Audit/VGSeminar buttons, and topic labels. Each row aligns to a chapter (same order as `BerichtKapitel`). |
 | `BerichtKapitel` | Chapter list. | Column A = chapter ID (`1.1.`), Column B = German title. Used for menus. |
 
 The VBA dump confirms PhotoSorter uses `PSHelperSheet`/`PSCategoryLabels`, handles folder creation, and writes override records into `ReportOverrides`.
@@ -91,14 +91,14 @@ Rather than synchronising legacy helper sheets, we can reshape the `.xlsm` so ea
    `chapterId` references `Chapters.chapterId`. Add new override columns at the end as needed.
 
 4. **`Photos`** — PhotoSorter catalogue.
-   | fileName | displayName | notes | tagChapters | tagCategories | tagTraining | preferredLocale |
+   | fileName | displayName | notes | tagChapters | tagCategories | tagTraining | tagTopics | preferredLocale |
 
    Comma-separated lists in `tag*` columns hold canonical IDs (e.g., `1.2,4.8.custom-001`). Both VBA and the web app split/join these values.
 
 5. **`Lists`** — button/tag vocabularies.
-   | listName | value | label_de | label_fr | label_it | group | sortOrder |
+   | listName | value | label_de | label_fr | label_it | label_en | group | sortOrder | chapterId |
 
-   Rows with `listName = "photo.berichtsbuttons"` feed the Bericht pane; `group` chooses the PhotoSorter column (Bericht, Audit, Seminar, Subfolder). Matching `value` to `Chapters.chapterId` lets us display localised titles automatically.
+   Rows with `listName = "photo.berichtsbuttons"` feed the Bericht pane; `group` chooses the PhotoSorter column (Bericht, Audit, Training, Topic). Matching `value` to `Chapters.chapterId` lets us display localised titles automatically.
 
 6. **Optional audit tables** — `OverridesHistory` (append-only log) and `ExportLog` (renumber map per export) if auditing is required.
 

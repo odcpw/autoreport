@@ -76,13 +76,12 @@ The resulting `project.json` is the canonical payload to feed the HTML/JS app.
 - `modABTableUtils`: header lookup, upsert helpers, Nz wrappers.
 - `modABWorkbookSetup`: sheet creation + header enforcement.
 - `modABPhotoConstants`: central list/tag identifiers for the PhotoSorter stack.
-- `modABPhotosRepository`: reads/writes the structured `Photos` + `Lists` tables and exposes helper functions (`GetButtonList`, `TogglePhotoTag`, etc.).
-- `PhotoSorter` / `PhotoSorterForm` / `CPhotoTagButton`: UI and directory helpers that now consume the structured tables directly.
-- `modLegacyListImporter`: one-off migration helper to translate `PSCategoryLabels` into the `Lists` sheet if you still have the legacy workbook.
+- `modABPhotosRepository`: reads/writes the structured `Photos` + `Lists` tables, seeds tags from folder names, and exposes helper functions (`GetButtonList`, `TogglePhotoTag`, etc.).
+- `PhotoSorter` / `PhotoSorterForm` / `CPhotoTagButton`: UI and directory helpers that now consume the structured tables directly (chapter/category/training/topic buttons).
 
 ## Current open items / caveats
 
-- **Photo workflow polish**: Lists/Photos integration is live; verify the `Lists` sheet reflects the desired button taxonomy (or run `modLegacyListImporter`) and wire any remaining training categories/UI tweaks as needed.
+- **Photo workflow polish**: Lists/Photos integration is live; verify the `Lists` sheet reflects the desired button taxonomy (Bericht/Audit/Training/Topic) before running the PhotoSorter so folder seeding stays in sync.
 - **Chapter orchestration**: ensure `Chapters` sheet is populated (either via `LoadProjectJson` or a staging import) before running the Bericht editor to keep button counts consistent.
 - **Error handling**: import macros currently stop on unexpected headers — consider upgrading messaging / logging before rollout.
 - **Testing**: manual smoke test required after every refresh (run both import macros + open BerichtForm + PhotoSorter) until automated regression coverage exists.

@@ -41,7 +41,7 @@ End Function
 Public Function HeaderPhotos() As Variant
     HeaderPhotos = Array( _
         "fileName", "displayName", "notes", _
-        "tagChapters", "tagCategories", "tagTraining", "tagSubfolders", _
+        "tagChapters", "tagCategories", "tagTraining", "tagTopics", _
         "preferredLocale", "capturedAt")
 End Function
 
@@ -88,4 +88,3 @@ End Function
 Public Function OverwriteModes() As Variant
     OverwriteModes = Array("append", "replace")
 End Function
-
