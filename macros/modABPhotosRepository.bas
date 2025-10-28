@@ -159,7 +159,8 @@ Public Function GetButtonList(listName As String, locale As String) As Collectio
     Dim r As Long
     For r = ROW_HEADER_ROW + 1 To lastRow
         If StrComp(NzString(ws.Cells(r, listColumn).Value), listName, vbTextCompare) = 0 Then
-            Dim item As New Scripting.Dictionary
+            Dim item As Scripting.Dictionary
+            Set item = New Scripting.Dictionary
             item.CompareMode = TextCompare
             item("value") = NzString(ws.Cells(r, valueCol).Value)
             item("label") = NzString(ws.Cells(r, labelCol).Value)
@@ -230,77 +231,6 @@ Public Function JoinTags(tags As Variant) As String
     End If
 
     JoinTags = result
-End Function
-
-Public Sub NormalizePhotoButtonKeys()
-    NormalizeListKeys PHOTO_LIST_BERICHT, syncChapterId:=True
-End Sub
-
-Private Sub NormalizeListKeys(listName As String, Optional syncChapterId As Boolean = False)
-    Dim ws As Worksheet
-    Set ws = ListsSheet()
-
-    Dim colListName As Long
-    Dim colValue As Long
-    Dim colLabelDe As Long
-    Dim colChapterId As Long
-
-    colListName = HeaderIndex(ws, "listName")
-    colValue = HeaderIndex(ws, "value")
-    colLabelDe = HeaderIndex(ws, "label_de")
-    colChapterId = HeaderIndex(ws, "chapterId")
-
-    If colListName = 0 Or colValue = 0 Or colLabelDe = 0 Then Exit Sub
-
-    Dim lastRow As Long
-    lastRow = ws.Cells(ws.Rows.Count, colListName).End(xlUp).Row
-
-    Dim r As Long
-    For r = ROW_HEADER_ROW + 1 To lastRow
-        If StrComp(NzString(ws.Cells(r, colListName).Value), listName, vbTextCompare) = 0 Then
-            Dim labelText As String
-            labelText = NzString(ws.Cells(r, colLabelDe).Value)
-            Dim guessedId As String
-            guessedId = GuessListId(labelText)
-            If Len(guessedId) = 0 Then GoTo ContinueRow
-
-            If StrComp(NzString(ws.Cells(r, colValue).Value), guessedId, vbTextCompare) <> 0 Then
-                ws.Cells(r, colValue).Value = guessedId
-            End If
-
-            If syncChapterId And colChapterId > 0 Then
-                If StrComp(NzString(ws.Cells(r, colChapterId).Value), guessedId, vbTextCompare) <> 0 Then
-                    ws.Cells(r, colChapterId).Value = guessedId
-                End If
-            End If
-        End If
-ContinueRow:
-    Next r
-End Sub
-
-Private Function GuessListId(ByVal labelText As String) As String
-    Dim candidate As String
-    candidate = Trim$(labelText)
-    If Len(candidate) = 0 Then Exit Function
-
-    Dim firstToken As String
-    Dim spacePos As Long
-    spacePos = InStr(candidate, " ")
-    If spacePos > 0 Then
-        firstToken = Left$(candidate, spacePos - 1)
-    Else
-        firstToken = candidate
-    End If
-
-    firstToken = Replace$(firstToken, Chr$(160), " ")
-    firstToken = Trim$(firstToken)
-    firstToken = modABIdUtils.NormalizeReportItemId(firstToken)
-
-    If firstToken Like "*[0-9]*" Then
-        GuessListId = firstToken
-    Else
-        GuessListId = ""
-    End If
 End Function
 
 EOF
