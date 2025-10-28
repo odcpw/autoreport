@@ -4,8 +4,8 @@ This captures the end-to-end path from pulling macros out of GitHub, through the
 
 ## 1. Macro refresh / distribution
 
-1. **Sync sources**  
-   - Run `sync-autobericht.ps1` (see `docs/powershell_sync.md`).  
+1. **Sync sources**
+   - Run `sync-autobericht.ps1` (see [PowerShell Sync](../reference/powershell-sync.md)).
    - Downloads the GitHub archive and drops `macros/` + `docs/` into the workstation folder (default `C:\Autobericht\macros`).
 2. **Import into Excel**  
    - Open the workbook (`project.xlsm`).  
@@ -86,4 +86,12 @@ The resulting `project.json` is the canonical payload to feed the HTML/JS app.
 - **Error handling**: import macros currently stop on unexpected headers — consider upgrading messaging / logging before rollout.
 - **Testing**: manual smoke test required after every refresh (run both import macros + open BerichtForm + PhotoSorter) until automated regression coverage exists.
 
-Everything else in the repository (e.g., `docs/unified_project_schema.md`) already describes the JSON contract consumed by the web client.
+Everything else in the repository (e.g., [Data Model](../architecture/data-model.md)) already describes the JSON contract consumed by the web client.
+
+---
+
+**Related Documentation**:
+- [Data Model](../architecture/data-model.md) - JSON schema and structure
+- [System Overview](../architecture/system-overview.md) - How components integrate
+- [Getting Started Guide](getting-started.md) - End-to-end workflow
+- [VBA Modules Reference](../../macros/README.md) - Detailed module documentation
