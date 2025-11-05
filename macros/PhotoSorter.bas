@@ -43,6 +43,9 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     For Each imageItem In images
         baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
+        Debug.Print "Scan:", baseName
+        Debug.Print "  relative:", NzString(imageItem("relativePath"))
+        Debug.Print "  existing row?", Not (modABPhotosRepository.GetPhotoEntry(baseName) Is Nothing)
 
         If entryMap.Exists(baseName) Then
             Set currentEntry = entryMap(baseName)
@@ -348,9 +351,9 @@ Public Function BuildDesiredPathMap(ByVal baseDirectory As String, ByVal record 
         Dim idx As Long
         For idx = LBound(sortedValues) To UBound(sortedValues)
             Dim folderLabel As String
-            folderLabel = GetFolderLabelForTag(CStr(field), CStr(sortedValues(idx)), locale)
+            folderLabel = NzString(sortedValues(idx))
             folderLabel = modABPhotosRepository.NormalizeFolderName(folderLabel)
-            If Len(folderLabel) = 0 Then folderLabel = CStr(sortedValues(idx))
+            If Len(folderLabel) = 0 Then folderLabel = NzString(sortedValues(idx))
             Dim relativePath As String
             relativePath = folderLabel & "\" & baseName
             Dim absolutePath As String

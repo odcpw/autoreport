@@ -91,6 +91,7 @@ Private Sub LoadPhotoCache()
             Set photoCache(fileKey) = entry
         End If
     Next entry
+    SortPhotoCache
 End Sub
 
 Private Sub BuildFilteredPhotoList(ByVal filterOption As String)
@@ -575,4 +576,35 @@ End Function
 
 Private Sub FilterAndReloadImages()
     RefreshPhotoList cmbFilter.Value
+End Sub
+Private Sub SortPhotoCache()
+    If photoCache Is Nothing Then Exit Sub
+    If photoCache.Count <= 1 Then Exit Sub
+    Dim keys() As String
+    ReDim keys(1 To photoCache.Count)
+    Dim idx As Long
+    Dim key As Variant
+    idx = 1
+    For Each key In photoCache.Keys
+        keys(idx) = CStr(key)
+        idx = idx + 1
+    Next key
+    Dim i As Long, j As Long
+    Dim tmp As String
+    For i = LBound(keys) To UBound(keys) - 1
+        For j = i + 1 To UBound(keys)
+            If StrComp(keys(i), keys(j), vbTextCompare) > 0 Then
+                tmp = keys(i)
+                keys(i) = keys(j)
+                keys(j) = tmp
+            End If
+        Next j
+    Next i
+
+    Dim sortedCache As New Scripting.Dictionary
+    sortedCache.CompareMode = TextCompare
+    For i = LBound(keys) To UBound(keys)
+        sortedCache(keys(i)) = photoCache(keys(i))
+    Next i
+    Set photoCache = sortedCache
 End Sub
