@@ -29,6 +29,7 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     ClearTagLabelCache
     Dim images As Collection
     Set images = EnumerateImages(baseDirectory)
+    Debug.Print "Enumerated images:", images.Count
 
     Dim folderTagMap As Scripting.Dictionary
     Set folderTagMap = modABPhotosRepository.BuildFolderTagLookup()
