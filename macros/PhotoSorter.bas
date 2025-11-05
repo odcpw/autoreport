@@ -352,7 +352,6 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
 
     Dim baseName As String
     baseName = NzString(newRecord("fileName"))
-
     Dim pathKey As Variant
 
     Dim canonicalAbsolute As String
@@ -363,7 +362,6 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
     If Len(baseName) > 0 And newMap.Exists(preferredRoot) Then
         canonicalAbsolute = preferredRoot
     Else
-        Dim pathKey As Variant
         For Each pathKey In newMap.Keys
             canonicalAbsolute = CStr(pathKey)
             Exit For
@@ -375,7 +373,6 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
     Dim sourcePath As String
     sourcePath = ""
 
-    Dim pathKey As Variant
     For Each pathKey In oldMap.Keys
         If fso.FileExists(CStr(pathKey)) Then
             sourcePath = CStr(pathKey)
