@@ -44,6 +44,7 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     For Each imageItem In images
         baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
+        Debug.Print "Base: ", baseName, "relative:", NzString(imageItem("relativePath"))
         If entryMap.Exists(baseName) Then
             Set currentEntry = entryMap(baseName)
         Else
