@@ -43,10 +43,6 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     For Each imageItem In images
         baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
-        Debug.Print "Scan:", baseName
-        Debug.Print "  relative:", NzString(imageItem("relativePath"))
-        Debug.Print "  existing row?", Not (modABPhotosRepository.GetPhotoEntry(baseName) Is Nothing)
-
         If entryMap.Exists(baseName) Then
             Set currentEntry = entryMap(baseName)
         Else
@@ -524,7 +520,7 @@ Private Sub TraverseFolder(ByVal folder As Object, ByVal baseDirectory As String
     For Each file In folder.Files
         If IsImageFile(file.Name) Then
             Dim relativePath As String
-            relativePath = Mid$(file.Path, Len(baseDirectory) + 2)
+            relativePath = GetRelativePath(baseDirectory, file.Path)
             Dim item As New Scripting.Dictionary
             item.CompareMode = TextCompare
             item("fullPath") = file.Path
@@ -556,5 +552,29 @@ Private Function BuildPath(ByVal baseDirectory As String, ByVal segment As Strin
         BuildPath = baseDirectory & segment
     Else
         BuildPath = baseDirectory & "\" & segment
+    End If
+End Function
+
+Private Function GetRelativePath(ByVal baseDirectory As String, ByVal fullPath As String) As String
+    If Len(baseDirectory) = 0 Then
+        GetRelativePath = fullPath
+        Exit Function
+    End If
+    Dim normalizedBase As String
+    normalizedBase = Replace(baseDirectory, "//", "\")
+    normalizedBase = Replace(normalizedBase, "/", "\")
+    If Right$(normalizedBase, 1) = "\" Then normalizedBase = Left$(normalizedBase, Len(normalizedBase) - 1)
+
+    Dim normalizedFull As String
+    normalizedFull = Replace(fullPath, "//", "\")
+    normalizedFull = Replace(normalizedFull, "/", "\")
+
+    If StrComp(Left$(normalizedFull, Len(normalizedBase)), normalizedBase, vbTextCompare) = 0 Then
+        Dim offset As Long
+        offset = Len(normalizedBase) + 1
+        If Mid$(normalizedFull, offset, 1) = "\" Then offset = offset + 1
+        GetRelativePath = Mid$(normalizedFull, offset)
+    Else
+        GetRelativePath = normalizedFull
     End If
 End Function
