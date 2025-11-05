@@ -5,6 +5,20 @@ Option Explicit
 ' Photo metadata and button catalog helpers
 '=============================================================
 
+Private Sub EnsurePhotoEntryDefaults(ByRef entry As Scripting.Dictionary)
+    If entry Is Nothing Then Exit Sub
+    entry.CompareMode = TextCompare
+    If Not entry.Exists("fileName") Then entry("fileName") = ""
+    If Not entry.Exists("filePath") Then entry("filePath") = NzString(entry("fileName"))
+    If Not entry.Exists("displayName") Then entry("displayName") = NzString(entry("fileName"))
+    If Not entry.Exists("notes") Then entry("notes") = ""
+    If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_BERICHT) Then entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
+    If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_SEMINAR) Then entry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
+    If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_TOPIC) Then entry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
+    If Not entry.Exists("preferredLocale") Then entry("preferredLocale") = ""
+    If Not entry.Exists("capturedAt") Then entry("capturedAt") = ""
+End Sub
+
 Public Function PhotosSheet() As Worksheet
     EnsureAutoBerichtSheets
     Set PhotosSheet = ThisWorkbook.Worksheets(SHEET_PHOTOS)
@@ -22,13 +36,15 @@ Public Sub EnsurePhotoRecord(fileName As String)
         Dim newEntry As New Scripting.Dictionary
         newEntry.CompareMode = TextCompare
         newEntry("fileName") = fileName
+        newEntry("filePath") = fileName
         newEntry("displayName") = fileName
         newEntry("notes") = ""
-        newEntry("tagBericht") = ""
-        newEntry("tagSeminar") = ""
-        newEntry("tagTopic") = ""
+        newEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
+        newEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
+        newEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
         newEntry("preferredLocale") = ""
         newEntry("capturedAt") = ""
+        EnsurePhotoEntryDefaults newEntry
         UpsertPhoto newEntry
     End If
 End Sub
@@ -52,13 +68,37 @@ Public Function GetPhotoEntry(fileName As String) As Scripting.Dictionary
     For c = LBound(headers, 2) To UBound(headers, 2)
         entry(CStr(headers(1, c))) = ws.Cells(rowIndex, c).Value
     Next c
+    EnsurePhotoEntryDefaults entry
     Set GetPhotoEntry = entry
 End Function
 
 Public Sub UpsertPhoto(entry As Scripting.Dictionary)
     Dim ws As Worksheet
     Set ws = PhotosSheet()
+    EnsurePhotoEntryDefaults entry
     UpsertRow ws, "fileName", entry
+End Sub
+
+Public Sub RemoveMissingPhotos(currentEntries As Scripting.Dictionary)
+    Dim ws As Worksheet
+    Set ws = PhotosSheet()
+    Dim nameCol As Long
+    nameCol = HeaderIndex(ws, "fileName")
+    If nameCol = 0 Then Exit Sub
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, nameCol).End(xlUp).Row
+
+    Dim r As Long
+    For r = lastRow To ROW_HEADER_ROW + 1 Step -1
+        Dim key As String
+        key = NzString(ws.Cells(r, nameCol).Value)
+        If Len(key) > 0 Then
+            If currentEntries Is Nothing Or Not currentEntries.Exists(key) Then
+                ws.Rows(r).Delete
+            End If
+        End If
+    Next r
 End Sub
 
 Public Sub SetPhotoTags(fileName As String, tagField As String, tags As Variant)
@@ -298,6 +338,7 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
     If folderMap Is Nothing Then Exit Sub
     If folderMap.Count = 0 Then Exit Sub
     If record Is Nothing Then Exit Sub
+    EnsurePhotoEntryDefaults record
 
     Dim normalizedPath As String
     normalizedPath = Replace(relativePath, "/", "\")
@@ -378,7 +419,7 @@ Private Sub AddFolderMapping(ByRef map As Scripting.Dictionary, ByVal labelValue
     entries.Add descriptor
 End Sub
 
-Private Function NormalizeFolderName(ByVal rawValue As Variant) As String
+Public Function NormalizeFolderName(ByVal rawValue As Variant) As String
     Dim textValue As String
     textValue = NzString(rawValue)
     textValue = Replace(textValue, Chr$(160), " ")

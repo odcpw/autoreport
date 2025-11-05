@@ -267,12 +267,20 @@ Private Sub btnClearSheets_Click()
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
     fileName = imageFiles(currentIndex)
+    Dim oldRecord As Scripting.Dictionary
+    Set oldRecord = GetPhotoEntry(fileName)
+    If oldRecord Is Nothing Then Exit Sub
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_BERICHT, Array()
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SEMINAR, Array()
     SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPIC, Array()
     Set photoCache(fileName) = GetPhotoEntry(fileName)
+    Dim clearedRecord As Scripting.Dictionary
+    Set clearedRecord = photoCache(fileName)
+    PhotoSorter.SyncPhotoFiles rootPath, oldRecord, clearedRecord, GetActiveLocale()
+    Set photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
+    UpdateImageDisplay
 End Sub
 
 Private Sub cmdCreateAllFolders_Click()
@@ -331,7 +339,7 @@ Private Sub UpdateImageDisplay()
     lblCurrentImageName.Caption = displayName
 
     Dim fullPath As String
-    fullPath = BuildPhotoPath(fileName)
+    fullPath = BuildPhotoPath(record)
     If Len(fullPath) > 0 And Dir(fullPath) <> "" Then
         ImageControl.Picture = LoadPicture(fullPath)
         ImageControl.PictureSizeMode = fmPictureSizeModeZoom
@@ -341,18 +349,23 @@ Private Sub UpdateImageDisplay()
     UpdateButtonStates record
 End Sub
 
-Private Function BuildPhotoPath(ByVal fileName As String) As String
-    If Len(fileName) = 0 Then Exit Function
-    If InStr(fileName, ":") > 0 Or Left$(fileName, 2) = "\" Then
-        BuildPhotoPath = fileName
+Private Function BuildPhotoPath(ByVal record As Scripting.Dictionary) As String
+    Dim relativePath As String
+    relativePath = NzString(record("filePath"))
+    If Len(relativePath) = 0 Then relativePath = NzString(record("fileName"))
+    If Len(relativePath) = 0 Then Exit Function
+    relativePath = Replace(relativePath, "/", "\")
+    If InStr(relativePath, ":") > 0 Or Left$(relativePath, 2) = "\\" Then
+        BuildPhotoPath = relativePath
     ElseIf Len(rootPath) > 0 Then
-        If Right$(rootPath, 1) = "" Or Right$(rootPath, 1) = "/" Then
-            BuildPhotoPath = rootPath & fileName
-        Else
-            BuildPhotoPath = rootPath & "" & fileName
+        Dim baseDir As String
+        baseDir = rootPath
+        If Right$(baseDir, 1) <> "\" And Right$(baseDir, 1) <> "/" Then
+            baseDir = baseDir & "\"
         End If
+        BuildPhotoPath = baseDir & relativePath
     Else
-        BuildPhotoPath = fileName
+        BuildPhotoPath = relativePath
     End If
 End Function
 
@@ -386,10 +399,18 @@ Public Sub ToggleTag(ByVal tagField As String, ByVal tagValue As String)
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
     fileName = imageFiles(currentIndex)
+    Dim oldRecord As Scripting.Dictionary
+    Set oldRecord = GetPhotoEntry(fileName)
+    If oldRecord Is Nothing Then Exit Sub
     TogglePhotoTag fileName, tagField, tagValue
+    Set photoCache(fileName) = GetPhotoEntry(fileName)
+    Dim updatedRecord As Scripting.Dictionary
+    Set updatedRecord = photoCache(fileName)
+    PhotoSorter.SyncPhotoFiles rootPath, oldRecord, updatedRecord, GetActiveLocale()
     Set photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
+    UpdateImageDisplay
 End Sub
 
 Private Sub ShowCategoryCounts()

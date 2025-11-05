@@ -40,7 +40,7 @@ End Function
 
 Public Function HeaderPhotos() As Variant
     HeaderPhotos = Array( _
-        "fileName", "displayName", "notes", _
+        "fileName", "filePath", "displayName", "notes", _
         "tagBericht", "tagSeminar", "tagTopic", _
         "preferredLocale", "capturedAt")
 End Function

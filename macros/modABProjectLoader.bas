@@ -244,6 +244,7 @@ Private Sub WritePhotos(photoDict As Variant)
         Dim payload As Dictionary
         Set payload = photoDict(key)
         ws.Cells(rowIndex, HeaderIndex(ws, "fileName")).Value = CStr(key)
+        ws.Cells(rowIndex, HeaderIndex(ws, "filePath")).Value = NzString(GetDictValue(payload, "filePath", GetDictValue(payload, "path", CStr(key))))
         ws.Cells(rowIndex, HeaderIndex(ws, "displayName")).Value = NzString(GetDictValue(payload, "displayName", key))
         ws.Cells(rowIndex, HeaderIndex(ws, "notes")).Value = NzString(GetDictValue(payload, "notes", ""))
         Dim tags As Dictionary
