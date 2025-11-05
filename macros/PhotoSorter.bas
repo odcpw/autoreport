@@ -3,6 +3,9 @@ Option Explicit
 
 Public rootPath As String
 
+Private tagLabelCache As Scripting.Dictionary
+Private tagLabelCacheLocale As String
+
 Public Sub ShowPhotoSorter()
     PhotoSorterForm.Show vbModeless
 End Sub
@@ -23,6 +26,7 @@ End Function
 
 Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     If Len(baseDirectory) = 0 Then Exit Sub
+    ClearTagLabelCache
     Dim images As Collection
     Set images = EnumerateImages(baseDirectory)
 
@@ -182,6 +186,60 @@ Private Function CollectionToSortedArray(items As Collection) As Variant
     CollectionToSortedArray = arr
 End Function
 
+Private Sub ClearTagLabelCache()
+    tagLabelCacheLocale = ""
+    Set tagLabelCache = Nothing
+End Sub
+
+Private Sub EnsureTagLabelCache(ByVal locale As String)
+    If Not tagLabelCache Is Nothing Then
+        If StrComp(tagLabelCacheLocale, locale, vbTextCompare) = 0 Then Exit Sub
+    End If
+
+    Set tagLabelCache = New Scripting.Dictionary
+    tagLabelCache.CompareMode = TextCompare
+    tagLabelCacheLocale = locale
+
+    Dim ws As Worksheet
+    Set ws = modABPhotosRepository.ListsSheet()
+
+    Dim colListName As Long
+    Dim colValue As Long
+    Dim colLabel As Long
+
+    colListName = HeaderIndex(ws, "listName")
+    colValue = HeaderIndex(ws, "value")
+    colLabel = HeaderIndex(ws, "label_" & Replace(locale, "-", "_"))
+    If colLabel = 0 Then colLabel = HeaderIndex(ws, "label_de")
+    If colLabel = 0 Then colLabel = HeaderIndex(ws, "label_en")
+    If colLabel = 0 Then colLabel = HeaderIndex(ws, "label")
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colListName).End(xlUp).Row
+
+    Dim r As Long
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        Dim listName As String
+        listName = NzString(ws.Cells(r, colListName).Value)
+        If Len(listName) = 0 Then GoTo ContinueRow
+
+        Dim tagValue As String
+        tagValue = NzString(ws.Cells(r, colValue).Value)
+        If Len(tagValue) = 0 Then GoTo ContinueRow
+
+        Dim labelText As String
+        If colLabel > 0 Then labelText = NzString(ws.Cells(r, colLabel).Value)
+        If Len(labelText) = 0 Then labelText = tagValue
+
+        Dim key As String
+        key = listName & "|" & LCase$(tagValue)
+        If Not tagLabelCache.Exists(key) Then
+            tagLabelCache.Add key, labelText
+        End If
+ContinueRow:
+    Next r
+End Sub
+
 Public Function ResolvePhotoPath(ByVal baseDirectory As String, ByVal record As Scripting.Dictionary, ByVal locale As String) As String
     If record Is Nothing Then Exit Function
     If Len(baseDirectory) = 0 Then Exit Function
@@ -247,21 +305,17 @@ Private Function GetFolderLabelForTag(ByVal tagField As String, ByVal tagValue A
             Exit Function
     End Select
 
-    Dim buttons As Collection
-    Set buttons = GetButtonList(listName, locale)
-    If Not buttons Is Nothing Then
-        Dim buttonEntry As Scripting.Dictionary
-        For Each buttonEntry In buttons
-            If StrComp(NzString(buttonEntry("value")), tagValue, vbTextCompare) = 0 Then
-                Dim labelValue As String
-                labelValue = NzString(buttonEntry("label"))
-                If Len(labelValue) = 0 Then labelValue = NzString(buttonEntry("value"))
-                GetFolderLabelForTag = labelValue
-                Exit Function
-            End If
-        Next buttonEntry
+    EnsureTagLabelCache locale
+    Dim cacheKey As String
+    cacheKey = listName & "|" & LCase$(NzString(tagValue))
+    If tagLabelCache.Exists(cacheKey) Then
+        Dim cachedLabel As String
+        cachedLabel = NzString(tagLabelCache(cacheKey))
+        If Len(cachedLabel) > 0 Then
+            GetFolderLabelForTag = cachedLabel
+            Exit Function
+        End If
     End If
-
     GetFolderLabelForTag = tagValue
 End Function
 
