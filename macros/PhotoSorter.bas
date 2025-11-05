@@ -204,10 +204,10 @@ Public Function ResolvePhotoPath(ByVal baseDirectory As String, ByVal record As 
 
     Dim canonical As String
     canonical = ""
+    Dim pathKey As Variant
     If Len(baseName) > 0 And map.Exists(preferredRoot) Then
         canonical = preferredRoot
     Else
-        Dim pathKey As Variant
         For Each pathKey In map.Keys
             canonical = CStr(pathKey)
             Exit For
@@ -220,7 +220,6 @@ Public Function ResolvePhotoPath(ByVal baseDirectory As String, ByVal record As 
     End If
 
     Dim candidate As String
-    Dim pathKey As Variant
     For Each pathKey In map.Keys
         candidate = CStr(pathKey)
         If fso.FileExists(candidate) Then
