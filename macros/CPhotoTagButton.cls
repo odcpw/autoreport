@@ -34,7 +34,7 @@ Public Sub Initialize(ByVal formRef As PhotoSorterForm, _
     SetActive False
 End Sub
 Private Sub btn_Click()
-    ParentForm.ToggleTag TagField, TagValue
+    ParentForm.ToggleTag TagField, TagValue, CaptionText
     ParentForm.Controls("InvisibleTextBox").SetFocus
 End Sub
 Public Sub SetActive(ByVal isActive As Boolean)

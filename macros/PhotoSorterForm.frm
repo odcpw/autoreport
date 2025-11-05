@@ -48,7 +48,7 @@ Private Sub InitializeFilterOptions()
     cmbFilter.ListIndex = 0
 End Sub
 
-Public Sub RefreshPhotoList(Optional ByVal preferredFilter As String = "")
+Public Sub RefreshPhotoList(Optional ByVal preferredFilter As String = "", Optional ByVal preferredFile As String = "")
     LoadPhotoCache
     Dim activeFilter As String
     If Len(preferredFilter) > 0 Then
@@ -57,7 +57,19 @@ Public Sub RefreshPhotoList(Optional ByVal preferredFilter As String = "")
         activeFilter = cmbFilter.Value
     End If
     BuildFilteredPhotoList activeFilter
-    If imageFiles.Count = 0 Then
+    Dim targetIndex As Long
+    If Len(preferredFile) > 0 Then
+        Dim idx As Long
+        For idx = 1 To imageFiles.Count
+            If StrComp(imageFiles(idx), preferredFile, vbTextCompare) = 0 Then
+                targetIndex = idx
+                Exit For
+            End If
+        Next idx
+    End If
+    If targetIndex > 0 Then
+        currentIndex = targetIndex
+    ElseIf imageFiles.Count = 0 Then
         currentIndex = 0
     ElseIf currentIndex = 0 Or currentIndex > imageFiles.Count Then
         currentIndex = 1
@@ -263,6 +275,10 @@ Private Sub btnShowCounts_MouseUp(ByVal Button As Integer, ByVal Shift As Intege
     InvisibleTextBox.SetFocus
 End Sub
 
+Private Sub btnCloseAndQuit_Click()
+    Unload Me
+End Sub
+
 Private Sub btnClearSheets_Click()
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
@@ -270,17 +286,8 @@ Private Sub btnClearSheets_Click()
     Dim oldRecord As Scripting.Dictionary
     Set oldRecord = GetPhotoEntry(fileName)
     If oldRecord Is Nothing Then Exit Sub
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_BERICHT, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SEMINAR, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPIC, Array()
-    Set photoCache(fileName) = GetPhotoEntry(fileName)
-    Dim clearedRecord As Scripting.Dictionary
-    Set clearedRecord = photoCache(fileName)
-    PhotoSorter.SyncPhotoFiles rootPath, oldRecord, clearedRecord, GetActiveLocale()
-    Set photoCache(fileName) = GetPhotoEntry(fileName)
-    UpdateButtonStates photoCache(fileName)
-    UpdateImageCounts
-    UpdateImageDisplay
+    ClearAllTags fileName
+    PersistAndRefresh oldRecord, fileName
 End Sub
 
 Private Sub cmdCreateAllFolders_Click()
@@ -376,13 +383,17 @@ Private Sub UpdateButtonStates(ByVal record As Scripting.Dictionary)
         If record Is Nothing Then
             isActive = False
         Else
-            isActive = TagExistsInRecord(record, buttonObj.TagField, buttonObj.TagValue)
+            isActive = TagExistsInRecord(record, buttonObj.TagField, buttonObj.TagValue, buttonObj.CaptionText)
         End If
         buttonObj.SetActive isActive
     Next buttonObj
 End Sub
 
-Private Function TagExistsInRecord(ByVal record As Scripting.Dictionary, ByVal tagField As String, ByVal tagValue As String) As Boolean
+Private Function TagExistsInRecord(ByVal record As Scripting.Dictionary, ByVal tagField As String, ByVal tagValue As String, ByVal tagCaption As String) As Boolean
+    If IsUnsortedTag(tagField, tagValue, tagCaption) Then
+        TagExistsInRecord = Not RecordHasAnyTag(record)
+        Exit Function
+    End If
     Dim values As Collection
     Set values = ParseTagCollection(NzString(record(tagField)))
     Dim item As Variant
@@ -395,33 +406,91 @@ Private Function TagExistsInRecord(ByVal record As Scripting.Dictionary, ByVal t
     TagExistsInRecord = False
 End Function
 
-Public Sub ToggleTag(ByVal tagField As String, ByVal tagValue As String)
+Public Sub ToggleTag(ByVal tagField As String, ByVal tagValue As String, Optional ByVal tagCaption As String = "")
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
     fileName = imageFiles(currentIndex)
+
     Dim oldRecord As Scripting.Dictionary
     Set oldRecord = GetPhotoEntry(fileName)
     If oldRecord Is Nothing Then Exit Sub
-    TogglePhotoTag fileName, tagField, tagValue
+
+    If IsUnsortedTag(tagField, tagValue, tagCaption) Then
+        ClearAllTags fileName
+    Else
+        TogglePhotoTag fileName, tagField, tagValue
+    End If
+
+    PersistAndRefresh oldRecord, fileName
+End Sub
+
+Private Sub ClearAllTags(ByVal fileName As String)
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_BERICHT, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SEMINAR, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPIC, Array()
+End Sub
+
+Private Sub PersistAndRefresh(oldRecord As Scripting.Dictionary, ByVal fileName As String)
     Set photoCache(fileName) = GetPhotoEntry(fileName)
     Dim updatedRecord As Scripting.Dictionary
     Set updatedRecord = photoCache(fileName)
     PhotoSorter.SyncPhotoFiles rootPath, oldRecord, updatedRecord, GetActiveLocale()
     Set photoCache(fileName) = GetPhotoEntry(fileName)
-    UpdateButtonStates photoCache(fileName)
-    UpdateImageCounts
-    UpdateImageDisplay
+    RefreshPhotoList cmbFilter.Value, fileName
 End Sub
+
+Private Function IsUnsortedTag(ByVal tagField As String, ByVal tagValue As String, ByVal tagCaption As String) As Boolean
+    Dim valueKey As String
+    valueKey = NormalizeTagKey(tagValue)
+    If Len(valueKey) = 0 Then
+        IsUnsortedTag = True
+        Exit Function
+    End If
+    If InStr(valueKey, "unsort") > 0 Or valueKey = "unsorted" Then
+        IsUnsortedTag = True
+        Exit Function
+    End If
+    Dim captionKey As String
+    captionKey = NormalizeTagKey(tagCaption)
+    If captionKey = "" Then Exit Function
+    If InStr(captionKey, "unsort") > 0 _
+        Or InStr(captionKey, "root") > 0 _
+        Or (InStr(captionKey, "keine") > 0 And InStr(captionKey, "zuord") > 0) _
+        Or (InStr(captionKey, "sans") > 0 And InStr(captionKey, "attrib") > 0) _
+        Or (InStr(captionKey, "nessuna") > 0 And InStr(captionKey, "assegn") > 0) Then
+        IsUnsortedTag = True
+    End If
+End Function
+
+Private Function NormalizeTagKey(ByVal raw As String) As String
+    Dim cleaned As String
+    cleaned = LCase$(Trim$(NzString(raw)))
+    cleaned = Replace(cleaned, "-", " ")
+    cleaned = Replace(cleaned, "_", " ")
+    cleaned = Replace(cleaned, ".", " ")
+    Do While InStr(cleaned, "  ") > 0
+        cleaned = Replace(cleaned, "  ", " ")
+    Loop
+    NormalizeTagKey = cleaned
+End Function
 
 Private Sub ShowCategoryCounts()
     Dim counts As Scripting.Dictionary
     Set counts = ComputeTagCounts()
     Dim buttonObj As CPhotoTagButton
+    Dim unsortedCount As Long
+    unsortedCount = CountUnsortedPhotos()
     For Each buttonObj In buttonCollection
         Dim key As String
         key = buttonObj.TagField & "|" & buttonObj.TagValue
         Dim countValue As Long
-        If counts.Exists(key) Then countValue = counts(key) Else countValue = 0
+        If counts.Exists(key) Then
+            countValue = counts(key)
+        ElseIf IsUnsortedTag(buttonObj.TagField, buttonObj.TagValue, buttonObj.CaptionText) Then
+            countValue = unsortedCount
+        Else
+            countValue = 0
+        End If
         buttonObj.ShowCount countValue
     Next buttonObj
 End Sub
