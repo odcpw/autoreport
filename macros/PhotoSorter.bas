@@ -31,13 +31,13 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     Dim entryMap As New Scripting.Dictionary
     entryMap.CompareMode = TextCompare
 
-    Dim item As Scripting.Dictionary
+    Dim imageItem As Scripting.Dictionary
     Dim baseName As String
     Dim currentEntry As Scripting.Dictionary
     Dim relativePath As String
 
-    For Each item In images
-        baseName = NzString(item("baseName"))
+    For Each imageItem In images
+        baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
 
         If entryMap.Exists(baseName) Then
@@ -55,7 +55,7 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
                 currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
                 currentEntry("preferredLocale") = ""
-                currentEntry("capturedAt") = item("capturedAt")
+                currentEntry("capturedAt") = imageItem("capturedAt")
             Else
                 currentEntry.CompareMode = TextCompare
                 If Len(NzString(currentEntry("displayName"))) = 0 Then currentEntry("displayName") = baseName
@@ -67,7 +67,7 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
             Set entryMap(baseName) = currentEntry
         End If
 
-        relativePath = NzString(item("relativePath"))
+        relativePath = NzString(imageItem("relativePath"))
         If Len(relativePath) = 0 Then relativePath = baseName
 
         If Len(NzString(currentEntry("filePath"))) = 0 Then
@@ -77,12 +77,12 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
         End If
 
         If Len(NzString(currentEntry("capturedAt"))) = 0 Then
-            currentEntry("capturedAt") = item("capturedAt")
+            currentEntry("capturedAt") = imageItem("capturedAt")
         End If
 
         modABPhotosRepository.ApplyFolderTags currentEntry, relativePath, folderTagMap
 ContinueLoop:
-    Next item
+    Next imageItem
 
     Dim key As Variant
     For Each key In entryMap.Keys
