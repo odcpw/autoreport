@@ -102,7 +102,9 @@ Private Sub BuildFilteredPhotoList(ByVal filterOption As String)
         End If
     Next key
     SortImageFiles
-    cmbFilter.Value = filterOption
+    If StrComp(cmbFilter.Value, filterOption, vbTextCompare) <> 0 Then
+        cmbFilter.Value = filterOption
+    End If
 End Sub
 
 Private Function ShouldIncludeRecord(ByVal record As Scripting.Dictionary, ByVal filterOption As String) As Boolean
