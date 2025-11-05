@@ -309,6 +309,7 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
     Dim tagBuckets As New Scripting.Dictionary
     tagBuckets.CompareMode = TextCompare
 
+    Dim bucket As Scripting.Dictionary
     Dim fields As Variant
     fields = Array(PHOTO_TAG_BERICHT, PHOTO_TAG_SEMINAR, PHOTO_TAG_TOPIC)
 
@@ -331,13 +332,15 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
             Set entries = folderMap(lookupKey)
             Dim desc As Scripting.Dictionary
             For Each desc In entries
-                tagBuckets(desc("field"))(desc("value")) = True
+                If tagBuckets.Exists(desc("field")) Then
+                    Set bucket = tagBuckets(desc("field"))
+                    bucket(desc("value")) = True
+                End If
             Next desc
         End If
 ContinueSegment:
     Next i
 
-    Dim bucket As Scripting.Dictionary
     For Each field In tagBuckets.Keys
         Set bucket = tagBuckets(field)
         record(CStr(field)) = JoinDictionaryKeys(bucket)
