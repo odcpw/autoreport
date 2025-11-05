@@ -28,90 +28,90 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
 
     Dim folderTagMap As Scripting.Dictionary
     Set folderTagMap = modABPhotosRepository.BuildFolderTagLookup()
-    Dim entries As New Scripting.Dictionary
-    entries.CompareMode = TextCompare
+    Dim entryMap As New Scripting.Dictionary
+    entryMap.CompareMode = TextCompare
 
     Dim item As Scripting.Dictionary
+    Dim baseName As String
+    Dim currentEntry As Scripting.Dictionary
+    Dim relativePath As String
+
     For Each item In images
-        Dim baseName As String
         baseName = NzString(item("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
 
-        Dim entry As Scripting.Dictionary
-        If entries.Exists(baseName) Then
-            Set entry = entries(baseName)
+        If entryMap.Exists(baseName) Then
+            Set currentEntry = entryMap(baseName)
         Else
-            Set entry = modABPhotosRepository.GetPhotoEntry(baseName)
-            If entry Is Nothing Then
-                Set entry = New Scripting.Dictionary
-                entry.CompareMode = TextCompare
-                entry("fileName") = baseName
-                entry("filePath") = ""
-                entry("displayName") = baseName
-                entry("notes") = ""
-                entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
-                entry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
-                entry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
-                entry("preferredLocale") = ""
-                entry("capturedAt") = item("capturedAt")
+            Set currentEntry = modABPhotosRepository.GetPhotoEntry(baseName)
+            If currentEntry Is Nothing Then
+                Set currentEntry = New Scripting.Dictionary
+                currentEntry.CompareMode = TextCompare
+                currentEntry("fileName") = baseName
+                currentEntry("filePath") = ""
+                currentEntry("displayName") = baseName
+                currentEntry("notes") = ""
+                currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
+                currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
+                currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
+                currentEntry("preferredLocale") = ""
+                currentEntry("capturedAt") = item("capturedAt")
             Else
-                entry.CompareMode = TextCompare
-                If Len(NzString(entry("displayName"))) = 0 Then entry("displayName") = baseName
-                entry("filePath") = NzString(entry("filePath"))
-                entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
-                entry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
-                entry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
+                currentEntry.CompareMode = TextCompare
+                If Len(NzString(currentEntry("displayName"))) = 0 Then currentEntry("displayName") = baseName
+                currentEntry("filePath") = NzString(currentEntry("filePath"))
+                currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
+                currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
+                currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
             End If
-            entries(baseName) = entry
+            Set entryMap(baseName) = currentEntry
         End If
 
-        Dim relativePath As String
         relativePath = NzString(item("relativePath"))
         If Len(relativePath) = 0 Then relativePath = baseName
 
-        If Len(NzString(entry("filePath"))) = 0 Then
-            entry("filePath") = relativePath
-        ElseIf InStr(relativePath, "\") = 0 And InStr(entry("filePath"), "\") > 0 Then
-            entry("filePath") = relativePath
+        If Len(NzString(currentEntry("filePath"))) = 0 Then
+            currentEntry("filePath") = relativePath
+        ElseIf InStr(relativePath, "\") = 0 And InStr(currentEntry("filePath"), "\") > 0 Then
+            currentEntry("filePath") = relativePath
         End If
 
-        If Len(NzString(entry("capturedAt"))) = 0 Then
-            entry("capturedAt") = item("capturedAt")
+        If Len(NzString(currentEntry("capturedAt"))) = 0 Then
+            currentEntry("capturedAt") = item("capturedAt")
         End If
 
-        modABPhotosRepository.ApplyFolderTags entry, relativePath, folderTagMap
+        modABPhotosRepository.ApplyFolderTags currentEntry, relativePath, folderTagMap
 ContinueLoop:
     Next item
 
     Dim key As Variant
-    For Each key In entries.Keys
-        Dim entry As Scripting.Dictionary
-        Set entry = entries(key)
-        entry.CompareMode = TextCompare
-        If Len(NzString(entry("filePath"))) = 0 Then
-            entry("filePath") = entry("fileName")
+    For Each key In entryMap.Keys
+        Set currentEntry = entryMap(key)
+        currentEntry.CompareMode = TextCompare
+        If Len(NzString(currentEntry("filePath"))) = 0 Then
+            currentEntry("filePath") = currentEntry("fileName")
         End If
-        If Len(NzString(entry("displayName"))) = 0 Then
-            entry("displayName") = entry("fileName")
+        If Len(NzString(currentEntry("displayName"))) = 0 Then
+            currentEntry("displayName") = currentEntry("fileName")
         End If
-        modABPhotosRepository.UpsertPhoto entry
+        modABPhotosRepository.UpsertPhoto currentEntry
     Next key
 
-    modABPhotosRepository.RemoveMissingPhotos entries
+    modABPhotosRepository.RemoveMissingPhotos entryMap
 End Sub
 
 Public Sub CreateFoldersForList(ByVal baseDirectory As String, ByVal listName As String, ByVal locale As String)
     If Len(baseDirectory) = 0 Then Exit Sub
-    Dim entries As Collection
-    Set entries = GetButtonList(listName, locale)
-    If entries Is Nothing Then Exit Sub
+    Dim buttonEntries As Collection
+    Set buttonEntries = GetButtonList(listName, locale)
+    If buttonEntries Is Nothing Then Exit Sub
     Dim fso As Object
     Set fso = CreateObject("Scripting.FileSystemObject")
-    Dim entry As Scripting.Dictionary
-    For Each entry In entries
+    Dim btnEntry As Scripting.Dictionary
+    For Each btnEntry In buttonEntries
         Dim folderName As String
-        folderName = NzString(entry("label"))
-        If Len(folderName) = 0 Then folderName = NzString(entry("value"))
+        folderName = NzString(btnEntry("label"))
+        If Len(folderName) = 0 Then folderName = NzString(btnEntry("value"))
         If Len(folderName) = 0 Then GoTo ContinueLoop
         Dim targetPath As String
         targetPath = BuildPath(baseDirectory, folderName)
@@ -119,7 +119,7 @@ Public Sub CreateFoldersForList(ByVal baseDirectory As String, ByVal listName As
             fso.CreateFolder targetPath
         End If
 ContinueLoop:
-    Next entry
+    Next btnEntry
     MsgBox "Ordnerstruktur aktualisiert.", vbInformation
 End Sub
 
@@ -210,16 +210,16 @@ Private Function GetFolderLabelForTag(ByVal tagField As String, ByVal tagValue A
     Dim buttons As Collection
     Set buttons = GetButtonList(listName, locale)
     If Not buttons Is Nothing Then
-        Dim entry As Scripting.Dictionary
-        For Each entry In buttons
-            If StrComp(NzString(entry("value")), tagValue, vbTextCompare) = 0 Then
+        Dim buttonEntry As Scripting.Dictionary
+        For Each buttonEntry In buttons
+            If StrComp(NzString(buttonEntry("value")), tagValue, vbTextCompare) = 0 Then
                 Dim labelValue As String
-                labelValue = NzString(entry("label"))
-                If Len(labelValue) = 0 Then labelValue = NzString(entry("value"))
+                labelValue = NzString(buttonEntry("label"))
+                If Len(labelValue) = 0 Then labelValue = NzString(buttonEntry("value"))
                 GetFolderLabelForTag = labelValue
                 Exit Function
             End If
-        Next entry
+        Next buttonEntry
     End If
 
     GetFolderLabelForTag = tagValue
@@ -309,17 +309,27 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
     Set newMap = BuildDesiredPathMap(baseDirectory, newRecord, locale)
     If newMap.Count = 0 Then Exit Sub
 
+    Dim baseName As String
+    baseName = NzString(newRecord("fileName"))
+
     Dim canonicalAbsolute As String
     Dim canonicalRelative As String
     canonicalAbsolute = ""
     canonicalRelative = ""
 
-    Dim pathKey As Variant
-    For Each pathKey In newMap.Keys
-        canonicalAbsolute = CStr(pathKey)
-        canonicalRelative = CStr(newMap(pathKey))
-        Exit For
-    Next pathKey
+    Dim preferredRoot As String
+    preferredRoot = BuildPath(baseDirectory, baseName)
+    If Len(baseName) > 0 And newMap.Exists(preferredRoot) Then
+        canonicalAbsolute = preferredRoot
+        canonicalRelative = CStr(newMap(preferredRoot))
+    Else
+        Dim pathKey As Variant
+        For Each pathKey In newMap.Keys
+            canonicalAbsolute = CStr(pathKey)
+            canonicalRelative = CStr(newMap(pathKey))
+            Exit For
+        Next pathKey
+    End If
 
     If Len(canonicalAbsolute) = 0 Then Exit Sub
 
