@@ -317,7 +317,7 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
     For Each field In fields
         Dim initialBucket As Scripting.Dictionary
         Set initialBucket = ExistingTagDictionary(record, CStr(field))
-        tagBuckets(field) = initialBucket
+        Set tagBuckets(field) = initialBucket
     Next field
 
     Dim i As Long
