@@ -44,12 +44,14 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     For Each imageItem In images
         baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
-        Debug.Print "Base: ", baseName, "relative:", NzString(imageItem("relativePath"))
+        Debug.Print "Base:", baseName, "relative:", NzString(imageItem("relativePath"))
         If entryMap.Exists(baseName) Then
+            Debug.Print "  Reuse existing entry"
             Set currentEntry = entryMap(baseName)
         Else
             Set currentEntry = modABPhotosRepository.GetPhotoEntry(baseName)
             If currentEntry Is Nothing Then
+                Debug.Print "  New entry"
                 Set currentEntry = New Scripting.Dictionary
                 currentEntry.CompareMode = TextCompare
                 currentEntry("fileName") = baseName
@@ -78,6 +80,8 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
         End If
 
         modABPhotosRepository.ApplyFolderTags currentEntry, relativePath, folderTagMap
+        Debug.Print "  Tags ->", currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT), _
+            currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR), currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC)
 ContinueLoop:
     Next imageItem
 
@@ -88,9 +92,11 @@ ContinueLoop:
         If Len(NzString(currentEntry("displayName"))) = 0 Then
             currentEntry("displayName") = currentEntry("fileName")
         End If
+        Debug.Print "Upsert", currentEntry("fileName")
         modABPhotosRepository.UpsertPhoto currentEntry
     Next key
 
+    Debug.Print "Cleaning missing rows"
     modABPhotosRepository.RemoveMissingPhotos entryMap
 End Sub
 
