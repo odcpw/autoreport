@@ -9,7 +9,6 @@ Private Sub EnsurePhotoEntryDefaults(ByRef entry As Scripting.Dictionary)
     If entry Is Nothing Then Exit Sub
     entry.CompareMode = TextCompare
     If Not entry.Exists("fileName") Then entry("fileName") = ""
-    If Not entry.Exists("filePath") Then entry("filePath") = NzString(entry("fileName"))
     If Not entry.Exists("displayName") Then entry("displayName") = NzString(entry("fileName"))
     If Not entry.Exists("notes") Then entry("notes") = ""
     If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_BERICHT) Then entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
@@ -36,7 +35,6 @@ Public Sub EnsurePhotoRecord(fileName As String)
         Dim newEntry As New Scripting.Dictionary
         newEntry.CompareMode = TextCompare
         newEntry("fileName") = fileName
-        newEntry("filePath") = fileName
         newEntry("displayName") = fileName
         newEntry("notes") = ""
         newEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""

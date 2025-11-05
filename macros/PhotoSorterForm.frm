@@ -357,23 +357,9 @@ Private Sub UpdateImageDisplay()
 End Sub
 
 Private Function BuildPhotoPath(ByVal record As Scripting.Dictionary) As String
-    Dim relativePath As String
-    relativePath = NzString(record("filePath"))
-    If Len(relativePath) = 0 Then relativePath = NzString(record("fileName"))
-    If Len(relativePath) = 0 Then Exit Function
-    relativePath = Replace(relativePath, "/", "\")
-    If InStr(relativePath, ":") > 0 Or Left$(relativePath, 2) = "\\" Then
-        BuildPhotoPath = relativePath
-    ElseIf Len(rootPath) > 0 Then
-        Dim baseDir As String
-        baseDir = rootPath
-        If Right$(baseDir, 1) <> "\" And Right$(baseDir, 1) <> "/" Then
-            baseDir = baseDir & "\"
-        End If
-        BuildPhotoPath = baseDir & relativePath
-    Else
-        BuildPhotoPath = relativePath
-    End If
+    If record Is Nothing Then Exit Function
+    If Len(rootPath) = 0 Then Exit Function
+    BuildPhotoPath = PhotoSorter.ResolvePhotoPath(rootPath, record, GetActiveLocale())
 End Function
 
 Private Sub UpdateButtonStates(ByVal record As Scripting.Dictionary)

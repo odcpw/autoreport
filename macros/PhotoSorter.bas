@@ -48,7 +48,6 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
                 Set currentEntry = New Scripting.Dictionary
                 currentEntry.CompareMode = TextCompare
                 currentEntry("fileName") = baseName
-                currentEntry("filePath") = ""
                 currentEntry("displayName") = baseName
                 currentEntry("notes") = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
@@ -59,7 +58,6 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
             Else
                 currentEntry.CompareMode = TextCompare
                 If Len(NzString(currentEntry("displayName"))) = 0 Then currentEntry("displayName") = baseName
-                currentEntry("filePath") = NzString(currentEntry("filePath"))
                 currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
@@ -69,12 +67,6 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
 
         relativePath = NzString(imageItem("relativePath"))
         If Len(relativePath) = 0 Then relativePath = baseName
-
-        If Len(NzString(currentEntry("filePath"))) = 0 Then
-            currentEntry("filePath") = relativePath
-        ElseIf InStr(relativePath, "\") = 0 And InStr(currentEntry("filePath"), "\") > 0 Then
-            currentEntry("filePath") = relativePath
-        End If
 
         If Len(NzString(currentEntry("capturedAt"))) = 0 Then
             currentEntry("capturedAt") = imageItem("capturedAt")
@@ -88,9 +80,6 @@ ContinueLoop:
     For Each key In entryMap.Keys
         Set currentEntry = entryMap(key)
         currentEntry.CompareMode = TextCompare
-        If Len(NzString(currentEntry("filePath"))) = 0 Then
-            currentEntry("filePath") = currentEntry("fileName")
-        End If
         If Len(NzString(currentEntry("displayName"))) = 0 Then
             currentEntry("displayName") = currentEntry("fileName")
         End If
@@ -193,6 +182,58 @@ Private Function CollectionToSortedArray(items As Collection) As Variant
     CollectionToSortedArray = arr
 End Function
 
+Public Function ResolvePhotoPath(ByVal baseDirectory As String, ByVal record As Scripting.Dictionary, ByVal locale As String) As String
+    If record Is Nothing Then Exit Function
+    If Len(baseDirectory) = 0 Then Exit Function
+
+    Dim fso As Object
+    Set fso = CreateObject("Scripting.FileSystemObject")
+
+    Dim map As Scripting.Dictionary
+    Set map = BuildDesiredPathMap(baseDirectory, record, locale)
+
+    Dim baseName As String
+    baseName = NzString(record("fileName"))
+    Dim preferredRoot As String
+    preferredRoot = BuildPath(baseDirectory, baseName)
+
+    If map Is Nothing Then
+        If Len(baseName) > 0 And fso.FileExists(preferredRoot) Then ResolvePhotoPath = preferredRoot
+        Exit Function
+    End If
+
+    Dim canonical As String
+    canonical = ""
+    If Len(baseName) > 0 And map.Exists(preferredRoot) Then
+        canonical = preferredRoot
+    Else
+        Dim pathKey As Variant
+        For Each pathKey In map.Keys
+            canonical = CStr(pathKey)
+            Exit For
+        Next pathKey
+    End If
+
+    If Len(canonical) > 0 And fso.FileExists(canonical) Then
+        ResolvePhotoPath = canonical
+        Exit Function
+    End If
+
+    Dim candidate As String
+    Dim pathKey As Variant
+    For Each pathKey In map.Keys
+        candidate = CStr(pathKey)
+        If fso.FileExists(candidate) Then
+            ResolvePhotoPath = candidate
+            Exit Function
+        End If
+    Next pathKey
+
+    If Len(baseName) > 0 And fso.FileExists(preferredRoot) Then
+        ResolvePhotoPath = preferredRoot
+    End If
+End Function
+
 Private Function GetFolderLabelForTag(ByVal tagField As String, ByVal tagValue As String, ByVal locale As String) As String
     Dim listName As String
     Select Case tagField
@@ -225,7 +266,7 @@ Private Function GetFolderLabelForTag(ByVal tagField As String, ByVal tagValue A
     GetFolderLabelForTag = tagValue
 End Function
 
-Private Function BuildDesiredPathMap(ByVal baseDirectory As String, ByVal record As Scripting.Dictionary, ByVal locale As String) As Scripting.Dictionary
+Public Function BuildDesiredPathMap(ByVal baseDirectory As String, ByVal record As Scripting.Dictionary, ByVal locale As String) As Scripting.Dictionary
     Dim result As New Scripting.Dictionary
     result.CompareMode = TextCompare
 
@@ -312,21 +353,19 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
     Dim baseName As String
     baseName = NzString(newRecord("fileName"))
 
+    Dim pathKey As Variant
+
     Dim canonicalAbsolute As String
-    Dim canonicalRelative As String
     canonicalAbsolute = ""
-    canonicalRelative = ""
 
     Dim preferredRoot As String
     preferredRoot = BuildPath(baseDirectory, baseName)
     If Len(baseName) > 0 And newMap.Exists(preferredRoot) Then
         canonicalAbsolute = preferredRoot
-        canonicalRelative = CStr(newMap(preferredRoot))
     Else
         Dim pathKey As Variant
         For Each pathKey In newMap.Keys
             canonicalAbsolute = CStr(pathKey)
-            canonicalRelative = CStr(newMap(pathKey))
             Exit For
         Next pathKey
     End If
@@ -335,24 +374,14 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
 
     Dim sourcePath As String
     sourcePath = ""
-    If Not oldRecord Is Nothing Then
-        Dim oldRelative As String
-        oldRelative = NzString(oldRecord("filePath"))
-        If Len(oldRelative) > 0 Then
-            Dim candidate As String
-            candidate = BuildPath(baseDirectory, Replace(oldRelative, "/", "\"))
-            If fso.FileExists(candidate) Then sourcePath = candidate
-        End If
-    End If
 
-    If Len(sourcePath) = 0 Then
-        For Each pathKey In oldMap.Keys
-            If fso.FileExists(CStr(pathKey)) Then
-                sourcePath = CStr(pathKey)
-                Exit For
-            End If
-        Next pathKey
-    End If
+    Dim pathKey As Variant
+    For Each pathKey In oldMap.Keys
+        If fso.FileExists(CStr(pathKey)) Then
+            sourcePath = CStr(pathKey)
+            Exit For
+        End If
+    Next pathKey
 
     If Len(sourcePath) = 0 Then
         For Each pathKey In newMap.Keys
@@ -365,7 +394,7 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
 
     If Len(sourcePath) = 0 Then
         Dim rootCandidate As String
-        rootCandidate = BuildPath(baseDirectory, NzString(newRecord("fileName")))
+        rootCandidate = BuildPath(baseDirectory, baseName)
         If fso.FileExists(rootCandidate) Then sourcePath = rootCandidate
     End If
 
@@ -420,7 +449,6 @@ Public Sub SyncPhotoFiles(ByVal baseDirectory As String, oldRecord As Scripting.
         End If
     Next pathKey
 
-    newRecord("filePath") = canonicalRelative
     modABPhotosRepository.UpsertPhoto newRecord
 End Sub
 

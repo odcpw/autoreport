@@ -237,7 +237,6 @@ Private Function ReadPhotos() As Dictionary
         If Len(fileName) = 0 Then GoTo Continue
         Dim photo As New Dictionary
         photo.CompareMode = TextCompare
-        photo("path") = NzString(ws.Cells(r, HeaderIndex(ws, "filePath")).Value)
         photo("displayName") = NzString(ws.Cells(r, HeaderIndex(ws, "displayName")).Value)
         photo("notes") = NzString(ws.Cells(r, HeaderIndex(ws, "notes")).Value)
         Dim tags As New Dictionary
