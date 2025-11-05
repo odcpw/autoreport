@@ -105,10 +105,9 @@ Private Function ShouldIncludeRecord(ByVal record As Scripting.Dictionary, ByVal
 End Function
 
 Private Function RecordHasAnyTag(ByVal record As Scripting.Dictionary) As Boolean
-    RecordHasAnyTag = (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))) > 0) _
-        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))) > 0) _
-        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))) > 0) _
-        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS))) > 0)
+    RecordHasAnyTag = (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_BERICHT))) > 0) _
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_SEMINAR))) > 0) _
+        Or (Len(NzString(record(modABPhotoConstants.PHOTO_TAG_TOPIC))) > 0)
 End Function
 
 Private Sub SortImageFiles()
@@ -142,11 +141,13 @@ Private Sub LoadTagButtons()
     ClearTagButtonFrame ButtonsBericht
     ClearTagButtonFrame ButtonsVGSeminar
     ClearTagButtonFrame ButtonsSubfolders
-    ButtonsSubfolders.Caption = "Topics"
+    ButtonsBericht.Caption = "Bericht"
+    ButtonsVGSeminar.Caption = "Seminar"
+    ButtonsSubfolders.Caption = "Topic"
     Set buttonCollection = New Collection
-    CreateTagButtons ButtonsBericht, modABPhotoConstants.PHOTO_LIST_BERICHT, modABPhotoConstants.PHOTO_TAG_CHAPTERS
-    CreateTagButtons ButtonsVGSeminar, modABPhotoConstants.PHOTO_LIST_AUDIT, modABPhotoConstants.PHOTO_TAG_CATEGORIES
-    CreateTagButtons ButtonsSubfolders, modABPhotoConstants.PHOTO_LIST_TOPICS, modABPhotoConstants.PHOTO_TAG_TOPICS
+    CreateTagButtons ButtonsBericht, modABPhotoConstants.PHOTO_LIST_BERICHT, modABPhotoConstants.PHOTO_TAG_BERICHT
+    CreateTagButtons ButtonsVGSeminar, modABPhotoConstants.PHOTO_LIST_SEMINAR, modABPhotoConstants.PHOTO_TAG_SEMINAR
+    CreateTagButtons ButtonsSubfolders, modABPhotoConstants.PHOTO_LIST_TOPIC, modABPhotoConstants.PHOTO_TAG_TOPIC
 End Sub
 
 Private Sub ClearTagButtonFrame(ByVal targetFrame As MSForms.Frame)
@@ -266,10 +267,9 @@ Private Sub btnClearSheets_Click()
     If currentIndex = 0 Then Exit Sub
     Dim fileName As String
     fileName = imageFiles(currentIndex)
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CHAPTERS, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_CATEGORIES, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TRAINING, Array()
-    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPICS, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_BERICHT, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_SEMINAR, Array()
+    SetPhotoTags fileName, modABPhotoConstants.PHOTO_TAG_TOPIC, Array()
     Set photoCache(fileName) = GetPhotoEntry(fileName)
     UpdateButtonStates photoCache(fileName)
     UpdateImageCounts
@@ -280,7 +280,7 @@ Private Sub cmdCreateAllFolders_Click()
         MsgBox "Bitte zuerst einen Wurzelordner auswählen.", vbExclamation
         Exit Sub
     End If
-    CreateFoldersForList rootPath, modABPhotoConstants.PHOTO_LIST_TOPICS, GetActiveLocale()
+    CreateFoldersForList rootPath, modABPhotoConstants.PHOTO_LIST_TOPIC, GetActiveLocale()
 End Sub
 
 Private Sub cmdRemoveEmptyFolders_Click()
@@ -419,10 +419,9 @@ Private Function ComputeTagCounts() As Scripting.Dictionary
     For Each key In photoCache.Keys
         Dim record As Scripting.Dictionary
         Set record = photoCache(key)
-        AddCounts counts, modABPhotoConstants.PHOTO_TAG_CHAPTERS, NzString(record(modABPhotoConstants.PHOTO_TAG_CHAPTERS))
-        AddCounts counts, modABPhotoConstants.PHOTO_TAG_CATEGORIES, NzString(record(modABPhotoConstants.PHOTO_TAG_CATEGORIES))
-        AddCounts counts, modABPhotoConstants.PHOTO_TAG_TRAINING, NzString(record(modABPhotoConstants.PHOTO_TAG_TRAINING))
-        AddCounts counts, modABPhotoConstants.PHOTO_TAG_TOPICS, NzString(record(modABPhotoConstants.PHOTO_TAG_TOPICS))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_BERICHT, NzString(record(modABPhotoConstants.PHOTO_TAG_BERICHT))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_SEMINAR, NzString(record(modABPhotoConstants.PHOTO_TAG_SEMINAR))
+        AddCounts counts, modABPhotoConstants.PHOTO_TAG_TOPIC, NzString(record(modABPhotoConstants.PHOTO_TAG_TOPIC))
     Next key
     Set ComputeTagCounts = counts
 End Function

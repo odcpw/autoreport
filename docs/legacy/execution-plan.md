@@ -24,7 +24,7 @@ This plan translates the final offline brief into concrete work packages for del
 
 **3A. PhotoSorter**
 - Build lazy-loaded thumbnail grid with virtual scrolling; load full-size preview on demand.
-- Implement metadata editor: notes textarea plus three toggle rows (categories/chapters/training) driven by `ProjectState.lists`.
+- Implement metadata editor: notes textarea plus three toggle rows (topic/bericht/seminar) driven by `ProjectState.lists`.
 - Persist changes back into `project.photos` and reflect validation errors for unknown tags.
 - Add keyboard support for moving between thumbnails and toggles; include basic image zoom and rotation controls if feasible.
 

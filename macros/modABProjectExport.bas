@@ -92,7 +92,6 @@ NextChapter:
         Dim rowId As String
         rowId = NzString(wsRows.Cells(r, HeaderIndex(wsRows, "rowId")).Value)
         If Len(rowId) = 0 Then GoTo NextRow
-        Dim chapterId As String
         chapterId = NzString(wsRows.Cells(r, HeaderIndex(wsRows, "chapterId")).Value)
         If Not chapterMap.Exists(chapterId) Then
             Dim placeholder As New Dictionary
@@ -242,15 +241,14 @@ Private Function ReadPhotos() As Dictionary
         photo("notes") = NzString(ws.Cells(r, HeaderIndex(ws, "notes")).Value)
         Dim tags As New Dictionary
         tags.CompareMode = TextCompare
-        tags("chapters") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagChapters")).Value)
-        tags("categories") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagCategories")).Value)
-        tags("training") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagTraining")).Value)
-        Dim tagTopicsCol As Long
-        tagTopicsCol = HeaderIndex(ws, "tagTopics")
-        If tagTopicsCol > 0 Then
-            tags("topics") = SplitTags(ws.Cells(r, tagTopicsCol).Value)
+        tags("bericht") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagBericht")).Value)
+        tags("seminar") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagSeminar")).Value)
+        Dim tagTopicCol As Long
+        tagTopicCol = HeaderIndex(ws, "tagTopic")
+        If tagTopicCol > 0 Then
+            tags("topic") = SplitTags(ws.Cells(r, tagTopicCol).Value)
         Else
-            tags("topics") = SplitTags("")
+            tags("topic") = SplitTags("")
         End If
         photo("tags") = tags
         photo("preferredLocale") = NzString(ws.Cells(r, HeaderIndex(ws, "preferredLocale")).Value)
@@ -352,7 +350,7 @@ Private Sub WriteTextFile(ByVal filePath As String, ByVal content As String)
     Close #fileNum
 End Sub
 
-Private Function GetParentChapterId(childId As String) As String
+Public Function GetParentChapterId(childId As String) As String
     Dim trimmed As String
     trimmed = Trim$(childId)
     Do While Len(trimmed) > 0 And Right$(trimmed, 1) = "."

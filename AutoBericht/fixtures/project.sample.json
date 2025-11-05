@@ -1,0 +1,85 @@
+{
+  "version": 1,
+  "meta": {
+    "created": "2024-01-12T09:30:00.000Z",
+    "company": "ACME AG",
+    "locale": "en"
+  },
+  "branding": {
+    "left": "assets/branding/logo_left.png",
+    "right": "assets/branding/logo_right.png"
+  },
+  "lists": {
+    "berichtList": [{ "value": "4.6.1", "label": "4.6.1" }],
+    "seminarList": ["PSA Basics", "Leadership Coaching"],
+    "topicList": ["Policy", "Leadership", "Training"]
+  },
+  "photos": {
+    "photos/site/psa-check.jpg": {
+      "notes": "Missing signage near north entrance",
+      "tags": {
+        "bericht": ["4.6.1"],
+        "seminar": ["PSA Basics"],
+        "topic": ["Training"]
+      }
+    }
+  },
+  "report": {
+    "chapters": [
+      {
+        "id": "1.1.1",
+        "title": "Safety Policy",
+        "clientInput": { "yesNo": "yes", "remarks": "Well documented." },
+        "finding": {
+          "masterText": "The organisation maintains an up-to-date safety policy.",
+          "adjustedText": "",
+          "useAdjusted": false
+        },
+        "recommendations": {
+          "1": { "master": "Adopt a site-wide communication plan.", "adjusted": "", "useAdjusted": false },
+          "2": { "master": "Introduce quarterly refreshers.", "adjusted": "", "useAdjusted": false },
+          "3": { "master": "Document policy exceptions.", "adjusted": "", "useAdjusted": false },
+          "4": { "master": "Escalate non-compliance within 5 days.", "adjusted": "", "useAdjusted": false }
+        },
+        "level": 2,
+        "includeInReport": true,
+        "proposeMasterUpdate": { "action": "none", "scope": "" }
+      },
+      {
+        "id": "4.6.1",
+        "title": "PSA Usage",
+        "clientInput": { "yesNo": "partial", "remarks": "Spot-checks inconsistent." },
+        "finding": {
+          "masterText": "Assess compliance with on-site personal safety equipment usage.",
+          "adjustedText": "- Emphasise morning briefings for PSA.\n- Add compliance metrics to dashboards.",
+          "useAdjusted": true
+        },
+        "recommendations": {
+          "1": { "master": "Roll out refresher modules.", "adjusted": "", "useAdjusted": false },
+          "2": { "master": "Update signage.", "adjusted": "", "useAdjusted": false },
+          "3": { "master": "Track training monthly.", "adjusted": "", "useAdjusted": false },
+          "4": { "master": "Supervisors perform spot checks.", "adjusted": "", "useAdjusted": false }
+        },
+        "level": 3,
+        "includeInReport": true,
+        "proposeMasterUpdate": { "action": "append", "scope": "recommendation" }
+      }
+    ]
+  },
+  "presentation": {
+    "reportPresentation": {
+      "layout": "auto-grid",
+      "maxPerSlide": 6
+    },
+    "seminar": {
+      "mode": "per-seminar-deck",
+      "groupBy": "bericht",
+      "maxPerSlide": 6
+    },
+    "topic": {
+      "mode": "per-topic-deck",
+      "groupBy": "bericht",
+      "maxPerSlide": 6
+    }
+  }
+}

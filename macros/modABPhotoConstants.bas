@@ -5,12 +5,10 @@ Option Explicit
 ' Shared constants for PhotoSorter lists and tag fields
 '=============================================================
 
-Public Const PHOTO_LIST_BERICHT As String = "photo.berichtsbuttons"
-Public Const PHOTO_LIST_AUDIT As String = "photo.auditbuttons"
-Public Const PHOTO_LIST_TRAINING As String = "photo.trainingbuttons"
-Public Const PHOTO_LIST_TOPICS As String = "photo.topicbuttons"
+Public Const PHOTO_LIST_BERICHT As String = "photo.bericht"
+Public Const PHOTO_LIST_SEMINAR As String = "photo.seminar"
+Public Const PHOTO_LIST_TOPIC As String = "photo.topic"
 
-Public Const PHOTO_TAG_CHAPTERS As String = "tagChapters"
-Public Const PHOTO_TAG_CATEGORIES As String = "tagCategories"
-Public Const PHOTO_TAG_TRAINING As String = "tagTraining"
-Public Const PHOTO_TAG_TOPICS As String = "tagTopics"
+Public Const PHOTO_TAG_BERICHT As String = "tagBericht"
+Public Const PHOTO_TAG_SEMINAR As String = "tagSeminar"
+Public Const PHOTO_TAG_TOPIC As String = "tagTopic"

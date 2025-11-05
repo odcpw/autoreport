@@ -81,7 +81,7 @@ The resulting `project.json` is the canonical payload to feed the HTML/JS app.
 
 ## Current open items / caveats
 
-- **Photo workflow polish**: Lists/Photos integration is live; verify the `Lists` sheet reflects the desired button taxonomy (Bericht/Audit/Training/Topic) before running the PhotoSorter so folder seeding stays in sync.
+- **Photo workflow polish**: Lists/Photos integration is live; verify the `Lists` sheet reflects the desired button taxonomy (Bericht/Seminar/Topic) before running the PhotoSorter so folder seeding stays in sync.
 - **Chapter orchestration**: ensure `Chapters` sheet is populated (either via `LoadProjectJson` or a staging import) before running the Bericht editor to keep button counts consistent.
 - **Error handling**: import macros currently stop on unexpected headers — consider upgrading messaging / logging before rollout.
 - **Testing**: manual smoke test required after every refresh (run both import macros + open BerichtForm + PhotoSorter) until automated regression coverage exists.

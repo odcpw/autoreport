@@ -24,10 +24,9 @@ Public Sub EnsurePhotoRecord(fileName As String)
         newEntry("fileName") = fileName
         newEntry("displayName") = fileName
         newEntry("notes") = ""
-        newEntry("tagChapters") = ""
-        newEntry("tagCategories") = ""
-        newEntry("tagTraining") = ""
-        newEntry("tagTopics") = ""
+        newEntry("tagBericht") = ""
+        newEntry("tagSeminar") = ""
+        newEntry("tagTopic") = ""
         newEntry("preferredLocale") = ""
         newEntry("capturedAt") = ""
         UpsertPhoto newEntry
@@ -261,10 +260,9 @@ Public Function BuildFolderTagLookup() As Scripting.Dictionary
 
     Dim listToField As New Scripting.Dictionary
     listToField.CompareMode = TextCompare
-    listToField(PHOTO_LIST_BERICHT) = PHOTO_TAG_CHAPTERS
-    listToField(PHOTO_LIST_AUDIT) = PHOTO_TAG_CATEGORIES
-    listToField(PHOTO_LIST_TRAINING) = PHOTO_TAG_TRAINING
-    listToField(PHOTO_LIST_TOPICS) = PHOTO_TAG_TOPICS
+    listToField(PHOTO_LIST_BERICHT) = PHOTO_TAG_BERICHT
+    listToField(PHOTO_LIST_SEMINAR) = PHOTO_TAG_SEMINAR
+    listToField(PHOTO_LIST_TOPIC) = PHOTO_TAG_TOPIC
 
     Dim lastRow As Long
     lastRow = ws.Cells(ws.Rows.Count, colListName).End(xlUp).Row
@@ -312,13 +310,13 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
     tagBuckets.CompareMode = TextCompare
 
     Dim fields As Variant
-    fields = Array(PHOTO_TAG_CHAPTERS, PHOTO_TAG_CATEGORIES, PHOTO_TAG_TRAINING, PHOTO_TAG_TOPICS)
+    fields = Array(PHOTO_TAG_BERICHT, PHOTO_TAG_SEMINAR, PHOTO_TAG_TOPIC)
 
     Dim field As Variant
     For Each field In fields
-        Dim bucket As Scripting.Dictionary
-        Set bucket = ExistingTagDictionary(record, CStr(field))
-        tagBuckets(field) = bucket
+        Dim initialBucket As Scripting.Dictionary
+        Set initialBucket = ExistingTagDictionary(record, CStr(field))
+        tagBuckets(field) = initialBucket
     Next field
 
     Dim i As Long
@@ -339,8 +337,8 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
 ContinueSegment:
     Next i
 
+    Dim bucket As Scripting.Dictionary
     For Each field In tagBuckets.Keys
-        Dim bucket As Scripting.Dictionary
         Set bucket = tagBuckets(field)
         record(CStr(field)) = JoinDictionaryKeys(bucket)
     Next field
@@ -359,7 +357,7 @@ Private Sub AddFolderMapping(ByRef map As Scripting.Dictionary, ByVal labelValue
         Set entries = map(key)
     Else
         Set entries = New Collection
-        map(key) = entries
+        Set map(key) = entries
     End If
 
     Dim existing As Scripting.Dictionary

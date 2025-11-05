@@ -282,10 +282,9 @@ Photo metadata keyed by filename.
       "displayName": "Leitbild im Empfang",
       "notes": "Neue Tafel, gut sichtbar",
       "tags": {
-        "chapters": ["1.1.3"],
-        "categories": ["Gefährdung"],
-        "training": ["Führungskräftetraining"],
-        "subfolders": ["Empfang"]
+        "bericht": ["1.1.3"],
+        "seminar": ["Führungskräftetraining"],
+        "topic": ["Gefährdung"]
       },
       "preferredLocale": "de-CH",
       "capturedAt": "2025-02-11T10:30:00Z"
@@ -299,10 +298,9 @@ Photo metadata keyed by filename.
 | `displayName` | string | Human-readable photo name |
 | `notes` | string | Photo description/notes |
 | `tags` | object | Tag assignments by dimension |
-| `tags.chapters` | array | Chapter IDs (e.g., ["1.1.3", "2.4.1"]) |
-| `tags.categories` | array | Category tags (e.g., ["Gefährdung"]) |
-| `tags.training` | array | Training tags (e.g., ["PSA Basics"]) |
-| `tags.subfolders` | array | Optional folder organization |
+| `tags.bericht` | array | Bericht chapter IDs (e.g., ["1.1.3", "2.4.1"]) |
+| `tags.seminar` | array | Seminar tags (e.g., ["PSA Basics"]) |
+| `tags.topic` | array | Topic tags (e.g., ["Gefährdung"]) |
 | `preferredLocale` | string | Locale hint for display |
 | `capturedAt` | string (ISO 8601) | Photo capture timestamp |
 
@@ -315,7 +313,37 @@ Tag vocabularies and button definitions.
 ```json
 {
   "lists": {
-    "categoryList": [
+    "berichtList": [
+      {
+        "value": "1.1.3",
+        "label": "1.1.3 — Leitbild",
+        "labels": {
+          "de": "1.1.3 — Leitbild",
+          "fr": "1.1.3 — Vision",
+          "it": "1.1.3 — Visione",
+          "en": "1.1.3 — Mission"
+        },
+        "group": "bericht",
+        "sortOrder": 1,
+        "chapterId": "1.1.3"
+      }
+    ],
+    "seminarList": [
+      {
+        "value": "psa-basics",
+        "label": "PSA Basics",
+        "labels": {
+          "de": "PSA Grundlagen",
+          "fr": "Bases EPI",
+          "it": "Basi DPI",
+          "en": "PPE Basics"
+        },
+        "group": "seminar",
+        "sortOrder": 1,
+        "chapterId": ""
+      }
+    ],
+    "topicList": [
       {
         "value": "gefaehrdung",
         "label": "Gefährdung",
@@ -325,12 +353,11 @@ Tag vocabularies and button definitions.
           "it": "Pericolo",
           "en": "Hazard"
         },
-        "group": "category",
+        "group": "topic",
         "sortOrder": 1,
         "chapterId": ""
       }
-    ],
-    "trainingList": [ ]
+    ]
   }
 }
 ```
@@ -340,15 +367,15 @@ Tag vocabularies and button definitions.
 | `value` | string | Internal identifier |
 | `label` | string | Display label (default locale) |
 | `labels` | object | Localized labels (de, fr, it, en) |
-| `group` | string | Button group (category, training, etc.) |
+| `group` | string | Button group (bericht, seminar, topic) |
 | `sortOrder` | integer | Display order |
 | `chapterId` | string | Optional chapter association |
 
 **Common list names**:
-- `categoryList`: Photo category buttons
-- `trainingList`: Training topic buttons
-- `photo.berichtsbuttons`: Report chapter buttons
-- `photo.audit`: Audit observation buttons
+- `berichtList`: Bericht chapter buttons
+- `seminarList`: Seminar assignment buttons
+- `topicList`: Topic buttons
+- `photo.topic`: Legacy topic folders (deprecated)
 
 **Excel mapping**: `Lists` sheet
 
@@ -559,7 +586,7 @@ All timestamps must be ISO 8601 format: `YYYY-MM-DDTHH:MM:SSZ`
 - Initial schema
 - Support for hierarchical chapters
 - Multi-locale titles
-- Photo tagging (chapters, categories, training, subfolders)
+- Photo tagging (Bericht, seminar, topic)
 - Override system with enable flags
 - Append-only history log
 

@@ -44,7 +44,7 @@ python -m http.server 8000
 
 ## PhotoSorter Tab
 
-Tag and organize photos by chapter, category, and training topic.
+Tag and organize photos by Bericht section, seminar tag, and topic.
 
 ### Interface Layout
 
@@ -74,10 +74,10 @@ Tag and organize photos by chapter, category, and training topic.
 │  Chapter Tags:                                     │
 │  [1.1] [1.2] [1.3] [4.8] ...                      │
 │                                                     │
-│  Categories:                                       │
+│  Topics:                                           │
 │  [Gefährdung] [Brandschutz] ...                   │
 │                                                     │
-│  Training:                                         │
+│  Seminar:                                          │
 │  [PSA Basics] [Führungskräfte] ...                │
 │                                                     │
 └────────────────────────────────────────────────────┘
@@ -107,8 +107,8 @@ Tag and organize photos by chapter, category, and training topic.
 2. **View full size**: Large preview appears below
 3. **Add notes**: Type in notes field (optional)
 4. **Tag by chapter**: Click chapter button(s) - multiple allowed
-5. **Tag by category**: Click category button(s) - multiple allowed
-6. **Tag by training**: Click training button(s) - multiple allowed
+5. **Tag by topic**: Click topic button(s) - multiple allowed
+6. **Tag by seminar**: Click seminar button(s) - multiple allowed
 
 **Visual feedback**:
 - Active tags are highlighted
@@ -138,8 +138,8 @@ Each photo stores:
   "notes": "Neue Tafel, gut sichtbar",
   "tags": {
     "chapters": ["1.1.3"],
-    "categories": ["Gefährdung"],
-    "training": ["Führungskräftetraining"]
+    "topic": ["Gefährdung"],
+    "seminar": ["Führungskräftetraining"]
   },
   "preferredLocale": "de-CH",
   "capturedAt": "2025-02-11T10:30:00Z"
@@ -167,7 +167,7 @@ Each photo stores:
 
 Tagged photos are automatically included in:
 - **Report PPTX**: Photos appear with their tagged chapter findings
-- **Training PPTX**: Photos grouped by training tag
+- **Seminar PPTX**: Photos grouped by seminar tag
 - **PDF Report**: Photos embedded in chapter sections (future)
 
 **See**: [Export Formats](#export-formats) below
@@ -376,7 +376,7 @@ Configure exports, validate project, and manage data.
 │  Export                                            │
 │  [Generate PDF Report]                             │
 │  [Export Report PPTX]                              │
-│  [Export Training PPTX]                            │
+│  [Export Seminar PPTX]                             │
 │  [Download project.json]                           │
 │                                                     │
 └────────────────────────────────────────────────────┘
@@ -503,24 +503,24 @@ File downloads automatically: report.pptx
 
 **Technology**: PptxGenJS
 
-### Training PPTX
+### Seminar PPTX
 
 **Generation**:
 ```
-Settings → Export → Export Training PPTX
-File downloads automatically: training.pptx
+Settings → Export → Export Seminar PPTX
+File downloads automatically: seminar.pptx
 ```
 
 **Content**:
-- Title slide per training tag
-- Photos grouped by training assignment
+- Title slide per seminar tag
+- Photos grouped by seminar assignment
 - References to chapters where photos appear
 - Notes field content as speaker notes
 
 **Layout**:
 ```
 ┌─────────────────────────────────┐
-│  Training: PSA Basics           │
+│  Seminar: PSA Basics            │
 ├─────────────────────────────────┤
 │                                  │
 │  [Photo 1]  [Photo 2]  [Photo 3]│

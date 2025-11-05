@@ -69,8 +69,9 @@ Private Function BuildTagLists() As Dictionary
     Dim lists As New Dictionary
     lists.CompareMode = TextCompare
 
-    lists("categoryList") = BuildCategoryList()
-    lists("trainingList") = BuildTrainingList()
+    lists("berichtList") = BuildBerichtList()
+    lists("seminarList") = BuildSeminarList()
+    lists("topicList") = BuildTopicList()
 
     Set BuildTagLists = lists
 End Function
@@ -91,18 +92,18 @@ Private Sub AddPhoto( _
     photos As Dictionary, _
     ByVal path As String, _
     ByVal notes As String, _
-    categories As Collection, _
-    chapters As Collection, _
-    training As Collection)
+    bericht As Collection, _
+    seminar As Collection, _
+    topic As Collection)
 
     Dim info As New Dictionary
     info.CompareMode = TextCompare
 
     Dim tags As New Dictionary
     tags.CompareMode = TextCompare
-    tags("categories") = CollectionToArray(categories)
-    tags("chapters") = CollectionToArray(chapters)
-    tags("training") = CollectionToArray(training)
+    tags("bericht") = CollectionToArray(bericht)
+    tags("seminar") = CollectionToArray(seminar)
+    tags("topic") = CollectionToArray(topic)
 
     info("notes") = notes
     info("tags") = tags
@@ -334,4 +335,3 @@ End Function
 Private Function GetCurrentUser() As String
     GetCurrentUser = Environ$("USERNAME")
 End Function
-

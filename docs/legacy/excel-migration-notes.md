@@ -32,8 +32,8 @@ The VBA dump confirms PhotoSorter uses `PSHelperSheet`/`PSCategoryLabels`, handl
 | --- | --- | --- |
 | `meta` | New `Meta` sheet (or reuse `Settings`). | Store `projectId`, `company`, `createdAt`, `locale`, `author`. |
 | `chapters[].rows[]` | Combination of `BerichtKapitel`, `MyMaster`, `SelbstbeurteilungKunde`, `ReportOverrides`. | `master` fields from `MyMaster`, `customer` fields from `SelbstbeurteilungKunde`, `workstate` from `ReportOverrides`, `title`/structure from `BerichtKapitel`. |
-| `photos` | `PSHelperSheet` + `PSCategoryLabels`. | Convert column flags into `tags.chapters`, `tags.categories`, `tags.training`. |
-| `lists` | `PSCategoryLabels` (`categoryList`, `trainingList`, optional button definitions). | Provide PhotoSorter button metadata to the browser UI. |
+| `photos` | `PSHelperSheet` + `PSCategoryLabels`. | Convert column flags into `tags.bericht`, `tags.topic`, `tags.seminar`. |
+| `lists` | `PSCategoryLabels` (`berichtList`, `seminarList`, optional button definitions). | Provide PhotoSorter button metadata to the browser UI. |
 | `exportHints` | Could align with `OutputChapterMapping` once renumber logic exists. |
 
 ### Recommendation
@@ -41,7 +41,7 @@ The VBA dump confirms PhotoSorter uses `PSHelperSheet`/`PSCategoryLabels`, handl
 1. **Introduce structured sheets** that match JSON directly:
    - `Meta` — two-column key/value list.
    - `Rows` — flat table keyed by `rowId`, carrying all row fields (`title`, `masterFinding`, `level1..4`, `selectedLevel`, overrides, include flags, etc.).
-   - `Photos` — filename + notes + tag columns (`categories`, `chapters`, `training`).
+   - `Photos` — filename + notes + tag columns (`bericht`, `seminar`, `topic`).
    - `Lists` — optional table for PhotoSorter button definitions.
 
    VBA can continue to read/write legacy sheets but should synchronise them with these structured tables so JSON export/import is straightforward.
@@ -91,14 +91,14 @@ Rather than synchronising legacy helper sheets, we can reshape the `.xlsm` so ea
    `chapterId` references `Chapters.chapterId`. Add new override columns at the end as needed.
 
 4. **`Photos`** — PhotoSorter catalogue.
-   | fileName | displayName | notes | tagChapters | tagCategories | tagTraining | tagTopics | preferredLocale |
+| fileName | displayName | notes | tagBericht | tagSeminar | tagTopic | preferredLocale |
 
    Comma-separated lists in `tag*` columns hold canonical IDs (e.g., `1.2,4.8.custom-001`). Both VBA and the web app split/join these values.
 
 5. **`Lists`** — button/tag vocabularies.
    | listName | value | label_de | label_fr | label_it | label_en | group | sortOrder | chapterId |
 
-   Rows with `listName = "photo.berichtsbuttons"` feed the Bericht pane; `group` chooses the PhotoSorter column (Bericht, Audit, Training, Topic). Matching `value` to `Chapters.chapterId` lets us display localised titles automatically.
+   Rows with `listName = "photo.bericht"` feed the Bericht pane; `group` chooses the PhotoSorter column (Bericht, Seminar, Topic). Matching `value` to `Chapters.chapterId` lets us display localised titles automatically.
 
 6. **Optional audit tables** — `OverridesHistory` (append-only log) and `ExportLog` (renumber map per export) if auditing is required.
 

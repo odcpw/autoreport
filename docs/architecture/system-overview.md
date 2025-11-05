@@ -51,7 +51,7 @@ This document explains how all AutoBericht components work together to create a 
 │  │  • PDF Report (Paged.js)                            │  │
 │  │  • PowerPoint Decks (PptxGenJS)                     │  │
 │  │  │  • Report PPTX                                    │  │
-│  │  │  • Training PPTX                                  │  │
+│  │  │  • Seminar PPTX                                   │  │
 │  │  • project.json snapshot                            │  │
 │  └──────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────┘
@@ -107,7 +107,7 @@ This document explains how all AutoBericht components work together to create a 
 **Purpose**: Content editing, photo management, report generation
 
 **Key Features**:
-- **PhotoSorter Tab**: Tag photos by chapter, category, training
+- **PhotoSorter Tab**: Tag photos by Bericht, seminar, topic
 - **AutoBericht Tab**: Edit findings, recommendations, overrides
 - **Settings Tab**: Configure exports, validate data, manage projects
 
@@ -238,7 +238,7 @@ This document explains how all AutoBericht components work together to create a 
 1. Generate Outputs
    ├─ PDF Report (Paged.js → browser print)
    ├─ Report PPTX (PptxGenJS)
-   ├─ Training PPTX (PptxGenJS)
+   ├─ Seminar PPTX (PptxGenJS)
    └─ project.json snapshot
 
 2. Optional: VBA Post-Processing

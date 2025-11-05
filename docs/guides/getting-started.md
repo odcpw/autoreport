@@ -177,7 +177,7 @@ Organize project photos by chapter, category, and training topic.
    - Select photo thumbnail
    - Toggle chapter buttons
    - Add category tags
-   - Add training tags
+  - Add seminar tags
    - Add notes in textarea
 
 3. **Auto-save**
@@ -262,12 +262,12 @@ File downloads automatically
 One slide per finding with photos
 ```
 
-### Training Deck
+### Seminar Deck
 
 ```
-Click "Export Training PPTX"
+Click "Export Seminar PPTX"
 File downloads automatically
-Photos grouped by training tag
+Photos grouped by seminar tag
 ```
 
 ### Project Snapshot
