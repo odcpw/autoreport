@@ -44,7 +44,7 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
     For Each imageItem In images
         baseName = NzString(imageItem("baseName"))
         If Len(baseName) = 0 Then GoTo ContinueLoop
-        Debug.Print "Base:", baseName, "relative:", NzString(imageItem("relativePath"))
+        Debug.Print "Base:", baseName, "relative:", NzString(imageItem("relativePath")), "full:", NzString(imageItem("fullPath"))
         If entryMap.Exists(baseName) Then
             Debug.Print "  Reuse existing entry"
             Set currentEntry = entryMap(baseName)
@@ -525,11 +525,12 @@ End Function
 
 Private Sub TraverseFolder(ByVal folder As Object, ByVal baseDirectory As String, ByRef results As Collection)
     Dim file As Object
+    Dim item As Scripting.Dictionary
     For Each file In folder.Files
         If IsImageFile(file.Name) Then
             Dim relativePath As String
             relativePath = GetRelativePath(baseDirectory, file.Path)
-            Dim item As New Scripting.Dictionary
+            Set item = New Scripting.Dictionary
             item.CompareMode = TextCompare
             item("fullPath") = file.Path
             item("relativePath") = relativePath
