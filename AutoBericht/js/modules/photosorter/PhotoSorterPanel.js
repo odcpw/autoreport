@@ -338,6 +338,7 @@ export class PhotoSorterPanel {
     const isInput = target instanceof HTMLInputElement || target instanceof HTMLTextAreaElement;
 
     if (isInput) return;
+    if (!this.isActivePanel()) return;
 
     const stats = this.localState.getStatistics();
     if (stats.filtered === 0) return;
@@ -356,6 +357,11 @@ export class PhotoSorterPanel {
       default:
         break;
     }
+  }
+
+  isActivePanel() {
+    const panel = this.container?.closest('.tab-panel');
+    return Boolean(panel?.classList.contains('tab-panel--active'));
   }
 
   destroy() {

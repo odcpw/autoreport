@@ -1,5 +1,7 @@
 import { readFileAsDataUrl } from '../utils/fileUtils.js';
 
+// NOTE: PPT export logic stays here as scaffolding only; revisit once presentation work resumes.
+
 const MAX_IMAGE_EDGE = 1600;
 const IMAGE_QUALITY = 0.85;
 

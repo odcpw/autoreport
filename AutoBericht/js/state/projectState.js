@@ -13,6 +13,7 @@ import {
   validateProjectSnapshotStructure,
 } from '../core/state/projectBuilder.js';
 import { cloneOverride } from '../core/utils/cloning.js';
+import { loadWorkbookPayload, readWorkbookFromArray, writeWorkbookSnapshot } from '../utils/workbookLoader.js';
 
 /**
  * ProjectState manages in-memory application data derived from uploads.
@@ -30,7 +31,7 @@ class ProjectState extends EventTarget {
     this.selfEval = null;
     this.masterSource = null;
     this.selfEvalSource = null;
-    this.sources = { master: null, selfEval: null, photos: null, project: null };
+    this.sources = { master: null, selfEval: null, photos: null, project: null, workbook: null };
     this.photos = new Map();
     this.reportTree = [];
     this.project = null;
@@ -53,6 +54,8 @@ class ProjectState extends EventTarget {
       headerFooter: 'show',
       footerText: '{company} — {date}',
     };
+    this.workbookBinary = null;
+    this.workbookName = null;
     this.validation = {
       master: { ok: null, messages: [] },
       selfEval: { ok: null, messages: [] },
@@ -75,6 +78,25 @@ class ProjectState extends EventTarget {
   async ingestProjectSnapshot(file) {
     const data = await parseJsonFile(file);
     this.setProjectSnapshot(data, file.name);
+  }
+
+  async ingestWorkbook(file) {
+    const result = await loadWorkbookPayload(file);
+    const payload = result.payload;
+    this.workbookBinary = result.arrayBuffer;
+    this.workbookName = file?.name || 'project.xlsm';
+    const sourceLabel = file?.name ? `${file.name} (Excel)` : 'Workbook';
+    this.sources.workbook = sourceLabel;
+    this.master = payload.master;
+    this.masterSource = sourceLabel;
+    this.sources.master = sourceLabel;
+    this.selfEval = payload.selfEval;
+    this.selfEvalSource = sourceLabel;
+    this.sources.selfEval = sourceLabel;
+    this.projectOverrides.clear();
+    this.runValidation('master', this.master);
+    this.runValidation('selfEval', this.selfEval);
+    this.setProjectSnapshot(payload.project, sourceLabel);
   }
 
   setMasterData(data, source = null) {
@@ -382,6 +404,8 @@ class ProjectState extends EventTarget {
       },
       sources: this.sources,
       ready: this.isReadyForExport(),
+      workbookReady: this.hasWorkbookTemplate(),
+      workbookName: this.workbookName,
     };
   }
 
@@ -518,6 +542,32 @@ class ProjectState extends EventTarget {
   dispatch(type, detail = {}) {
     this.dispatchEvent(new CustomEvent(type, { detail }));
     this.dispatchEvent(new CustomEvent(EVENTS.STATE_CHANGE, { detail: this.getSnapshot() }));
+  }
+
+  hasWorkbookTemplate() {
+    return Boolean(this.workbookBinary);
+  }
+
+  generateWorkbookFile() {
+    if (!this.hasWorkbookTemplate()) {
+      throw new Error('Load an Excel workbook before exporting.');
+    }
+    if (typeof XLSX === 'undefined') {
+      throw new Error('SheetJS library is not available.');
+    }
+    const workbook = readWorkbookFromArray(this.workbookBinary);
+    writeWorkbookSnapshot(workbook, this.getSnapshot());
+    const arrayBuffer = XLSX.write(workbook, {
+      bookType: 'xlsm',
+      type: 'array',
+      bookSST: true,
+      bookVBA: true,
+    });
+    this.workbookBinary = arrayBuffer;
+    return {
+      arrayBuffer,
+      fileName: this.workbookName || 'project.xlsm',
+    };
   }
 }
 

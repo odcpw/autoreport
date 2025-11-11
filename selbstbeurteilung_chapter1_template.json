@@ -1,0 +1,200 @@
+{
+  "selbstbeurteilung_chapter_1": {
+    "title": "Kapitel 1 - Leitbild, Sicherheitsziele und Strategien",
+    "note": "Template based on IST-Aufnahme-Bericht structure. Actual customer answers (yes/no) and remarks would need to be extracted from the Excel file.",
+    "sections": {
+      "1.1": {
+        "title": "Unternehmensleitbild, Führungsgrundsätze",
+        "items": {
+          "1.1.1": {
+            "question": "Das Unternehmen verfügt nicht über ein Unternehmensleitbild",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.2": {
+            "question": "Es gibt eine Sicherheitscharta, aber kein Unternehmensleitbild",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.3": {
+            "question": "Die Mitarbeiter sind nicht über den Sinn und die praktischen Konsequenzen des Unternehmensleitbildes informiert",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.4": {
+            "question": "Das betriebliche Geschehen stimmt nicht mit dem Unternehmensleitbild überein",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.5": {
+            "question": "Das Führungsverhalten der Vorgesetzten richtet sich nicht nach bestimmten Führungsgrundsätzen oder Führungsrichtlinien",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.6": {
+            "question": "Sicherheit und Gesundheitsschutz sind kein ausdrücklicher Bestandteil der Führungsgrundsätze oder Führungsrichtlinien",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.7": {
+            "question": "Verpflichtungen wie Charta, Erklärung, Branchenlösung nicht von Geschäftsleitung unterzeichnet",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.1.8": {
+            "question": "Kein Managementsystem/Zertifizierung eingeführt",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          }
+        }
+      },
+      "1.2": {
+        "title": "Engagement der Geschäftsleitung",
+        "items": {
+          "1.2.1": {
+            "question": "Die Geschäftsleitung nimmt ihren Einfluss auf die Sicherheit nicht wahr",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.2.2": {
+            "question": "Die Geschäftsleitung macht keine regelmässigen Betriebsrundgänge",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.2.3": {
+            "question": "Die Geschäftsleitung spricht bei Betriebsrundgängen keine unsicheren Zustände und Handlungen an",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.2.4": {
+            "question": "Für Arbeitssicherheit und Gesundheitsschutz besteht keine Budgetposition",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          }
+        }
+      },
+      "1.3": {
+        "title": "Sicherheitsverhalten der Vorgesetzten",
+        "items": {
+          "1.3.1": {
+            "question": "Die Vorgesetzten sind sich ihrer Verantwortung für Arbeitssicherheit nicht bewusst",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.3.2": {
+            "question": "Die Vorgesetzten nehmen ihre Vorbildfunktion für sicheres Verhalten nicht wahr",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.3.3": {
+            "question": "Die Vorgesetzten sprechen Mitarbeitende bei unsicherem Verhalten nicht an",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          }
+        }
+      },
+      "1.4": {
+        "title": "Sicherheitsziele",
+        "items": {
+          "1.4.1": {
+            "question": "Es gibt keine messbaren Ziele für die Begrenzung der Häufigkeiten von Nichtberufsunfällen, Krankheiten, Sachschäden, Störungen oder anderen Ereignissen",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.4.2": {
+            "question": "Die Sicherheitsziele werden den Betriebsangehörigen nicht mitgeteilt",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.4.3": {
+            "question": "Es gibt keine individuellen oder bereichsspezifischen Sicherheitsziele",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          }
+        }
+      },
+      "1.5": {
+        "title": "Strategien, Konzepte, Programme",
+        "items": {
+          "1.5.1": {
+            "question": "Es gibt kein Sicherheitskonzept",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.2": {
+            "question": "Das Sicherheitskonzept ist nicht schriftlich dokumentiert",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.3": {
+            "question": "Entscheidungsfindung ohne Berücksichtigung der Meinung der Betroffenen",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.4": {
+            "question": "Keine Ereignisüberwachung für das ganze Unternehmen",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.5": {
+            "question": "Keine Ereignisüberwachung für Organisationseinheiten",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.6": {
+            "question": "Keine Konsequenzen bei Zielabweichungen",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          },
+          "1.5.7": {
+            "question": "Keine Sicherheitsstrategie vorhanden",
+            "customer_answer": null,
+            "remark": "",
+            "priority": null
+          }
+        }
+      }
+    },
+    "assessment_scale": {
+      "description": "The assessment typically uses a scale from -- (very negative) to ++ (very positive)",
+      "scale": ["--", "-", "0", "+", "++"],
+      "meaning": {
+        "--": "Sehr schlecht / Nicht vorhanden",
+        "-": "Schlecht / Mangelhaft",
+        "0": "Neutral / Teilweise vorhanden",
+        "+": "Gut / Überwiegend vorhanden",
+        "++": "Sehr gut / Vollständig vorhanden"
+      }
+    },
+    "priority_levels": {
+      "1": "Punkte mit Gefahren, die rasch behoben werden müssen",
+      "2": "Punkte die für den Auf- und Ausbau des Sicherheitssystems wichtig sind",
+      "3": "Punkte zur Ergänzung des Sicherheitssystems",
+      "4": "Punkte für weitere Unterstützungs- und Verbesserungsmöglichkeiten"
+    }
+  }
+}

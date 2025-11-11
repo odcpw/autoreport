@@ -23,6 +23,23 @@ This folder contains the standalone HTML/JS prototype for the offline AutoBerich
 4. Keyboard shortcuts: `Alt+1/2/3` switch tabs, `Ctrl+/` toggles the shortcut overlay, `Esc` closes it.
 5. Validation must be green before exports enable; the Settings panel lists current issues and recent actions.
 
+### One-Click Edge Shortcut (Windows)
+
+If you only run Microsoft Edge at work, create a shortcut (or `.bat`) so the page always opens with the right flags:
+
+1. Right-click the desktop → **New → Shortcut**.
+2. Set the target to:
+   ```
+   "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+     --allow-file-access-from-files ^
+     --disable-web-security ^
+     --user-data-dir="%LOCALAPPDATA%\AutoBerichtProfile" ^
+     "file:///C:/path/to/AutoBericht/index.html"
+   ```
+   Adjust both paths to match your install and the local folder.
+3. Name it “AutoBericht” and optionally change the icon.
+4. Launch the app only through this shortcut so the dedicated Edge profile keeps autosaves separate from your daily browser. Close that window when finished; don’t browse other sites while those flags are active.
+
 ### PDF / PPTX Layout Options
 
 - **Margins:** configurable in millimetres; defaults to 25mm.

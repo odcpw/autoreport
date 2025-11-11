@@ -1,0 +1,257 @@
+{
+  "chapter_1": {
+    "title": "Leitbild, Sicherheitsziele und Strategien",
+    "sections": {
+      "1.1": {
+        "title": "Unternehmensleitbild, Führungsgrundsätze",
+        "subsections": {
+          "1.1.1": {
+            "finding": "Das Unternehmen verfügt nicht über ein Unternehmensleitbild",
+            "recommendations": {
+              "level_1": "Eine Sicherheitscharta als ersten Schritt etablieren. Klare, verständliche Sicherheitsziele formulieren, die jeden ansprechen. In einem Workshop mit Vertretern verschiedener Abteilungen die wichtigsten Werte erarbeiten. Die Geschäftsleitung ihre Unterstützung durch persönliche Geschichten und Verpflichtung zeigen.",
+              "level_2": "Die vorhandenen Werte und Praktiken in einer Sicherheitscharta festhalten. Ein aussagekräftiges Dokument mit Foto und Unterschriften der Geschäftsleitung erstellen. Die Hauptbotschaften visuell aufbereiten. In allen Bereichen aufhängen und die Erfolge sichtbar machen und feiern.",
+              "level_3": "Die dokumentierte Charta durch tägliche Handlungen zum Leben erwecken. Jede Teamsitzung mit Bezug zur Charta beginnen. Praktische Beispiele für jeden Punkt entwickeln. Mitarbeitende regelmässig befragen, wie sie die Werte erleben. Erfolgsgeschichten sammeln und teilen.",
+              "level_4": "Die Charta als lebendiges Instrument weiterentwickeln. Jährliche Reflexionsworkshops durchführen. Best Practices aus allen Bereichen integrieren. Mit messbaren Erfolgsindikatoren verknüpfen. Eine Kultur schaffen, in der die Werte selbstverständlich gelebt werden."
+            }
+          },
+          "1.1.2": {
+            "finding": "Es gibt eine Sicherheitscharta, aber kein Unternehmensleitbild",
+            "recommendations": {
+              "level_1": "Die bestehende Sicherheitscharta als Ausgangspunkt für ein umfassendes Leitbild nutzen. Erste Workshops zur Leitbildentwicklung durchführen. Die Charta als Beweis ansehen, dass Sicherheit bereits Werte schafft. Eine Arbeitsschutzcharta als Zwischenlösung entwickeln.",
+              "level_2": "Ein umfassendes Unternehmensleitbild entwickeln, das über Sicherheit hinausgeht. Die Sicherheitscharta integrieren. Das neue Leitbild von der Geschäftsleitung unterzeichnen und als Ergänzung zum Leitbild positionieren.",
+              "level_3": "Das Leitbild in allen Unternehmensbereichen verankern. Umsetzungspläne entwickeln. Führungskräfte als Botschafter ausbilden. Regelmässige Reviews durchführen.",
+              "level_4": "Das Leitbild zur gelebten Unternehmenskultur machen. In alle Prozesse integrieren. Kontinuierliche Weiterentwicklung. Als Benchmark in der Branche etablieren."
+            }
+          },
+          "1.1.3": {
+            "finding": "Die Mitarbeiter sind nicht über den Sinn und die praktischen Konsequenzen des Unternehmensleitbildes informiert",
+            "recommendations": {
+              "level_1": "Das Interesse und Verständnis für das Leitbild wecken. In bestehenden Meetings 5-Minuten-Slots für Leitbildthemen nutzen. Konkrete Alltagsbeispiele sammeln. Vorgesetzte als Multiplikatoren gewinnen. Mit einfachen Visualisierungen arbeiten.",
+              "level_2": "Die Bedeutung des Leitbilds für jeden Arbeitsbereich übersetzen. Abteilungsspezifische Interpretationen erarbeiten. Führungskräfte in der Vermittlung schulen. Zeit für Fragen und Diskussionen einplanen. FAQ-Listen erstellen.",
+              "level_3": "Interaktive Formate zur Leitbildverankerung nutzen. Mitarbeitende selbst erarbeiten lassen, was es für sie bedeutet. Digitale Plattformen für kontinuierlichen Dialog schaffen. In Onboarding-Prozesse integrieren. Regelmässig Verständnis überprüfen.",
+              "level_4": "Leitbild-Botschafter in allen Bereichen etablieren. Innovative Kommunikationsformate entwickeln. Eine App für tägliche Leitbild-Impulse erstellen. Erfolgsgeschichten systematisch sammeln und teilen. Kontinuierliche Weiterentwicklung ermöglichen."
+            }
+          },
+          "1.1.4": {
+            "finding": "Das betriebliche Geschehen stimmt nicht mit dem Unternehmensleitbild überein",
+            "recommendations": {
+              "level_1": "Die grössten Diskrepanzen bewusst machen. Mit einem Pilotbereich beginnen. Kleine, sichtbare Veränderungen initiieren. Offen über die Lücke kommunizieren. Quick Wins identifizieren und umsetzen.",
+              "level_2": "Systematisch erfassen, wo Abweichungen auftreten. Ursachen gemeinsam analysieren. Einen realistischen Massnahmenplan mit klaren Meilensteinen erstellen. Monatlich über Fortschritte berichten. Transparenz als Erfolgsfaktor nutzen.",
+              "level_3": "Ein kontinuierliches Monitoring-System implementieren. Führungskräfte in wertebasierter Führung trainieren. Prozesse anpassen, die im Widerspruch stehen. Einen sicheren Meldekanal für Unstimmigkeiten schaffen.",
+              "level_4": "Die Leitbildkonformität in alle Managementprozesse einweben. Regelmässige Kulturaudits durchführen. Ein Frühwarnsystem entwickeln. Aus Abweichungen systematisch lernen. Eine Kultur der kontinuierlichen Angleichung schaffen."
+            }
+          },
+          "1.1.5": {
+            "finding": "Das Führungsverhalten der Vorgesetzten richtet sich nicht nach bestimmten Führungsgrundsätzen oder Führungsrichtlinien",
+            "recommendations": {
+              "level_1": "Das Bewusstsein für einheitliche Führung schaffen. Mit drei bis fünf klaren Sicherheitsverhaltensweisen beginnen. Positive Beispiele hervorheben. Jede Führungskraft ein persönliches Commitment formulieren lassen.",
+              "level_2": "Die erwarteten Führungsverhaltensweisen dokumentieren. In Workshops konkrete Situationen bearbeiten. Sicherheit als ersten Agendapunkt etablieren. Austausch über Führungsherausforderungen fördern. Vorbilder sichtbar machen.",
+              "level_3": "Führungsgrundsätze durch systematisches Training verankern. Peer-Coaching einführen. Sicherheitsführung in Leistungsbeurteilungen integrieren. Regelmässige Reflexionsrunden etablieren. Führungsqualität messen.",
+              "level_4": "Ein umfassendes Leadership-Excellence-Programm entwickeln. Interne Führungs-Coaches zertifizieren. 360-Grad-Assessments nutzen. Best-Practice-Austausch institutionalisieren. Führungserfolg mit Kulturentwicklung verknüpfen."
+            }
+          },
+          "1.1.6": {
+            "finding": "Sicherheit und Gesundheitsschutz sind kein ausdrücklicher Bestandteil der Führungsgrundsätze oder Führungsrichtlinien",
+            "recommendations": {
+              "level_1": "Sicherheit als ersten Punkt in bestehende Führungsleitlinien aufnehmen. Care-Prinzip betonen. Einfache Formulierungen wählen. In allen Führungsdokumenten verankern.",
+              "level_2": "Sicherheit systematisch in alle Führungsinstrumente integrieren. Konkrete Verhaltensbeispiele definieren. Führungskräfte schulen. Sicherheit in Mitarbeitergespräche einbauen.",
+              "level_3": "Sicherheitsorientierte Führung als Kernkompetenz etablieren. Messbare Kriterien entwickeln. In Auswahlverfahren berücksichtigen. Führungsentwicklung darauf ausrichten.",
+              "level_4": "Sicherheitsführerschaft als Differenzierungsmerkmal entwickeln. Innovative Führungskonzepte pilotieren. Andere Unternehmen inspirieren. Auszeichnungen anstreben."
+            }
+          },
+          "1.1.7": {
+            "finding": "Verpflichtungen wie Charta, Erklärung, Branchenlösung nicht von Geschäftsleitung unterzeichnet",
+            "recommendations": {
+              "level_1": "Die wichtigsten Verpflichtungen identifizieren. In der Geschäftsleitung die Bedeutung diskutieren. Erfüllte Anforderungen identifizieren. Einen Umsetzungsplan für fehlende Punkte erstellen.",
+              "level_2": "Alle erfüllten Punkte dokumentieren. Lückenanalyse durchführen. Mitarbeitervertretungen einbinden. Die geplante Unterzeichnung kommunizieren.",
+              "level_3": "Verpflichtungen konsequent umsetzen. Für jeden Punkt einen Aktionsplan erstellen. Verantwortlichkeiten klar definieren. Regelmässig über Fortschritte berichten. Als Rahmen für die Strategie nutzen.",
+              "level_4": "Über Mindestanforderungen hinausgehen. Eigene, ambitioniertere Standards setzen. Vorbild für andere werden. Erfahrungen in Netzwerken teilen. Auszeichnungen anstreben."
+            }
+          },
+          "1.1.8": {
+            "finding": "Kein Managementsystem/Zertifizierung eingeführt",
+            "recommendations": {
+              "level_1": "Den Nutzen eines Managementsystems aufzeigen. Mit einer Bestandsaufnahme beginnen. Quick Wins ohne System umsetzen. Verschiedene Systeme evaluieren. Ressourcenbedarf abschätzen.",
+              "level_2": "Bestehende Prozesse systematisch dokumentieren. Mit Systemanforderungen abgleichen. Eine Gap-Analyse erstellen. Schritweise Einführung über 12-18 Monate planen. Mitarbeitende frühzeitig einbinden.",
+              "level_3": "Das gewählte System strukturiert implementieren. Interne Auditoren ausbilden. Probeaudits durchführen. Die Zertifizierung vorbereiten. Das System zur Verbesserung nutzen.",
+              "level_4": "Mehrere Systeme intelligent integrieren. Ein ganzheitliches Managementsystem entwickeln. Benchmark in der Branche werden. Systeme für Innovation nutzen. Andere Unternehmen unterstützen."
+            }
+          }
+        }
+      },
+      "1.2": {
+        "title": "Engagement der Geschäftsleitung",
+        "subsections": {
+          "1.2.1": {
+            "finding": "Die Geschäftsleitung nimmt ihren Einfluss auf die Sicherheit nicht wahr",
+            "recommendations": {
+              "level_1": "Die Geschäftsleitung für ihre Vorbildrolle sensibilisieren. Konkrete Sicherheitsthemen in GL-Sitzungen einbringen. Erste persönliche Sicherheitsziele setzen. Sichtbare Sicherheitsaktionen durchführen.",
+              "level_2": "Systematisches GL-Engagement für Sicherheit aufbauen. Regelmässige Sicherheitsreviews. Persönliche Sicherheitsrundgänge. Klare Botschaften kommunizieren.",
+              "level_3": "Sicherheitsführerschaft der GL professionalisieren. Messbare Commitments. Persönliche Verantwortung übernehmen. In allen Entscheidungen berücksichtigen.",
+              "level_4": "GL als Sicherheitsvorbild in der Branche positionieren. Innovative Führungskonzepte. Andere inspirieren. Thought Leadership entwickeln."
+            }
+          },
+          "1.2.2": {
+            "finding": "Die Geschäftsleitung macht keine regelmässigen Betriebsrundgänge",
+            "recommendations": {
+              "level_1": "Erste monatliche Rundgänge einführen. Verschiedene Bereiche besuchen. Mit Mitarbeitenden sprechen. Beobachtungen dokumentieren.",
+              "level_2": "Systematische Rundgangsplanung etablieren. Alle Bereiche abdecken. Checklisten verwenden. Verbesserungen nachverfolgen.",
+              "level_3": "Professionelle Sicherheitsrundgänge implementieren. Verschiedene Tageszeiten. Unangekündigt durchführen. Sofort Massnahmen einleiten.",
+              "level_4": "Rundgänge als Führungsinstrument perfektionieren. Mitarbeitende einbeziehen. Best Practices teilen. Kontinuierliche Verbesserung."
+            }
+          },
+          "1.2.3": {
+            "finding": "Die Geschäftsleitung spricht bei Betriebsrundgängen keine unsicheren Zustände und Handlungen an",
+            "recommendations": {
+              "level_1": "Mut zum Ansprechen entwickeln. Wertschätzend kommunizieren. Erste Erfolge feiern. Vorbildfunktion wahrnehmen.",
+              "level_2": "Systematisches Ansprechen etablieren. Gesprächstechniken lernen. Positive Verstärkung nutzen. Nachverfolgung sicherstellen.",
+              "level_3": "Professionelle Sicherheitskommunikation implementieren. Coaching-Ansatz nutzen. Verhaltensänderungen unterstützen. Wirksamkeit messen.",
+              "level_4": "Exzellenz in Sicherheitskommunikation erreichen. Andere coachen. Best Practices entwickeln. Kulturwandel vorantreiben."
+            }
+          },
+          "1.2.4": {
+            "finding": "Für Arbeitssicherheit und Gesundheitsschutz besteht keine Budgetposition",
+            "recommendations": {
+              "level_1": "Erste Budgetposition schaffen. Notwendige Investitionen aufzeigen. ROI von Sicherheit berechnen. Klein beginnen.",
+              "level_2": "Systematisches Sicherheitsbudget aufbauen. Verschiedene Kostenarten erfassen. Jährlich planen. Transparenz schaffen.",
+              "level_3": "Professionelles Sicherheitsbudget implementieren. Präventionskosten einplanen. Innovationsbudget schaffen. Controlling etablieren.",
+              "level_4": "Sicherheit als Investition perfektionieren. Value-Creation nachweisen. Beste Kosteneffizienz. Andere inspirieren."
+            }
+          }
+        }
+      },
+      "1.3": {
+        "title": "Sicherheitsverhalten der Vorgesetzten",
+        "subsections": {
+          "1.3.1": {
+            "finding": "Die Vorgesetzten sind sich ihrer Verantwortung für Arbeitssicherheit nicht bewusst",
+            "recommendations": {
+              "level_1": "Bewusstsein für Verantwortung schaffen. Rechtliche Pflichten aufzeigen. Persönliche Haftung erklären. Erste Schulungen durchführen.",
+              "level_2": "Systematische Verantwortungsklärung. Aufgaben dokumentieren. Kompetenzen definieren. Regelmässig schulen.",
+              "level_3": "Professionelles Verantwortungsmanagement. Klare Delegation. Rechenschaftspflicht etablieren. In Zielsysteme integrieren.",
+              "level_4": "Verantwortungsexzellenz erreichen. Selbstverantwortung fördern. Proaktives Handeln. Andere befähigen."
+            }
+          },
+          "1.3.2": {
+            "finding": "Die Vorgesetzten nehmen ihre Vorbildfunktion für sicheres Verhalten nicht wahr",
+            "recommendations": {
+              "level_1": "Vorbildfunktion bewusst machen. Eigenes Verhalten reflektieren. Erste Verbesserungen umsetzen. Feedback einholen.",
+              "level_2": "Systematische Vorbildentwicklung. Verhaltensstandards definieren. Training durchführen. Gegenseitig beobachten.",
+              "level_3": "Professionelle Vorbildfunktion etablieren. 24/7-Commitment. Verhaltenscoaching nutzen. Wirkung messen.",
+              "level_4": "Vorbildexzellenz perfektionieren. Andere inspirieren. Multiplikator-Effekt nutzen. Kulturprägend wirken."
+            }
+          },
+          "1.3.3": {
+            "finding": "Die Vorgesetzten sprechen Mitarbeitende bei unsicherem Verhalten nicht an",
+            "recommendations": {
+              "level_1": "Mut zum Ansprechen entwickeln. Einfache Gesprächstechniken lernen. Erste Erfolge sammeln. Ängste abbauen.",
+              "level_2": "Systematisches Ansprechen etablieren. Gesprächsleitfäden nutzen. Regelmässig üben. Erfahrungen austauschen.",
+              "level_3": "Professionelle Sicherheitsgespräche führen. Verhaltensbasierte Sicherheit. Coaching-Kompetenzen. Nachhaltige Wirkung.",
+              "level_4": "Kommunikationsexzellenz erreichen. Präventiv wirken. Selbstregulation fördern. Best Practices entwickeln."
+            }
+          }
+        }
+      },
+      "1.4": {
+        "title": "Sicherheitsziele",
+        "subsections": {
+          "1.4.1": {
+            "finding": "Es gibt keine messbaren Ziele für die Begrenzung der Häufigkeiten von Nichtberufsunfällen, Krankheiten, Sachschäden, Störungen oder anderen Ereignissen",
+            "recommendations": {
+              "level_1": "Erste einfache Ziele setzen. Unfallreduktion anstreben. Baseline erfassen. Kommunizieren.",
+              "level_2": "Systematische Zielsetzung. SMART-Ziele definieren. Verschiedene Ereignistypen. Regelmässig überprüfen.",
+              "level_3": "Professionelles Zielsystem. Kaskadierte Ziele. Leading/Lagging Indicators. Anreizsysteme verknüpfen.",
+              "level_4": "Vision Zero verfolgen. Prädiktive Ziele. Kontinuierliche Verbesserung. Branchenführer werden."
+            }
+          },
+          "1.4.2": {
+            "finding": "Die Sicherheitsziele werden den Betriebsangehörigen nicht mitgeteilt",
+            "recommendations": {
+              "level_1": "Ziele einfach kommunizieren. Visualisieren. In Meetings besprechen. Verständnis prüfen.",
+              "level_2": "Systematische Zielkommunikation. Verschiedene Kanäle nutzen. Regelmässig wiederholen. Fortschritte zeigen.",
+              "level_3": "Professionelle Zielkaskadierung. Persönliche Ziele ableiten. Digitale Dashboards. Real-time Updates.",
+              "level_4": "Ziele in DNA verankern. Selbstverständlichkeit schaffen. Intrinsische Motivation. Kulturelle Verankerung."
+            }
+          },
+          "1.4.3": {
+            "finding": "Es gibt keine individuellen oder bereichsspezifischen Sicherheitsziele",
+            "recommendations": {
+              "level_1": "Erste Bereichsziele definieren. Mit Pilotbereichen beginnen. Einfache Metriken. Unterstützung bieten.",
+              "level_2": "Systematische Bereichsziele. Risikobezogen differenzieren. Mitarbeitende einbeziehen. Regelmässig reviewen.",
+              "level_3": "Professionelle Zielvereinbarungen. Individuelle Ziele. In Leistungsbeurteilung. Entwicklungspläne.",
+              "level_4": "Personalisierte Sicherheitsziele. Selbstgesteuert. Gamification nutzen. Höchste Ownership."
+            }
+          }
+        }
+      },
+      "1.5": {
+        "title": "Strategien, Konzepte, Programme",
+        "subsections": {
+          "1.5.1": {
+            "finding": "Es gibt kein Sicherheitskonzept",
+            "recommendations": {
+              "level_1": "Erstes Grobkonzept erstellen. Hauptelemente definieren. Verantwortlichkeiten klären. Dokumentieren.",
+              "level_2": "Systematisches Konzept entwickeln. Alle Bereiche abdecken. Standards definieren. Implementierungsplan.",
+              "level_3": "Professionelles Sicherheitskonzept. Integriert in Unternehmensstrategie. Messbare Outcomes. Kontinuierliche Anpassung.",
+              "level_4": "Innovatives Sicherheitskonzept. Zukunftsorientiert. Best-in-Class. Andere inspirieren."
+            }
+          },
+          "1.5.2": {
+            "finding": "Das Sicherheitskonzept ist nicht schriftlich dokumentiert",
+            "recommendations": {
+              "level_1": "Erste schriftliche Dokumentation. Hauptpunkte festhalten. Einfache Struktur. Zugänglich machen.",
+              "level_2": "Systematische Dokumentation. Vollständiges Konzept. Versionskontrolle. Regelmässige Updates.",
+              "level_3": "Professionelles Dokumentenmanagement. Digitale Plattform. Interaktive Elemente. Automatische Verteilung.",
+              "level_4": "Intelligentes Wissensmanagement. KI-gestützt. Selbstaktualisierend. Predictive Updates."
+            }
+          },
+          "1.5.3": {
+            "finding": "Entscheidungsfindung ohne Berücksichtigung der Meinung der Betroffenen",
+            "recommendations": {
+              "level_1": "Mit informellen Gesprächen beginnen. Feedback bei Entscheidungen einholen. Vorschläge sammeln. Berücksichtigung kommunizieren.",
+              "level_2": "Partizipative Entscheide strukturiert angehen. Workshops mit Vertretern durchführen. Gremien nutzen. Transparent entscheiden.",
+              "level_3": "Systematische Partizipation implementieren. Mitbestimmung nutzen. Bottom-up entwickeln. Akzeptanz messen.",
+              "level_4": "Kollektive Intelligenz perfektionieren. Dezentrale Entscheidungen. Selbstorganisation. Ownership schaffen. Vorbild werden."
+            }
+          },
+          "1.5.4": {
+            "finding": "Keine Ereignisüberwachung für das ganze Unternehmen",
+            "recommendations": {
+              "level_1": "Mit monatlichem One-Pager starten. Basisdaten erfassen. Dashboard erstellen. In GL-Sitzung diskutieren.",
+              "level_2": "Alle Ereignisse systematisch dokumentieren. Zentrales Reporting aufbauen. Trends visualisieren. Frühwarnindikatoren definieren. Eskalation regeln.",
+              "level_3": "Real-Time-Monitoring implementieren. Digitale Dashboards nutzen. Muster analysieren. Prädiktiv arbeiten. Alerts automatisieren.",
+              "level_4": "Intelligente Systeme entwickeln. KI für Muster nutzen. IoT integrieren. Vorausschauend steuern. Datengetrieben werden."
+            }
+          },
+          "1.5.5": {
+            "finding": "Keine Ereignisüberwachung für Organisationseinheiten",
+            "recommendations": {
+              "level_1": "Einfache Einheiten-Scorecards erstellen. Mit kritischen Bereichen beginnen. In Datenerfassung schulen. Monatlich reviewen.",
+              "level_2": "Einheitsspezifische KPIs dokumentieren. Massgeschneiderte Dashboards erstellen. Risikoprofile berücksichtigen. Peer-Reviews etablieren. Transparenz schaffen.",
+              "level_3": "Dezentrale Steuerung implementieren. Zur Selbststeuerung befähigen. Mobile Tools nutzen. Echtzeit verfolgen. Schwächere unterstützen.",
+              "level_4": "Autonomie mit Vernetzung fördern. Selbstlernende Systeme entwickeln. Gamification nutzen. Virtuelle Steuerung schaffen. Modern führen."
+            }
+          },
+          "1.5.6": {
+            "finding": "Keine Konsequenzen bei Zielabweichungen",
+            "recommendations": {
+              "level_1": "Klare Regeln definieren. Bei Verfehlung sofort analysieren. Aktionspläne erstellen. Bei Umsetzung unterstützen. Aus Fehlern lernen.",
+              "level_2": "Eskalationsprozesse dokumentieren. Abweichungsgrade unterscheiden. Strukturiert reviewen. Erst unterstützen, dann sanktionieren. Learnings kommunizieren.",
+              "level_3": "Professionelles Abweichungsmanagement implementieren. Root-Cause-Analysen nutzen. Präventiv agieren. Lernschleifen schaffen. Wirksamkeit messen.",
+              "level_4": "Abweichungen als Chancen nutzen. Fehlerkultur fördern. Für Systemverbesserungen nutzen. Resilienz entwickeln. High-Reliability werden."
+            }
+          },
+          "1.5.7": {
+            "finding": "Keine Sicherheitsstrategie vorhanden",
+            "recommendations": {
+              "level_1": "Einfache 3-Jahres-Vision entwickeln. Grösste Risiken identifizieren. 3-5 Handlungsfelder definieren. Groben Plan erstellen. Klar kommunizieren.",
+              "level_2": "Strukturierte Strategie dokumentieren. Trends analysieren. Stakeholder einbeziehen. Roadmaps erstellen. Mit Unternehmensstrategie verknüpfen.",
+              "level_3": "Strategisches Management implementieren. Szenarien planen. Alternative Pfade entwickeln. Regelmässig reviewen. Umsetzung messen.",
+              "level_4": "Visionäre Strategie entwickeln. Zukunft antizipieren. Trends gestalten. Nachhaltigkeit integrieren. Vordenker werden."
+            }
+          }
+        }
+      }
+    }
+  }
+}

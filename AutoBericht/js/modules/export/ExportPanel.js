@@ -137,12 +137,19 @@ export class ExportPanel {
 
   renderState(snapshot) {
     this.currentSnapshot = snapshot;
-    this.updateExports(snapshot.ready);
+    this.updateExports(snapshot);
   }
 
-  updateExports(isReady) {
+  updateExports(snapshot) {
+    const isReady = snapshot?.ready === true;
+    const workbookReady = Boolean(snapshot?.workbookReady);
     this.exportButtons.forEach((button) => {
-      button.disabled = !isReady;
+      const type = button.dataset.export;
+      if (type === 'workbook') {
+        button.disabled = !isReady || !workbookReady;
+      } else {
+        button.disabled = !isReady;
+      }
     });
     this.defaultStatusMessage = isReady
       ? 'Validation passed. Exports ready.'
@@ -159,6 +166,14 @@ export class ExportPanel {
           this.downloadProjectJson();
           if (this.activityLog) {
             this.activityLog.add('project.json downloaded');
+          }
+          break;
+        case 'workbook':
+          this.ensureSnapshotReady();
+          this.ensureWorkbookTemplate();
+          this.downloadWorkbook();
+          if (this.activityLog) {
+            this.activityLog.add('Workbook downloaded');
           }
           break;
         case 'pdf':
@@ -259,5 +274,27 @@ export class ExportPanel {
       this.statusElement.textContent = this.defaultStatusMessage;
       this.statusResetTimer = null;
     }, 2500);
+  }
+
+  ensureWorkbookTemplate() {
+    if (!this.state?.hasWorkbookTemplate || !this.state.hasWorkbookTemplate()) {
+      throw new Error('Load a workbook before exporting.');
+    }
+  }
+
+  downloadWorkbook() {
+    const result = this.state.generateWorkbookFile();
+    const blob = new Blob([result.arrayBuffer], {
+      type: 'application/vnd.ms-excel.sheet.macroEnabled.12',
+    });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = result.fileName || 'project.xlsm';
+    document.body.append(link);
+    link.click();
+    link.remove();
+    requestAnimationFrame(() => URL.revokeObjectURL(url));
+    this.showStatus('Workbook downloaded.');
   }
 }

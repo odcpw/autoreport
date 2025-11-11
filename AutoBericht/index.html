@@ -97,6 +97,10 @@
                 <input type="file" id="input-self-eval" accept=".json" />
               </label>
               <label class="upload-field">
+                <span>Project Workbook (.xlsm)</span>
+                <input type="file" id="input-workbook" accept=".xlsm,.xlsx" />
+              </label>
+              <label class="upload-field">
                 <span>Photo Directory</span>
                 <input type="file" id="input-photos" webkitdirectory directory />
               </label>
@@ -314,6 +318,9 @@
             </button>
             <button class="export-button" data-export="project-json" disabled>
               Download project.json
+            </button>
+            <button class="export-button" data-export="workbook" disabled>
+              Download Workbook (.xlsm)
             </button>
             <div class="export-status" id="export-status">
               Validation pending. Upload data to enable exports.
