@@ -1,15 +1,8 @@
 param(
-    [string]$TargetFolder = (Get-Location).Path,
-    [string]$RepoUrl      = "https://github.com/odcpw/autoreport.git",
-    [string]$Branch       = "main",
-    [switch]$FullClone
+    [string]$TargetFolder   = (Get-Location).Path,  # where to drop the repo contents
+    [string]$RepoArchiveUrl = "https://github.com/odcpw/autoreport/archive/refs/heads/main.zip",
+    [switch]$CleanTarget                       # optional: wipe target folder before copying
 )
-
-function Ensure-Git {
-    if (-not (Get-Command git -ErrorAction SilentlyContinue)) {
-        throw "Git is required but was not found in PATH."
-    }
-}
 
 function Ensure-Folder([string]$Path) {
     if (-not (Test-Path $Path)) {
@@ -17,36 +10,46 @@ function Ensure-Folder([string]$Path) {
     }
 }
 
-try {
-    Ensure-Git
+$zipPath     = Join-Path $env:TEMP "autobericht_zip_download.zip"
+$extractRoot = Join-Path $env:TEMP "autobericht_zip_extract"
 
+try {
     Ensure-Folder -Path $TargetFolder
     $ResolvedTarget = (Resolve-Path $TargetFolder).Path
 
-    $RepoName = [IO.Path]::GetFileNameWithoutExtension((Split-Path $RepoUrl -Leaf))
-    if (-not $RepoName) { $RepoName = "autoreport" }
+    Write-Host "Downloading archive..." -ForegroundColor Cyan
+    Invoke-WebRequest -Uri $RepoArchiveUrl -OutFile $zipPath
 
-    $RepoPath = Join-Path $ResolvedTarget $RepoName
-    $CloneArgs = @("--branch", $Branch, $RepoUrl, $RepoPath)
-    if (-not $FullClone) {
-        $CloneArgs = @("--depth", "1") + $CloneArgs
+    if (Test-Path $extractRoot) {
+        Remove-Item $extractRoot -Recurse -Force
+    }
+    Expand-Archive -Path $zipPath -DestinationPath $extractRoot -Force
+
+    # Locate the extracted repo root (usually autoreport-main)
+    $sourceInner = Join-Path $extractRoot "autoreport-main"
+    if (-not (Test-Path $sourceInner)) {
+        $sourceInner = (Get-ChildItem $extractRoot | Where-Object { $_.PSIsContainer }).FullName | Select-Object -First 1
+    }
+    if (-not $sourceInner -or -not (Test-Path $sourceInner)) {
+        throw "Could not locate extracted repo root under $extractRoot"
     }
 
-    if (-not (Test-Path $RepoPath)) {
-        Write-Host "Cloning $RepoUrl ($Branch) into $RepoPath..." -ForegroundColor Cyan
-        git clone @CloneArgs
-    }
-    else {
-        Write-Host "Updating existing repo at $RepoPath..." -ForegroundColor Cyan
-        git -C "$RepoPath" fetch --all --prune
-        git -C "$RepoPath" checkout "$Branch"
-        git -C "$RepoPath" pull --ff-only origin "$Branch"
+    if ($CleanTarget) {
+        Write-Host "Cleaning target folder $ResolvedTarget..." -ForegroundColor Yellow
+        Get-ChildItem -Path $ResolvedTarget -Force | Remove-Item -Recurse -Force
     }
 
-    Write-Host "Sync complete. Repo available at:`n$RepoPath" -ForegroundColor Green
-    Write-Host "Open AutoBericht via http://localhost:5501/AutoBericht/index.html (serve locally) or file:// if you start Edge with file access enabled."
+    Write-Host "Copying repo into $ResolvedTarget ..." -ForegroundColor Cyan
+    Copy-Item -Path (Join-Path $sourceInner '*') -Destination $ResolvedTarget -Recurse -Force
+
+    Write-Host "Sync complete. Open AutoBericht via http://localhost:5501/AutoBericht/index.html (serve locally)." -ForegroundColor Green
 }
 catch {
     Write-Error $_
     exit 1
+}
+finally {
+    foreach ($p in @($zipPath, $extractRoot)) {
+        if (Test-Path $p) { Remove-Item $p -Recurse -Force }
+    }
 }
