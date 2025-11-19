@@ -55,16 +55,14 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
                 Set currentEntry = New Scripting.Dictionary
                 currentEntry.CompareMode = TextCompare
                 currentEntry("fileName") = baseName
-                currentEntry("displayName") = baseName
                 currentEntry("notes") = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
                 currentEntry("preferredLocale") = ""
-                currentEntry("capturedAt") = imageItem("capturedAt")
             Else
                 currentEntry.CompareMode = TextCompare
-                If Len(NzString(currentEntry("displayName"))) = 0 Then currentEntry("displayName") = baseName
+                ' Recompute tags from disk; clear once when loading the record into the map
                 currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
                 currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
@@ -75,11 +73,12 @@ Public Sub ScanImagesIntoSheet(ByVal baseDirectory As String)
         relativePath = NzString(imageItem("relativePath"))
         If Len(relativePath) = 0 Then relativePath = baseName
 
-        If Len(NzString(currentEntry("capturedAt"))) = 0 Then
-            currentEntry("capturedAt") = imageItem("capturedAt")
-        End If
-
-        modABPhotosRepository.ApplyFolderTags currentEntry, relativePath, folderTagMap
+        Dim tagDict As Scripting.Dictionary
+        Set tagDict = modABPhotosRepository.CollectFolderTags(relativePath, folderTagMap)
+        currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = modABPhotosRepository.JoinDictionaryKeys(tagDict(modABPhotoConstants.PHOTO_LIST_BERICHT))
+        currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = modABPhotosRepository.JoinDictionaryKeys(tagDict(modABPhotoConstants.PHOTO_LIST_SEMINAR))
+        currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = modABPhotosRepository.JoinDictionaryKeys(tagDict(modABPhotoConstants.PHOTO_LIST_TOPIC))
+        modABPhotosRepository.SetAllTagsForFile currentEntry("fileName"), tagDict
         Debug.Print "  Tags ->", currentEntry(modABPhotoConstants.PHOTO_TAG_BERICHT), _
             currentEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR), currentEntry(modABPhotoConstants.PHOTO_TAG_TOPIC)
 ContinueLoop:
@@ -89,9 +88,6 @@ ContinueLoop:
     For Each key In entryMap.Keys
         Set currentEntry = entryMap(key)
         currentEntry.CompareMode = TextCompare
-        If Len(NzString(currentEntry("displayName"))) = 0 Then
-            currentEntry("displayName") = currentEntry("fileName")
-        End If
         Debug.Print "Upsert", currentEntry("fileName")
         modABPhotosRepository.UpsertPhoto currentEntry
     Next key
@@ -535,7 +531,6 @@ Private Sub TraverseFolder(ByVal folder As Object, ByVal baseDirectory As String
             item("fullPath") = file.Path
             item("relativePath") = relativePath
             item("baseName") = file.Name
-            item("capturedAt") = file.DateCreated
             results.Add item
         End If
     Next file

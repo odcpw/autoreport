@@ -237,26 +237,46 @@ Private Function ReadPhotos() As Dictionary
         If Len(fileName) = 0 Then GoTo Continue
         Dim photo As New Dictionary
         photo.CompareMode = TextCompare
-        photo("displayName") = NzString(ws.Cells(r, HeaderIndex(ws, "displayName")).Value)
         photo("notes") = NzString(ws.Cells(r, HeaderIndex(ws, "notes")).Value)
         Dim tags As New Dictionary
         tags.CompareMode = TextCompare
-        tags("bericht") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagBericht")).Value)
-        tags("seminar") = SplitTags(ws.Cells(r, HeaderIndex(ws, "tagSeminar")).Value)
-        Dim tagTopicCol As Long
-        tagTopicCol = HeaderIndex(ws, "tagTopic")
-        If tagTopicCol > 0 Then
-            tags("topic") = SplitTags(ws.Cells(r, tagTopicCol).Value)
-        Else
-            tags("topic") = SplitTags("")
-        End If
+        Dim tagDict As Dictionary
+        Set tagDict = modABPhotosRepository.GetPhotoTagsDict(fileName)
+        tags("bericht") = TagsDictToArray(tagDict, modABPhotoConstants.PHOTO_LIST_BERICHT)
+        tags("seminar") = TagsDictToArray(tagDict, modABPhotoConstants.PHOTO_LIST_SEMINAR)
+        tags("topic") = TagsDictToArray(tagDict, modABPhotoConstants.PHOTO_LIST_TOPIC)
         photo("tags") = tags
         photo("preferredLocale") = NzString(ws.Cells(r, HeaderIndex(ws, "preferredLocale")).Value)
-        photo("capturedAt") = NzString(ws.Cells(r, HeaderIndex(ws, "capturedAt")).Value)
         result(fileName) = photo
 Continue:
     Next r
     Set ReadPhotos = result
+End Function
+
+Private Function TagsDictToArray(tagDict As Dictionary, listName As String) As Variant
+    If tagDict Is Nothing Then
+        TagsDictToArray = Array()
+        Exit Function
+    End If
+    If Not tagDict.Exists(listName) Then
+        TagsDictToArray = Array()
+        Exit Function
+    End If
+    Dim col As Collection
+    On Error Resume Next
+    Set col = tagDict(listName)
+    On Error GoTo 0
+    If col Is Nothing Then
+        TagsDictToArray = Array()
+        Exit Function
+    End If
+    Dim arr() As String
+    ReDim arr(1 To col.Count)
+    Dim i As Long
+    For i = 1 To col.Count
+        arr(i) = NzString(col(i))
+    Next i
+    TagsDictToArray = arr
 End Function
 
 Private Function SplitTags(value As Variant) As Variant

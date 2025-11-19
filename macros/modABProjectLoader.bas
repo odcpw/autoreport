@@ -235,6 +235,11 @@ Private Sub WritePhotos(photoDict As Variant)
     ws.Cells.ClearContents
     WriteHeaderRow ws, HeaderPhotos()
 
+    Dim wsTags As Worksheet
+    Set wsTags = EnsureSheetWithHeaders(SHEET_PHOTO_TAGS, HeaderPhotoTags(), False)
+    wsTags.Cells.ClearContents
+    WriteHeaderRow wsTags, HeaderPhotoTags()
+
     If TypeName(photoDict) <> "Dictionary" Then Exit Sub
 
     Dim rowIndex As Long
@@ -244,17 +249,43 @@ Private Sub WritePhotos(photoDict As Variant)
         Dim payload As Dictionary
         Set payload = photoDict(key)
         ws.Cells(rowIndex, HeaderIndex(ws, "fileName")).Value = CStr(key)
-        ws.Cells(rowIndex, HeaderIndex(ws, "displayName")).Value = NzString(GetDictValue(payload, "displayName", key))
         ws.Cells(rowIndex, HeaderIndex(ws, "notes")).Value = NzString(GetDictValue(payload, "notes", ""))
         Dim tags As Dictionary
         Set tags = GetDictValue(payload, "tags", Nothing)
-        ws.Cells(rowIndex, HeaderIndex(ws, "tagBericht")).Value = JoinVariant(GetDictValue(tags, "bericht", Array()))
-        ws.Cells(rowIndex, HeaderIndex(ws, "tagSeminar")).Value = JoinVariant(GetDictValue(tags, "seminar", Array()))
-        ws.Cells(rowIndex, HeaderIndex(ws, "tagTopic")).Value = JoinVariant(GetDictValue(tags, "topic", Array()))
         ws.Cells(rowIndex, HeaderIndex(ws, "preferredLocale")).Value = NzString(GetDictValue(payload, "preferredLocale", ""))
-        ws.Cells(rowIndex, HeaderIndex(ws, "capturedAt")).Value = NzString(GetDictValue(payload, "capturedAt", ""))
+        WritePhotoTags wsTags, CStr(key), modABPhotoConstants.PHOTO_LIST_BERICHT, GetDictValue(tags, "bericht", Array())
+        WritePhotoTags wsTags, CStr(key), modABPhotoConstants.PHOTO_LIST_SEMINAR, GetDictValue(tags, "seminar", Array())
+        WritePhotoTags wsTags, CStr(key), modABPhotoConstants.PHOTO_LIST_TOPIC, GetDictValue(tags, "topic", Array())
         rowIndex = rowIndex + 1
     Next key
+End Sub
+
+Private Sub WritePhotoTags(wsTags As Worksheet, ByVal fileName As String, ByVal listName As String, tagArr As Variant)
+    Dim asCollection As Collection
+    If TypeName(tagArr) = "Collection" Then
+        Set asCollection = tagArr
+    Else
+        Set asCollection = New Collection
+        If IsArray(tagArr) Then
+            Dim lb As Long, ub As Long, i As Long
+            lb = LBound(tagArr): ub = UBound(tagArr)
+            For i = lb To ub
+                If Len(NzString(tagArr(i))) > 0 Then asCollection.Add NzString(tagArr(i))
+            Next i
+        ElseIf Len(NzString(tagArr)) > 0 Then
+            asCollection.Add NzString(tagArr)
+        End If
+    End If
+
+    Dim nextRow As Long
+    nextRow = wsTags.Cells(wsTags.Rows.Count, 1).End(xlUp).Row + 1
+    Dim item As Variant
+    For Each item In asCollection
+        wsTags.Cells(nextRow, HeaderIndex(wsTags, "fileName")).Value = fileName
+        wsTags.Cells(nextRow, HeaderIndex(wsTags, "listName")).Value = listName
+        wsTags.Cells(nextRow, HeaderIndex(wsTags, "tagValue")).Value = NzString(item)
+        nextRow = nextRow + 1
+    Next item
 End Sub
 
 Private Sub WriteLists(listDict As Variant)

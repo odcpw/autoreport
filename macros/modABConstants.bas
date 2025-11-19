@@ -9,6 +9,7 @@ Public Const SHEET_META As String = "Meta"
 Public Const SHEET_CHAPTERS As String = "Chapters"
 Public Const SHEET_ROWS As String = "Rows"
 Public Const SHEET_PHOTOS As String = "Photos"
+Public Const SHEET_PHOTO_TAGS As String = "PhotoTags"
 Public Const SHEET_LISTS As String = "Lists"
 Public Const SHEET_EXPORT_LOG As String = "ExportLog"
 Public Const SHEET_OVERRIDES_HISTORY As String = "OverridesHistory"
@@ -40,9 +41,13 @@ End Function
 
 Public Function HeaderPhotos() As Variant
     HeaderPhotos = Array( _
-        "fileName", "displayName", "notes", _
-        "tagBericht", "tagSeminar", "tagTopic", _
-        "preferredLocale", "capturedAt")
+        "fileName", "notes", _
+        "preferredLocale")
+End Function
+
+Public Function HeaderPhotoTags() As Variant
+    HeaderPhotoTags = Array( _
+        "fileName", "listName", "tagValue")
 End Function
 
 Public Function HeaderLists() As Variant
@@ -68,6 +73,7 @@ Public Function SheetHeaders(sheetName As String) As Variant
         Case SHEET_CHAPTERS: SheetHeaders = HeaderChapters()
         Case SHEET_ROWS: SheetHeaders = HeaderRows()
         Case SHEET_PHOTOS: SheetHeaders = HeaderPhotos()
+        Case SHEET_PHOTO_TAGS: SheetHeaders = HeaderPhotoTags()
         Case SHEET_LISTS: SheetHeaders = HeaderLists()
         Case SHEET_EXPORT_LOG: SheetHeaders = HeaderExportLog()
         Case SHEET_OVERRIDES_HISTORY: SheetHeaders = HeaderOverridesHistory()
@@ -77,7 +83,7 @@ End Function
 
 Public Function SheetList() As Variant
     SheetList = Array( _
-        SHEET_META, SHEET_CHAPTERS, SHEET_ROWS, SHEET_PHOTOS, _
+        SHEET_META, SHEET_CHAPTERS, SHEET_ROWS, SHEET_PHOTOS, SHEET_PHOTO_TAGS, _
         SHEET_LISTS, SHEET_EXPORT_LOG, SHEET_OVERRIDES_HISTORY)
 End Function
 

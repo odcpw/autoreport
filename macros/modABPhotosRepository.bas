@@ -9,18 +9,21 @@ Private Sub EnsurePhotoEntryDefaults(ByRef entry As Scripting.Dictionary)
     If entry Is Nothing Then Exit Sub
     entry.CompareMode = TextCompare
     If Not entry.Exists("fileName") Then entry("fileName") = ""
-    If Not entry.Exists("displayName") Then entry("displayName") = NzString(entry("fileName"))
     If Not entry.Exists("notes") Then entry("notes") = ""
     If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_BERICHT) Then entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
     If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_SEMINAR) Then entry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
     If Not entry.Exists(modABPhotoConstants.PHOTO_TAG_TOPIC) Then entry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
     If Not entry.Exists("preferredLocale") Then entry("preferredLocale") = ""
-    If Not entry.Exists("capturedAt") Then entry("capturedAt") = ""
 End Sub
 
 Public Function PhotosSheet() As Worksheet
     EnsureAutoBerichtSheets
     Set PhotosSheet = ThisWorkbook.Worksheets(SHEET_PHOTOS)
+End Function
+
+Public Function PhotoTagsSheet() As Worksheet
+    EnsureAutoBerichtSheets
+    Set PhotoTagsSheet = ThisWorkbook.Worksheets(SHEET_PHOTO_TAGS)
 End Function
 
 Public Function ListsSheet() As Worksheet
@@ -35,13 +38,11 @@ Public Sub EnsurePhotoRecord(fileName As String)
         Dim newEntry As New Scripting.Dictionary
         newEntry.CompareMode = TextCompare
         newEntry("fileName") = fileName
-        newEntry("displayName") = fileName
         newEntry("notes") = ""
         newEntry(modABPhotoConstants.PHOTO_TAG_BERICHT) = ""
         newEntry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = ""
         newEntry(modABPhotoConstants.PHOTO_TAG_TOPIC) = ""
         newEntry("preferredLocale") = ""
-        newEntry("capturedAt") = ""
         EnsurePhotoEntryDefaults newEntry
         UpsertPhoto newEntry
     End If
@@ -67,6 +68,12 @@ Public Function GetPhotoEntry(fileName As String) As Scripting.Dictionary
         entry(CStr(headers(1, c))) = ws.Cells(rowIndex, c).Value
     Next c
     EnsurePhotoEntryDefaults entry
+    ' Hydrate tag fields for UI convenience from PhotoTags table
+    Dim tags As Dictionary
+    Set tags = GetPhotoTagsDict(NzString(entry("fileName")))
+    entry(modABPhotoConstants.PHOTO_TAG_BERICHT) = JoinTags(GetDictValue(tags, modABPhotoConstants.PHOTO_LIST_BERICHT, Array()))
+    entry(modABPhotoConstants.PHOTO_TAG_SEMINAR) = JoinTags(GetDictValue(tags, modABPhotoConstants.PHOTO_LIST_SEMINAR, Array()))
+    entry(modABPhotoConstants.PHOTO_TAG_TOPIC) = JoinTags(GetDictValue(tags, modABPhotoConstants.PHOTO_LIST_TOPIC, Array()))
     Set GetPhotoEntry = entry
 End Function
 
@@ -93,77 +100,12 @@ Public Sub RemoveMissingPhotos(currentEntries As Scripting.Dictionary)
         key = NzString(ws.Cells(r, nameCol).Value)
         If Len(key) > 0 Then
             If currentEntries Is Nothing Or Not currentEntries.Exists(key) Then
+                RemoveTagsForFile key
                 ws.Rows(r).Delete
             End If
         End If
     Next r
 End Sub
-
-Public Sub SetPhotoTags(fileName As String, tagField As String, tags As Variant)
-    EnsurePhotoRecord fileName
-    Dim ws As Worksheet
-    Set ws = PhotosSheet()
-    Dim rowIndex As Long
-    rowIndex = FindRowIndex(ws, "fileName", fileName)
-    If rowIndex = 0 Then Exit Sub
-
-    Dim colIndex As Long
-    colIndex = HeaderIndex(ws, tagField)
-    If colIndex = 0 Then Exit Sub
-
-    ws.Cells(rowIndex, colIndex).Value = JoinTags(tags)
-End Sub
-
-Public Sub TogglePhotoTag(fileName As String, tagField As String, tagValue As String)
-    EnsurePhotoRecord fileName
-    Dim current As Collection
-    Set current = GetTagList(fileName, tagField)
-
-    Dim dict As New Scripting.Dictionary
-    dict.CompareMode = TextCompare
-
-    Dim i As Long
-    For i = 1 To current.Count
-        dict(current(i)) = True
-    Next i
-
-    If dict.Exists(tagValue) Then
-        dict.Remove tagValue
-    Else
-        dict(tagValue) = True
-    End If
-
-    SetPhotoTags fileName, tagField, dict.Keys
-End Sub
-
-Public Function GetTagList(fileName As String, tagField As String) As Collection
-    Dim entry As Scripting.Dictionary
-    Set entry = GetPhotoEntry(fileName)
-    Dim result As New Collection
-    If entry Is Nothing Then
-        Set GetTagList = result
-        Exit Function
-    End If
-
-    Dim raw As String
-    raw = NzString(entry(tagField))
-    If Len(raw) = 0 Then
-        Set GetTagList = result
-        Exit Function
-    End If
-
-    Dim parts() As String
-    parts = Split(raw, ",")
-    Dim i As Long
-    For i = LBound(parts) To UBound(parts)
-        Dim val As String
-        val = Trim$(parts(i))
-        If Len(val) > 0 Then
-            result.Add val
-        End If
-    Next i
-    Set GetTagList = result
-End Function
 
 Public Function GetButtonList(listName As String, locale As String) As Collection
     Dim ws As Worksheet
@@ -332,32 +274,27 @@ ContinueRow:
     Set BuildFolderTagLookup = map
 End Function
 
-Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As String, folderMap As Scripting.Dictionary)
-    If folderMap Is Nothing Then Exit Sub
-    If folderMap.Count = 0 Then Exit Sub
-    If record Is Nothing Then Exit Sub
-    EnsurePhotoEntryDefaults record
+Public Function CollectFolderTags(ByVal relativePath As String, folderMap As Scripting.Dictionary) As Scripting.Dictionary
+    Dim result As New Scripting.Dictionary
+    result.CompareMode = TextCompare
+    result(PHOTO_LIST_BERICHT) = New Scripting.Dictionary
+    result(PHOTO_LIST_SEMINAR) = New Scripting.Dictionary
+    result(PHOTO_LIST_TOPIC) = New Scripting.Dictionary
+
+    If folderMap Is Nothing Or folderMap.Count = 0 Then
+        Set CollectFolderTags = result
+        Exit Function
+    End If
 
     Dim normalizedPath As String
     normalizedPath = Replace(relativePath, "/", "\")
 
     Dim segments() As String
     segments = Split(normalizedPath, "\")
-    If UBound(segments) < 1 Then Exit Sub
-
-    Dim tagBuckets As New Scripting.Dictionary
-    tagBuckets.CompareMode = TextCompare
-
-    Dim bucket As Scripting.Dictionary
-    Dim fields As Variant
-    fields = Array(PHOTO_TAG_BERICHT, PHOTO_TAG_SEMINAR, PHOTO_TAG_TOPIC)
-
-    Dim field As Variant
-    For Each field In fields
-        Dim initialBucket As Scripting.Dictionary
-        Set initialBucket = ExistingTagDictionary(record, CStr(field))
-        Set tagBuckets(field) = initialBucket
-    Next field
+    If UBound(segments) < 0 Then
+        Set CollectFolderTags = result
+        Exit Function
+    End If
 
     Dim i As Long
     For i = LBound(segments) To UBound(segments) - 1
@@ -371,8 +308,9 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
             Set entries = folderMap(lookupKey)
             Dim desc As Scripting.Dictionary
             For Each desc In entries
-                If tagBuckets.Exists(desc("field")) Then
-                    Set bucket = tagBuckets(desc("field"))
+                If result.Exists(desc("listName")) Then
+                    Dim bucket As Scripting.Dictionary
+                    Set bucket = result(desc("listName"))
                     bucket(desc("value")) = True
                 End If
             Next desc
@@ -380,11 +318,8 @@ Public Sub ApplyFolderTags(record As Scripting.Dictionary, ByVal relativePath As
 ContinueSegment:
     Next i
 
-    For Each field In tagBuckets.Keys
-        Set bucket = tagBuckets(field)
-        record(CStr(field)) = JoinDictionaryKeys(bucket)
-    Next field
-End Sub
+    Set CollectFolderTags = result
+End Function
 
 Private Sub AddFolderMapping(ByRef map As Scripting.Dictionary, ByVal labelValue As Variant, ByVal tagField As String, ByVal tagValue As String)
     Dim token As String
@@ -452,7 +387,7 @@ Private Function ExistingTagDictionary(ByVal record As Scripting.Dictionary, ByV
     Set ExistingTagDictionary = dict
 End Function
 
-Private Function JoinDictionaryKeys(ByVal dict As Scripting.Dictionary) As String
+Public Function JoinDictionaryKeys(ByVal dict As Scripting.Dictionary) As String
     If dict Is Nothing Then Exit Function
     If dict.Count = 0 Then
         JoinDictionaryKeys = ""
@@ -472,4 +407,218 @@ Private Function JoinDictionaryKeys(ByVal dict As Scripting.Dictionary) As Strin
         Next i
         JoinDictionaryKeys = Join(keys, ", ")
     End If
+End Function
+
+'=====================
+' PhotoTags table I/O
+'=====================
+Public Function GetTagList(fileName As String, tagField As String) As Collection
+    Dim listName As String
+    listName = FieldToListName(tagField)
+    Set GetTagList = GetTagsForFileAndList(fileName, listName)
+End Function
+
+Public Function GetTagsForFileAndList(ByVal fileName As String, ByVal listName As String) As Collection
+    Dim result As New Collection
+    If Len(fileName) = 0 Or Len(listName) = 0 Then
+        Set GetTagsForFileAndList = result
+        Exit Function
+    End If
+
+    Dim ws As Worksheet
+    Set ws = PhotoTagsSheet()
+    Dim colFile As Long, colList As Long, colTag As Long
+    colFile = HeaderIndex(ws, "fileName")
+    colList = HeaderIndex(ws, "listName")
+    colTag = HeaderIndex(ws, "tagValue")
+    If colFile = 0 Or colList = 0 Or colTag = 0 Then
+        Set GetTagsForFileAndList = result
+        Exit Function
+    End If
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colFile).End(xlUp).Row
+    Dim r As Long
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        If StrComp(NzString(ws.Cells(r, colFile).Value), fileName, vbTextCompare) = 0 _
+            And StrComp(NzString(ws.Cells(r, colList).Value), listName, vbTextCompare) = 0 Then
+            Dim val As String
+            val = NzString(ws.Cells(r, colTag).Value)
+            If Len(val) > 0 Then result.Add val
+        End If
+    Next r
+    Set GetTagsForFileAndList = result
+End Function
+
+Public Sub SetPhotoTags(fileName As String, tagField As String, tags As Variant)
+    Dim listName As String
+    listName = FieldToListName(tagField)
+    If Len(listName) = 0 Then Exit Sub
+    SetTagList fileName, listName, tags
+End Sub
+
+Public Sub TogglePhotoTag(fileName As String, tagField As String, tagValue As String)
+    EnsurePhotoRecord fileName
+    Dim listName As String
+    listName = FieldToListName(tagField)
+    If Len(listName) = 0 Then Exit Sub
+
+    Dim current As Collection
+    Set current = GetTagsForFileAndList(fileName, listName)
+
+    Dim dict As New Scripting.Dictionary
+    dict.CompareMode = TextCompare
+
+    Dim i As Long
+    For i = 1 To current.Count
+        dict(current(i)) = True
+    Next i
+
+    If dict.Exists(tagValue) Then
+        dict.Remove tagValue
+    Else
+        dict(tagValue) = True
+    End If
+
+    SetTagList fileName, listName, dict.Keys
+End Sub
+
+Public Sub SetTagList(ByVal fileName As String, ByVal listName As String, tags As Variant)
+    If Len(fileName) = 0 Or Len(listName) = 0 Then Exit Sub
+    Dim ws As Worksheet
+    Set ws = PhotoTagsSheet()
+    Dim colFile As Long, colList As Long, colTag As Long
+    colFile = HeaderIndex(ws, "fileName")
+    colList = HeaderIndex(ws, "listName")
+    colTag = HeaderIndex(ws, "tagValue")
+    If colFile = 0 Or colList = 0 Or colTag = 0 Then Exit Sub
+
+    ' Remove existing
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colFile).End(xlUp).Row
+    Dim r As Long
+    For r = lastRow To ROW_HEADER_ROW + 1 Step -1
+        If StrComp(NzString(ws.Cells(r, colFile).Value), fileName, vbTextCompare) = 0 _
+            And StrComp(NzString(ws.Cells(r, colList).Value), listName, vbTextCompare) = 0 Then
+            ws.Rows(r).Delete
+        End If
+    Next r
+
+    Dim values As Collection
+    Set values = NormalizeToCollection(tags)
+    If values.Count = 0 Then Exit Sub
+
+    Dim insertRow As Long
+    insertRow = ws.Cells(ws.Rows.Count, colFile).End(xlUp).Row + 1
+    Dim item As Variant
+    For Each item In values
+        ws.Cells(insertRow, colFile).Value = fileName
+        ws.Cells(insertRow, colList).Value = listName
+        ws.Cells(insertRow, colTag).Value = item
+        insertRow = insertRow + 1
+    Next item
+End Sub
+
+Public Sub SetAllTagsForFile(ByVal fileName As String, tagsDict As Dictionary)
+    If Len(fileName) = 0 Then Exit Sub
+    Dim listName As Variant
+    For Each listName In tagsDict.Keys
+        Dim bucket As Scripting.Dictionary
+        Set bucket = tagsDict(listName)
+        SetTagList fileName, CStr(listName), bucket.Keys
+    Next listName
+End Sub
+
+Public Sub RemoveTagsForFile(ByVal fileName As String)
+    If Len(fileName) = 0 Then Exit Sub
+    Dim ws As Worksheet
+    Set ws = PhotoTagsSheet()
+    Dim colFile As Long
+    colFile = HeaderIndex(ws, "fileName")
+    If colFile = 0 Then Exit Sub
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colFile).End(xlUp).Row
+    Dim r As Long
+    For r = lastRow To ROW_HEADER_ROW + 1 Step -1
+        If StrComp(NzString(ws.Cells(r, colFile).Value), fileName, vbTextCompare) = 0 Then
+            ws.Rows(r).Delete
+        End If
+    Next r
+End Sub
+
+Public Function GetPhotoTagsDict(ByVal fileName As String) As Dictionary
+    Dim result As New Dictionary
+    result.CompareMode = TextCompare
+    result(modABPhotoConstants.PHOTO_LIST_BERICHT) = Array()
+    result(modABPhotoConstants.PHOTO_LIST_SEMINAR) = Array()
+    result(modABPhotoConstants.PHOTO_LIST_TOPIC) = Array()
+
+    If Len(fileName) = 0 Then
+        Set GetPhotoTagsDict = result
+        Exit Function
+    End If
+
+    Dim ws As Worksheet
+    Set ws = PhotoTagsSheet()
+    Dim colFile As Long, colList As Long, colTag As Long
+    colFile = HeaderIndex(ws, "fileName")
+    colList = HeaderIndex(ws, "listName")
+    colTag = HeaderIndex(ws, "tagValue")
+    If colFile = 0 Or colList = 0 Or colTag = 0 Then
+        Set GetPhotoTagsDict = result
+        Exit Function
+    End If
+
+    Dim temp As New Scripting.Dictionary
+    temp.CompareMode = TextCompare
+    temp(modABPhotoConstants.PHOTO_LIST_BERICHT) = New Collection
+    temp(modABPhotoConstants.PHOTO_LIST_SEMINAR) = New Collection
+    temp(modABPhotoConstants.PHOTO_LIST_TOPIC) = New Collection
+
+    Dim lastRow As Long
+    lastRow = ws.Cells(ws.Rows.Count, colFile).End(xlUp).Row
+    Dim r As Long
+    For r = ROW_HEADER_ROW + 1 To lastRow
+        If StrComp(NzString(ws.Cells(r, colFile).Value), fileName, vbTextCompare) = 0 Then
+            Dim ln As String
+            ln = NzString(ws.Cells(r, colList).Value)
+            Dim tv As String
+            tv = NzString(ws.Cells(r, colTag).Value)
+            If temp.Exists(ln) And Len(tv) > 0 Then temp(ln).Add tv
+        End If
+    Next r
+
+    Dim lnKey As Variant
+    For Each lnKey In temp.Keys
+        result(lnKey) = temp(lnKey)
+    Next lnKey
+    Set GetPhotoTagsDict = result
+End Function
+
+Private Function NormalizeToCollection(tags As Variant) As Collection
+    Dim result As New Collection
+    If TypeName(tags) = "Collection" Then
+        Dim item As Variant
+        For Each item In tags
+            If Len(NzString(item)) > 0 Then result.Add NzString(item)
+        Next item
+    ElseIf IsArray(tags) Then
+        Dim lb As Long, ub As Long, i As Long
+        lb = LBound(tags): ub = UBound(tags)
+        For i = lb To ub
+            If Len(NzString(tags(i))) > 0 Then result.Add NzString(tags(i))
+        Next i
+    ElseIf Len(NzString(tags)) > 0 Then
+        result.Add NzString(tags)
+    End If
+    Set NormalizeToCollection = result
+End Function
+
+Private Function FieldToListName(ByVal tagField As String) As String
+    Select Case tagField
+        Case modABPhotoConstants.PHOTO_TAG_BERICHT: FieldToListName = modABPhotoConstants.PHOTO_LIST_BERICHT
+        Case modABPhotoConstants.PHOTO_TAG_SEMINAR: FieldToListName = modABPhotoConstants.PHOTO_LIST_SEMINAR
+        Case modABPhotoConstants.PHOTO_TAG_TOPIC: FieldToListName = modABPhotoConstants.PHOTO_LIST_TOPIC
+        Case Else: FieldToListName = ""
+    End Select
 End Function

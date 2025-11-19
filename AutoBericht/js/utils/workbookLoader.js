@@ -5,6 +5,7 @@ const SHEETS = {
   CHAPTERS: 'Chapters',
   ROWS: 'Rows',
   PHOTOS: 'Photos',
+  PHOTO_TAGS: 'PhotoTags',
   LISTS: 'Lists',
 };
 
@@ -33,12 +34,14 @@ export function writeWorkbookSnapshot(workbook, snapshot) {
   const chaptersRows = buildChapterRows(snapshot);
   const rowRows = buildRowsSheet(snapshot);
   const photoRows = buildPhotoRows(snapshot);
+  const photoTagRows = buildPhotoTagRows(snapshot);
   const listRows = buildListRows(snapshot);
 
   setSheet(workbook, SHEETS.META, metaRows);
   setSheet(workbook, SHEETS.CHAPTERS, chaptersRows);
   setSheet(workbook, SHEETS.ROWS, rowRows);
   setSheet(workbook, SHEETS.PHOTOS, photoRows);
+  setSheet(workbook, SHEETS.PHOTO_TAGS, photoTagRows);
   setSheet(workbook, SHEETS.LISTS, listRows);
 }
 
@@ -179,28 +182,53 @@ function readLists(workbook) {
 }
 
 function readPhotos(workbook) {
-  const rows = sheetToJson(workbook, SHEETS.PHOTOS);
+  const photoRows = sheetToJson(workbook, SHEETS.PHOTOS);
   const photos = {};
-  rows.forEach((row) => {
+  photoRows.forEach((row) => {
     const fileName = String(row.fileName || '').trim();
     if (!fileName) return;
-    const parseTags = (value) =>
-      String(value || '')
-        .split(',')
-        .map((token) => token.trim())
-        .filter(Boolean);
     photos[fileName] = {
-      displayName: String(row.displayName || fileName).trim(),
       notes: String(row.notes || '').trim(),
       preferredLocale: String(row.preferredLocale || '').trim(),
-      capturedAt: String(row.capturedAt || '').trim(),
       tags: {
-        bericht: parseTags(row.tagBericht),
-        seminar: parseTags(row.tagSeminar),
-        topic: parseTags(row.tagTopic),
+        bericht: [],
+        seminar: [],
+        topic: [],
       },
     };
   });
+
+  const tagRows = sheetToJson(workbook, SHEETS.PHOTO_TAGS);
+  const mapListName = (listName) => {
+    if (!listName) return null;
+    if (String(listName).toLowerCase().includes('bericht')) return 'bericht';
+    if (String(listName).toLowerCase().includes('seminar')) return 'seminar';
+    if (String(listName).toLowerCase().includes('topic')) return 'topic';
+    return null;
+  };
+
+  tagRows.forEach((row) => {
+    const fileName = String(row.fileName || '').trim();
+    const listName = mapListName(row.listName);
+    const tagValue = String(row.tagValue || '').trim();
+    if (!fileName || !listName || !tagValue) return;
+    if (!photos[fileName]) {
+      photos[fileName] = {
+        notes: '',
+        preferredLocale: '',
+        tags: { bericht: [], seminar: [], topic: [] },
+      };
+    }
+    photos[fileName].tags[listName].push(tagValue);
+  });
+
+  // Normalize tag lists
+  Object.values(photos).forEach((photo) => {
+    photo.tags.bericht = normalizeTagList(photo.tags.bericht);
+    photo.tags.seminar = normalizeTagList(photo.tags.seminar);
+    photo.tags.topic = normalizeTagList(photo.tags.topic);
+  });
+
   return photos;
 }
 
@@ -541,32 +569,42 @@ function buildRowsSheet(snapshot) {
 function buildPhotoRows(snapshot) {
   const headers = [
     'fileName',
-    'displayName',
     'notes',
-    'tagBericht',
-    'tagSeminar',
-    'tagTopic',
     'preferredLocale',
-    'capturedAt',
   ];
   const photos = Array.isArray(snapshot.photos) ? snapshot.photos : [];
   if (!photos.length) return [headers];
   const aoa = photos.map((photo) => {
     const path = photo.path || photo.file?.name || '';
-    const tags = photo.tags || {};
-    const joinTags = (list) => (Array.isArray(list) ? list.join(', ') : '');
     return [
       path,
-      photo.displayName || path,
       photo.notes || '',
-      joinTags(tags.bericht),
-      joinTags(tags.seminar),
-      joinTags(tags.topic),
       photo.preferredLocale || '',
-      photo.capturedAt || '',
     ];
   });
   return [headers, ...aoa];
+}
+
+function buildPhotoTagRows(snapshot) {
+  const headers = ['fileName', 'listName', 'tagValue'];
+  const photos = Array.isArray(snapshot.photos) ? snapshot.photos : [];
+  if (!photos.length) return [headers];
+  const rows = [];
+  photos.forEach((photo) => {
+    const path = photo.path || photo.file?.name || '';
+    const tags = photo.tags || {};
+    const pushTags = (listName, values) => {
+      if (!Array.isArray(values)) return;
+      values.forEach((val) => {
+        if (!val) return;
+        rows.push([path, listName, val]);
+      });
+    };
+    pushTags('photo.bericht', tags.bericht);
+    pushTags('photo.seminar', tags.seminar);
+    pushTags('photo.topic', tags.topic);
+  });
+  return [headers, ...rows];
 }
 
 function buildListRows(snapshot) {

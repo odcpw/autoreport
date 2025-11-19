@@ -88,7 +88,13 @@ Private Sub LoadPhotoCache()
         Dim fileKey As String
         fileKey = NzString(entry("fileName"))
         If Len(fileKey) > 0 Then
-            Set photoCache(fileKey) = entry
+            Dim hydrated As Scripting.Dictionary
+            Set hydrated = modABPhotosRepository.GetPhotoEntry(fileKey)
+            If hydrated Is Nothing Then
+                Set photoCache(fileKey) = entry
+            Else
+                Set photoCache(fileKey) = hydrated
+            End If
         End If
     Next entry
     SortPhotoCache
@@ -343,10 +349,7 @@ Private Sub UpdateImageDisplay()
     End If
 
     Set photoCache(fileName) = record
-    Dim displayName As String
-    displayName = NzString(record("displayName"))
-    If Len(displayName) = 0 Then displayName = fileName
-    lblCurrentImageName.Caption = displayName
+    lblCurrentImageName.Caption = fileName
 
     Dim fullPath As String
     fullPath = BuildPhotoPath(record)

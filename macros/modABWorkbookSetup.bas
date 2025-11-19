@@ -73,7 +73,7 @@ End Function
 
 Public Sub ClearDataTables()
     Dim sheetName As Variant
-    For Each sheetName In Array(SHEET_ROWS, SHEET_PHOTOS, SHEET_LISTS, SHEET_EXPORT_LOG, SHEET_OVERRIDES_HISTORY)
+    For Each sheetName In Array(SHEET_ROWS, SHEET_PHOTOS, SHEET_PHOTO_TAGS, SHEET_LISTS, SHEET_EXPORT_LOG, SHEET_OVERRIDES_HISTORY)
         ClearTable ThisWorkbook.Worksheets(CStr(sheetName))
     Next sheetName
 End Sub
