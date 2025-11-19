@@ -15,6 +15,8 @@ import {
 import { cloneOverride } from '../core/utils/cloning.js';
 import { loadWorkbookPayload, readWorkbookFromArray, writeWorkbookSnapshot } from '../utils/workbookLoader.js';
 
+const PROJECT_REBUILD_DEBOUNCE_MS = 250;
+
 /**
  * ProjectState manages in-memory application data derived from uploads.
  * Exposes events to enable reactive UI updates without direct DOM manipulation.
@@ -23,10 +25,13 @@ import { loadWorkbookPayload, readWorkbookFromArray, writeWorkbookSnapshot } fro
 class ProjectState extends EventTarget {
   constructor() {
     super();
+    this.projectDirty = false;
+    this.projectRebuildTimer = null;
     this.reset();
   }
 
   reset() {
+    this.clearPendingRebuild();
     this.master = null;
     this.selfEval = null;
     this.masterSource = null;
@@ -105,7 +110,7 @@ class ProjectState extends EventTarget {
     this.sources.master = this.masterSource;
     this.projectOverrides.clear();
     this.runValidation('master', data);
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   setSelfEvalData(data, source = null) {
@@ -113,7 +118,7 @@ class ProjectState extends EventTarget {
     this.selfEvalSource = source || 'Loaded programmatically';
     this.sources.selfEval = this.selfEvalSource;
     this.runValidation('selfEval', data);
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   setProjectSnapshot(data, source = null) {
@@ -202,7 +207,7 @@ class ProjectState extends EventTarget {
       });
     }
 
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   ingestPhotos(fileList) {
@@ -225,7 +230,7 @@ class ProjectState extends EventTarget {
       : `${imageFiles.length} files`;
 
     this.runValidation('photos', { count: this.photos.size });
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   setPhotoFixtures(entries) {
@@ -244,17 +249,17 @@ class ProjectState extends EventTarget {
     });
     this.sources.photos = `${entries.length} fixtures`;
     this.runValidation('photos', { count: this.photos.size });
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   updateConfig(partial) {
     this.config = { ...this.config, ...partial };
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   updateBranding(side, dataUrl) {
     this.branding = { ...this.branding, [side]: dataUrl };
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   setTagOptions(partial) {
@@ -274,14 +279,14 @@ class ProjectState extends EventTarget {
       changed = true;
     }
     if (changed) {
-      this.rebuildProject();
+      this.requestProjectRebuild({ immediate: true });
     }
   }
 
   updateTagList(type, values) {
     if (!['seminar', 'topic'].includes(type)) return;
     this.applyTagList(type, values);
-    this.rebuildProject();
+    this.requestProjectRebuild({ immediate: true });
   }
 
   applyTagList(type, values) {
@@ -296,7 +301,8 @@ class ProjectState extends EventTarget {
     if (!photo) return;
     photo.notes = notes;
     this.photos.set(path, photo);
-    this.rebuildProject();
+    this.emitStateChange();
+    this.requestProjectRebuild();
   }
 
   togglePhotoTag(path, group, value) {
@@ -319,72 +325,94 @@ class ProjectState extends EventTarget {
     }
     photo.tags[group] = Array.from(current);
     this.photos.set(path, photo);
-    this.rebuildProject();
+    this.emitStateChange();
+    this.requestProjectRebuild();
   }
 
   updateFindingAdjusted(id, text) {
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       override.finding.adjustedText = text;
     });
+    if (changed) {
+      this.requestProjectRebuild();
+    }
   }
 
   setFindingUseAdjusted(id, value) {
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       override.finding.useAdjusted = Boolean(value);
     });
+    if (changed) {
+      this.requestProjectRebuild({ immediate: true });
+    }
   }
 
   updateFindingLevel(id, level) {
     const numeric = Number(level);
     if (Number.isNaN(numeric)) return;
-    this.applyOverride(id, (override, base) => {
+    const changed = this.applyOverride(id, (override, base) => {
       override.level = Math.min(Math.max(numeric, 1), 4);
       if (!base.includeInReport) {
         override.includeInReport = base.includeInReport;
       }
     });
+    if (changed) {
+      this.requestProjectRebuild({ immediate: true });
+    }
   }
 
   setFindingInclude(id, value) {
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       override.includeInReport = Boolean(value);
     });
+    if (changed) {
+      this.requestProjectRebuild({ immediate: true });
+    }
   }
 
   updateRecommendationAdjusted(id, index, text) {
     const key = String(index);
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       ensureRecommendation(override, key);
       override.recommendations[key].adjusted = text;
     });
+    if (changed) {
+      this.requestProjectRebuild();
+    }
   }
 
   setRecommendationUse(id, index, value) {
     const key = String(index);
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       ensureRecommendation(override, key);
       override.recommendations[key].useAdjusted = Boolean(value);
     });
+    if (changed) {
+      this.requestProjectRebuild({ immediate: true });
+    }
   }
 
   setProposeMasterUpdate(id, action, scope) {
-    this.applyOverride(id, (override) => {
+    const changed = this.applyOverride(id, (override) => {
       override.proposeMasterUpdate = {
         action: action || 'none',
         scope: scope || '',
       };
     });
+    if (changed) {
+      this.requestProjectRebuild({ immediate: true });
+    }
   }
 
   applyOverride(id, mutate) {
-    if (!this.project) return;
+    if (!this.project) return false;
     const baseEntry = getFindingById(this.project, id);
-    if (!baseEntry) return;
+    if (!baseEntry) return false;
     const currentOverride = this.projectOverrides.get(id) || buildOverrideFromEntry(baseEntry);
     const cloned = cloneOverride(currentOverride);
     mutate(cloned, baseEntry);
     this.projectOverrides.set(id, cloned);
-    this.rebuildProject();
+    return true;
   }
 
   getSnapshot() {
@@ -443,6 +471,32 @@ class ProjectState extends EventTarget {
       master.ok === true &&
       selfEval.ok === true &&
       project.ok === true;
+  }
+
+  requestProjectRebuild({ immediate = false } = {}) {
+    if (immediate) {
+      this.clearPendingRebuild();
+      this.rebuildProject();
+      return;
+    }
+
+    this.projectDirty = true;
+    if (this.projectRebuildTimer) return;
+
+    this.projectRebuildTimer = setTimeout(() => {
+      this.projectRebuildTimer = null;
+      if (!this.projectDirty) return;
+      this.projectDirty = false;
+      this.rebuildProject();
+    }, PROJECT_REBUILD_DEBOUNCE_MS);
+  }
+
+  clearPendingRebuild() {
+    if (this.projectRebuildTimer) {
+      clearTimeout(this.projectRebuildTimer);
+      this.projectRebuildTimer = null;
+    }
+    this.projectDirty = false;
   }
 
   rebuildProject() {
@@ -541,6 +595,10 @@ class ProjectState extends EventTarget {
 
   dispatch(type, detail = {}) {
     this.dispatchEvent(new CustomEvent(type, { detail }));
+    this.emitStateChange();
+  }
+
+  emitStateChange() {
     this.dispatchEvent(new CustomEvent(EVENTS.STATE_CHANGE, { detail: this.getSnapshot() }));
   }
 

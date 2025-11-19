@@ -40,16 +40,6 @@
       </button>
       <button
         class="app-tab"
-        id="tab-photosorter"
-        role="tab"
-        aria-selected="false"
-        aria-controls="panel-photosorter"
-        tabindex="-1"
-      >
-        PhotoSorter
-      </button>
-      <button
-        class="app-tab"
         id="tab-autobericht"
         role="tab"
         aria-selected="false"
@@ -81,7 +71,7 @@
           <h2>Import &amp; Setup</h2>
           <p>
             Upload master data, self-evaluations, photos, and configure your project.
-            Validation must pass before you can proceed to PhotoSorter and exports.
+            Validation must pass before you can export a report bundle.
           </p>
         </div>
         <div class="settings-grid">
@@ -212,7 +202,7 @@
             <div class="list-editor" data-tag-list="topic">
               <div class="list-editor__header">
                 <h4>Topics</h4>
-                <p>Used for PhotoSorter topic buttons.</p>
+                <p>Used by the Excel PhotoSorter topic buttons.</p>
               </div>
               <ul class="list-editor__items"></ul>
               <form class="list-editor__form">
@@ -224,7 +214,7 @@
             <div class="list-editor" data-tag-list="seminar">
               <div class="list-editor__header">
                 <h4>Seminar Tags</h4>
-                <p>Determines seminar decks and tagging options.</p>
+                <p>Used by the Excel PhotoSorter and seminar decks.</p>
               </div>
               <ul class="list-editor__items"></ul>
               <form class="list-editor__form">
@@ -233,27 +223,6 @@
               </form>
             </div>
           </section>
-        </div>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="panel-photosorter"
-        role="tabpanel"
-        aria-labelledby="tab-photosorter"
-        aria-hidden="true"
-      >
-        <div class="panel-header">
-          <h2>PhotoSorter</h2>
-          <p>
-            Tag your imported photos with Bericht, Seminar, and Topic groups.
-            These tags power photo organization across reports and seminar decks.
-          </p>
-        </div>
-        <div class="photosorter-content" id="photosorter-content">
-          <div class="empty-state" data-empty="photos">
-            <p>No photos imported yet. Upload a directory in the Import tab.</p>
-          </div>
         </div>
       </section>
 
@@ -358,8 +327,8 @@
         <button type="button" id="btn-shortcut-close" class="shortcut-overlay__close" aria-label="Close shortcuts">×</button>
         <h2>Keyboard Shortcuts</h2>
         <dl>
-          <dt>Alt + 1 / 2 / 3 / 4</dt>
-          <dd>Switch between Import / PhotoSorter / AutoBericht / Export</dd>
+          <dt>Alt + 1 / 2 / 3</dt>
+          <dd>Switch between Import / AutoBericht / Export</dd>
           <dt>Ctrl + /</dt>
           <dd>Toggle this shortcut help</dd>
           <dt>Esc</dt>

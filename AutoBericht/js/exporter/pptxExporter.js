@@ -4,13 +4,15 @@ import { readFileAsDataUrl } from '../utils/fileUtils.js';
 
 const MAX_IMAGE_EDGE = 1600;
 const IMAGE_QUALITY = 0.85;
+const MAX_PHOTOS_PER_SLIDE = 6;
 
 export async function exportReportPpt(snapshot) {
   ensureLibrary();
   const pptx = new window.PptxGenJS();
   const filename = buildFilename(snapshot, 'Report Presentation');
   const chapters = snapshot?.project?.report?.chapters || [];
-  const photos = snapshot?.project?.photos || {};
+  const availablePhotos = Array.isArray(snapshot?.photos) ? snapshot.photos : [];
+  const projectPhotoMeta = snapshot?.project?.photos || {};
 
   if (!chapters.length) {
     const slide = pptx.addSlide();
@@ -57,12 +59,12 @@ export async function exportReportPpt(snapshot) {
         });
       }
 
-      const chapterPhotos = collectPhotosForChapter(snapshot.project, chapter.id);
+      const chapterPhotos = filterPhotosByTag(availablePhotos, 'bericht', chapter.id);
       if (chapterPhotos.length) {
-        const grid = buildPhotoGrid(chapterPhotos.slice(0, 6));
-        await embedPhotoGrid(slide, grid, photos);
-        if (chapterPhotos.length > 6) {
-          slide.addText(`+ ${chapterPhotos.length - 6} more`, {
+        const grid = buildPhotoGrid(chapterPhotos.slice(0, MAX_PHOTOS_PER_SLIDE));
+        await embedPhotoGrid(slide, grid, projectPhotoMeta);
+        if (chapterPhotos.length > MAX_PHOTOS_PER_SLIDE) {
+          slide.addText(`+ ${chapterPhotos.length - MAX_PHOTOS_PER_SLIDE} more`, {
             x: 0.5,
             y: 5.8,
             fontSize: 12,
@@ -80,16 +82,10 @@ export async function exportSeminarPpt(snapshot) {
   ensureLibrary();
   const pptx = new window.PptxGenJS();
   const filename = buildFilename(snapshot, 'Seminar Slides');
-  const photos = snapshot?.project?.photos || {};
+  const availablePhotos = Array.isArray(snapshot?.photos) ? snapshot.photos : [];
+  const projectPhotoMeta = snapshot?.project?.photos || {};
 
-  const seminarGroups = {};
-  Object.entries(photos).forEach(([path, info]) => {
-    (info.tags?.seminar || []).forEach((seminarTag) => {
-      if (!seminarGroups[seminarTag]) seminarGroups[seminarTag] = [];
-      seminarGroups[seminarTag].push({ path, info });
-    });
-  });
-
+  const seminarGroups = groupPhotosByTag(availablePhotos, 'seminar');
   const tags = Object.keys(seminarGroups);
   if (!tags.length) {
     const slide = pptx.addSlide();
@@ -100,7 +96,7 @@ export async function exportSeminarPpt(snapshot) {
       slide.addText(`Seminar: ${tag}`, { x: 0.5, y: 0.5, fontSize: 24, bold: true });
 
       seminarGroups[tag]
-        .slice(0, 6)
+        .slice(0, MAX_PHOTOS_PER_SLIDE)
         .forEach((photo, index) => {
           slide.addText(`${index + 1}. ${photo.path}`, {
             x: 0.5,
@@ -109,8 +105,9 @@ export async function exportSeminarPpt(snapshot) {
             w: 4.5,
             h: 0.5,
           });
-          if (photo.info?.notes) {
-            slide.addText(photo.info.notes, {
+          const note = photo.notes || projectPhotoMeta?.[photo.path]?.notes || '';
+          if (note) {
+            slide.addText(note, {
               x: 5.1,
               y: 1.2 + index * 0.6,
               fontSize: 12,
@@ -121,11 +118,11 @@ export async function exportSeminarPpt(snapshot) {
           }
         });
 
-      const grid = buildPhotoGrid(seminarGroups[tag].slice(0, 6));
-      await embedPhotoGrid(slide, grid, photos);
+      const grid = buildPhotoGrid(seminarGroups[tag].slice(0, MAX_PHOTOS_PER_SLIDE));
+      await embedPhotoGrid(slide, grid, projectPhotoMeta);
 
-      if (seminarGroups[tag].length > 6) {
-        slide.addText(`+ ${seminarGroups[tag].length - 6} more`, {
+      if (seminarGroups[tag].length > MAX_PHOTOS_PER_SLIDE) {
+        slide.addText(`+ ${seminarGroups[tag].length - MAX_PHOTOS_PER_SLIDE} more`, {
           x: 0.5,
           y: 5.8,
           fontSize: 12,
@@ -150,17 +147,6 @@ function buildFilename(snapshot, suffix) {
   return `${today} ${company} ${suffix}.pptx`;
 }
 
-function collectPhotosForChapter(project, chapterId) {
-  if (!chapterId || !project?.photos) return [];
-  const matches = [];
-  Object.entries(project.photos).forEach(([path, info]) => {
-    if (info.tags?.chapters?.includes?.(chapterId)) {
-      matches.push({ path, info });
-    }
-  });
-  return matches;
-}
-
 function buildPhotoGrid(photos) {
   const positions = [
     { x: 0.5, y: 5.2 },
@@ -180,14 +166,13 @@ function buildPhotoGrid(photos) {
   }));
 }
 
-async function embedPhotoGrid(slide, grid, allPhotos) {
-  const tasks = grid.map((entry) => addImageToSlide(slide, entry, allPhotos));
+async function embedPhotoGrid(slide, grid, fallbackMeta) {
+  const tasks = grid.map((entry) => addImageToSlide(slide, entry, fallbackMeta));
   await Promise.all(tasks);
 }
 
-async function addImageToSlide(slide, entry, allPhotos) {
+async function addImageToSlide(slide, entry, fallbackMeta) {
   const { photo, x, y, w, h } = entry;
-  const source = allPhotos?.[photo.path]?.file;
   const captionOptions = {
     x,
     y: y + h + 0.05,
@@ -197,12 +182,12 @@ async function addImageToSlide(slide, entry, allPhotos) {
     color: '555555',
   };
 
-  if (source instanceof File) {
+  if (photo.file instanceof File) {
     try {
-      const dataUrl = await loadAndScaleImage(source);
+      const dataUrl = await loadAndScaleImage(photo.file);
       if (dataUrl) {
         slide.addImage({ data: dataUrl, x, y, w, h });
-        const caption = buildCaption(photo);
+        const caption = buildCaption(photo, fallbackMeta);
         slide.addText(caption, captionOptions);
         return;
       }
@@ -219,13 +204,15 @@ async function addImageToSlide(slide, entry, allPhotos) {
     fill: { color: 'DDDDDD' },
     line: { color: '999999' },
   });
-  slide.addText(buildCaption(photo), captionOptions);
+  slide.addText(buildCaption(photo, fallbackMeta), captionOptions);
 }
 
-function buildCaption(photo) {
+function buildCaption(photo, fallbackMeta) {
   const parts = [photo.path];
-  if (photo.info?.notes) {
-    parts.push(photo.info.notes.replace(/\s+/g, ' '));
+  const fallback = fallbackMeta?.[photo.path];
+  const note = photo.notes || fallback?.notes || '';
+  if (note) {
+    parts.push(note.replace(/\s+/g, ' '));
   }
   return parts.join(' — ');
 }
@@ -261,4 +248,33 @@ function scaleDimensions(width, height, maxEdge) {
   }
   const scale = maxEdge / largest;
   return { width: Math.round(width * scale), height: Math.round(height * scale) };
+}
+
+function filterPhotosByTag(photos, key, value) {
+  const target = normalizeTagValue(value);
+  if (!target) return [];
+  return photos.filter((photo) => {
+    const tags = Array.isArray(photo.tags?.[key]) ? photo.tags[key] : [];
+    return tags.some((tag) => normalizeTagValue(tag) === target);
+  });
+}
+
+function groupPhotosByTag(photos, key) {
+  const buckets = {};
+  photos.forEach((photo) => {
+    const tags = Array.isArray(photo.tags?.[key]) ? photo.tags[key] : [];
+    tags.forEach((tag) => {
+      const normalized = normalizeTagValue(tag);
+      if (!normalized) return;
+      if (!buckets[normalized]) buckets[normalized] = [];
+      buckets[normalized].push(photo);
+    });
+  });
+  return buckets;
+}
+
+function normalizeTagValue(value) {
+  if (typeof value === 'string') return value.trim();
+  if (value === null || typeof value === 'undefined') return '';
+  return String(value).trim();
 }

@@ -19,6 +19,7 @@ This folder contains the standalone HTML/JS prototype for the offline AutoBerich
 2. Optionally load sample fixtures:
    - Open the app and upload `fixtures/master.sample.json` and `fixtures/self_eval.sample.json`.
    - Upload a folder of test photos (Chrome tip: use the directory picker, then allow nested folders).
+   - Photo tagging and file moves now happen exclusively in the Excel PhotoSorter; the web UI simply reads the resulting metadata.
 3. Launch the browser with `--allow-file-access-from-files` (or a local server) before opening `index.html`.
 4. Keyboard shortcuts: `Alt+1/2/3` switch tabs, `Ctrl+/` toggles the shortcut overlay, `Esc` closes it.
 5. Validation must be green before exports enable; the Settings panel lists current issues and recent actions.
@@ -59,7 +60,7 @@ If you only run Microsoft Edge at work, create a shortcut (or `.bat`) so the pag
 - The current code base focuses on the UI shell, tab navigation, and data-ingestion stubs.
 - Schema validation is stubbed; integrate AJV bundle by replacing `js/schema/validator.js`.
 - Fixture loading is a no-op; extend `js/state/fixtures.js` to hydrate the state automatically when running from a dev server.
-- Keep all code modular to ease future expansion: PhotoSorter grid, Markdown editors, PPT/PDF pipelines, and FS Access toggles will plug into the existing skeleton.
+- Keep all code modular to ease future expansion: Markdown editors, PPT/PDF pipelines, and FS Access toggles will plug into the existing skeleton. The Excel PhotoSorter remains the canonical tagging experience, so no PhotoSorter panel is rendered in the web UI.
 
 ---
 

@@ -4,7 +4,6 @@ import { ImportPanel } from './modules/import/ImportPanel.js';
 import { ExportPanel } from './modules/export/ExportPanel.js';
 import { SettingsPanel } from './modules/settings/SettingsPanel.js';
 import { AutoBerichtPanel } from './ui/autoberichtPanel.js';
-import { PhotoSorterPanel } from './modules/photosorter/PhotoSorterPanel.js';
 import { EVENTS } from './core/constants/events.js';
 import { loadFixtures } from './state/fixtures.js';
 import { loadSession, saveSession, clearSession } from './storage/session.js';
@@ -24,10 +23,6 @@ window.addEventListener('DOMContentLoaded', async () => {
   tabs.focusFirstTab();
 
   new ImportPanel({ state: projectState });
-  new PhotoSorterPanel({
-    state: projectState,
-    container: document.getElementById('photosorter-content'),
-  });
   new AutoBerichtPanel({
     state: projectState,
     treeContainer: document.getElementById('autobericht-tree'),
@@ -243,10 +238,6 @@ function setupKeyboardShortcuts() {
       case '3':
         event.preventDefault();
         tabsController.activate(2);
-        break;
-      case '4':
-        event.preventDefault();
-        tabsController.activate(3);
         break;
       default:
         break;
