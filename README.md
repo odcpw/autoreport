@@ -1,6 +1,6 @@
 # AutoBericht System
 
-> Automated safety culture reporting system combining Excel VBA, offline web UI, and AI-powered quality analysis
+> Automated safety culture reporting system combining Excel VBA and an offline web UI
 
 ## Overview
 
@@ -16,9 +16,9 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 │  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
 │  │   Excel VBA  │───▶│  HTML/JS UI  │───▶│   Exports    │  │
 │  │              │    │              │    │              │  │
-│  │ • Data       │    │ • PhotoSorter│    │ • PDF Report │  │
+│  │ • Data       │    │ • Import     │    │ • PDF Report │  │
 │  │   Import     │    │ • Editor     │    │ • PPTX Deck  │  │
-│  │ • Macro      │    │ • Settings   │    │ • JSON       │  │
+│  │ • Macro      │    │ • Export     │    │ • JSON       │  │
 │  │   Sync       │    │              │    │              │  │
 │  └──────────────┘    └──────────────┘    └──────────────┘  │
 │         │                    │                               │
@@ -29,21 +29,16 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 │                                      │  (Data Model)   │     │
 │                                      └─────────────────┘     │
 │                                                               │
-│  ┌──────────────────────────────────────────────────────┐   │
-│  │              vision-critique (Optional)              │   │
-│  │  AI-powered UI quality analysis for development     │   │
-│  └──────────────────────────────────────────────────────┘   │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Features
 
 - **Excel VBA Backend**: Import master findings and customer assessments, manage structured data
-- **Offline Web UI**: Photo tagging, content editing, report preview (runs in browser without server)
+- **Offline Web UI**: Content editing and report generation (photo tagging happens in Excel PhotoSorter)
 - **Multi-format Export**: Generate PDF reports and PowerPoint presentations
 - **Unified Data Model**: Single `project.json` format shared between Excel and web UI
-- **Photo Management**: Organize and tag photos by chapter, category, and training topic
-- **AI Quality Analysis**: Optional vision-based UI critique tool for development
+- **Photo Management (Excel)**: Organize and tag photos by chapter, category, and training topic (PhotoSorterForm)
 
 ## Quick Start
 
@@ -55,10 +50,10 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Import customer self-assessment (Excel file)
 
 2. **Edit Content**
-   - Open `AutoBericht/index.html` in Chrome/Edge
-   - Tag photos in PhotoSorter tab
+   - Start the offline UI with `start-autobericht.cmd` (recommended; avoids browser flags)
+   - Tag photos in Excel PhotoSorter, then export `project.json`
    - Edit findings and recommendations in AutoBericht tab
-   - Configure export settings
+   - Download updated `project.json` from the Export tab
 
 3. **Export Reports**
    - Generate PDF report (print from browser)
@@ -84,14 +79,6 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Libraries bundled in `AutoBericht/libs/`
    - See [AutoBericht README](AutoBericht/README.md)
 
-4. **UI Quality Analysis** (optional)
-   ```bash
-   cd vision-critique
-   uv sync
-   playwright install chromium
-   uv run vision-critique capture --tab photosorter
-   ```
-
 **See**: [System Architecture](docs/architecture/system-overview.md)
 
 ## Documentation
@@ -112,7 +99,12 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 ```
 autoreport/
+├── .beads/                     # Beads task tracker (issues.jsonl)
+├── AGENTS.md                   # Agent playbook for this repo
 ├── README.md                    # You are here
+├── start-autobericht.cmd        # Windows launcher for the web UI
+├── start-autobericht.ps1        # PowerShell launcher for the web UI
+├── sync-autobericht.ps1         # Macro sync helper
 ├── docs/                        # Documentation
 │   ├── INDEX.md                # Documentation roadmap
 │   ├── architecture/           # System design
@@ -127,8 +119,8 @@ autoreport/
 │   ├── js/                     # JavaScript modules
 │   ├── libs/                   # Third-party libraries
 │   └── assets/                 # Images, icons
-└── vision-critique/             # UI quality analysis tool
-    └── README.md               # Tool documentation
+└── tools/                       # Local tooling scripts
+    └── serve-autobericht.ps1    # Local server (offline-only)
 ```
 
 ## Tech Stack
@@ -142,11 +134,6 @@ autoreport/
 - **Purpose**: Offline editing interface
 - **Key Libraries**: markdown-it, CodeMirror, Paged.js, PptxGenJS, SheetJS
 - **Entry Point**: `AutoBericht/index.html`
-
-### Vision Critique (Optional)
-- **Purpose**: AI-powered UI quality analysis
-- **Tech**: Python, Playwright, Claude/GPT-4V/Ollama
-- **Entry Point**: `vision-critique` CLI tool
 
 ## Data Flow
 
@@ -174,6 +161,8 @@ Structured Sheets      project.json
 
 **See**: [Data Model Documentation](docs/architecture/data-model.md)
 
+**Canonical contract**: `project.json` follows the schema documented in `docs/architecture/data-model.md` (root `chapters[].rows[]`). The Excel/VBA exporter/loader is canonical; the web UI adapts to VBA. Current progress/mismatches live in `docs/STATUS.md`.
+
 ## Contributing
 
 This is a private corporate project. For development guidelines:
@@ -187,7 +176,6 @@ This is a private corporate project. For development guidelines:
 - **Issues**: Check documentation first, then consult team
 - **VBA Help**: See [VBA Workflow](docs/guides/vba-workflow.md)
 - **Web UI Help**: See [AutoBericht README](AutoBericht/README.md)
-- **Vision Critique**: See [Tool README](vision-critique/README.md)
 
 ## License
 

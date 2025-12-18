@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/autobericht/project.schema.json",
+  "title": "AutoBericht project.json (VBA canonical)",
+  "type": "object",
+  "required": ["version", "meta", "chapters", "photos", "lists"],
+  "properties": {
+    "version": { "type": "integer", "minimum": 1 },
+    "meta": {
+      "type": "object",
+      "required": ["company", "locale"],
+      "properties": {
+        "projectId": { "type": "string" },
+        "company": { "type": "string", "minLength": 1 },
+        "createdAt": { "type": "string" },
+        "locale": { "type": "string", "minLength": 1 },
+        "author": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "chapters": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/chapter" }
+    },
+    "photos": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "notes": { "type": "string" },
+          "tags": {
+            "type": "object",
+            "properties": {
+              "bericht": { "type": "array", "items": { "type": "string" } },
+              "seminar": { "type": "array", "items": { "type": "string" } },
+              "topic": { "type": "array", "items": { "type": "string" } }
+            },
+            "additionalProperties": true
+          },
+          "preferredLocale": { "type": "string" }
+        },
+        "additionalProperties": true
+      }
+    },
+    "lists": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "$ref": "#/$defs/listItem" }
+      }
+    },
+    "history": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/historyEntry" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "localizedTitle": {
+      "anyOf": [
+        { "type": "string" },
+        {
+          "type": "object",
+          "properties": {
+            "de": { "type": "string" },
+            "fr": { "type": "string" },
+            "it": { "type": "string" },
+            "en": { "type": "string" }
+          },
+          "additionalProperties": true
+        }
+      ]
+    },
+    "chapter": {
+      "type": "object",
+      "required": ["id", "rows"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "parentId": { "type": "string" },
+        "orderIndex": { "type": ["integer", "number"] },
+        "title": { "$ref": "#/$defs/localizedTitle" },
+        "pageSize": { "type": ["integer", "number", "null"] },
+        "isActive": { "type": ["boolean", "null"] },
+        "rows": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/row" }
+        }
+      },
+      "additionalProperties": true
+    },
+    "row": {
+      "type": "object",
+      "required": ["id", "chapterId", "master", "overrides", "customer", "workstate"],
+      "properties": {
+        "id": { "type": "string", "minLength": 1 },
+        "chapterId": { "type": "string", "minLength": 1 },
+        "titleOverride": { "type": "string" },
+        "master": {
+          "type": "object",
+          "required": ["finding", "levels"],
+          "properties": {
+            "finding": { "type": "string" },
+            "levels": {
+              "type": "object",
+              "properties": {
+                "1": { "type": "string" },
+                "2": { "type": "string" },
+                "3": { "type": "string" },
+                "4": { "type": "string" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "overrides": {
+          "type": "object",
+          "required": ["finding", "levels"],
+          "properties": {
+            "finding": {
+              "type": "object",
+              "required": ["text", "enabled"],
+              "properties": {
+                "text": { "type": "string" },
+                "enabled": { "type": "boolean" }
+              },
+              "additionalProperties": true
+            },
+            "levels": {
+              "type": "object",
+              "properties": {
+                "1": { "$ref": "#/$defs/overrideField" },
+                "2": { "$ref": "#/$defs/overrideField" },
+                "3": { "$ref": "#/$defs/overrideField" },
+                "4": { "$ref": "#/$defs/overrideField" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        },
+        "customer": {
+          "type": "object",
+          "properties": {
+            "answer": {},
+            "remark": { "type": "string" },
+            "priority": {}
+          },
+          "additionalProperties": true
+        },
+        "workstate": {
+          "type": "object",
+          "required": ["selectedLevel", "includeFinding", "includeRecommendation", "overwriteMode", "done"],
+          "properties": {
+            "selectedLevel": {},
+            "includeFinding": { "type": "boolean" },
+            "includeRecommendation": { "type": "boolean" },
+            "overwriteMode": { "type": "string" },
+            "done": { "type": "boolean" },
+            "notes": { "type": "string" },
+            "lastEditedBy": { "type": "string" },
+            "lastEditedAt": { "type": "string" },
+            "findingOverride": { "type": "string" },
+            "useFindingOverride": { "type": "boolean" },
+            "levelOverrides": {
+              "type": "object",
+              "properties": {
+                "1": { "type": "string" },
+                "2": { "type": "string" },
+                "3": { "type": "string" },
+                "4": { "type": "string" }
+              },
+              "additionalProperties": true
+            },
+            "useLevelOverride": {
+              "type": "object",
+              "properties": {
+                "1": { "type": "boolean" },
+                "2": { "type": "boolean" },
+                "3": { "type": "boolean" },
+                "4": { "type": "boolean" }
+              },
+              "additionalProperties": true
+            }
+          },
+          "additionalProperties": true
+        }
+      },
+      "additionalProperties": true
+    },
+    "overrideField": {
+      "type": "object",
+      "required": ["text", "enabled"],
+      "properties": {
+        "text": { "type": "string" },
+        "enabled": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "listItem": {
+      "type": "object",
+      "required": ["value"],
+      "properties": {
+        "value": { "type": "string" },
+        "label": { "type": "string" },
+        "labels": { "type": "object" },
+        "group": { "type": "string" },
+        "sortOrder": {},
+        "chapterId": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "historyEntry": {
+      "type": "object",
+      "properties": {
+        "timestamp": {},
+        "rowId": { "type": "string" },
+        "field": { "type": "string" },
+        "oldValue": { "type": "string" },
+        "newValue": { "type": "string" },
+        "user": { "type": "string" }
+      },
+      "additionalProperties": true
+    }
+  }
+}
+

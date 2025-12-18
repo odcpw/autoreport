@@ -2,7 +2,9 @@
 
 This folder contains the standalone HTML/JS prototype for the offline AutoBericht experience. Open `index.html` in Edge/Chrome (Chromium) to run it without a web server. All assets and libraries must be bundled locally to satisfy corporate offline constraints.
 
-> **Tip:** Chromium blocks ES module imports over `file://` by default. Launch Chrome/Edge with `--allow-file-access-from-files` or serve the folder via `python -m http.server` while developing.
+> **Tip (recommended):** Use the repo launcher (`start-autobericht.cmd` at the repository root). It starts a local, offline-only server so the app works without browser flags and without any external network calls.
+>
+> If you cannot run the launcher, serve the folder via `python -m http.server` while developing. Chromium often blocks ES module imports over `file://`.
 
 ## Directory Layout
 
@@ -31,11 +33,10 @@ If you only run Microsoft Edge at work, create a shortcut (or `.bat`) so the pag
 1. Right-click the desktop → **New → Shortcut**.
 2. Set the target to:
    ```
-   "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
-     --allow-file-access-from-files ^
-     --disable-web-security ^
-     --user-data-dir="%LOCALAPPDATA%\AutoBerichtProfile" ^
-     "file:///C:/path/to/AutoBericht/index.html"
+    "C:\Program Files (x86)\Microsoft\Edge\Application\msedge.exe" ^
+      --allow-file-access-from-files ^
+      --user-data-dir="%LOCALAPPDATA%\AutoBerichtProfile" ^
+      "file:///C:/path/to/AutoBericht/index.html"
    ```
    Adjust both paths to match your install and the local folder.
 3. Name it “AutoBericht” and optionally change the icon.
@@ -70,4 +71,3 @@ If you only run Microsoft Edge at work, create a shortcut (or `.bat`) so the pag
 - **[Getting Started](../docs/guides/getting-started.md)** - End-to-end first report
 - **[System Overview](../docs/architecture/system-overview.md)** - How web UI integrates with VBA
 - **[Data Model](../docs/architecture/data-model.md)** - JSON schema reference
-- **[Vision Critique](../vision-critique/README.md)** - UI quality analysis tool

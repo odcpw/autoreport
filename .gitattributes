@@ -2,3 +2,6 @@
 *.cls text eol=crlf
 *.frm text eol=crlf
 *.frx binary
+
+# Use bd merge for beads JSONL files
+.beads/issues.jsonl merge=beads

@@ -62,6 +62,7 @@ This keeps the UI and structured sheets in sync without touching legacy sheets.
 
 1. After edits, run `modABProjectExport.ExportProjectJson`.
 2. Flow:
+   - Runs `ValidateAutoBerichtWorkbook` to ensure required structured sheets + headers are present.
    - Reads each structured sheet (`Meta`, `Chapters`, `Rows`, `Photos`, `Lists`, `OverridesHistory`).
    - Builds the composite `project` dictionary (version, meta, chapters with rows, photos, lists, history).
    - Serialises via `JsonConverter.ConvertToJson` (2-space indent).

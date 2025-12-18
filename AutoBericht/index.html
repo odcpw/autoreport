@@ -233,24 +233,62 @@
         aria-labelledby="tab-autobericht"
         aria-hidden="true"
       >
-        <div class="panel-header">
-          <h2>AutoBericht</h2>
-          <p>
-            Merge master data and self-evaluations to edit findings, recommendations,
-            and report metadata. The current view renders a read-only chapter tree
-            until the Markdown editor is integrated.
-          </p>
-        </div>
-        <div class="autobericht-content">
-          <div class="chapter-strip" id="autobericht-strip" role="tablist" aria-label="Chapter selector">
-            <p class="chapter-strip__empty">Load data to show chapters.</p>
+        <div class="panel-header panel-header--autobericht">
+          <div>
+            <h2>AutoBericht</h2>
+            <p>
+              Edit findings and recommendations per chapter, capture status, and keep a downloadable
+              backup while you work.
+            </p>
           </div>
-          <div class="chapter-substrip" id="autobericht-substrip" role="tablist" aria-label="Sub chapter selector"></div>
-          <button type="button" class="drawer-toggle" id="autobericht-drawer-toggle" aria-haspopup="dialog">
-            Open Navigation
-          </button>
-          <div class="autobericht-layout">
-            <section class="report-detail" id="autobericht-detail">
+        </div>
+        <div class="autobericht-shell">
+          <div class="autobericht-sticky">
+            <div class="chapter-strip" id="autobericht-strip" role="tablist" aria-label="Chapter selector">
+              <p class="chapter-strip__empty">Load data to show chapters.</p>
+            </div>
+            <div
+              class="chapter-substrip"
+              id="autobericht-substrip"
+              role="tablist"
+              aria-label="Sub chapter selector"
+            ></div>
+            <div class="autobericht-filterbar">
+              <div class="autobericht-filters" role="group" aria-label="Finding filters">
+                <label class="filter-chip">
+                  <input type="radio" name="filter-status" value="all" checked />
+                  <span>Show all</span>
+                </label>
+                <label class="filter-chip">
+                  <input type="radio" name="filter-status" value="done" />
+                  <span>Done</span>
+                </label>
+                <label class="filter-chip">
+                  <input type="radio" name="filter-status" value="todo" />
+                  <span>Unfinished</span>
+                </label>
+                <label class="filter-chip">
+                  <input type="checkbox" id="filter-hide-excluded" />
+                  <span>Hide excluded</span>
+                </label>
+                <label class="filter-chip">
+                  <input type="checkbox" id="filter-preview-global" />
+                  <span>Preview mode</span>
+                </label>
+              </div>
+              <div class="autobericht-actions">
+                <span id="autobericht-save-status" class="save-status" aria-live="polite"></span>
+                <button type="button" id="autobericht-save-now" class="primary-action">
+                  Save now
+                </button>
+                <button type="button" class="drawer-toggle" id="autobericht-drawer-toggle" aria-haspopup="dialog">
+                  Open Navigation
+                </button>
+              </div>
+            </div>
+          </div>
+          <div class="autobericht-content">
+            <section class="report-detail report-detail--table" id="autobericht-detail">
               <div class="detail-placeholder">
                 <p>Select a finding to start editing.</p>
               </div>

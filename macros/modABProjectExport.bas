@@ -7,6 +7,7 @@ Option Explicit
 
 Public Sub ExportProjectJson(ByVal outputPath As String)
     EnsureAutoBerichtSheets
+    If Not ValidateAutoBerichtWorkbook(True) Then Exit Sub
     Dim project As Dictionary
     Set project = BuildProjectSnapshot()
 

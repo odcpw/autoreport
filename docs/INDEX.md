@@ -2,6 +2,10 @@
 
 Welcome to the AutoBericht documentation. This index helps you find the right information for your role and task.
 
+## Project Status
+
+- **Current state vs target**: [STATUS](STATUS.md)
+
 ## Documentation by Role
 
 ### 👤 Report Creators (Non-Technical)
@@ -27,8 +31,8 @@ Start here if you're developing or maintaining the system:
 Start here if you're working on the web interface:
 
 1. **[AutoBericht UI](../AutoBericht/README.md)** - Web interface overview
-2. **[Vision Critique Tool](../vision-critique/README.md)** - AI-powered UI analysis
-3. **[System Overview](architecture/system-overview.md)** - Integration points
+2. **[System Overview](architecture/system-overview.md)** - Integration points
+3. **[Data Model](architecture/data-model.md)** - `project.json` contract
 
 ## Documentation by Topic
 
@@ -55,6 +59,8 @@ Start here if you're working on the web interface:
 | [VBA Modules](../macros/README.md) | All VBA modules, functions, and their purpose |
 | [JSON Schema](reference/json-schema.md) | Complete data structure specification |
 | [PowerShell Sync](reference/powershell-sync.md) | Macro distribution and versioning |
+| [Round-Trip Smoke Checklist](reference/roundtrip-smoke-checklist.md) | Quick verification of Excel ↔ Web UI workflow |
+| [project.schema.json](reference/project.schema.json) | Machine-readable schema (VBA-canonical) |
 
 ### 📦 Component Documentation
 
@@ -62,7 +68,6 @@ Start here if you're working on the web interface:
 |-----------|---------------|
 | Excel VBA | [VBA Modules Reference](../macros/README.md) |
 | Web UI | [AutoBericht README](../AutoBericht/README.md) |
-| Vision Critique | [Tool README](../vision-critique/README.md) |
 
 ### 🗄️ Legacy & Planning
 
@@ -84,7 +89,7 @@ Historical documents and execution plans:
 → See [VBA Workflow - Section 2.1](guides/vba-workflow.md#21-master-findings-word--rows)
 
 #### Tag photos
-→ See [HTML Workflow](guides/html-workflow.md) or [PhotoSorter](guides/vba-workflow.md#4-photosorter)
+→ Use Excel PhotoSorter (see [VBA Workflow](guides/vba-workflow.md#4-photosorter))
 
 #### Export to PDF/PowerPoint
 → See [HTML Workflow - Export Section](guides/html-workflow.md#export-overview)
@@ -97,9 +102,6 @@ Historical documents and execution plans:
 
 #### Sync macros from GitHub
 → See [PowerShell Sync](reference/powershell-sync.md)
-
-#### Analyze UI quality
-→ See [Vision Critique README](../vision-critique/README.md)
 
 #### Understand how everything connects
 → See [System Overview](architecture/system-overview.md)
@@ -122,7 +124,9 @@ docs/
 │
 ├── reference/                        # Technical reference
 │   ├── json-schema.md               # Complete schema spec
-│   └── powershell-sync.md           # Macro distribution
+│   ├── project.schema.json          # Machine-readable schema (VBA-canonical)
+│   ├── powershell-sync.md           # Macro distribution
+│   └── roundtrip-smoke-checklist.md # Excel ↔ Web UI smoke checklist
 │
 └── legacy/                           # Historical docs
     ├── excel-migration-notes.md     # Legacy analysis
@@ -139,6 +143,7 @@ docs/
 - **Customer Assessment**: Self-evaluation data from Excel
 - **Overrides**: Custom consultant edits to template content
 - **PhotoSorter**: Photo tagging and organization interface
+  - Canonical photo tagging UI lives in Excel (PhotoSorterForm).
 
 ### Key Files
 

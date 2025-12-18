@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.uv/
+
+# Virtual environments
+.venv/
+venv/
+
+# IDE / OS
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Agent / local tooling
+.claude/
+
+# Build / export artifacts (keep directory via .gitkeep)
+output/**
+!output/.gitkeep
+

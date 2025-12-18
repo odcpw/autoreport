@@ -1,5 +1,5 @@
-import { renderMarkdown, renderMarkdownInline } from '../utils/markdownRenderer.js';
-import { MarkdownEditor } from './markdownEditor.js';
+import { renderMarkdown } from '../utils/markdownRenderer.js';
+import { saveSession, isStorageAvailable } from '../storage/session.js';
 
 export class AutoBerichtPanel {
   constructor({ state, treeContainer, detailContainer }) {
@@ -8,21 +8,42 @@ export class AutoBerichtPanel {
     this.detailContainer = detailContainer;
     this.selectedId = null;
     this.currentSnapshot = null;
+    this.isEditing = false;
+    this.pendingRender = false;
+    this.editIdleTimer = null;
+    this.filters = { status: 'all', hideExcluded: false, globalPreview: false };
+    this.previewByFinding = new Map();
+    this.editModeByFinding = new Map();
+    this.photoModal = null;
+    this.photoModalState = { photos: [], index: 0 };
+    this.storageAvailable = isStorageAvailable();
 
     this.chapterStrip = document.getElementById('autobericht-strip');
     this.subStrip = document.getElementById('autobericht-substrip');
     this.drawer = document.getElementById('autobericht-drawer');
     this.drawerToggle = document.getElementById('autobericht-drawer-toggle');
     this.drawerClose = document.getElementById('autobericht-drawer-close');
+    this.statusRadios = document.querySelectorAll('input[name="filter-status"]');
+    this.hideExcludedToggle = document.getElementById('filter-hide-excluded');
+    this.previewGlobalToggle = document.getElementById('filter-preview-global');
+    this.saveStatusElement = document.getElementById('autobericht-save-status');
+    this.saveNowButton = document.getElementById('autobericht-save-now');
 
     this.state.addEventListener('state:change', (event) => {
       this.currentSnapshot = event.detail;
+      if (this.isEditing) {
+        this.pendingRender = true;
+        return;
+      }
       this.ensureSelection();
       this.renderMainChapters();
       this.renderSubChapters();
       this.renderTree();
       this.renderDetail();
     });
+
+    this.bindFilters();
+    this.bindSaveNow();
 
     this.treeContainer?.addEventListener('keydown', (event) => {
       this.handleTreeKeydown(event);
@@ -155,29 +176,48 @@ export class AutoBerichtPanel {
       this.selectedId = rows[0]?.id ?? null;
     }
 
+    const filteredRows = this.filterRows(rows);
     const focusMeta = this.captureFocusMeta();
     this.detailContainer.innerHTML = '';
+
+    if (!filteredRows.length) {
+      const placeholder = document.createElement('div');
+      placeholder.className = 'detail-placeholder';
+      placeholder.innerHTML = '<p>No findings match the current filters.</p>';
+      this.detailContainer.append(placeholder);
+      return;
+    }
+
+    const table = document.createElement('div');
+    table.className = 'finding-table';
+    table.append(this.buildTableHead());
 
     const container = document.createElement('div');
     container.className = 'finding-row-container';
 
-    rows.forEach((entry) => {
+    filteredRows.forEach((entry) => {
+      const photos = this.getPhotosForFinding(entry.id);
       const row = renderFindingRow(entry, {
-        onFindingChange: (text) => this.state.updateFindingAdjusted(entry.id, text),
-        onFindingToggle: (value) => this.state.setFindingUseAdjusted(entry.id, value),
-        onLevelChange: (level) => this.state.updateFindingLevel(entry.id, level),
+        editEnabled: this.isEditEnabled(entry.id),
+        onTogglePreview: (value) => this.setRowPreview(entry.id, value),
+        onToggleEdit: () => this.toggleEdit(entry.id),
+        onFindingChange: (text) => this.handleFindingChange(entry.id, text),
+        onLevelChange: (level) => this.handleLevelChange(entry, level),
         onIncludeChange: (value) => this.state.setFindingInclude(entry.id, value),
-        onRecommendationChange: (index, text) =>
-          this.state.updateRecommendationAdjusted(entry.id, index, text),
-        onRecommendationToggle: (index, value) =>
-          this.state.setRecommendationUse(entry.id, index, value),
+        onRecommendationChange: (text) => this.handleRecommendationChange(entry, text),
+        onDoneChange: (value) => this.state.setFindingDone(entry.id, value),
+        onReviewChange: (value) => this.state.setFindingNeedsReview(entry.id, value),
         onMasterUpdateChange: (update) =>
           this.state.setProposeMasterUpdate(entry.id, update.action, update.scope),
+        onPhotos: () => this.openPhotoModal(entry.id),
+        hasPhotos: photos.length > 0,
+        photoCount: photos.length,
       });
       container.append(row);
     });
 
-    this.detailContainer.append(container);
+    table.append(container);
+    this.detailContainer.append(table);
     this.restoreFocusMeta(focusMeta);
   }
 
@@ -397,7 +437,7 @@ export class AutoBerichtPanel {
     if (!parentNode) return [];
     const findings = flattenFindings(parentNode);
     return findings
-      .map((node) => getFindingById(this.currentSnapshot.project, node.id))
+      .map((node) => node.reportEntry)
       .filter(Boolean);
   }
 
@@ -410,6 +450,288 @@ export class AutoBerichtPanel {
     if (parts.length >= 3) return `${parts[0]}.${parts[1]}`;
     if (parts.length === 2) return this.selectedId;
     return parts[0];
+  }
+
+  buildTableHead() {
+    const head = document.createElement('div');
+    head.className = 'finding-table__head';
+    ['Finding', 'Report Text', 'Recommendation', 'Controls'].forEach((label) => {
+      const cell = document.createElement('div');
+      cell.className = 'finding-table__cell';
+      cell.textContent = label;
+      head.append(cell);
+    });
+    return head;
+  }
+
+  filterRows(rows) {
+    return rows.filter((entry) => {
+      if (this.filters.hideExcluded && entry.includeInReport === false) {
+        return false;
+      }
+      if (this.filters.status === 'done' && !entry.done) {
+        return false;
+      }
+      if (this.filters.status === 'todo' && entry.done) {
+        return false;
+      }
+      return true;
+    });
+  }
+
+  isPreviewEnabled(id) {
+    return this.filters.globalPreview || this.previewByFinding.get(id) === true;
+  }
+
+  setRowPreview(id, enabled) {
+    if (enabled) {
+      this.previewByFinding.set(id, true);
+    } else {
+      this.previewByFinding.delete(id);
+    }
+    this.renderDetail();
+  }
+
+  isEditEnabled(id) {
+    return this.editModeByFinding.get(id) === true;
+  }
+
+  toggleEdit(id) {
+    if (this.isEditEnabled(id)) {
+      this.editModeByFinding.delete(id);
+    } else {
+      this.editModeByFinding.set(id, true);
+    }
+    this.renderDetail();
+  }
+
+  handleFindingChange(id, text) {
+    this.markEditing();
+    this.state.updateFindingAdjusted(id, text);
+    this.state.setFindingUseAdjusted?.(id, true);
+  }
+
+  handleRecommendationChange(entry, text) {
+    this.markEditing();
+    const levelKey = entry.level || '1';
+    this.state.updateRecommendationAdjusted(entry.id, levelKey, text);
+    this.state.setRecommendationUse(entry.id, levelKey, true);
+  }
+
+  markEditing() {
+    this.isEditing = true;
+    if (this.editIdleTimer) {
+      clearTimeout(this.editIdleTimer);
+    }
+    this.editIdleTimer = setTimeout(() => {
+      this.isEditing = false;
+      this.editIdleTimer = null;
+      if (this.pendingRender && this.currentSnapshot) {
+        this.pendingRender = false;
+        this.ensureSelection();
+        this.renderMainChapters();
+        this.renderSubChapters();
+        this.renderTree();
+        this.renderDetail();
+      }
+    }, 350);
+  }
+
+  handleLevelChange(entry, level) {
+    this.state.updateFindingLevel(entry.id, level);
+  }
+
+  bindFilters() {
+    this.statusRadios?.forEach((radio) => {
+      radio.addEventListener('change', () => {
+        if (!radio.checked) return;
+        this.filters.status = radio.value;
+        this.renderDetail();
+      });
+    });
+    this.hideExcludedToggle?.addEventListener('change', () => {
+      this.filters.hideExcluded = this.hideExcludedToggle.checked;
+      this.renderDetail();
+    });
+    this.previewGlobalToggle?.addEventListener('change', () => {
+      this.filters.globalPreview = this.previewGlobalToggle.checked;
+      this.renderDetail();
+    });
+  }
+
+  bindSaveNow() {
+    this.saveNowButton?.addEventListener('click', () => this.handleSaveNow());
+  }
+
+  handleSaveNow() {
+    const payload = this.state.getStoragePayload();
+    if (!payload?.project) {
+      this.setSaveStatus('Load project.json to save.');
+      return;
+    }
+    if (this.storageAvailable) {
+      try {
+        saveSession(payload, { source: 'manual' });
+        this.setSaveStatus('Saved locally.');
+      } catch (error) {
+        this.setSaveStatus('Local save failed.');
+      }
+    } else {
+      this.setSaveStatus('Download only.');
+    }
+    this.downloadSnapshot(payload);
+  }
+
+  downloadSnapshot(payload) {
+    if (!payload) return;
+    const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = `${timestamp}-autobericht-session.json`;
+    document.body.append(link);
+    link.click();
+    link.remove();
+    URL.revokeObjectURL(url);
+    this.setSaveStatus('Backup downloaded.');
+  }
+
+  setSaveStatus(message) {
+    if (this.saveStatusElement) {
+      this.saveStatusElement.textContent = message || '';
+    }
+  }
+
+  getPhotosForFinding(findingId) {
+    const photos = Array.isArray(this.currentSnapshot?.photos) ? this.currentSnapshot.photos : [];
+    if (!photos.length || !findingId) return [];
+    const target = findingId.toLowerCase();
+    return photos.filter((photo) => (photo.path || '').toLowerCase().includes(target));
+  }
+
+  openPhotoModal(findingId) {
+    const photos = this.getPhotosForFinding(findingId);
+    if (!photos.length) {
+      this.setSaveStatus('No photos for this finding.');
+      return;
+    }
+    this.photoModalState = { photos, index: 0 };
+    const modal = this.ensurePhotoModal();
+    this.renderPhoto();
+    modal.overlay.setAttribute('aria-hidden', 'false');
+    modal.close?.focus();
+  }
+
+  closePhotoModal() {
+    const modal = this.photoModal;
+    if (!modal) return;
+    modal.overlay.setAttribute('aria-hidden', 'true');
+    if (modal.img && modal.img.src.startsWith('blob:')) {
+      URL.revokeObjectURL(modal.img.src);
+    }
+  }
+
+  renderPhoto() {
+    const modal = this.ensurePhotoModal();
+    const { photos, index } = this.photoModalState;
+    if (!photos.length) {
+      modal.caption.textContent = 'No photos available.';
+      modal.img.removeAttribute('src');
+      return;
+    }
+    const boundedIndex = Math.max(0, Math.min(index, photos.length - 1));
+    this.photoModalState.index = boundedIndex;
+    const photo = photos[boundedIndex];
+    modal.caption.textContent = photo.path || `Photo ${boundedIndex + 1}`;
+    modal.counter.textContent = `${boundedIndex + 1} / ${photos.length}`;
+    if (photo.file instanceof File) {
+      const objectUrl = URL.createObjectURL(photo.file);
+      modal.img.src = objectUrl;
+      modal.img.alt = photo.path || `Photo ${boundedIndex + 1}`;
+    } else if (photo.path) {
+      modal.img.src = photo.path;
+      modal.img.alt = photo.path;
+    } else {
+      modal.img.removeAttribute('src');
+    }
+    modal.prev.disabled = boundedIndex === 0;
+    modal.next.disabled = boundedIndex >= photos.length - 1;
+  }
+
+  ensurePhotoModal() {
+    if (this.photoModal) return this.photoModal;
+    const overlay = document.createElement('div');
+    overlay.className = 'photo-modal';
+    overlay.setAttribute('aria-hidden', 'true');
+    const content = document.createElement('div');
+    content.className = 'photo-modal__content';
+
+    const header = document.createElement('div');
+    header.className = 'photo-modal__header';
+    const title = document.createElement('div');
+    title.textContent = 'Photos';
+    const counter = document.createElement('div');
+    counter.className = 'photo-modal__counter';
+    header.append(title, counter);
+
+    const body = document.createElement('div');
+    body.className = 'photo-modal__body';
+    const img = document.createElement('img');
+    img.alt = 'Photo preview';
+    body.append(img);
+
+    const caption = document.createElement('div');
+    caption.className = 'photo-modal__caption';
+
+    const controls = document.createElement('div');
+    controls.className = 'photo-modal__controls';
+    const prev = document.createElement('button');
+    prev.type = 'button';
+    prev.textContent = 'Prev';
+    const next = document.createElement('button');
+    next.type = 'button';
+    next.textContent = 'Next';
+    const close = document.createElement('button');
+    close.type = 'button';
+    close.textContent = 'Close';
+    controls.append(prev, next, close);
+
+    content.append(header, body, caption, controls);
+    overlay.append(content);
+    document.body.append(overlay);
+
+    overlay.addEventListener('click', (event) => {
+      if (event.target === overlay) {
+        this.closePhotoModal();
+      }
+    });
+    close.addEventListener('click', () => this.closePhotoModal());
+    prev.addEventListener('click', () => {
+      this.photoModalState.index = Math.max(0, this.photoModalState.index - 1);
+      this.renderPhoto();
+    });
+    next.addEventListener('click', () => {
+      this.photoModalState.index = Math.min(
+        this.photoModalState.photos.length - 1,
+        this.photoModalState.index + 1,
+      );
+      this.renderPhoto();
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (overlay.getAttribute('aria-hidden') === 'true') return;
+      if (event.key === 'Escape') {
+        this.closePhotoModal();
+      } else if (event.key === 'ArrowLeft') {
+        prev.click();
+      } else if (event.key === 'ArrowRight') {
+        next.click();
+      }
+    });
+
+    this.photoModal = { overlay, content, img, caption, prev, next, close, counter };
+    return this.photoModal;
   }
 }
 
@@ -434,7 +756,7 @@ function buildTreeList(nodes, selectedId, onSelect) {
 
     const title = document.createElement('div');
     title.className = 'chapter-node__title';
-    title.textContent = `${node.id} — ${node.title}`;
+    title.textContent = node.title ? `${node.id} — ${node.title}` : node.id;
     header.append(title);
 
     if (node.isFinding && node.reportEntry) {
@@ -459,35 +781,63 @@ function buildTreeList(nodes, selectedId, onSelect) {
   return list;
 }
 
-function renderDetailHeader(entry) {
-  const wrapper = document.createElement('div');
-  wrapper.className = 'detail-header';
+function renderFindingRow(entry, handlers) {
+  const row = document.createElement('article');
+  row.className = 'finding-row';
+  row.dataset.findingId = entry.id;
+  if (!entry.includeInReport) {
+    row.classList.add('finding-row--excluded');
+  }
+  if (entry.done) {
+    row.classList.add('finding-row--done');
+  } else if (entry.needsReview) {
+    row.classList.add('finding-row--review');
+  }
 
-  const title = document.createElement('h3');
-  title.textContent = `${entry.id} — ${entry.title}`;
-  wrapper.append(title);
+  const levelKey = String(entry.level || 1);
+  const activeRecommendation = entry.recommendations?.[levelKey] || {
+    master: '',
+    adjusted: '',
+    useAdjusted: false,
+  };
+  const recommendationDisplay =
+    (activeRecommendation.useAdjusted && activeRecommendation.adjusted) ||
+    activeRecommendation.adjusted ||
+    activeRecommendation.master ||
+    '';
+  const recommendationText = activeRecommendation.adjusted || activeRecommendation.master || '';
+  const findingDisplay =
+    entry.finding.adjustedText ||
+    entry.finding.masterText ||
+    '';
+  const findingText = entry.finding.adjustedText || entry.finding.masterText || '';
+  const editOn = Boolean(handlers.editEnabled);
+
+  const metaCell = document.createElement('div');
+  metaCell.className = 'finding-row__meta';
+
+  const title = document.createElement('p');
+  title.className = 'finding-row__title';
+  title.textContent = `${entry.id} — ${entry.title || ''}`;
+  metaCell.append(title);
 
   const chip = document.createElement('span');
   chip.className = 'client-chip';
   chip.dataset.state = entry.clientInput.yesNo || 'n/a';
   chip.textContent = (entry.clientInput.yesNo || 'n/a').toUpperCase();
-  wrapper.append(chip);
+  metaCell.append(chip);
 
-  return wrapper;
-}
-
-function renderFindingRow(entry, handlers) {
-  const row = document.createElement('article');
-  row.className = 'finding-row';
-  row.dataset.findingId = entry.id;
-
-  const header = document.createElement('header');
-  header.className = 'finding-row__header';
-
-  const title = document.createElement('div');
-  title.className = 'finding-row__title';
-  title.innerHTML = `<strong>${entry.id}</strong> ${entry.title || ''}`;
-  header.append(title);
+  if (entry.clientInput.remarks) {
+    const remarkWrapper = document.createElement('div');
+    remarkWrapper.className = 'client-remark';
+    const remarkLabel = document.createElement('label');
+    remarkLabel.textContent = 'Client comment';
+    const remarkBody = document.createElement('div');
+    remarkBody.className = 'preview-pane preview-pane--compact';
+    remarkBody.innerHTML = renderMarkdown(entry.clientInput.remarks || '');
+    remarkWrapper.append(remarkLabel, remarkBody);
+    metaCell.append(remarkWrapper);
+  }
 
   const levelGroup = document.createElement('div');
   levelGroup.className = 'finding-row__levels';
@@ -500,13 +850,57 @@ function renderFindingRow(entry, handlers) {
     radio.value = value;
     radio.checked = Number(entry.level) === Number(value);
     radio.addEventListener('change', () => handlers.onLevelChange(Number(value)));
-    label.append(radio, document.createTextNode(value));
+    const visual = document.createElement('span');
+    visual.textContent = value;
+    label.append(radio, visual);
     levelGroup.append(label);
   });
-  header.append(levelGroup);
+  metaCell.append(levelGroup);
 
-  const controls = document.createElement('div');
-  controls.className = 'finding-row__controls';
+  const findingCell = document.createElement('div');
+  findingCell.className = 'finding-row__cell finding-row__cell--finding';
+  const adjustedLabel = document.createElement('label');
+  adjustedLabel.textContent = 'Finding (Markdown)';
+  findingCell.append(adjustedLabel);
+  if (editOn) {
+    const adjustArea = document.createElement('textarea');
+    adjustArea.className = 'markdown-textarea';
+    adjustArea.dataset.field = 'finding-adjusted';
+    adjustArea.dataset.finding = entry.id;
+    adjustArea.value = findingText;
+    adjustArea.addEventListener('input', () => handlers.onFindingChange(adjustArea.value));
+    findingCell.append(adjustArea);
+  } else {
+    const findingPreview = document.createElement('div');
+    findingPreview.className = 'preview-pane preview-pane--compact';
+    findingPreview.innerHTML = renderMarkdown(findingDisplay);
+    findingCell.append(findingPreview);
+  }
+
+  const recommendationCell = document.createElement('div');
+  recommendationCell.className = 'finding-row__cell finding-row__cell--recommendation';
+  const recLabel = document.createElement('label');
+  recLabel.textContent = `Recommendation (Level ${levelKey})`;
+  recommendationCell.append(recLabel);
+
+  if (editOn) {
+    const recTextarea = document.createElement('textarea');
+    recTextarea.className = 'markdown-textarea';
+    recTextarea.dataset.field = 'recommendation-adjusted';
+    recTextarea.dataset.finding = entry.id;
+    recTextarea.dataset.recommendation = levelKey;
+    recTextarea.value = recommendationText;
+    recTextarea.addEventListener('input', () => handlers.onRecommendationChange(recTextarea.value));
+    recommendationCell.append(recTextarea);
+  } else {
+    const recPreview = document.createElement('div');
+    recPreview.className = 'preview-pane preview-pane--compact';
+    recPreview.innerHTML = renderMarkdown(recommendationDisplay || '');
+    recommendationCell.append(recPreview);
+  }
+
+  const controlsCell = document.createElement('div');
+  controlsCell.className = 'finding-row__cell finding-row__controls';
 
   const includeLabel = document.createElement('label');
   includeLabel.className = 'checkbox-row';
@@ -514,98 +908,71 @@ function renderFindingRow(entry, handlers) {
   includeCheckbox.type = 'checkbox';
   includeCheckbox.checked = Boolean(entry.includeInReport);
   includeCheckbox.addEventListener('change', () => handlers.onIncludeChange(includeCheckbox.checked));
-  includeLabel.append(includeCheckbox, document.createTextNode('Bericht'));
-  controls.append(includeLabel);
+  includeLabel.append(includeCheckbox, document.createTextNode('Include'));
+  controlsCell.append(includeLabel);
 
-  const updateSelect = document.createElement('select');
-  updateSelect.innerHTML = `
-    <option value="none">No master update</option>
-    <option value="finding">Finding</option>
-    <option value="recommendation">Recommendations</option>
-    <option value="all">Entire record</option>
-  `;
-  updateSelect.value = entry.proposeMasterUpdate?.scope || '';
-  updateSelect.addEventListener('change', () =>
-    handlers.onMasterUpdateChange({
-      action: updateSelect.value ? 'append' : 'none',
-      scope: updateSelect.value,
-    }),
-  );
-  controls.append(updateSelect);
+  const doneLabel = document.createElement('label');
+  doneLabel.className = 'checkbox-row';
+  const doneCheckbox = document.createElement('input');
+  doneCheckbox.type = 'checkbox';
+  doneCheckbox.checked = Boolean(entry.done);
+  doneCheckbox.addEventListener('change', () => handlers.onDoneChange(doneCheckbox.checked));
+  doneLabel.append(doneCheckbox, document.createTextNode('Done'));
+  controlsCell.append(doneLabel);
 
-  header.append(controls);
-  row.append(header);
+  const reviewLabel = document.createElement('label');
+  reviewLabel.className = 'checkbox-row';
+  const reviewCheckbox = document.createElement('input');
+  reviewCheckbox.type = 'checkbox';
+  reviewCheckbox.checked = Boolean(entry.needsReview);
+  reviewCheckbox.addEventListener('change', () => handlers.onReviewChange(reviewCheckbox.checked));
+  reviewLabel.append(reviewCheckbox, document.createTextNode('Needs review'));
+  controlsCell.append(reviewLabel);
 
-  const columns = document.createElement('div');
-  columns.className = 'finding-row__columns';
-
-  // Finding column
-  const findingColumn = document.createElement('div');
-  findingColumn.className = 'finding-row__column finding-row__column--finding';
-  findingColumn.innerHTML = `
-    <label>Master Text</label>
-    <div class="preview-pane">${renderMarkdown(entry.finding.masterText || '')}</div>
-  `;
-  const adjustedField = document.createElement('div');
-  adjustedField.className = 'detail-field';
-  adjustedField.innerHTML = '<label>Adjusted Text</label>';
-  const adjustArea = document.createElement('textarea');
-  adjustArea.className = 'markdown-textarea';
-  adjustArea.dataset.field = 'finding-adjusted';
-  adjustArea.dataset.finding = entry.id;
-  adjustedField.append(adjustArea);
-  new MarkdownEditor(adjustArea, {
-    value: entry.finding.adjustedText || '',
-    onChange: handlers.onFindingChange,
+  const intentWrapper = document.createElement('div');
+  intentWrapper.className = 'control-group';
+  const intentLabel = document.createElement('div');
+  intentLabel.className = 'control-group__label';
+  intentLabel.textContent = 'Master intent';
+  intentWrapper.append(intentLabel);
+  const intents = [
+    { value: 'none', label: 'None', scope: '' },
+    { value: 'append', label: 'Append', scope: 'all' },
+    { value: 'replace', label: 'Replace', scope: 'all' },
+  ];
+  intents.forEach((intent) => {
+    const intentRow = document.createElement('label');
+    intentRow.className = 'checkbox-row';
+    const radio = document.createElement('input');
+    radio.type = 'radio';
+    radio.name = `intent-${entry.id}`;
+    radio.value = intent.value;
+    radio.checked = (entry.proposeMasterUpdate?.action || 'none') === intent.value;
+    radio.addEventListener('change', () =>
+      handlers.onMasterUpdateChange({ action: intent.value, scope: intent.scope }),
+    );
+    intentRow.append(radio, document.createTextNode(intent.label));
+    intentWrapper.append(intentRow);
   });
-  const checkboxRow = document.createElement('label');
-  checkboxRow.className = 'checkbox-row';
-  const checkbox = document.createElement('input');
-  checkbox.type = 'checkbox';
-  checkbox.checked = Boolean(entry.finding.useAdjusted);
-  checkbox.addEventListener('change', () => handlers.onFindingToggle(checkbox.checked));
-  checkboxRow.append(checkbox, document.createTextNode('Use adjusted text'));
-  adjustedField.append(checkboxRow);
-  findingColumn.append(adjustedField);
+  controlsCell.append(intentWrapper);
 
-  columns.append(findingColumn);
+  const photosButton = document.createElement('button');
+  photosButton.type = 'button';
+  photosButton.className = handlers.hasPhotos ? 'chip-button chip-button--active' : 'chip-button';
+  photosButton.textContent = handlers.hasPhotos
+    ? `Photos (${handlers.photoCount || 0})`
+    : 'Photos';
+  photosButton.addEventListener('click', () => handlers.onPhotos?.());
+  controlsCell.append(photosButton);
 
-  const recommendationsColumn = document.createElement('div');
-  recommendationsColumn.className = 'finding-row__column finding-row__column--recommendations';
+  const editButton = document.createElement('button');
+  editButton.type = 'button';
+  editButton.className = 'chip-button';
+  editButton.textContent = editOn ? 'Hide editors' : 'Edit';
+  editButton.addEventListener('click', () => handlers.onToggleEdit());
+  controlsCell.append(editButton);
 
-  Object.keys(entry.recommendations || {}).forEach((key) => {
-    const recommendation = entry.recommendations[key];
-    const card = document.createElement('div');
-    card.className = 'recommendation-card';
-    card.innerHTML = `
-      <header>
-        <strong>${key}</strong>
-        <label class="checkbox-row">
-          <input type="checkbox" ${recommendation.useAdjusted ? 'checked' : ''} />
-          <span>Use adjusted</span>
-        </label>
-      </header>
-      <div class="recommendation-master">${renderMarkdown(recommendation.master || '')}</div>
-    `;
-    const checkbox = card.querySelector('input[type="checkbox"]');
-    checkbox.addEventListener('change', () => handlers.onRecommendationToggle(key, checkbox.checked));
-
-    const textarea = document.createElement('textarea');
-    textarea.className = 'markdown-textarea';
-    textarea.dataset.field = 'recommendation-adjusted';
-    textarea.dataset.finding = entry.id;
-    textarea.dataset.recommendation = key;
-    card.append(textarea);
-    new MarkdownEditor(textarea, {
-      value: recommendation.adjusted || '',
-      onChange: (value) => handlers.onRecommendationChange(key, value),
-    });
-
-    recommendationsColumn.append(card);
-  });
-
-  columns.append(recommendationsColumn);
-  row.append(columns);
+  row.append(metaCell, findingCell, recommendationCell, controlsCell);
 
   return row;
 }
@@ -648,8 +1015,15 @@ function findFirstFinding(nodes) {
 }
 
 function getFindingById(project, id) {
-  if (!project?.report?.chapters) return null;
-  return project.report.chapters.find((chapter) => chapter.id === id) || null;
+  if (!project) return null;
+  if (Array.isArray(project.chapters)) {
+    for (const chapter of project.chapters) {
+      const rows = Array.isArray(chapter?.rows) ? chapter.rows : [];
+      const row = rows.find((entry) => entry?.id === id);
+      if (row) return row;
+    }
+  }
+  return null;
 }
 
 function flattenFindings(node) {

@@ -122,15 +122,13 @@ Now you can use the offline web interface for content editing.
 
 2. **Load your project**
    ```
-   Go to Settings tab
-   Click "Upload project.json"
-   Select the JSON file you exported
+   Go to Import tab
+   Upload your `project.xlsm` and/or `project.json`
    ```
 
 3. **Verify loading**
-   - Settings tab shows green validation
+   - Import tab shows green validation
    - AutoBericht tab shows chapter tree
-   - PhotoSorter tab shows (no photos yet)
 
 **See**: [HTML Workflow Guide](html-workflow.md)
 
@@ -138,7 +136,7 @@ Now you can use the offline web interface for content editing.
 
 Organize project photos by chapter, category, and training topic.
 
-### Option A: Using Excel PhotoSorter
+### Using Excel PhotoSorter (canonical)
 
 1. **Scan photos into Excel**
    ```
@@ -160,31 +158,9 @@ Organize project photos by chapter, category, and training topic.
 
 4. **Reload in web UI**
    ```
-   Go to Settings tab
-   Upload the new project.json
+   Go to Import tab
+   Upload the new `project.json` (or the updated workbook)
    ```
-
-### Option B: Using Web UI PhotoSorter
-
-1. **Upload photos**
-   ```
-   Go to PhotoSorter tab
-   Click "Add Photos"
-   Select photos or folder
-   ```
-
-2. **Tag photos**
-   - Select photo thumbnail
-   - Toggle chapter buttons
-   - Add category tags
-  - Add seminar tags
-   - Add notes in textarea
-
-3. **Auto-save**
-   - Changes saved to in-memory project state
-   - Export JSON when done
-
-**See**: [HTML Workflow - PhotoSorter](html-workflow.md#photosorter-tab)
 
 ## Step 7: Edit Findings and Recommendations
 
@@ -216,30 +192,30 @@ Review and customize the report content.
 
 4. **Save your work**
    ```
-   Settings tab → Export → Download project.json
+   Export tab → Download project.json
    ```
 
-**See**: [HTML Workflow - AutoBericht Tab](html-workflow.md#autobericht-tab)
+**See**: [HTML Workflow Guide](html-workflow.md)
 
-## Step 8: Configure Export Settings
+## Step 8: Configure Layout & Branding
 
 Prepare for PDF and PowerPoint generation.
 
-1. **Go to Settings tab**
+1. **Go to Import tab**
 
-2. **Set export options**
+2. **Set layout and branding**
    - Company name
    - Report locale (de-CH, fr-CH, etc.)
-   - PDF margins (mm)
+   - PDF margin/header/footer settings
    - Header/footer preferences
    - Logo images (optional)
 
 3. **Validate project**
    - Check for validation errors
    - Fix any issues shown
-   - Ensure "Export Ready" is green
+   - Ensure validation is green
 
-**See**: [HTML Workflow - Settings Tab](html-workflow.md#settings-tab)
+**See**: [HTML Workflow Guide](html-workflow.md)
 
 ## Step 9: Generate Reports
 
@@ -248,8 +224,8 @@ Create the final deliverables.
 ### PDF Report
 
 ```
-AutoBericht → Settings tab → Export section
-Click "Generate PDF Report"
+AutoBericht → Export tab
+Click "Generate PDF Report" (or similar)
 Browser print dialog opens
 Choose "Save as PDF"
 ```
@@ -277,7 +253,7 @@ Click "Download project.json"
 Saves current state for later editing
 ```
 
-**See**: [HTML Workflow - Exports](html-workflow.md#export-overview)
+**See**: [HTML Workflow Guide](html-workflow.md)
 
 ## Step 10: Finalize and Distribute
 
@@ -358,10 +334,10 @@ Save final project.json
 → Verify file paths are relative, photos in same folder structure
 
 ### "PDF export looks wrong"
-→ Check Settings tab for margin/header configuration
+→ Check Import tab for margin/header/footer configuration
 
 ### "Can't edit in web UI"
-→ Ensure project is loaded (Settings tab should show validation status)
+→ Ensure the project is loaded and validation is green in the Import tab
 
 ## Next Steps
 

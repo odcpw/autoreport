@@ -55,8 +55,8 @@ export class ExportPanel {
   bindSessionControls() {
     this.sessionButtons.save?.addEventListener('click', () => {
       const payload = this.state.getStoragePayload();
-      if (!payload?.master || !payload?.selfEval) {
-        this.showStatus('Load master and self-eval before saving session.');
+      if (!payload?.project) {
+        this.showStatus('Load project.json before saving session.');
         return;
       }
       if (!this.storageAvailable) {
@@ -80,7 +80,7 @@ export class ExportPanel {
 
     this.sessionButtons.download?.addEventListener('click', () => {
       const payload = this.state.getStoragePayload();
-      if (!payload?.master || !payload?.selfEval) {
+      if (!payload?.project) {
         this.showStatus('Nothing to download yet.');
         return;
       }

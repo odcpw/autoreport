@@ -22,29 +22,27 @@ function buildDocumentHtml(snapshot, baseHref) {
   const displayDate = formatLocaleDate(now, locale);
   const margin = normalizeMargin(snapshot.config?.pdfMargin);
   const showHeaderFooter = snapshot.config?.headerFooter !== 'hide';
-  const includedChapters = (project.report?.chapters || []).filter(
-    (chapter) => chapter.includeInReport !== false,
-  );
+  const includedRows = collectIncludedRows(project);
 
-  const tocHtml = includedChapters
+  const tocHtml = includedRows
     .map(
-      (chapter, index) => `
+      (entry, index) => `
         <li>
           <span class="toc-index">${index + 1}</span>
-          <span class="toc-title">${chapter.id || ''} — ${chapter.title || ''}</span>
+          <span class="toc-title">${entry.id || ''} — ${entry.title || ''}</span>
         </li>
       `,
     )
     .join('\n');
 
-  const chaptersHtml = includedChapters
-    .map((chapter, index) => {
-      const findingText = chapter.finding?.useAdjusted
-        ? chapter.finding.adjustedText || chapter.finding.masterText
-        : chapter.finding?.masterText;
-      const recommendations = Object.keys(chapter.recommendations || {})
+  const chaptersHtml = includedRows
+    .map((entry, index) => {
+      const findingText = entry.finding?.useAdjusted
+        ? entry.finding.adjustedText || entry.finding.masterText
+        : entry.finding?.masterText;
+      const recommendations = Object.keys(entry.recommendations || {})
         .map((key) => {
-          const rec = chapter.recommendations[key];
+          const rec = entry.recommendations[key];
           const text = rec?.useAdjusted ? rec.adjusted || rec.master : rec?.master;
           return text ? `<li>${renderMarkdown(text)}</li>` : '';
         })
@@ -53,8 +51,8 @@ function buildDocumentHtml(snapshot, baseHref) {
       return `
         <section class="chapter" data-index="${index + 1}">
           <header>
-            <h2>${chapter.id || ''} — ${chapter.title || ''}</h2>
-            <div class="meta">Level ${chapter.level ?? ''}</div>
+            <h2>${entry.id || ''} — ${entry.title || ''}</h2>
+            <div class="meta">Level ${entry.level ?? ''}</div>
           </header>
           <div class="finding">${renderMarkdown(findingText || '')}</div>
           ${recommendations ? `<ul class="recommendations">${recommendations}</ul>` : ''}
@@ -125,10 +123,60 @@ function buildDocumentHtml(snapshot, baseHref) {
   </head>
   <body>
     ${headerSection}
-    ${chaptersHtml || '<p>No chapters selected for report.</p>'}
+    ${chaptersHtml || '<p>No findings selected for report.</p>'}
     ${showHeaderFooter ? `<div class="page-footer">${footerText}</div>` : ''}
   </body>
 </html>`;
+}
+
+function collectIncludedRows(project) {
+  if (!project) return [];
+  const entries = [];
+  (project.chapters || []).forEach((chapter) => {
+    (chapter?.rows || []).forEach((row) => {
+      const include = row?.workstate?.includeFinding ?? true;
+      if (!include) return;
+      entries.push(unifiedRowToEntry(row));
+    });
+  });
+  return entries;
+}
+
+function unifiedRowToEntry(row) {
+  const ws = row.workstate || {};
+  const levels = row.master?.levels || {};
+  return {
+    id: row.id,
+    title: row.titleOverride || row.id,
+    level: ws.selectedLevel ?? '',
+    finding: {
+      masterText: row.master?.finding || '',
+      adjustedText: ws.findingOverride || '',
+      useAdjusted: Boolean(ws.useFindingOverride),
+    },
+    recommendations: {
+      '1': {
+        master: levels['1'] || '',
+        adjusted: ws.levelOverrides?.['1'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['1']),
+      },
+      '2': {
+        master: levels['2'] || '',
+        adjusted: ws.levelOverrides?.['2'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['2']),
+      },
+      '3': {
+        master: levels['3'] || '',
+        adjusted: ws.levelOverrides?.['3'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['3']),
+      },
+      '4': {
+        master: levels['4'] || '',
+        adjusted: ws.levelOverrides?.['4'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['4']),
+      },
+    },
+  };
 }
 
 function renderLogo(src, alt) {

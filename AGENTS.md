@@ -36,6 +36,20 @@ Practical guidelines for working as the coding agent across projects.
 - Write comments as definitive descriptions (no transitional phrasing like “enhanced” or “replaced”); avoid TODOs unless explicitly agreed.
 - Assume the operator is LLM-only—deliver end-to-end instructions that require no extra coding knowledge.
 
+## Task Tracking (Beads)
+
+If a repo has a `.beads/` directory, use `bd` as the task tracker (instead of ad-hoc markdown plans).
+
+- Find ready work: `bd ready`
+- Create/update tasks: `bd create "Title" -p 1`, `bd show <id>`, `bd update <id> --status in_progress`
+- Capture dependencies: `bd dep add <child> <parent>`
+- After changing issues: run `bd sync` so `.beads/issues.jsonl` is exported/committed/pushed (if configured)
+
+Optional: use Beads Viewer (`bv`) for triage/graph insights on Beads data.
+
+- Install (no sudo): `curl -fsSL "https://raw.githubusercontent.com/Dicklesworthstone/beads_viewer/main/install.sh?$(date +%s)" | bash`
+- Agents: use only robot mode (non-interactive JSON), e.g. `bv --robot-triage`, `bv --robot-plan`, `bv --robot-next` (bare `bv` launches an interactive TUI and will block)
+
 ## Error Handling
 
 Prefer result-based error handling over exception-based flow control for business logic. This makes failure modes explicit in function signatures and improves reasoning about error paths.
@@ -163,3 +177,29 @@ with sync_playwright() as p:
 PY
 pandoc docs/tmp_scrape/hyperliquid_api.html -f html -t gfm -o docs/tmp_scrape/hyperliquid_api.md
 ```
+
+## Landing the Plane (Session Completion)
+
+**When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
+
+**MANDATORY WORKFLOW:**
+
+1. **File issues for remaining work** - Create issues for anything that needs follow-up
+2. **Run quality gates** (if code changed) - Tests, linters, builds
+3. **Update issue status** - Close finished work, update in-progress items
+4. **PUSH TO REMOTE** - This is MANDATORY:
+   ```bash
+   git pull --rebase
+   bd sync
+   git push
+   git status  # MUST show "up to date with origin"
+   ```
+5. **Clean up** - Clear stashes, prune remote branches
+6. **Verify** - All changes committed AND pushed
+7. **Hand off** - Provide context for next session
+
+**CRITICAL RULES:**
+- Work is NOT complete until `git push` succeeds
+- NEVER stop before pushing - that leaves work stranded locally
+- NEVER say "ready to push when you are" - YOU must push
+- If push fails, resolve and retry until it succeeds

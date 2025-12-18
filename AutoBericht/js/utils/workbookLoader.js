@@ -70,7 +70,7 @@ function extractWorkbookPayload(workbook) {
 
   const master = buildMasterPayload(meta, chapterRows, rows);
   const selfEval = buildSelfEvalPayload(meta, rows);
-  const project = buildProjectSnapshot(meta, rows, lists, photos);
+  const project = buildProjectSnapshot(meta, chapterRows, rows, lists, photos);
 
   return { master, selfEval, project };
 }
@@ -149,36 +149,28 @@ function readRowEntries(workbook) {
 
 function readLists(workbook) {
   const rows = sheetToJson(workbook, SHEETS.LISTS);
-  const buckets = {
-    berichtList: [],
-    seminarList: [],
-    topicList: [],
-  };
+  const result = {};
   rows.forEach((row) => {
     const listName = String(row.listName || '').trim();
     if (!listName) return;
-    if (listName === 'photo.bericht') {
-      buckets.berichtList.push({
-        value: String(row.value || '').trim(),
-        label: pickFirst(
-          row.label_de,
-          row.label_en,
-          row.label_fr,
-          row.label_it,
-          row.value,
-        ),
-      });
-    } else if (listName === 'photo.seminar') {
-      const label = pickFirst(row.label_de, row.value);
-      if (label) buckets.seminarList.push(label);
-    } else if (listName === 'photo.topic') {
-      const label = pickFirst(row.label_de, row.value);
-      if (label) buckets.topicList.push(label);
-    }
+    const item = {
+      value: pickFirst(row.value, ''),
+      label: pickFirst(row.label_de, row.label_en, row.label_fr, row.label_it, row.value),
+      labels: {
+        de: pickFirst(row.label_de, row.value),
+        fr: pickFirst(row.label_fr, row.value),
+        it: pickFirst(row.label_it, row.value),
+        en: pickFirst(row.label_en, row.value),
+      },
+      group: pickFirst(row.group, ''),
+      sortOrder: row.sortOrder ?? '',
+      chapterId: pickFirst(row.chapterId, ''),
+    };
+    if (!item.value) return;
+    if (!result[listName]) result[listName] = [];
+    result[listName].push(item);
   });
-  buckets.seminarList = normalizeTagList(buckets.seminarList);
-  buckets.topicList = normalizeTagList(buckets.topicList);
-  return buckets;
+  return result;
 }
 
 function readPhotos(workbook) {
@@ -321,7 +313,41 @@ function buildSelfEvalPayload(meta, rows) {
   };
 }
 
-function buildProjectSnapshot(meta, rows, lists, photos) {
+function buildProjectSnapshot(meta, chapterRows, rows, lists, photos) {
+  const chapterMap = new Map();
+  (chapterRows || []).forEach((chapter) => {
+    chapterMap.set(chapter.id, {
+      id: chapter.id,
+      parentId: chapter.parentId || '',
+      orderIndex: chapter.orderIndex || 0,
+      title: chapter.titles || { de: '', fr: '', it: '', en: '' },
+      pageSize: chapter.pageSize ?? '',
+      isActive: typeof chapter.isActive === 'boolean' ? chapter.isActive : true,
+      rows: [],
+    });
+  });
+
+  (rows || []).forEach((row) => {
+    const chapterId = String(row.chapterId || '').trim();
+    if (!chapterId) return;
+    if (!chapterMap.has(chapterId)) {
+      chapterMap.set(chapterId, {
+        id: chapterId,
+        parentId: deriveParentId(chapterId),
+        orderIndex: chapterMap.size + 1,
+        title: { de: chapterId, fr: chapterId, it: chapterId, en: chapterId },
+        pageSize: '',
+        isActive: true,
+        rows: [],
+      });
+    }
+    chapterMap.get(chapterId).rows.push(mapRowToVbaRowEntry(row));
+  });
+
+  const chapters = Array.from(chapterMap.values()).sort(
+    (a, b) => Number(a.orderIndex || 0) - Number(b.orderIndex || 0),
+  );
+
   return {
     version: Number(meta.version) || 1,
     meta: {
@@ -334,43 +360,63 @@ function buildProjectSnapshot(meta, rows, lists, photos) {
     branding: {},
     lists,
     photos,
-    report: {
-      chapters: rows.map((row) => mapRowToReportEntry(row)),
-    },
+    chapters,
   };
 }
 
-function mapRowToReportEntry(row) {
-  const recommendations = {};
-  for (let i = 0; i < 4; i += 1) {
-    const key = String(i + 1);
-    recommendations[key] = {
-      master: row.masterLevels[i] || '',
-      adjusted: row.overrideLevels[i] || '',
-      useAdjusted: row.useOverrideLevels[i],
-    };
-  }
+function mapRowToVbaRowEntry(row) {
+  const levels = {
+    '1': row.masterLevels?.[0] || '',
+    '2': row.masterLevels?.[1] || '',
+    '3': row.masterLevels?.[2] || '',
+    '4': row.masterLevels?.[3] || '',
+  };
+  const overrideLevelText = {
+    '1': row.overrideLevels?.[0] || '',
+    '2': row.overrideLevels?.[1] || '',
+    '3': row.overrideLevels?.[2] || '',
+    '4': row.overrideLevels?.[3] || '',
+  };
+  const overrideLevelUse = {
+    '1': Boolean(row.useOverrideLevels?.[0]),
+    '2': Boolean(row.useOverrideLevels?.[1]),
+    '3': Boolean(row.useOverrideLevels?.[2]),
+    '4': Boolean(row.useOverrideLevels?.[3]),
+  };
+
   return {
     id: row.rowId,
-    title: row.titleOverride || row.rowId,
-    clientInput: {
-      yesNo: mapAnswer(row.customerAnswer),
-      remarks: row.customerRemark || '',
+    chapterId: row.chapterId,
+    titleOverride: row.titleOverride || '',
+    master: {
+      finding: row.masterFinding || '',
+      levels,
     },
-    finding: {
-      masterText: row.masterFinding || '',
-      adjustedText: row.overrideFinding || '',
-      useAdjusted: row.useOverrideFinding,
+    overrides: {
+      finding: { text: row.overrideFinding || '', enabled: Boolean(row.useOverrideFinding) },
+      levels: {
+        '1': { text: overrideLevelText['1'], enabled: overrideLevelUse['1'] },
+        '2': { text: overrideLevelText['2'], enabled: overrideLevelUse['2'] },
+        '3': { text: overrideLevelText['3'], enabled: overrideLevelUse['3'] },
+        '4': { text: overrideLevelText['4'], enabled: overrideLevelUse['4'] },
+      },
     },
-    recommendations,
-    level: row.selectedLevel || 2,
-    includeInReport: row.includeFinding,
-    proposeMasterUpdate: { action: 'none', scope: '' },
+    customer: {
+      answer: row.customerAnswer ?? null,
+      remark: row.customerRemark || '',
+      priority: row.customerPriority ?? null,
+    },
     workstate: {
-      notes: row.notes || '',
+      selectedLevel: row.selectedLevel || null,
+      useFindingOverride: row.useOverrideFinding,
+      findingOverride: row.overrideFinding || '',
+      levelOverrides: overrideLevelText,
+      useLevelOverride: overrideLevelUse,
+      includeFinding: row.includeFinding !== false,
+      includeRecommendation: row.includeRecommendation !== false,
       overwriteMode: row.overwriteMode || 'append',
-      includeRecommendation: row.includeRecommendation,
-      done: row.done,
+      done: Boolean(row.done),
+      notes: row.notes || '',
       lastEditedBy: row.lastEditedBy || '',
       lastEditedAt: row.lastEditedAt || '',
     },
@@ -455,11 +501,28 @@ function buildChapterRows(snapshot) {
     'isActive',
   ];
   const chapters = [];
-  const master = snapshot.master?.chapters || [];
-  flattenChapters(master, '', chapters, new Map());
-  if (!chapters.length) {
-    return [headers];
+  const projectChapters = Array.isArray(snapshot.project?.chapters) ? snapshot.project.chapters : [];
+  if (projectChapters.length) {
+    projectChapters.forEach((chapter, idx) => {
+      const id = String(chapter?.id || '').trim();
+      if (!id) return;
+      const titles = normalizeTitles(chapter.title);
+      chapters.push({
+        id,
+        parentId: String(chapter.parentId || '').trim(),
+        orderIndex: Number.isFinite(Number(chapter.orderIndex)) ? Number(chapter.orderIndex) : idx + 1,
+        titles,
+        pageSize: chapter.pageSize ?? '',
+        isActive: typeof chapter.isActive === 'boolean' ? chapter.isActive : true,
+      });
+    });
+  } else {
+    const master = snapshot.master?.chapters || [];
+    flattenChapters(master, '', chapters, new Map());
   }
+
+  if (!chapters.length) return [headers];
+
   const aoa = chapters.map((chapter) => [
     chapter.id,
     chapter.parentId,
@@ -507,59 +570,57 @@ function buildRowsSheet(snapshot) {
     'lastEditedAt',
   ];
 
-  const projectRows = snapshot.project?.report?.chapters || [];
+  const chapterBuckets = Array.isArray(snapshot.project?.chapters) ? snapshot.project.chapters : [];
+  const projectRows = [];
+  chapterBuckets.forEach((chapter) => {
+    (chapter?.rows || []).forEach((entry) => projectRows.push(entry));
+  });
   if (!projectRows.length) return [headers];
-
-  const masterIndex = new Map();
-  flattenChapters(snapshot.master?.chapters || [], '', [], masterIndex);
 
   const aoa = projectRows.map((entry) => {
     const rowId = entry.id || '';
-    const masterInfo = masterIndex.get(rowId) || null;
-    const masterRecommendation = (level) => {
-      if (masterInfo?.recommendations?.[level]) {
-        return masterInfo.recommendations[level];
-      }
-      return entry.recommendations?.[level]?.master || '';
-    };
-    const overrideRecommendation = (level) =>
-      entry.recommendations?.[level]?.adjusted || '';
-    const useOverrideRecommendation = (level) =>
-      Boolean(entry.recommendations?.[level]?.useAdjusted);
-
-    const chapterId = masterInfo?.parentId || deriveParentId(rowId);
+    const chapterId = entry.chapterId || deriveParentId(rowId);
+    const master = entry.master || {};
+    const masterLevels = master.levels || {};
+    const overrides = entry.overrides || {};
+    const overrideFinding = overrides.finding?.text ?? entry.workstate?.findingOverride ?? '';
+    const useOverrideFinding = Boolean(overrides.finding?.enabled ?? entry.workstate?.useFindingOverride);
+    const overrideLevels = overrides.levels || {};
+    const levelText = (k) => overrideLevels?.[k]?.text ?? entry.workstate?.levelOverrides?.[k] ?? '';
+    const levelUse = (k) => Boolean(overrideLevels?.[k]?.enabled ?? entry.workstate?.useLevelOverride?.[k]);
+    const customer = entry.customer || {};
     const workstate = entry.workstate || {};
-    const customer = entry.clientInput || {};
+
     return [
       rowId,
       chapterId,
-      '',
-      masterInfo?.findingTemplate || entry.finding?.masterText || '',
-      masterRecommendation('1'),
-      masterRecommendation('2'),
-      masterRecommendation('3'),
-      masterRecommendation('4'),
-      entry.finding?.adjustedText || '',
-      Boolean(entry.finding?.useAdjusted),
-      overrideRecommendation('1'),
-      overrideRecommendation('2'),
-      overrideRecommendation('3'),
-      overrideRecommendation('4'),
-      useOverrideRecommendation('1'),
-      useOverrideRecommendation('2'),
-      useOverrideRecommendation('3'),
-      useOverrideRecommendation('4'),
-      normalizeCustomerAnswer(customer.yesNo),
-      customer.remarks || '',
-      '',
-      Number(entry.level) || 2,
-      entry.includeInReport !== false,
-      workstate.includeRecommendation ?? entry.includeInReport !== false,
-      workstate.overwriteMode || 'append',
+      entry.titleOverride || '',
+      master.finding || '',
+      masterLevels['1'] || '',
+      masterLevels['2'] || '',
+      masterLevels['3'] || '',
+      masterLevels['4'] || '',
+      overrideFinding,
+      useOverrideFinding,
+      levelText('1'),
+      levelText('2'),
+      levelText('3'),
+      levelText('4'),
+      levelUse('1'),
+      levelUse('2'),
+      levelUse('3'),
+      levelUse('4'),
+      customer.answer ?? '',
+      customer.remark ?? '',
+      customer.priority ?? '',
+      workstate.selectedLevel ?? '',
+      workstate.includeFinding ?? true,
+      workstate.includeRecommendation ?? true,
+      workstate.overwriteMode ?? '',
       Boolean(workstate.done),
-      workstate.notes || '',
-      workstate.lastEditedBy || '',
-      workstate.lastEditedAt || '',
+      workstate.notes ?? '',
+      workstate.lastEditedBy ?? '',
+      workstate.lastEditedAt ?? '',
     ];
   });
 
@@ -620,50 +681,52 @@ function buildListRows(snapshot) {
     'chapterId',
   ];
   const rows = [];
-  const berichtOptions = snapshot.tagOptions?.bericht || [];
-  berichtOptions.forEach((option, index) => {
-    rows.push([
-      'photo.bericht',
-      option.value || '',
-      option.label || option.value || '',
-      option.label || option.value || '',
-      option.label || option.value || '',
-      option.label || option.value || '',
-      'bericht',
-      index + 1,
-      option.value || '',
-    ]);
-  });
 
-  const seminarList = snapshot.tagLists?.seminar || [];
-  seminarList.forEach((value, index) => {
-    rows.push([
-      'photo.seminar',
-      value,
-      value,
-      value,
-      value,
-      value,
-      'seminar',
-      index + 1,
-      '',
-    ]);
-  });
+  const lists =
+    snapshot?.project?.lists && typeof snapshot.project.lists === 'object'
+      ? snapshot.project.lists
+      : {};
 
-  const topicList = snapshot.tagLists?.topic || [];
-  topicList.forEach((value, index) => {
-    rows.push([
-      'photo.topic',
-      value,
-      value,
-      value,
-      value,
-      value,
-      'topic',
-      index + 1,
-      '',
-    ]);
-  });
+  const inferGroup = (listName) => {
+    switch (listName) {
+      case 'photo.bericht':
+        return 'bericht';
+      case 'photo.seminar':
+        return 'seminar';
+      case 'photo.topic':
+        return 'topic';
+      default:
+        return '';
+    }
+  };
+
+  Object.keys(lists)
+    .sort()
+    .forEach((listName) => {
+      const entries = Array.isArray(lists[listName]) ? lists[listName] : [];
+      entries.forEach((entry, index) => {
+        const isObject = entry && typeof entry === 'object' && !Array.isArray(entry);
+        const rawValue = isObject ? entry.value : entry;
+        const value = rawValue != null ? String(rawValue) : '';
+        const label = isObject ? String(entry.label ?? entry.value ?? '') : value;
+        const labels = isObject && entry.labels && typeof entry.labels === 'object' ? entry.labels : null;
+        const group = isObject ? String(entry.group ?? inferGroup(listName)) : inferGroup(listName);
+        const sortOrder = isObject && entry.sortOrder != null ? entry.sortOrder : index + 1;
+        const chapterId = isObject ? String(entry.chapterId ?? '') : '';
+
+        rows.push([
+          listName,
+          value,
+          String(labels?.de ?? label),
+          String(labels?.fr ?? label),
+          String(labels?.it ?? label),
+          String(labels?.en ?? label),
+          group,
+          sortOrder,
+          chapterId,
+        ]);
+      });
+    });
 
   return [headers, ...rows];
 }

@@ -71,14 +71,10 @@ function validateProject(data, context) {
     return { ok: null, messages: [VALIDATION_MESSAGES.PROJECT_PENDING] };
   }
 
-  if (!context.master || !context.selfEval) {
-    return { ok: null, messages: [VALIDATION_MESSAGES.PROJECT_PENDING] };
-  }
-
   let ok = Boolean(schemaValidator.validate('project', data));
   let messages = ok ? [] : schemaValidator.getErrors();
 
-  const crossCheck = validateCrossRefs(data, context.master);
+  const crossCheck = validateCrossRefs(data);
   if (!crossCheck.ok) {
     ok = false;
     messages = messages.concat(crossCheck.messages);
@@ -94,45 +90,56 @@ function validateProject(data, context) {
  * @param {Object} master - The master data
  * @returns {{ok: boolean, messages: string[]}} Validation result
  */
-function validateCrossRefs(project, master) {
+function validateCrossRefs(project) {
   const messages = [];
-  const masterIds = new Set();
-
-  traverseMaster(master.chapters || [], (chapter) => masterIds.add(chapter.id));
+  const berichtIds = new Set();
+  if (Array.isArray(project.chapters)) {
+    project.chapters.forEach((chapter) => {
+      (chapter?.rows || []).forEach((row) => {
+        if (row?.id) berichtIds.add(String(row.id));
+      });
+    });
+  }
 
   const normalizeValue = (value) => (value != null ? String(value).trim() : '');
 
-  const berichtSet = new Set(
-    (project.lists?.berichtList || []).map((entry) => {
-      if (entry && typeof entry === 'object') {
-        return normalizeValue(entry.value ?? entry.id ?? entry.label ?? '');
-      }
-      return normalizeValue(entry);
-    }).filter(Boolean),
-  );
+  const getListValues = (listName) => {
+    const list = Array.isArray(project.lists?.[listName]) ? project.lists[listName] : [];
+    return list
+      .map((entry) => {
+        if (entry && typeof entry === 'object') {
+          return normalizeValue(entry.value ?? entry.label ?? '');
+        }
+        return normalizeValue(entry);
+      })
+      .filter(Boolean);
+  };
 
-  const seminarSet = new Set((project.lists?.seminarList || []).map(normalizeValue).filter(Boolean));
-  const topicSet = new Set((project.lists?.topicList || []).map(normalizeValue).filter(Boolean));
+  const berichtSet = new Set(getListValues('photo.bericht'));
+  const seminarSet = new Set(getListValues('photo.seminar'));
+  const topicSet = new Set(getListValues('photo.topic'));
 
   Object.entries(project.photos || {}).forEach(([path, info]) => {
-    (info.tags.bericht || []).forEach((chapterId) => {
+    if (!info || typeof info !== 'object') return;
+    const tags = info.tags && typeof info.tags === 'object' ? info.tags : {};
+    (tags.bericht || []).forEach((chapterId) => {
       const normalized = normalizeValue(chapterId);
       if (!normalized) return;
-      if (!masterIds.has(normalized)) {
+      if (berichtIds.size > 0 && !berichtIds.has(normalized)) {
         messages.push(`Photo "${path}" references unknown bericht ${normalized}.`);
       }
       if (berichtSet.size > 0 && !berichtSet.has(normalized)) {
         messages.push(`Photo "${path}" uses bericht tag "${normalized}" not present in lists.`);
       }
     });
-    (info.tags.seminar || []).forEach((seminar) => {
+    (tags.seminar || []).forEach((seminar) => {
       const normalized = normalizeValue(seminar);
       if (!normalized) return;
       if (!seminarSet.has(normalized)) {
         messages.push(`Photo "${path}" uses unknown seminar tag "${normalized}".`);
       }
     });
-    (info.tags.topic || []).forEach((topic) => {
+    (tags.topic || []).forEach((topic) => {
       const normalized = normalizeValue(topic);
       if (!normalized) return;
       if (!topicSet.has(normalized)) {
@@ -141,28 +148,7 @@ function validateCrossRefs(project, master) {
     });
   });
 
-  (project.report?.chapters || []).forEach((chapter) => {
-    if (chapter?.id && !masterIds.has(chapter.id)) {
-      messages.push(`Report chapter ${chapter.id} is missing in master.json.`);
-    }
-  });
-
   return { ok: messages.length === 0, messages };
-}
-
-/**
- * Traverse master chapters recursively.
- *
- * @param {Array} chapters - Array of chapter objects
- * @param {Function} callback - Function to call for each chapter
- */
-function traverseMaster(chapters, callback) {
-  chapters.forEach((chapter) => {
-    callback(chapter);
-    if (chapter.children?.length) {
-      traverseMaster(chapter.children, callback);
-    }
-  });
 }
 
 /**

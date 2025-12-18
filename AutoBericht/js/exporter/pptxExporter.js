@@ -10,15 +10,15 @@ export async function exportReportPpt(snapshot) {
   ensureLibrary();
   const pptx = new window.PptxGenJS();
   const filename = buildFilename(snapshot, 'Report Presentation');
-  const chapters = snapshot?.project?.report?.chapters || [];
+  const chapters = collectReportEntries(snapshot);
   const availablePhotos = Array.isArray(snapshot?.photos) ? snapshot.photos : [];
   const projectPhotoMeta = snapshot?.project?.photos || {};
 
   if (!chapters.length) {
     const slide = pptx.addSlide();
-    slide.addText('No chapters available for export.', { x: 1, y: 1, fontSize: 18 });
+    slide.addText('No findings available for export.', { x: 1, y: 1, fontSize: 18 });
   } else {
-    for (const chapter of chapters.filter((item) => item.includeInReport !== false)) {
+    for (const chapter of chapters) {
       const slide = pptx.addSlide();
       slide.addText(`${chapter.id || ''} — ${chapter.title || ''}`, {
         x: 0.5,
@@ -257,6 +257,58 @@ function filterPhotosByTag(photos, key, value) {
     const tags = Array.isArray(photo.tags?.[key]) ? photo.tags[key] : [];
     return tags.some((tag) => normalizeTagValue(tag) === target);
   });
+}
+
+function collectReportEntries(snapshot) {
+  const project = snapshot?.project;
+  if (!project) return [];
+  const entries = [];
+  (project.chapters || []).forEach((chapter) => {
+    (chapter?.rows || []).forEach((row) => {
+      const include = row?.workstate?.includeFinding ?? true;
+      if (!include) return;
+      entries.push(unifiedRowToEntry(row));
+    });
+  });
+  return entries;
+}
+
+function unifiedRowToEntry(row) {
+  const ws = row.workstate || {};
+  const levels = row.master?.levels || {};
+  const selectedLevel = Number.isFinite(Number(ws.selectedLevel)) ? Number(ws.selectedLevel) : 2;
+  return {
+    id: row.id,
+    title: row.titleOverride || row.id,
+    finding: {
+      masterText: row.master?.finding || '',
+      adjustedText: ws.findingOverride || '',
+      useAdjusted: Boolean(ws.useFindingOverride),
+    },
+    recommendations: {
+      '1': {
+        master: levels['1'] || '',
+        adjusted: ws.levelOverrides?.['1'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['1']),
+      },
+      '2': {
+        master: levels['2'] || '',
+        adjusted: ws.levelOverrides?.['2'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['2']),
+      },
+      '3': {
+        master: levels['3'] || '',
+        adjusted: ws.levelOverrides?.['3'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['3']),
+      },
+      '4': {
+        master: levels['4'] || '',
+        adjusted: ws.levelOverrides?.['4'] || '',
+        useAdjusted: Boolean(ws.useLevelOverride?.['4']),
+      },
+    },
+    level: selectedLevel,
+  };
 }
 
 function groupPhotosByTag(photos, key) {

@@ -1,18 +1,27 @@
 {
   "version": 1,
   "meta": {
-    "created": "2024-01-12T09:30:00.000Z",
+    "projectId": "2025-ACME-001",
     "company": "ACME AG",
-    "locale": "en"
+    "createdAt": "2025-02-11T08:45:00Z",
+    "locale": "en",
+    "author": "Fixture"
   },
-  "branding": {
-    "left": "assets/branding/logo_left.png",
-    "right": "assets/branding/logo_right.png"
-  },
+  "branding": {},
   "lists": {
-    "berichtList": [{ "value": "4.6.1", "label": "4.6.1" }],
-    "seminarList": ["PSA Basics", "Leadership Coaching"],
-    "topicList": ["Policy", "Leadership", "Training"]
+    "photo.bericht": [
+      { "value": "1.1.1", "label": "1.1.1", "labels": { "en": "1.1.1", "de": "1.1.1" }, "group": "bericht", "sortOrder": 1, "chapterId": "1.1" },
+      { "value": "4.6.1", "label": "4.6.1", "labels": { "en": "4.6.1", "de": "4.6.1" }, "group": "bericht", "sortOrder": 2, "chapterId": "4.6" }
+    ],
+    "photo.seminar": [
+      { "value": "PSA Basics", "label": "PSA Basics", "labels": { "en": "PSA Basics", "de": "PSA Basics" }, "group": "seminar", "sortOrder": 1, "chapterId": "" },
+      { "value": "Leadership Coaching", "label": "Leadership Coaching", "labels": { "en": "Leadership Coaching", "de": "Leadership Coaching" }, "group": "seminar", "sortOrder": 2, "chapterId": "" }
+    ],
+    "photo.topic": [
+      { "value": "Policy", "label": "Policy", "labels": { "en": "Policy", "de": "Policy" }, "group": "topic", "sortOrder": 1, "chapterId": "" },
+      { "value": "Leadership", "label": "Leadership", "labels": { "en": "Leadership", "de": "Leadership" }, "group": "topic", "sortOrder": 2, "chapterId": "" },
+      { "value": "Training", "label": "Training", "labels": { "en": "Training", "de": "Training" }, "group": "topic", "sortOrder": 3, "chapterId": "" }
+    ]
   },
   "photos": {
     "photos/site/psa-check.jpg": {
@@ -24,62 +33,104 @@
       }
     }
   },
-  "report": {
-    "chapters": [
-      {
-        "id": "1.1.1",
-        "title": "Safety Policy",
-        "clientInput": { "yesNo": "yes", "remarks": "Well documented." },
-        "finding": {
-          "masterText": "The organisation maintains an up-to-date safety policy.",
-          "adjustedText": "",
-          "useAdjusted": false
-        },
-        "recommendations": {
-          "1": { "master": "Adopt a site-wide communication plan.", "adjusted": "", "useAdjusted": false },
-          "2": { "master": "Introduce quarterly refreshers.", "adjusted": "", "useAdjusted": false },
-          "3": { "master": "Document policy exceptions.", "adjusted": "", "useAdjusted": false },
-          "4": { "master": "Escalate non-compliance within 5 days.", "adjusted": "", "useAdjusted": false }
-        },
-        "level": 2,
-        "includeInReport": true,
-        "proposeMasterUpdate": { "action": "none", "scope": "" }
-      },
-      {
-        "id": "4.6.1",
-        "title": "PSA Usage",
-        "clientInput": { "yesNo": "partial", "remarks": "Spot-checks inconsistent." },
-        "finding": {
-          "masterText": "Assess compliance with on-site personal safety equipment usage.",
-          "adjustedText": "- Emphasise morning briefings for PSA.\n- Add compliance metrics to dashboards.",
-          "useAdjusted": true
-        },
-        "recommendations": {
-          "1": { "master": "Roll out refresher modules.", "adjusted": "", "useAdjusted": false },
-          "2": { "master": "Update signage.", "adjusted": "", "useAdjusted": false },
-          "3": { "master": "Track training monthly.", "adjusted": "", "useAdjusted": false },
-          "4": { "master": "Supervisors perform spot checks.", "adjusted": "", "useAdjusted": false }
-        },
-        "level": 3,
-        "includeInReport": true,
-        "proposeMasterUpdate": { "action": "append", "scope": "recommendation" }
-      }
-    ]
-  },
-  "presentation": {
-    "reportPresentation": {
-      "layout": "auto-grid",
-      "maxPerSlide": 6
+  "chapters": [
+    {
+      "id": "1.1",
+      "title": { "en": "Policies", "de": "Policies" },
+      "rows": [
+        {
+          "id": "1.1.1",
+          "chapterId": "1.1",
+          "titleOverride": "Safety Policy",
+          "master": {
+            "finding": "The organisation maintains an up-to-date safety policy.",
+            "levels": {
+              "1": "Adopt a site-wide communication plan for safety policy updates.",
+              "2": "Introduce quarterly training refreshers focused on leadership accountability.",
+              "3": "Document all policy exceptions and review them during the annual audit.",
+              "4": "Escalate non-compliance cases to senior management within 5 working days."
+            }
+          },
+          "overrides": {
+            "finding": { "text": "", "enabled": false },
+            "levels": {
+              "1": { "text": "", "enabled": false },
+              "2": { "text": "", "enabled": false },
+              "3": { "text": "", "enabled": false },
+              "4": { "text": "", "enabled": false }
+            }
+          },
+          "customer": {
+            "answer": "yes",
+            "remark": "Policies reviewed in March; pending communication update.",
+            "priority": null
+          },
+          "workstate": {
+            "selectedLevel": 2,
+            "includeFinding": true,
+            "includeRecommendation": true,
+            "overwriteMode": "append",
+            "done": false,
+            "notes": "",
+            "lastEditedBy": "",
+            "lastEditedAt": "",
+            "findingOverride": "",
+            "useFindingOverride": false,
+            "levelOverrides": { "1": "", "2": "", "3": "", "4": "" },
+            "useLevelOverride": { "1": false, "2": false, "3": false, "4": false }
+          }
+        }
+      ]
     },
-    "seminar": {
-      "mode": "per-seminar-deck",
-      "groupBy": "bericht",
-      "maxPerSlide": 6
-    },
-    "topic": {
-      "mode": "per-topic-deck",
-      "groupBy": "bericht",
-      "maxPerSlide": 6
+    {
+      "id": "4.6",
+      "title": { "en": "On-Site Training", "de": "On-Site Training" },
+      "rows": [
+        {
+          "id": "4.6.1",
+          "chapterId": "4.6",
+          "titleOverride": "PSA Usage",
+          "master": {
+            "finding": "Assess compliance with on-site personal safety equipment usage.",
+            "levels": {
+              "1": "Roll out refresher modules for PSA usage.",
+              "2": "Update signage across high-risk areas.",
+              "3": "Track PSA training completion monthly.",
+              "4": "Ensure supervisors perform spot checks twice per shift."
+            }
+          },
+          "overrides": {
+            "finding": { "text": "", "enabled": false },
+            "levels": {
+              "1": { "text": "", "enabled": false },
+              "2": { "text": "", "enabled": false },
+              "3": { "text": "", "enabled": false },
+              "4": { "text": "", "enabled": false }
+            }
+          },
+          "customer": {
+            "answer": "partial",
+            "remark": "PSA availability is high, but compliance audits show gaps.",
+            "priority": null
+          },
+          "workstate": {
+            "selectedLevel": 3,
+            "includeFinding": true,
+            "includeRecommendation": true,
+            "overwriteMode": "append",
+            "done": false,
+            "needsReview": true,
+            "notes": "",
+            "lastEditedBy": "",
+            "lastEditedAt": "",
+            "findingOverride": "",
+            "useFindingOverride": false,
+            "levelOverrides": { "1": "", "2": "", "3": "", "4": "" },
+            "useLevelOverride": { "1": false, "2": false, "3": false, "4": false }
+          }
+        }
+      ]
     }
-  }
+  ],
+  "history": []
 }

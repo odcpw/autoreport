@@ -74,6 +74,8 @@ export function createReportEntry(chapter, clientInput) {
     level: 2,
     includeInReport: true,
     proposeMasterUpdate: { action: 'none', scope: '' },
+    done: false,
+    needsReview: false,
   };
 }
 
@@ -156,6 +158,14 @@ export function applyOverrideToEntry(entry, override) {
     result.includeInReport = override.includeInReport;
   }
 
+  if (Object.prototype.hasOwnProperty.call(override, 'done')) {
+    result.done = Boolean(override.done);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(override, 'needsReview')) {
+    result.needsReview = Boolean(override.needsReview);
+  }
+
   if (override.proposeMasterUpdate) {
     result.proposeMasterUpdate = {
       action: override.proposeMasterUpdate.action || 'none',
@@ -194,6 +204,14 @@ export function buildOverrideFromEntry(entry) {
       useAdjusted: Boolean(recommendation.useAdjusted),
     };
   });
+
+  if (Object.prototype.hasOwnProperty.call(entry, 'done')) {
+    override.done = Boolean(entry.done);
+  }
+
+  if (Object.prototype.hasOwnProperty.call(entry, 'needsReview')) {
+    override.needsReview = Boolean(entry.needsReview);
+  }
 
   return override;
 }
@@ -267,8 +285,15 @@ export function normalizeTagList(values) {
  * @returns {Object|null} The finding entry or null if not found
  */
 export function getFindingById(project, id) {
-  if (!project?.report?.chapters) return null;
-  return project.report.chapters.find((chapter) => chapter.id === id) || null;
+  if (!project || !id) return null;
+  if (Array.isArray(project.chapters)) {
+    for (const chapter of project.chapters) {
+      const rows = Array.isArray(chapter?.rows) ? chapter.rows : [];
+      const row = rows.find((entry) => entry?.id === id);
+      if (row) return row;
+    }
+  }
+  return null;
 }
 
 /**
@@ -292,22 +317,12 @@ export function validateProjectSnapshotStructure(data) {
     errors.push('project.json missing "meta" section.');
   }
 
-  if (!data.report || !Array.isArray(data.report.chapters)) {
-    errors.push('project.json missing report chapters array.');
-  } else {
-    const invalidChapter = data.report.chapters.find((chapter) => !chapter?.id);
-    if (invalidChapter) {
-      errors.push('project.json contains a report chapter without an "id" field.');
-    }
+  if (!Array.isArray(data.chapters)) {
+    errors.push('project.json missing "chapters" array.');
   }
 
-  if (
-    !data.lists ||
-    !Array.isArray(data.lists.berichtList) ||
-    !Array.isArray(data.lists.seminarList) ||
-    !Array.isArray(data.lists.topicList)
-  ) {
-    errors.push('project.json missing tag lists (berichtList/seminarList/topicList).');
+  if (!data.lists || typeof data.lists !== 'object') {
+    errors.push('project.json missing "lists" object.');
   }
 
   return errors;

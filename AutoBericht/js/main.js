@@ -88,7 +88,7 @@ function scheduleAutosave() {
   autosaveTimer = window.setTimeout(() => {
     autosaveTimer = null;
     const payload = projectState.getStoragePayload();
-    if (!payload?.master || !payload?.selfEval) return;
+    if (!payload?.project) return;
     const startTimestamp = new Date().toISOString();
     window.dispatchEvent(
       new CustomEvent(EVENTS.AUTOSAVE_START, {
@@ -255,14 +255,14 @@ function restoreFromPayload(payload, timestamp = null) {
     if (payload.tagLists?.seminar) {
       projectState.updateTagList('seminar', payload.tagLists.seminar);
     }
-    if (payload.master) {
-      projectState.setMasterData(payload.master, sourceLabel(timestamp));
-    }
-    if (payload.selfEval) {
-      projectState.setSelfEvalData(payload.selfEval, sourceLabel(timestamp));
-    }
     if (payload.project) {
       projectState.setProjectSnapshot(payload.project, sourceLabel(timestamp));
+    }
+    if (payload.master && !payload.project) {
+      projectState.setMasterData(payload.master, sourceLabel(timestamp));
+    }
+    if (payload.selfEval && !payload.project) {
+      projectState.setSelfEvalData(payload.selfEval, sourceLabel(timestamp));
     }
     if (payload.config) {
       projectState.updateConfig(payload.config);

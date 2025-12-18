@@ -70,16 +70,18 @@ export const selfEvalSchema = {
 export const projectSchema = {
   $id: 'project.json',
   type: 'object',
-  required: ['version', 'meta', 'photos', 'report', 'presentation'],
+  required: ['version', 'meta', 'chapters', 'photos', 'lists'],
   properties: {
     version: { type: 'integer', minimum: 1 },
     meta: {
       type: 'object',
       required: ['company', 'locale'],
       properties: {
-        created: { type: 'string', format: 'date-time' },
+        projectId: { type: 'string' },
         company: { type: 'string' },
-        locale: { enum: ['en', 'de', 'fr', 'it'] },
+        createdAt: { type: 'string' },
+        locale: { type: 'string' },
+        author: { type: 'string' },
       },
     },
     branding: {
@@ -91,31 +93,19 @@ export const projectSchema = {
     },
     lists: {
       type: 'object',
-      required: ['berichtList', 'seminarList', 'topicList'],
-      properties: {
-        berichtList: {
-          type: 'array',
-          items: {
-            anyOf: [
-              { type: 'string' },
-              {
-                type: 'object',
-                properties: {
-                  value: { type: 'string' },
-                  label: { type: 'string' },
-                },
-                required: ['value'],
-              },
-            ],
+      additionalProperties: {
+        type: 'array',
+        items: {
+          type: 'object',
+          required: ['value'],
+          properties: {
+            value: { type: 'string' },
+            label: { type: 'string' },
+            labels: { type: 'object' },
+            group: { type: 'string' },
+            sortOrder: { type: ['number', 'integer', 'string'] },
+            chapterId: { type: 'string' },
           },
-        },
-        seminarList: {
-          type: 'array',
-          items: { type: 'string' },
-        },
-        topicList: {
-          type: 'array',
-          items: { type: 'string' },
         },
       },
     },
@@ -130,7 +120,7 @@ export const projectSchema = {
             properties: {
               bericht: {
                 type: 'array',
-                items: { type: 'string', pattern: '^\\d+(\\.\\d+)*$' },
+                items: { type: 'string' },
               },
               seminar: { type: 'array', items: { type: 'string' } },
               topic: { type: 'array', items: { type: 'string' } },
@@ -139,7 +129,58 @@ export const projectSchema = {
         },
       },
     },
-    report: { type: 'object' },
-    presentation: { type: 'object' },
+    chapters: {
+      type: 'array',
+      items: {
+        type: 'object',
+        required: ['id', 'rows'],
+        properties: {
+          id: { type: 'string' },
+          parentId: { type: 'string' },
+          orderIndex: { type: ['number', 'integer'] },
+          title: {
+            anyOf: [
+              { type: 'string' },
+              {
+                type: 'object',
+                properties: {
+                  de: { type: 'string' },
+                  fr: { type: 'string' },
+                  it: { type: 'string' },
+                  en: { type: 'string' },
+                },
+                additionalProperties: true,
+              },
+            ],
+          },
+          pageSize: { type: ['integer', 'null'] },
+          isActive: { type: ['boolean', 'null'] },
+          rows: {
+            type: 'array',
+            items: {
+              type: 'object',
+              required: ['id', 'chapterId', 'master', 'overrides', 'customer', 'workstate'],
+              properties: {
+                id: { type: 'string' },
+                chapterId: { type: 'string' },
+                titleOverride: { type: 'string' },
+                master: {
+                  type: 'object',
+                  required: ['finding', 'levels'],
+                  properties: {
+                    finding: { type: 'string' },
+                    levels: { type: 'object' },
+                  },
+                },
+                overrides: { type: 'object' },
+                customer: { type: 'object' },
+                workstate: { type: 'object' },
+              },
+            },
+          },
+        },
+      },
+    },
+    history: { type: 'array' },
   },
 };

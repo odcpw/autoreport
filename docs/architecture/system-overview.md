@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This document explains how all AutoBericht components work together to create a complete safety assessment reporting system. It bridges the VBA backend, web UI, data model, and optional development tools.
+This document explains how all AutoBericht components work together to create a complete safety assessment reporting system. It bridges the VBA backend, the offline web UI, and the `project.json` data model.
 
 ## System Diagram
 
@@ -39,11 +39,11 @@ This document explains how all AutoBericht components work together to create a 
 ├────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
-│  │ PhotoSorter  │  │ AutoBericht  │  │  Settings    │     │
+│  │   Import     │  │ AutoBericht  │  │    Export    │     │
 │  │              │  │              │  │              │     │
-│  │ • Tag photos │  │ • Edit       │  │ • Configure  │     │
-│  │ • Organize   │  │   findings   │  │   exports    │     │
-│  │              │  │ • Overrides  │  │ • Validate   │     │
+│  │ • Load       │  │ • Edit       │  │ • PDF/PPTX   │     │
+│  │   workbook   │  │   findings   │  │ • Download   │     │
+│  │ • Validate   │  │ • Overrides  │  │   project    │     │
 │  └──────────────┘  └──────────────┘  └──────────────┘     │
 │                                                              │
 │  ┌──────────────────────────────────────────────────────┐  │
@@ -65,15 +65,6 @@ This document explains how all AutoBericht components work together to create a 
                  │ • training.pptx    │
                  │ • project.json     │
                  └────────────────────┘
-
-┌────────────────────────────────────────────────────────────┐
-│          Development Tools (Optional)                       │
-├────────────────────────────────────────────────────────────┤
-│  vision-critique: AI-powered UI quality analysis           │
-│  • Analyze screenshots                                      │
-│  • Score visual hierarchy, UX, accessibility                │
-│  • Provide actionable feedback                             │
-└────────────────────────────────────────────────────────────┘
 ```
 
 ## Component Responsibilities
@@ -104,12 +95,12 @@ This document explains how all AutoBericht components work together to create a 
 
 **Location**: `/AutoBericht/` folder
 
-**Purpose**: Content editing, photo management, report generation
+**Purpose**: Content editing and report generation. Photo tagging is performed in Excel (PhotoSorterForm); the web UI consumes the resulting metadata via `project.json` / workbook import.
 
 **Key Features**:
-- **PhotoSorter Tab**: Tag photos by Bericht, seminar, topic
-- **AutoBericht Tab**: Edit findings, recommendations, overrides
-- **Settings Tab**: Configure exports, validate data, manage projects
+- **Import Tab**: Load `project.json`/workbook/photos, edit tag lists, run validation
+- **AutoBericht Tab**: Edit findings/recommendations, levels, overrides
+- **Export Tab**: Generate PDF/PPTX outputs and download `project.json`
 
 **Technology**:
 - Pure HTML/CSS/JavaScript (ES modules)
@@ -130,6 +121,8 @@ This document explains how all AutoBericht components work together to create a 
 
 **Purpose**: Unified data format shared between VBA and web UI
 
+**Canonical contract**: `docs/architecture/data-model.md`. The Excel/VBA exporter/loader defines the canonical JSON shape; the web UI adapts to it. Current progress/mismatches live in `docs/STATUS.md`.
+
 **Structure**:
 ```json
 {
@@ -142,10 +135,10 @@ This document explains how all AutoBericht components work together to create a 
       "rows": [
         {
           "id": "1.1.1",
-          "master": { finding, recommendations },
+          "master": { "finding": "...", "levels": { "1": "...", "2": "...", "3": "...", "4": "..." } },
+          "overrides": { "finding": { "text": "...", "enabled": false }, "levels": { "1": { "text": "...", "enabled": false } } },
           "customer": { answer, remark, priority },
-          "workstate": { selectedLevel, overrides, includes, done },
-          "assets": { photos, slides }
+          "workstate": { selectedLevel, includeFinding, includeRecommendation, done }
         }
       ]
     }
@@ -164,26 +157,6 @@ This document explains how all AutoBericht components work together to create a 
 
 **See**: [Data Model Documentation](data-model.md)
 
-### 4. Vision Critique (Development Tool)
-
-**Location**: `/vision-critique/` folder
-
-**Purpose**: AI-powered UI quality analysis during development
-
-**Features**:
-- Automated screenshot capture
-- Vision AI analysis (Claude, GPT-4V, or local Ollama)
-- Scoring: visual hierarchy, UX, accessibility, typography
-- JSON output for coding agents
-
-**Use Cases**:
-- UI development iteration
-- Accessibility validation
-- Design quality checks
-- Automated CI/CD quality gates
-
-**See**: [Vision Critique README](../../vision-critique/README.md)
-
 ## Data Flow
 
 ### Import Flow
@@ -197,7 +170,7 @@ This document explains how all AutoBericht components work together to create a 
 2. VBA Import
    ├─ ImportMyMaster.bas reads Word tables
    ├─ ImportSelbstbeurteilungKunde.bas reads Excel
-   └─ PhotoSorter scans photo directory
+   └─ PhotoSorterForm scans/tags photo directory
 
 3. Structured Sheets
    ├─ Meta: project metadata
@@ -218,9 +191,9 @@ This document explains how all AutoBericht components work together to create a 
    └─ OR: Web UI reads project.xlsm directly (SheetJS)
 
 2. Edit Content
-   ├─ PhotoSorter: tag photos
-   ├─ AutoBericht: edit findings, set levels, add overrides
-   └─ Settings: configure exports
+   ├─ Excel PhotoSorter: tag photos (writes Photos/PhotoTags/Lists)
+   ├─ Web UI AutoBericht: edit findings, set levels, add overrides
+   └─ Web UI Import: validation + tag list edits
 
 3. Validate
    ├─ Check required fields
@@ -266,19 +239,6 @@ This document explains how all AutoBericht components work together to create a 
 - VBA `modMacroSync` imports modules automatically
 - Enables version control without Git client
 
-### Web UI ↔ Vision Critique
-
-**Development workflow**:
-```bash
-# Make UI changes
-vim AutoBericht/css/main.css
-
-# Analyze quality
-vision-critique capture --tab photosorter --output json
-
-# Read feedback, iterate
-```
-
 ## Offline Requirements
 
 ### Why Offline?
@@ -323,8 +283,7 @@ vision-critique capture --tab photosorter --output json
 ```
 1. Clone repository
 2. Import VBA modules for Excel development
-3. Open AutoBericht/index.html for web development
-4. Optional: Install vision-critique for UI analysis
+3. Run the local server (recommended) and open the AutoBericht UI
 ```
 
 ## Extension Points
@@ -356,19 +315,13 @@ vision-critique capture --tab photosorter --output json
 
 - **Import**: ~1-5 seconds for 100-300 finding rows
 - **Export**: ~2-10 seconds for full project
-- **PhotoSorter**: Handles 700+ photos with lazy loading
+- **PhotoSorter (Excel)**: Handles 700+ photos with lazy loading
 
 ### Web UI
 
 - **Load**: <2 seconds for typical project
-- **PhotoSorter**: Virtual scrolling for 1000+ photos
 - **PDF Export**: 5-15 seconds depending on content
 - **PPTX Export**: 3-10 seconds per deck
-
-### Vision Critique
-
-- **Screenshot**: 2-5 seconds
-- **Analysis**: 3-10 seconds (cloud), 10-60 seconds (local)
 
 ## Security Model
 
