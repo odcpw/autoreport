@@ -2,6 +2,7 @@
   const pickFolderBtn = document.getElementById("pick-folder");
   const loadSidecarBtn = document.getElementById("load-sidecar");
   const saveSidecarBtn = document.getElementById("save-sidecar");
+  const saveLogBtn = document.getElementById("save-log");
   const statusEl = document.getElementById("status");
   const chapterListEl = document.getElementById("chapter-list");
   const chapterTitleEl = document.getElementById("chapter-title");
@@ -12,6 +13,10 @@
   const filterDoneOnlyEl = document.getElementById("filter-done-only");
 
   let dirHandle = null;
+  const debug = window.AutoReportDebug || {
+    logLine: () => {},
+    saveLog: async () => ({ location: "none", filename: "" }),
+  };
 
   const defaultProject = {
     meta: {
@@ -121,6 +126,7 @@
 
   const setStatus = (message) => {
     statusEl.textContent = message;
+    debug.logLine("info", message);
   };
 
   const ensureFsAccess = () => {
@@ -341,8 +347,10 @@
       dirHandle = await window.showDirectoryPicker();
       enableActions();
       setStatus(`Selected folder: ${dirHandle.name}`);
+      debug.logLine("info", `Selected folder: ${dirHandle.name}`);
     } catch (err) {
       setStatus(`Folder pick canceled or failed: ${err.message}`);
+      debug.logLine("warn", `Folder pick canceled or failed: ${err.message}`);
     }
   });
 
@@ -356,11 +364,13 @@
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded project_sidecar.json");
+      debug.logLine("info", "Loaded project_sidecar.json");
     } catch (err) {
       state.project = structuredClone(defaultProject);
       state.selectedChapterId = state.project.chapters[0].id;
       render();
       setStatus("Sidecar not found; loaded default template.");
+      debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
     }
   });
 
@@ -372,8 +382,22 @@
       await writable.write(JSON.stringify(state.project, null, 2));
       await writable.close();
       setStatus("Saved project_sidecar.json");
+      debug.logLine("info", "Saved project_sidecar.json");
     } catch (err) {
       setStatus(`Save failed: ${err.message}`);
+      debug.logLine("error", `Save failed: ${err.message}`);
+    }
+  });
+
+  saveLogBtn.addEventListener("click", async () => {
+    try {
+      const result = await debug.saveLog({
+        suggestedName: `mini-editor-log-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`,
+        dirHandle,
+      });
+      setStatus(`Saved log (${result.location}): ${result.filename}`);
+    } catch (err) {
+      setStatus(`Log save failed: ${err.message}`);
     }
   });
 

@@ -31,6 +31,7 @@ window.addEventListener('DOMContentLoaded', async () => {
   new ExportPanel({ state: projectState });
   new SettingsPanel({ state: projectState });
 
+  setupDebugLogButton();
   setFsStatus();
   await bootstrapData();
   projectState.addEventListener(EVENTS.STATE_CHANGE, handleStateChange);
@@ -241,6 +242,23 @@ function setupKeyboardShortcuts() {
         break;
       default:
         break;
+    }
+  });
+}
+
+function setupDebugLogButton() {
+  const button = document.getElementById('btn-save-debug-log');
+  if (!button) return;
+  const debug = window.AutoReportDebug;
+  if (!debug?.saveLog) return;
+
+  button.addEventListener('click', async () => {
+    const filename = `autobericht-log-${new Date().toISOString().replace(/[:.]/g, '-')}.txt`;
+    try {
+      const result = await debug.saveLog({ suggestedName: filename });
+      console.info('Saved debug log:', result);
+    } catch (error) {
+      console.error('Failed to save debug log:', error);
     }
   });
 }

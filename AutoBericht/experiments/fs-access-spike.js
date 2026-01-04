@@ -8,7 +8,10 @@
   const sidecarEl = document.getElementById("sidecar");
 
   let dirHandle = null;
-  const logLines = [];
+  const debug = window.AutoReportDebug || {
+    logLine: () => {},
+    saveLog: async () => ({ location: "none", filename: "" }),
+  };
 
   const defaultSidecar = {
     meta: {
@@ -54,44 +57,7 @@
     statusEl.textContent = message;
   };
 
-  const logLine = (level, message) => {
-    const timestamp = new Date().toISOString();
-    const line = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
-    logLines.push(line);
-  };
-
-  const captureConsole = () => {
-    const original = {
-      log: console.log,
-      warn: console.warn,
-      error: console.error,
-      info: console.info,
-      debug: console.debug,
-    };
-
-    Object.keys(original).forEach((key) => {
-      console[key] = (...args) => {
-        const text = args.map((item) => {
-          if (typeof item === "string") return item;
-          try {
-            return JSON.stringify(item);
-          } catch (err) {
-            return String(item);
-          }
-        }).join(" ");
-        logLine(key, text);
-        original[key](...args);
-      };
-    });
-
-    window.addEventListener("error", (event) => {
-      logLine("error", `${event.message} @ ${event.filename}:${event.lineno}:${event.colno}`);
-    });
-
-    window.addEventListener("unhandledrejection", (event) => {
-      logLine("error", `Unhandled rejection: ${event.reason}`);
-    });
-  };
+  const logLine = debug.logLine;
 
   const enableActions = () => {
     const enabled = !!dirHandle;
@@ -223,40 +189,15 @@
   });
 
   saveLogBtn.addEventListener("click", async () => {
-    const content = logLines.join("\n") || "No log entries yet.";
-    const filename = `fs-access-spike-log-${new Date().toISOString().replace(/[:.]/g, \"-\")}.txt`;
     try {
-      if (dirHandle) {
-        const handle = await dirHandle.getFileHandle(filename, { create: true });
-        const writable = await handle.createWritable();
-        await writable.write(content);
-        await writable.close();
-        setStatus(`Saved log to ${filename}`);
-        return;
-      }
-      if (window.showSaveFilePicker) {
-        const handle = await window.showSaveFilePicker({
-          suggestedName: filename,
-          types: [{ description: \"Text\", accept: { \"text/plain\": [\".txt\"] } }],
-        });
-        const writable = await handle.createWritable();
-        await writable.write(content);
-        await writable.close();
-        setStatus(`Saved log via picker: ${filename}`);
-        return;
-      }
-      const blob = new Blob([content], { type: \"text/plain\" });
-      const link = document.createElement(\"a\");
-      link.href = URL.createObjectURL(blob);
-      link.download = filename;
-      link.click();
-      URL.revokeObjectURL(link.href);
-      setStatus(`Downloaded log: ${filename}`);
+      const result = await debug.saveLog({
+        suggestedName: `fs-access-spike-log-${new Date().toISOString().replace(/[:.]/g, \"-\")}.txt`,
+        dirHandle,
+      });
+      setStatus(`Saved log (${result.location}): ${result.filename}`);
     } catch (err) {
       setStatus(`Log save failed: ${err.message}`);
     }
   });
-
-  captureConsole();
   ensureFsAccess();
 })();
