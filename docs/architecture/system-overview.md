@@ -1,4 +1,7 @@
-# AutoBericht System Architecture Overview
+# AutoBericht System Architecture Overview (Legacy)
+
+> This overview reflects the pre-redesign architecture. For the 2026 redesign
+> direction, see `docs/architecture/redesign-spec-2026-01-04.md`.
 
 ## Purpose
 
@@ -35,7 +38,7 @@ This document explains how all AutoBericht components work together to create a 
                                           │ Load/Save
                                           ▼
 ┌────────────────────────────────────────────────────────────┐
-│              Offline Web UI (AutoBericht/)                  │
+│              Legacy Offline Web UI (AutoBericht/legacy/)                  │
 ├────────────────────────────────────────────────────────────┤
 │                                                              │
 │  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐     │
@@ -93,7 +96,7 @@ This document explains how all AutoBericht components work together to create a 
 
 ### 2. Offline Web UI
 
-**Location**: `/AutoBericht/` folder
+**Location**: `/AutoBericht/legacy/` folder
 
 **Purpose**: Content editing and report generation. Photo tagging is performed in Excel (PhotoSorterForm); the web UI consumes the resulting metadata via `project.json` / workbook import.
 
@@ -272,7 +275,7 @@ This document explains how all AutoBericht components work together to create a 
 
 ```
 1. Install Excel with VBA enabled
-2. Copy AutoBericht/ folder to workstation
+2. Copy AutoBericht/ folder (including legacy) to workstation
 3. Open project.xlsm
 4. Import macros once (optional: PowerShell sync)
 5. Ready to work
@@ -297,7 +300,7 @@ This document explains how all AutoBericht components work together to create a 
 
 ### Adding Web UI Features
 
-1. Add ES module in `AutoBericht/js/`
+1. Add ES module in `AutoBericht/legacy/js/`
 2. Keep modular, avoid global state
 3. Use existing state management
 4. Update tab navigation if needed

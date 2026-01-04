@@ -1,4 +1,7 @@
-# Getting Started with AutoBericht
+# Getting Started with AutoBericht (Legacy)
+
+> This guide reflects the legacy Excel/VBA + three-tab web UI flow. For the
+> current minimal editor workflow, see `docs/guides/redesign-workflow.md`.
 
 This guide walks you through creating your first safety assessment report from start to finish.
 
@@ -113,7 +116,7 @@ Now you can use the offline web interface for content editing.
 
 1. **Open AutoBericht**
    ```
-   Navigate to: AutoBericht/index.html
+   Navigate to: AutoBericht/legacy/index.html
 
    Option A: Double-click (may require browser flag)
    Option B: Right-click → Open with → Chrome/Edge
@@ -278,7 +281,7 @@ Saves current state for later editing
 ### Quick Report Update
 
 ```
-1. Open AutoBericht/index.html
+1. Open AutoBericht/legacy/index.html
 2. Load existing project.json
 3. Make edits in AutoBericht tab
 4. Export PDF (Ctrl+P)

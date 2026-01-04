@@ -1,398 +1,85 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>AutoBericht Offline MVP</title>
-    <link rel="stylesheet" href="./css/main.css" />
-    <link rel="stylesheet" href="./libs/codemirror/codemirror.css" />
-    <script src="./shared/debug-log.js" defer></script>
-    <script src="./libs/ajv/ajv.min.js" defer></script>
-    <script src="./libs/markdown-it/markdown-it.min.js" defer></script>
-    <script src="./libs/codemirror/codemirror.js" defer></script>
-    <script src="./libs/codemirror/mode/markdown/markdown.js" defer></script>
-    <script src="./libs/pptxgenjs/pptxgen.min.js" defer></script>
-    <script src="./libs/sheetjs/xlsx.full.min.js" defer></script>
-  </head>
-  <body>
-    <header class="app-header">
-      <h1>AutoBericht Offline MVP</h1>
-      <div class="header-status">
-        <span id="status-validation" class="status-pill">
-          Validation pending
-        </span>
-        <span id="status-storage" class="status-pill">
-          FS Access: unavailable
-        </span>
-        <button id="btn-save-debug-log" class="header-log-button" type="button">
-          Save debug log
-        </button>
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoBericht</title>
+  <style>
+    :root {
+      color-scheme: light;
+      font-family: "Avenir", "Segoe UI", system-ui, sans-serif;
+      background: #f6f3ef;
+      color: #1e1e1e;
+    }
+    body { margin: 0; }
+    .page {
+      min-height: 100vh;
+      display: grid;
+      place-items: center;
+      padding: 40px 24px;
+    }
+    .card {
+      width: min(900px, 100%);
+      background: #ffffff;
+      border-radius: 20px;
+      padding: 28px 32px;
+      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+    }
+    h1 { margin: 0 0 8px; font-size: 2rem; }
+    p { margin: 0 0 16px; color: #4a4a4a; }
+    .actions {
+      display: grid;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    a.button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 14px 18px;
+      border-radius: 14px;
+      background: #1a232f;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    a.button.secondary {
+      background: #f6d365;
+      color: #1a232f;
+    }
+    a.link {
+      color: #1a232f;
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .note {
+      margin-top: 18px;
+      padding: 12px 14px;
+      background: #fff3cd;
+      border-radius: 12px;
+      color: #5f4b00;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <div class="card">
+      <h1>AutoBericht</h1>
+      <p>This repo now defaults to the minimal, folder-first editor. Legacy UI is still available.</p>
+
+      <div class="actions">
+        <a class="button" href="./mini/index.html">Open Minimal Editor</a>
+        <a class="button secondary" href="./experiments/fs-access-spike.html">Run FS Access Spike</a>
+        <a class="link" href="./legacy/index.html">Open Legacy UI</a>
       </div>
-    </header>
 
-    <nav class="app-tabs" role="tablist" aria-label="Primary">
-      <button
-        class="app-tab app-tab--active"
-        id="tab-import"
-        role="tab"
-        aria-selected="true"
-        aria-controls="panel-import"
-        tabindex="0"
-      >
-        Import
-      </button>
-      <button
-        class="app-tab"
-        id="tab-autobericht"
-        role="tab"
-        aria-selected="false"
-        aria-controls="panel-autobericht"
-        tabindex="-1"
-      >
-        AutoBericht
-      </button>
-      <button
-        class="app-tab"
-        id="tab-export"
-        role="tab"
-        aria-selected="false"
-        aria-controls="panel-export"
-        tabindex="-1"
-      >
-        Export
-      </button>
-    </nav>
-
-    <main>
-      <section
-        class="tab-panel tab-panel--active"
-        id="panel-import"
-        role="tabpanel"
-        aria-labelledby="tab-import"
-      >
-        <div class="panel-header">
-          <h2>Import &amp; Setup</h2>
-          <p>
-            Upload master data, self-evaluations, photos, and configure your project.
-            Validation must pass before you can export a report bundle.
-          </p>
-        </div>
-        <div class="settings-grid">
-          <section class="card">
-            <h3>Data Upload</h3>
-            <form id="form-data-upload">
-              <label class="upload-field">
-                <span>Master JSON</span>
-                <input type="file" id="input-master" accept=".json" />
-              </label>
-              <label class="upload-field">
-                <span>Self Evaluation JSON</span>
-                <input type="file" id="input-self-eval" accept=".json" />
-              </label>
-              <label class="upload-field">
-                <span>Project Workbook (.xlsm)</span>
-                <input type="file" id="input-workbook" accept=".xlsm,.xlsx" />
-              </label>
-              <label class="upload-field">
-                <span>Photo Directory</span>
-                <input type="file" id="input-photos" webkitdirectory directory />
-              </label>
-              <label class="upload-field">
-                <span>Existing project.json (optional)</span>
-                <input type="file" id="input-project" accept=".json" />
-              </label>
-            </form>
-          </section>
-
-          <section class="card">
-            <h3>Branding</h3>
-            <div class="branding-picker">
-              <label class="upload-field">
-                <span>Left Logo</span>
-                <input type="file" id="input-logo-left" accept="image/*" />
-              </label>
-              <label class="upload-field">
-                <span>Right Logo</span>
-                <input type="file" id="input-logo-right" accept="image/*" />
-              </label>
-              <div class="branding-preview">
-                <div>
-                  <span>Left preview</span>
-                  <img id="preview-logo-left" alt="" />
-                </div>
-                <div>
-                  <span>Right preview</span>
-                  <img id="preview-logo-right" alt="" />
-                </div>
-              </div>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3>Session Management</h3>
-            <p id="session-info" class="session-info">No saved session.</p>
-            <div class="session-actions">
-              <button type="button" id="btn-session-restore">Restore Session</button>
-              <button type="button" id="btn-session-upload">Upload Session</button>
-              <button type="button" id="btn-session-clear">Start Fresh</button>
-            </div>
-            <input
-              type="file"
-              id="input-session-import"
-              accept=".json,application/json"
-              hidden
-            />
-          </section>
-
-          <section class="card">
-            <h3>Recent Activity</h3>
-            <ul id="activity-log-import" class="activity-log">
-              <li class="activity-log__empty">No activity yet.</li>
-            </ul>
-          </section>
-
-          <section class="card card--full">
-            <h3>Validation</h3>
-            <div id="validation-summary" class="validation-summary" role="status"></div>
-            <div id="validation-messages" class="validation-messages" aria-live="polite">
-              <p>No validation run yet.</p>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3>PDF Layout Settings</h3>
-            <form id="form-pdf-settings" class="pdf-settings">
-              <label>
-                <span>Margin (mm)</span>
-                <input type="number" id="input-margin" min="5" max="40" value="25" />
-              </label>
-              <label>
-                <span>Header / Footer</span>
-                <select id="input-header-footer">
-                  <option value="show">Show</option>
-                  <option value="hide">Hide</option>
-                </select>
-              </label>
-              <label>
-                <span>Locale</span>
-                <select id="input-locale">
-                  <option value="en">English</option>
-                  <option value="de">Deutsch</option>
-                  <option value="fr">Français</option>
-                  <option value="it">Italiano</option>
-                </select>
-              </label>
-              <label>
-                <span>Footer text</span>
-                <input type="text" id="input-footer-text" value="{company} — {date}" />
-                <small class="field-note">Tokens: {company}, {date}, {time}</small>
-              </label>
-              <label>
-                <span>Footer preset</span>
-                <select id="input-footer-preset">
-                  <option value="">Custom</option>
-                  <option value="{company} — {date}">Company — Date</option>
-                  <option value="{company}\n{date} {time}">Company / Date & Time</option>
-                  <option value="Confidential — {date}">Confidential — Date</option>
-                </select>
-              </label>
-              <button type="button" id="btn-reset-pdf" class="link-button">Reset to defaults</button>
-            </form>
-          </section>
-
-          <section class="card card--full">
-            <h3>Tag Lists</h3>
-            <div class="list-editor" data-tag-list="topic">
-              <div class="list-editor__header">
-                <h4>Topics</h4>
-                <p>Used by the Excel PhotoSorter topic buttons.</p>
-              </div>
-              <ul class="list-editor__items"></ul>
-              <form class="list-editor__form">
-                <input type="text" placeholder="Add topic" />
-                <button type="submit">Add</button>
-              </form>
-            </div>
-
-            <div class="list-editor" data-tag-list="seminar">
-              <div class="list-editor__header">
-                <h4>Seminar Tags</h4>
-                <p>Used by the Excel PhotoSorter and seminar decks.</p>
-              </div>
-              <ul class="list-editor__items"></ul>
-              <form class="list-editor__form">
-                <input type="text" placeholder="Add seminar tag" />
-                <button type="submit">Add</button>
-              </form>
-            </div>
-          </section>
-        </div>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="panel-autobericht"
-        role="tabpanel"
-        aria-labelledby="tab-autobericht"
-        aria-hidden="true"
-      >
-        <div class="panel-header panel-header--autobericht">
-          <div>
-            <h2>AutoBericht</h2>
-            <p>
-              Edit findings and recommendations per chapter, capture status, and keep a downloadable
-              backup while you work.
-            </p>
-          </div>
-        </div>
-        <div class="autobericht-shell">
-          <div class="autobericht-sticky">
-            <div class="chapter-strip" id="autobericht-strip" role="tablist" aria-label="Chapter selector">
-              <p class="chapter-strip__empty">Load data to show chapters.</p>
-            </div>
-            <div
-              class="chapter-substrip"
-              id="autobericht-substrip"
-              role="tablist"
-              aria-label="Sub chapter selector"
-            ></div>
-            <div class="autobericht-filterbar">
-              <div class="autobericht-filters" role="group" aria-label="Finding filters">
-                <label class="filter-chip">
-                  <input type="radio" name="filter-status" value="all" checked />
-                  <span>Show all</span>
-                </label>
-                <label class="filter-chip">
-                  <input type="radio" name="filter-status" value="done" />
-                  <span>Done</span>
-                </label>
-                <label class="filter-chip">
-                  <input type="radio" name="filter-status" value="todo" />
-                  <span>Unfinished</span>
-                </label>
-                <label class="filter-chip">
-                  <input type="checkbox" id="filter-hide-excluded" />
-                  <span>Hide excluded</span>
-                </label>
-                <label class="filter-chip">
-                  <input type="checkbox" id="filter-preview-global" />
-                  <span>Preview mode</span>
-                </label>
-              </div>
-              <div class="autobericht-actions">
-                <span id="autobericht-save-status" class="save-status" aria-live="polite"></span>
-                <button type="button" id="autobericht-save-now" class="primary-action">
-                  Save now
-                </button>
-                <button type="button" class="drawer-toggle" id="autobericht-drawer-toggle" aria-haspopup="dialog">
-                  Open Navigation
-                </button>
-              </div>
-            </div>
-          </div>
-          <div class="autobericht-content">
-            <section class="report-detail report-detail--table" id="autobericht-detail">
-              <div class="detail-placeholder">
-                <p>Select a finding to start editing.</p>
-              </div>
-            </section>
-          </div>
-        </div>
-      </section>
-
-      <section
-        class="tab-panel"
-        id="panel-export"
-        role="tabpanel"
-        aria-labelledby="tab-export"
-        aria-hidden="true"
-      >
-        <div class="panel-header">
-          <h2>Export</h2>
-          <p>
-            Export your reports as PDF or PowerPoint presentations. Save your project session
-            for later use. All exports are enabled once validation passes.
-          </p>
-        </div>
-        <div class="settings-grid">
-          <section class="card">
-            <h3>Report Exports</h3>
-            <button class="export-button" data-export="pdf" disabled>
-              Download Report PDF
-            </button>
-            <button class="export-button" data-export="pptx-report" disabled>
-              Download Report Presentation
-            </button>
-            <button class="export-button" data-export="pptx-seminar" disabled>
-              Download Seminar Slides
-            </button>
-            <button class="export-button" data-export="project-json" disabled>
-              Download project.json
-            </button>
-            <button class="export-button" data-export="workbook" disabled>
-              Download Workbook (.xlsm)
-            </button>
-            <div class="export-status" id="export-status">
-              Validation pending. Upload data to enable exports.
-            </div>
-          </section>
-
-          <section class="card">
-            <h3>Session Management</h3>
-            <p>Save your work to browser storage or download a session file for backup.</p>
-            <div class="session-actions">
-              <button type="button" id="btn-session-save">Save Session</button>
-              <button type="button" id="btn-session-download">Download Session</button>
-            </div>
-          </section>
-
-          <section class="card">
-            <h3>Recent Activity</h3>
-            <ul id="activity-log-export" class="activity-log">
-              <li class="activity-log__empty">No activity yet.</li>
-            </ul>
-          </section>
-        </div>
-      </section>
-    </main>
-
-    <footer class="app-footer">
-      <small>
-        AutoBericht &copy; Offline MVP — No telemetry. Press <kbd>Ctrl</kbd> + <kbd>/</kbd>
-        for shortcuts.
-      </small>
-    </footer>
-
-    <div id="shortcut-overlay" class="shortcut-overlay" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="shortcut-overlay__content">
-        <button type="button" id="btn-shortcut-close" class="shortcut-overlay__close" aria-label="Close shortcuts">×</button>
-        <h2>Keyboard Shortcuts</h2>
-        <dl>
-          <dt>Alt + 1 / 2 / 3</dt>
-          <dd>Switch between Import / AutoBericht / Export</dd>
-          <dt>Ctrl + /</dt>
-          <dd>Toggle this shortcut help</dd>
-          <dt>Esc</dt>
-          <dd>Close this overlay</dd>
-        </dl>
+      <div class="note">
+        If you launched via the PowerShell server, this page is just a landing hub. The start script
+        now opens the minimal editor directly.
       </div>
     </div>
-
-    <div id="autobericht-drawer" class="chapter-drawer" role="dialog" aria-modal="true" aria-hidden="true">
-      <div class="chapter-drawer__content">
-        <div class="chapter-drawer__header">
-          <h2>Chapter Navigation</h2>
-          <button type="button" id="autobericht-drawer-close" aria-label="Close navigation">&times;</button>
-        </div>
-        <aside class="report-tree" id="autobericht-tree">
-          <div class="empty-state" data-empty="autobericht">
-            <p>Load master and self-evaluation JSON to view findings.</p>
-          </div>
-        </aside>
-      </div>
-    </div>
-
-    <script type="module" src="./js/main.js"></script>
-  </body>
+  </div>
+</body>
 </html>

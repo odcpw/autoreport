@@ -2,7 +2,8 @@ param(
   [Parameter(Mandatory = $true)]
   [string]$Root,
   [int]$Port = 0,
-  [switch]$NoOpen
+  [switch]$NoOpen,
+  [string]$StartPath = ''
 )
 
 Set-StrictMode -Version Latest
@@ -70,7 +71,15 @@ Write-Host "  URL : $prefix"
 Write-Host "Press Ctrl+C to stop."
 
 if (-not $NoOpen) {
-  try { Start-Process $prefix } catch {}
+  $start = $prefix
+  if (-not [string]::IsNullOrWhiteSpace($StartPath)) {
+    $normalized = $StartPath.TrimStart('/')
+    if (-not $normalized.EndsWith('/')) {
+      $normalized = "$normalized/"
+    }
+    $start = "$prefix$normalized"
+  }
+  try { Start-Process $start } catch {}
 }
 
 try {
@@ -126,4 +135,3 @@ try {
   }
   $listener.Close()
 }
-

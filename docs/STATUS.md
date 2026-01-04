@@ -3,11 +3,13 @@
 This document is written for a corporate/offline environment:
 - No external network calls at runtime (no CDN, no telemetry, no remote fonts/images).
 - Prefer workflows that work on Windows without browser security flags.
-- Canonical `project.json` contract: `docs/architecture/data-model.md` (root `chapters[].rows[]`, plus `photos`, `lists`, `history`).
-- Canonical implementation: the Excel/VBA exporter/loader (`macros/modABProjectExport.bas`, `macros/modABProjectLoader.bas`) is the source of truth; the web UI adapts to VBA, not the other way around.
+- Legacy canonical `project.json` contract: `docs/architecture/data-model.md` (root `chapters[].rows[]`, plus `photos`, `lists`, `history`).
+- Legacy canonical implementation: the Excel/VBA exporter/loader (`macros/modABProjectExport.bas`, `macros/modABProjectLoader.bas`) is the source of truth; the web UI adapts to VBA, not the other way around.
 
 ## Redesign Direction (2026-01-04)
 
+- New minimal editor lives in `AutoBericht/mini/` (current default).
+- Legacy MVP UI moved to `AutoBericht/legacy/` (reference only).
 - Interview spec captured in `docs/architecture/redesign-spec-2026-01-04.md`.
 - Browser becomes the primary editor and canonical working state (sidecar JSON).
 - Excel/VBA should be minimized to import/export and Office template automation.
@@ -38,7 +40,7 @@ All web UI JS/CSS/libs are local under `AutoBericht/` and must not trigger any e
 ## Where the Repo Is Now
 
 ### Good / already in place
-- **Offline-first web UI** with local `libs/` and ES-module structure (`AutoBericht/index.html`).
+- **Legacy offline-first web UI** with local `libs/` and ES-module structure (`AutoBericht/legacy/index.html`).
 - **Structured-sheet VBA architecture** to load/export `project.json` (`macros/modABProjectLoader.bas`, `macros/modABProjectExport.bas`).
 - **PhotoSorter VBA modules** and sheet constants include `PhotoTags` (`macros/modABConstants.bas`).
 - **No-flags launcher for Windows**: `start-autobericht.cmd` runs a tiny local server so modules work without `--disable-web-security`.
@@ -46,7 +48,7 @@ All web UI JS/CSS/libs are local under `AutoBericht/` and must not trigger any e
 ### Primary mismatch blocking “it just works”
 There are currently *two different* “project.json” shapes in the repo:
 - **Docs + VBA** describe/export a unified JSON with root `chapters` (and `rows` inside chapters): `docs/architecture/data-model.md`.
-- **Web UI** currently expects a different scaffold shape with root `report` / `presentation` and uses `report.chapters` (see `AutoBericht/js/schema/definitions.js`).
+- **Web UI** currently expects a different scaffold shape with root `report` / `presentation` and uses `report.chapters` (see `AutoBericht/legacy/js/schema/definitions.js`).
 
 This means:
 - Exporting `project.json` from Excel and importing it into the web UI will fail (unless the web UI is adapted).
@@ -59,7 +61,7 @@ Decision: treat the **Docs/VBA unified `project.json`** as canonical (it matches
 
 ### 2) Make the web UI speak the canonical contract
 Work items:
-- Update `AutoBericht/js/schema/definitions.js` so `projectSchema` matches the unified JSON.
+- Update `AutoBericht/legacy/js/schema/definitions.js` so `projectSchema` matches the unified JSON.
 - Refactor `ProjectState` so `project.json` is the primary source of truth (not “master + selfEval + overrides” as separate files).
 - Update the report UI + exporters to iterate `chapters[].rows[]`.
 - No migration/adapter needed yet (alpha; no legacy snapshots).

@@ -1,4 +1,7 @@
-# AutoBericht Workbook Flow (Current VBA Stack)
+# AutoBericht Workbook Flow (Legacy-heavy)
+
+> This describes the full VBA-driven pipeline. In the redesign, VBA is minimized
+> to import/export and Office template automation.
 
 This captures the end-to-end path from pulling macros out of GitHub, through the data import routines, into the Bericht editor, and finally to JSON export. Use it as the working reference while stabilising the Excel side before wiring up the web UI.
 

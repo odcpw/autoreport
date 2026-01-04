@@ -1,6 +1,7 @@
 param(
   [int]$Port = 0,
-  [switch]$NoOpen
+  [switch]$NoOpen,
+  [string]$StartPath = 'mini/'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -8,4 +9,4 @@ $ErrorActionPreference = 'Stop'
 $root = Join-Path $PSScriptRoot 'AutoBericht'
 $server = Join-Path $PSScriptRoot 'tools\serve-autobericht.ps1'
 
-& $server -Root $root -Port $Port -NoOpen:$NoOpen
+& $server -Root $root -Port $Port -NoOpen:$NoOpen -StartPath $StartPath

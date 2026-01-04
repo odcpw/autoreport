@@ -27,7 +27,7 @@ This downloads the ZIP and copies the full repo into `<TargetFolder>`. It includ
    ```
    This downloads and copies the repo into `C:\Autobericht` (overwriting existing files unless you use `-CleanTarget` to wipe first).
 2. Open `project.xlsm` and run `RefreshProjectMacros`. The loader removes previous modules and imports everything fresh from the current folder.
-3. For the web app, serve `AutoBericht` locally (e.g., `python -m http.server 5501`) and open `http://localhost:5501/AutoBericht/index.html`.
+3. For the web app, serve `AutoBericht` locally (e.g., `python -m http.server 5501`) and open `http://localhost:5501/AutoBericht/mini/index.html`.
 
 ## Notes
 - The script uses a ZIP download (no Git required) to keep the full repo in sync. Set `$TargetFolder` to a non-SharePoint path for reliability.

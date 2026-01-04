@@ -6,6 +6,12 @@
 
 AutoBericht streamlines the creation of safety culture assessment reports by automating data ingestion, photo management, content editing, and multi-format export (PDF, PowerPoint). The system operates entirely offline to meet corporate security requirements.
 
+## Redesign Status (2026)
+
+- The minimal editor in `AutoBericht/mini/` is the current direction.
+- The legacy MVP UI now lives in `AutoBericht/legacy/` (reference only).
+- See `docs/architecture/redesign-spec-2026-01-04.md` for the interview-based spec.
+
 ### System Components
 
 ```
@@ -50,17 +56,17 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Import customer self-assessment (Excel file)
 
 2. **Edit Content**
-   - Start the offline UI with `start-autobericht.cmd` (recommended; avoids browser flags)
-   - Tag photos in Excel PhotoSorter, then export `project.json`
-   - Edit findings and recommendations in AutoBericht tab
-   - Download updated `project.json` from the Export tab
+   - Start the offline UI with `start-autobericht.cmd` (opens the minimal editor)
+   - Open the project folder and load `project_sidecar.json`
+   - Edit findings and recommendations by chapter
+   - Save the sidecar back to the project folder
 
 3. **Export Reports**
    - Generate PDF report (print from browser)
    - Export PowerPoint presentations
    - Save project snapshot as JSON
 
-**See**: [Getting Started Guide](docs/guides/getting-started.md)
+**See**: [Redesign Workflow](docs/guides/redesign-workflow.md)
 
 ### For Developers
 
@@ -75,11 +81,11 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - See [VBA Workflow Guide](docs/guides/vba-workflow.md)
 
 3. **Web UI Development**
-   - Open `AutoBericht/index.html` in browser
+   - Open `AutoBericht/mini/index.html` (current) or `AutoBericht/legacy/index.html` (legacy)
    - Libraries bundled in `AutoBericht/libs/`
    - See [AutoBericht README](AutoBericht/README.md)
 
-**See**: [System Architecture](docs/architecture/system-overview.md)
+**See**: [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md)
 
 ## Documentation
 
@@ -133,7 +139,7 @@ autoreport/
 ### HTML/JavaScript
 - **Purpose**: Offline editing interface
 - **Key Libraries**: markdown-it, CodeMirror, Paged.js, PptxGenJS, SheetJS
-- **Entry Point**: `AutoBericht/index.html`
+- **Entry Point**: `AutoBericht/mini/index.html` (current) or `AutoBericht/index.html` (landing)
 
 ## Data Flow
 
@@ -161,7 +167,7 @@ Structured Sheets      project.json
 
 **See**: [Data Model Documentation](docs/architecture/data-model.md)
 
-**Canonical contract**: `project.json` follows the schema documented in `docs/architecture/data-model.md` (root `chapters[].rows[]`). The Excel/VBA exporter/loader is canonical; the web UI adapts to VBA. Current progress/mismatches live in `docs/STATUS.md`.
+**Canonical contract**: legacy flow uses `project.json` as documented in `docs/architecture/data-model.md`. The redesign shifts canonical state to `project_sidecar.json` (see `docs/architecture/redesign-spec-2026-01-04.md` and `docs/STATUS.md`).
 
 ## Contributing
 

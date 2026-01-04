@@ -13,9 +13,10 @@ Welcome to the AutoBericht documentation. This index helps you find the right in
 
 Start here if you create safety assessment reports:
 
-1. **[Getting Started](guides/getting-started.md)** - Your first report from start to finish
-2. **[VBA Workflow](guides/vba-workflow.md)** - Using Excel macros for data import
-3. **[HTML Workflow](guides/html-workflow.md)** - Using the web interface for editing
+1. **[Redesign Workflow](guides/redesign-workflow.md)** - Minimal editor workflow (current direction)
+2. **[Getting Started](guides/getting-started.md)** - Legacy end-to-end workflow
+3. **[VBA Workflow](guides/vba-workflow.md)** - Legacy Excel macro workflow
+4. **[HTML Workflow](guides/html-workflow.md)** - Legacy web UI workflow
 
 ### 👨‍💻 Developers (Technical)
 
@@ -49,9 +50,10 @@ Start here if you're working on the web interface:
 
 | Document | What You'll Learn |
 |----------|-------------------|
+| [Redesign Workflow](guides/redesign-workflow.md) | Minimal editor workflow (current direction) |
 | [Getting Started](guides/getting-started.md) | Create your first report end-to-end |
 | [VBA Workflow](guides/vba-workflow.md) | Import data, manage macros, export JSON |
-| [HTML Workflow](guides/html-workflow.md) | Edit content, tag photos, generate exports |
+| [HTML Workflow](guides/html-workflow.md) | Legacy web UI workflow |
 
 ### 📚 Technical Reference
 
@@ -93,7 +95,7 @@ Historical documents and execution plans:
 → Use Excel PhotoSorter (see [VBA Workflow](guides/vba-workflow.md#4-photosorter))
 
 #### Export to PDF/PowerPoint
-→ See [HTML Workflow - Export Section](guides/html-workflow.md#export-overview)
+→ See [HTML Workflow - Export Section (Legacy)](guides/html-workflow.md#export-overview)
 
 #### Understand the data structure
 → See [Data Model](architecture/data-model.md)
@@ -114,14 +116,16 @@ docs/
 ├── INDEX.md (you are here)          # Documentation roadmap
 │
 ├── architecture/                     # System design
-│   ├── system-overview.md           # Component integration
+│   ├── system-overview.md           # Component integration (legacy)
 │   ├── vba-architecture.md          # VBA design principles
-│   └── data-model.md                # JSON and Excel structure
+│   ├── data-model.md                # JSON and Excel structure
+│   └── redesign-spec-2026-01-04.md  # Interview notes + redesign direction
 │
 ├── guides/                           # How-to guides
-│   ├── getting-started.md           # First-time user guide
-│   ├── vba-workflow.md              # Excel macro usage
-│   └── html-workflow.md             # Web UI usage
+│   ├── redesign-workflow.md         # Minimal editor workflow
+│   ├── getting-started.md           # Legacy end-to-end guide
+│   ├── vba-workflow.md              # Legacy Excel macro usage
+│   └── html-workflow.md             # Legacy web UI usage
 │
 ├── reference/                        # Technical reference
 │   ├── json-schema.md               # Complete schema spec
@@ -150,7 +154,9 @@ docs/
 
 - `project.xlsm` - Excel workbook with VBA macros
 - `project.json` - Unified data export/import format
-- `AutoBericht/index.html` - Web UI entry point
+- `AutoBericht/index.html` - UI landing page
+- `AutoBericht/mini/index.html` - Minimal editor (current)
+- `AutoBericht/legacy/index.html` - Legacy UI
 - `macros/*.bas` - VBA source modules
 
 ## Getting Help

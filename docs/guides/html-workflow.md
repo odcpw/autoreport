@@ -1,6 +1,9 @@
-# AutoBericht Web UI Workflow Guide
+# AutoBericht Web UI Workflow Guide (Legacy)
 
-This guide covers the offline HTML/JavaScript interface in `AutoBericht/`.
+> This guide documents the legacy three-tab UI. The current direction is the
+> minimal editor workflow in `docs/guides/redesign-workflow.md`.
+
+This guide covers the offline HTML/JavaScript interface in `AutoBericht/legacy/`.
 
 The web UI adapts to the Excel/VBA `project.json` contract (VBA is canonical). Photo tagging is performed in Excel (PhotoSorterForm); the web UI consumes the resulting photo metadata and uses it for exports.
 
@@ -29,7 +32,7 @@ From the repository root:
 python -m http.server 8000
 ```
 
-Then open `http://127.0.0.1:8000/AutoBericht/`.
+Then open `http://127.0.0.1:8000/AutoBericht/legacy/`.
 
 ## Import & Setup (Import tab)
 
