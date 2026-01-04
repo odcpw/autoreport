@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoBericht Minimal Chapter Editor</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div>
+        <h1>AutoBericht Minimal Editor</h1>
+        <p>Chapter-focused editor with sidecar load/save.</p>
+      </div>
+      <div class="actions">
+        <button id="pick-folder">Open Project Folder</button>
+        <button id="load-sidecar" disabled>Load sidecar</button>
+        <button id="save-sidecar" disabled>Save sidecar</button>
+      </div>
+    </header>
+
+    <section class="status" id="status"></section>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <h2>Chapters</h2>
+        <nav id="chapter-list"></nav>
+        <div class="filters">
+          <label><input type="checkbox" id="filter-hide-yes" /> Hide answered yes</label>
+          <label><input type="checkbox" id="filter-include-only" /> Include only</label>
+          <label><input type="checkbox" id="filter-done-only" /> Done only</label>
+        </div>
+      </aside>
+
+      <main class="content">
+        <div id="chapter-title" class="chapter-title"></div>
+        <div id="rows"></div>
+      </main>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

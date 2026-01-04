@@ -6,6 +6,13 @@ This document is written for a corporate/offline environment:
 - Canonical `project.json` contract: `docs/architecture/data-model.md` (root `chapters[].rows[]`, plus `photos`, `lists`, `history`).
 - Canonical implementation: the Excel/VBA exporter/loader (`macros/modABProjectExport.bas`, `macros/modABProjectLoader.bas`) is the source of truth; the web UI adapts to VBA, not the other way around.
 
+## Redesign Direction (2026-01-04)
+
+- Interview spec captured in `docs/architecture/redesign-spec-2026-01-04.md`.
+- Browser becomes the primary editor and canonical working state (sidecar JSON).
+- Excel/VBA should be minimized to import/export and Office template automation.
+- File System Access API is the preferred path for direct folder writes (no Downloads).
+
 ## Intended Functioning (Target)
 
 ### End-to-end workflow

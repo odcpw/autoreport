@@ -5,6 +5,7 @@ Welcome to the AutoBericht documentation. This index helps you find the right in
 ## Project Status
 
 - **Current state vs target**: [STATUS](STATUS.md)
+- **Redesign interview spec (2026-01-04)**: [Redesign Spec](architecture/redesign-spec-2026-01-04.md)
 
 ## Documentation by Role
 
