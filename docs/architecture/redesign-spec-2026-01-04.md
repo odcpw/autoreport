@@ -108,7 +108,7 @@ Core principle: no unsafe flags, no implicit disk access.
 
 One project folder:
 - project_sidecar.json (editor state)
-- project_db.xlsx (canonical data)
+- project_db.xlsx (optional readable archive)
 - self_assessment.xlsx
 - photos/
 - out/
@@ -118,6 +118,59 @@ Responsibilities:
 - Browser editor: edit report content, tag photos, autosave to sidecar JSON.
 - Excel macros: import sidecar -> update Excel -> generate Word/PPT/PDF.
 - Templates: updated centrally; exports use latest templates.
+
+### 8a. System Diagram
+
+```
+┌──────────────────────────────────────────────────────────────┐
+│                          AutoReport                           │
+└──────────────────────────────────────────────────────────────┘
+
+┌──────────────────────┐      reads/writes     ┌────────────────────────┐
+│  Minimal Editor UI   │ ───────────────────▶  │  project_sidecar.json  │
+│  (browser, offline)  │ ◀───────────────────  │  (working state)       │
+└──────────────────────┘                       └────────────────────────┘
+           │
+           │ optional
+           ▼
+┌──────────────────────┐     reads sidecar     ┌────────────────────────┐
+│  Excel/VBA Exporter  │ ───────────────────▶  │  Word/PPT Templates     │
+│  (thin layer)        │                       │  (corp branding)        │
+└──────────────────────┘                       └────────────────────────┘
+           │
+           ▼
+┌──────────────────────────────────────────────────────────────┐
+│ Outputs: Word report, PPT deck, PDF, photo folder views       │
+└──────────────────────────────────────────────────────────────┘
+```
+
+### 8b. Data Flow Diagram
+
+```
+Self-assessment Excel + Photos
+          │
+          ▼
+Minimal Editor (chapter editing, recommendations, tags)
+          │
+          ▼
+project_sidecar.json (canonical state)
+          │
+          ├── Optional: write project_db.xlsx (human-readable)
+          │
+          └── Excel/VBA export → Word/PPT/PDF outputs
+```
+
+### 8c. Project Folder Layout
+
+```
+<Project>/
+  project_sidecar.json      # editor state (canonical)
+  project_db.xlsx           # optional readable archive
+  self_assessment.xlsx      # customer input (static)
+  photos/                   # raw photos
+  out/                      # Word/PPT/PDF outputs
+  cache/                    # optional materialized photo views
+```
 
 Access:
 - File System Access API with folder picker each session.

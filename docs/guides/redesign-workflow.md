@@ -1,7 +1,6 @@
 # Redesign Workflow (2026)
 
-This guide describes the new minimal, folder-first workflow. It replaces the
-legacy three-tab MVP UI.
+This guide describes the minimal, folder-first workflow.
 
 ## Requirements
 
@@ -32,8 +31,3 @@ legacy three-tab MVP UI.
 
 - Use **Save debug log** to write a `.txt` file into the project folder.
 - Attach the log file in GitHub so it can be reviewed on the other machine.
-
-## Legacy Workflow
-
-The old HTML workflow guide remains for reference:
-- [Legacy HTML Workflow](html-workflow.md)

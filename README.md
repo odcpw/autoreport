@@ -16,35 +16,29 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                    AutoBericht System                        │
+│                    AutoBericht (Redesign)                   │
 ├─────────────────────────────────────────────────────────────┤
 │                                                               │
-│  ┌──────────────┐    ┌──────────────┐    ┌──────────────┐  │
-│  │   Excel VBA  │───▶│  HTML/JS UI  │───▶│   Exports    │  │
-│  │              │    │              │    │              │  │
-│  │ • Data       │    │ • Import     │    │ • PDF Report │  │
-│  │   Import     │    │ • Editor     │    │ • PPTX Deck  │  │
-│  │ • Macro      │    │ • Export     │    │ • JSON       │  │
-│  │   Sync       │    │              │    │              │  │
-│  └──────────────┘    └──────────────┘    └──────────────┘  │
-│         │                    │                               │
-│         └────────────────────┴───────────────┐              │
-│                                               │              │
-│                                      ┌────────▼────────┐     │
-│                                      │  project.json   │     │
-│                                      │  (Data Model)   │     │
-│                                      └─────────────────┘     │
+│  ┌──────────────┐    ┌──────────────────┐    ┌──────────────┐ │
+│  │  Browser UI  │───▶│ project_sidecar  │───▶│  Exports     │ │
+│  │  (mini)      │◀───│ (canonical JSON) │    │ Word/PPT/PDF │ │
+│  └──────────────┘    └──────────────────┘    └──────────────┘ │
+│             ▲                    │                             │
+│             │ optional           ▼                             │
+│        ┌──────────────┐   ┌──────────────┐                      │
+│        │  SheetJS DB  │   │ Excel/VBA    │                      │
+│        │ project_db   │   │ (thin export)│                      │
+│        └──────────────┘   └──────────────┘                      │
 │                                                               │
 └─────────────────────────────────────────────────────────────┘
 ```
 
 ### Key Features
 
-- **Excel VBA Backend**: Import master findings and customer assessments, manage structured data
-- **Offline Web UI**: Content editing and report generation (photo tagging happens in Excel PhotoSorter)
-- **Multi-format Export**: Generate PDF reports and PowerPoint presentations
-- **Unified Data Model**: Single `project.json` format shared between Excel and web UI
-- **Photo Management (Excel)**: Organize and tag photos by chapter, category, and training topic (PhotoSorterForm)
+- **Browser-first editing** with sidecar JSON stored in the project folder.
+- **Offline, policy-safe** workflow (no flags, no installs).
+- **Thin Excel/VBA export layer** for Word/PPT templates (optional).
+- **File System Access API** preferred for direct folder writes.
 
 ## Quick Start
 
@@ -78,7 +72,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 2. **VBA Development**
    - Install VBA modules from `/macros/` folder
-   - See [VBA Workflow Guide](docs/guides/vba-workflow.md)
+   - See legacy docs in `legacy/docs/guides/vba-workflow.md`
 
 3. **Web UI Development**
    - Open `AutoBericht/mini/index.html` (current) or `AutoBericht/legacy/index.html` (legacy)
@@ -95,11 +89,12 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 | Document | Description |
 |----------|-------------|
-| [System Architecture](docs/architecture/system-overview.md) | How all components work together |
-| [Data Model](docs/architecture/data-model.md) | JSON schema and Excel sheets structure |
-| [VBA Workflow](docs/guides/vba-workflow.md) | Excel macro usage and development |
-| [VBA Modules Reference](macros/README.md) | Detailed module documentation |
-| [HTML Workflow](docs/guides/html-workflow.md) | Web UI usage and features |
+| [System Architecture](docs/architecture/system-overview.md) | Current redesign architecture |
+| [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md) | Interview-based requirements |
+| [Redesign Workflow](docs/guides/redesign-workflow.md) | Minimal editor workflow |
+| [VBA Modules Reference](macros/README.md) | VBA module documentation (legacy export layer) |
+
+Legacy documentation is archived under `legacy/docs/`.
 
 ## Project Structure
 
@@ -112,11 +107,12 @@ autoreport/
 ├── start-autobericht.ps1        # PowerShell launcher for the web UI
 ├── sync-autobericht.ps1         # Macro sync helper
 ├── docs/                        # Documentation
-│   ├── INDEX.md                # Documentation roadmap
-│   ├── architecture/           # System design
-│   ├── guides/                 # How-to guides
-│   ├── reference/              # Technical reference
-│   └── legacy/                 # Historical/planning docs
+│   ├── INDEX.md                # Documentation roadmap (current)
+│   ├── STATUS.md               # Current state vs target
+│   ├── architecture/           # Redesign architecture
+│   └── guides/                 # Redesign workflows
+├── legacy/                      # Legacy UI + docs archive
+│   └── docs/                   # Legacy documentation
 ├── macros/                      # VBA modules (.bas, .cls, .frm)
 │   └── README.md               # VBA module overview
 ├── AutoBericht/                 # Offline web UI
@@ -165,9 +161,9 @@ Structured Sheets      project.json
 2. **Edit**: Web UI loads `project.json` or Excel file directly
 3. **Export**: Generate reports and update `project.json`
 
-**See**: [Data Model Documentation](docs/architecture/data-model.md)
+**See**: [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md)
 
-**Canonical contract**: legacy flow uses `project.json` as documented in `docs/architecture/data-model.md`. The redesign shifts canonical state to `project_sidecar.json` (see `docs/architecture/redesign-spec-2026-01-04.md` and `docs/STATUS.md`).
+**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `docs/architecture/redesign-spec-2026-01-04.md` and `docs/STATUS.md`). Legacy `project.json` docs are archived in `legacy/docs/architecture/data-model.md`.
 
 ## Contributing
 
@@ -180,7 +176,7 @@ This is a private corporate project. For development guidelines:
 ## Support
 
 - **Issues**: Check documentation first, then consult team
-- **VBA Help**: See [VBA Workflow](docs/guides/vba-workflow.md)
+- **VBA Help**: See `legacy/docs/guides/vba-workflow.md`
 - **Web UI Help**: See [AutoBericht README](AutoBericht/README.md)
 
 ## License
@@ -189,4 +185,4 @@ Internal use only. All rights reserved.
 
 ---
 
-**Next Steps**: Read the [Documentation Index](docs/INDEX.md) or jump to [Getting Started](docs/guides/getting-started.md)
+**Next Steps**: Read the [Documentation Index](docs/INDEX.md) or jump to [Redesign Workflow](docs/guides/redesign-workflow.md)

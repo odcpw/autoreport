@@ -11,5 +11,5 @@ editor in `AutoBericht/mini/`.
 
 ## Docs
 
-- `docs/guides/html-workflow.md` (legacy UI workflow)
-- `docs/architecture/system-overview.md` (legacy architecture)
+- `legacy/docs/guides/html-workflow.md` (legacy UI workflow)
+- `legacy/docs/architecture/system-overview.md` (legacy architecture)
