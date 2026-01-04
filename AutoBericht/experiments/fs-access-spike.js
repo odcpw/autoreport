@@ -3,10 +3,12 @@
   const loadSidecarBtn = document.getElementById("load-sidecar");
   const saveSidecarBtn = document.getElementById("save-sidecar");
   const writeXlsxBtn = document.getElementById("write-xlsx");
+  const saveLogBtn = document.getElementById("save-log");
   const statusEl = document.getElementById("status");
   const sidecarEl = document.getElementById("sidecar");
 
   let dirHandle = null;
+  const logLines = [];
 
   const defaultSidecar = {
     meta: {
@@ -52,6 +54,45 @@
     statusEl.textContent = message;
   };
 
+  const logLine = (level, message) => {
+    const timestamp = new Date().toISOString();
+    const line = `[${timestamp}] ${level.toUpperCase()}: ${message}`;
+    logLines.push(line);
+  };
+
+  const captureConsole = () => {
+    const original = {
+      log: console.log,
+      warn: console.warn,
+      error: console.error,
+      info: console.info,
+      debug: console.debug,
+    };
+
+    Object.keys(original).forEach((key) => {
+      console[key] = (...args) => {
+        const text = args.map((item) => {
+          if (typeof item === "string") return item;
+          try {
+            return JSON.stringify(item);
+          } catch (err) {
+            return String(item);
+          }
+        }).join(" ");
+        logLine(key, text);
+        original[key](...args);
+      };
+    });
+
+    window.addEventListener("error", (event) => {
+      logLine("error", `${event.message} @ ${event.filename}:${event.lineno}:${event.colno}`);
+    });
+
+    window.addEventListener("unhandledrejection", (event) => {
+      logLine("error", `Unhandled rejection: ${event.reason}`);
+    });
+  };
+
   const enableActions = () => {
     const enabled = !!dirHandle;
     loadSidecarBtn.disabled = !enabled;
@@ -83,6 +124,7 @@
       return JSON.parse(sidecarEl.value);
     } catch (err) {
       setStatus(`Invalid JSON: ${err.message}`);
+      logLine("error", `Invalid JSON: ${err.message}`);
       return null;
     }
   };
@@ -121,8 +163,10 @@
       dirHandle = await window.showDirectoryPicker();
       enableActions();
       setStatus(`Selected folder: ${dirHandle.name}`);
+      logLine("info", `Selected folder: ${dirHandle.name}`);
     } catch (err) {
       setStatus(`Folder pick canceled or failed: ${err.message}`);
+      logLine("warn", `Folder pick canceled or failed: ${err.message}`);
     }
   });
 
@@ -132,9 +176,11 @@
       const text = await readFileText(handle);
       sidecarEl.value = text;
       setStatus("Loaded project_sidecar.json");
+      logLine("info", "Loaded project_sidecar.json");
     } catch (err) {
       sidecarEl.value = JSON.stringify(defaultSidecar, null, 2);
       setStatus("Sidecar not found; loaded default template.");
+      logLine("warn", `Sidecar not found: ${err.message || err}`);
     }
   });
 
@@ -147,8 +193,10 @@
       await writable.write(JSON.stringify(data, null, 2));
       await writable.close();
       setStatus("Saved project_sidecar.json");
+      logLine("info", "Saved project_sidecar.json");
     } catch (err) {
       setStatus(`Save failed: ${err.message}`);
+      logLine("error", `Save failed: ${err.message}`);
     }
   });
 
@@ -167,10 +215,48 @@
       await writable.write(buffer);
       await writable.close();
       setStatus("Wrote project_db.xlsx");
+      logLine("info", "Wrote project_db.xlsx");
     } catch (err) {
       setStatus(`Excel write failed: ${err.message}`);
+      logLine("error", `Excel write failed: ${err.message}`);
     }
   });
 
+  saveLogBtn.addEventListener("click", async () => {
+    const content = logLines.join("\n") || "No log entries yet.";
+    const filename = `fs-access-spike-log-${new Date().toISOString().replace(/[:.]/g, \"-\")}.txt`;
+    try {
+      if (dirHandle) {
+        const handle = await dirHandle.getFileHandle(filename, { create: true });
+        const writable = await handle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        setStatus(`Saved log to ${filename}`);
+        return;
+      }
+      if (window.showSaveFilePicker) {
+        const handle = await window.showSaveFilePicker({
+          suggestedName: filename,
+          types: [{ description: \"Text\", accept: { \"text/plain\": [\".txt\"] } }],
+        });
+        const writable = await handle.createWritable();
+        await writable.write(content);
+        await writable.close();
+        setStatus(`Saved log via picker: ${filename}`);
+        return;
+      }
+      const blob = new Blob([content], { type: \"text/plain\" });
+      const link = document.createElement(\"a\");
+      link.href = URL.createObjectURL(blob);
+      link.download = filename;
+      link.click();
+      URL.revokeObjectURL(link.href);
+      setStatus(`Downloaded log: ${filename}`);
+    } catch (err) {
+      setStatus(`Log save failed: ${err.message}`);
+    }
+  });
+
+  captureConsole();
   ensureFsAccess();
 })();
