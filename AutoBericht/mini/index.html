@@ -14,6 +14,7 @@
         <a class="app-switcher__item is-active" href="./index.html">AutoBericht</a>
       </div>
       <div class="actions">
+        <button id="open-settings" class="ghost" title="Settings">⚙</button>
         <button id="pick-folder">Open Project Folder</button>
         <button id="load-sidecar" disabled>Load sidecar</button>
         <button id="save-sidecar" disabled>Save sidecar</button>
@@ -39,6 +40,37 @@
         <div id="chapter-title" class="chapter-title"></div>
         <div id="rows"></div>
       </main>
+    </div>
+
+    <div class="settings-modal" id="settings-modal" aria-hidden="true">
+      <div class="settings-panel">
+        <div class="settings-header">
+          <h3>Settings</h3>
+          <button id="close-settings" class="ghost" aria-label="Close settings">✕</button>
+        </div>
+        <div class="settings-body">
+          <label>
+            Author
+            <input id="settings-author" type="text" placeholder="Name" />
+          </label>
+          <label>
+            Initials
+            <input id="settings-initials" type="text" placeholder="MM" />
+          </label>
+          <label>
+            Language
+            <input id="settings-locale" type="text" placeholder="de-CH" />
+          </label>
+          <label>
+            Library file name
+            <input id="settings-library-file" type="text" placeholder="library_user_de-CH.json" />
+          </label>
+        </div>
+        <div class="settings-actions">
+          <button id="generate-library">Generate / Update Library</button>
+          <button id="save-settings" class="ghost">Save settings</button>
+        </div>
+      </div>
     </div>
   </div>
 

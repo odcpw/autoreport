@@ -4,6 +4,15 @@
   const saveSidecarBtn = document.getElementById("save-sidecar");
   const loadSeedsBtn = document.getElementById("load-seeds");
   const saveLogBtn = document.getElementById("save-log");
+  const openSettingsBtn = document.getElementById("open-settings");
+  const settingsModal = document.getElementById("settings-modal");
+  const closeSettingsBtn = document.getElementById("close-settings");
+  const saveSettingsBtn = document.getElementById("save-settings");
+  const generateLibraryBtn = document.getElementById("generate-library");
+  const settingsAuthorEl = document.getElementById("settings-author");
+  const settingsInitialsEl = document.getElementById("settings-initials");
+  const settingsLocaleEl = document.getElementById("settings-locale");
+  const settingsLibraryFileEl = document.getElementById("settings-library-file");
   const statusEl = document.getElementById("status");
   const chapterListEl = document.getElementById("chapter-list");
   const chapterTitleEl = document.getElementById("chapter-title");
@@ -284,6 +293,28 @@
     return String(value);
   };
 
+  const sanitizeFilename = (value) => String(value || "")
+    .trim()
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+
+  const getLibraryFileName = () => {
+    const meta = state.project?.meta || {};
+    const explicit = sanitizeFilename(meta.libraryFile || "");
+    if (explicit) return explicit;
+    const locale = sanitizeFilename(meta.locale || "de-CH");
+    return `library_user_${locale}.json`;
+  };
+
+  const hashText = (value) => {
+    const text = String(value || "");
+    let hash = 2166136261;
+    for (let i = 0; i < text.length; i += 1) {
+      hash ^= text.charCodeAt(i);
+      hash += (hash << 1) + (hash << 4) + (hash << 7) + (hash << 8) + (hash << 24);
+    }
+    return String(hash >>> 0);
+  };
+
   const ensureWorkstateDefaults = (row) => {
     if (!row.workstate) row.workstate = {};
     const ws = row.workstate;
@@ -295,12 +326,42 @@
     if (!ws.findingOverride) ws.findingOverride = "";
     ws.useLevelOverride = ws.useLevelOverride || { "1": false, "2": false, "3": false, "4": false };
     ws.levelOverrides = ws.levelOverrides || { "1": "", "2": "", "3": "", "4": "" };
+    ws.libraryActions = ws.libraryActions || { "1": "off", "2": "off", "3": "off", "4": "off" };
+    ws.libraryHashes = ws.libraryHashes || { "1": "", "2": "", "3": "", "4": "" };
   };
 
-  const buildProjectFromSeeds = (selbstData, libraryData) => {
-    const libraryMap = new Map(
-      (libraryData.entries || []).map((entry) => [entry.id, entry])
-    );
+  const normalizeLibraryEntries = (libraryData) => {
+    if (!libraryData) return [];
+    if (Array.isArray(libraryData.entries)) return libraryData.entries;
+    if (libraryData.entries && typeof libraryData.entries === "object") {
+      return Object.entries(libraryData.entries).map(([id, levels]) => ({ id, levels }));
+    }
+    return [];
+  };
+
+  const buildLibraryMap = (masterData, userData) => {
+    const masterEntries = normalizeLibraryEntries(masterData);
+    const userEntries = normalizeLibraryEntries(userData);
+    const map = new Map(masterEntries.map((entry) => [entry.id, entry]));
+    userEntries.forEach((entry) => {
+      const existing = map.get(entry.id) || { id: entry.id, levels: {}, finding: "" };
+      const mergedLevels = { ...(existing.levels || {}) };
+      Object.entries(entry.levels || {}).forEach(([key, value]) => {
+        const text = toText(value).trim();
+        if (text) mergedLevels[key] = text;
+      });
+      const merged = {
+        ...existing,
+        levels: mergedLevels,
+      };
+      if (entry.finding) merged.finding = entry.finding;
+      map.set(entry.id, merged);
+    });
+    return map;
+  };
+
+  const buildProjectFromSeeds = (selbstData, masterLibrary, userLibrary) => {
+    const libraryMap = buildLibraryMap(masterLibrary, userLibrary);
     const groups = new Map();
 
     (selbstData.items || []).forEach((item) => {
@@ -405,6 +466,140 @@
     merged.meta.updatedAt = new Date().toISOString();
     merged.report = { project };
     return merged;
+  };
+
+  const readJsonFromPath = async (rootHandle, pathParts) => {
+    let currentHandle = rootHandle;
+    for (let i = 0; i < pathParts.length - 1; i += 1) {
+      currentHandle = await currentHandle.getDirectoryHandle(pathParts[i]);
+    }
+    const fileHandle = await currentHandle.getFileHandle(pathParts[pathParts.length - 1]);
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    return JSON.parse(text);
+  };
+
+  const readJsonIfExists = async (rootHandle, pathParts) => {
+    try {
+      return await readJsonFromPath(rootHandle, pathParts);
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const loadSeedsForProject = async () => {
+    let selbst = null;
+    let masterLibrary = null;
+    let userLibrary = null;
+    if (dirHandle) {
+      selbst = await readJsonIfExists(dirHandle, ["data", "seed", "selbstbeurteilung_ids.json"]);
+      masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
+      userLibrary = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
+    }
+    if (!selbst && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+      selbst = await readJsonFromHttp("/data/seed/selbstbeurteilung_ids.json");
+    }
+    if (!masterLibrary && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+      masterLibrary = await readJsonFromHttp("/data/seed/library_master.json");
+    }
+    if (!selbst) throw new Error("Self assessment seed not found.");
+    if (!masterLibrary) throw new Error("Master library seed not found.");
+    return buildProjectFromSeeds(selbst, masterLibrary, userLibrary);
+  };
+
+  const ensureProjectMeta = () => {
+    if (!state.project.meta) state.project.meta = {};
+    if (!state.project.meta.locale) state.project.meta.locale = "de-CH";
+  };
+
+  const saveSidecar = async () => {
+    if (!dirHandle) return;
+    let existing = sidecarDoc;
+    try {
+      const handle = await dirHandle.getFileHandle("project_sidecar.json");
+      const file = await handle.getFile();
+      const text = await file.text();
+      existing = JSON.parse(text);
+    } catch (err) {
+      existing = sidecarDoc;
+    }
+    const payload = mergeSidecar(existing, state.project);
+    const handle = await dirHandle.getFileHandle("project_sidecar.json", { create: true });
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(payload, null, 2));
+    await writable.close();
+    sidecarDoc = payload;
+  };
+
+  const loadLibraryFile = async () => {
+    if (!dirHandle) return { meta: {}, entries: [] };
+    const name = getLibraryFileName();
+    const data = await readJsonIfExists(dirHandle, [name]);
+    if (data && Array.isArray(data.entries)) return data;
+    return { meta: {}, entries: [] };
+  };
+
+  const saveLibraryFile = async (library, timestampSuffix) => {
+    if (!dirHandle) return;
+    const name = getLibraryFileName();
+    const handle = await dirHandle.getFileHandle(name, { create: true });
+    const writable = await handle.createWritable();
+    await writable.write(JSON.stringify(library, null, 2));
+    await writable.close();
+    if (timestampSuffix) {
+      const stamped = name.replace(/\\.json$/i, `_${timestampSuffix}.json`);
+      const stampedHandle = await dirHandle.getFileHandle(stamped, { create: true });
+      const stampedWritable = await stampedHandle.createWritable();
+      await stampedWritable.write(JSON.stringify(library, null, 2));
+      await stampedWritable.close();
+    }
+  };
+
+  const generateLibrary = async () => {
+    if (!dirHandle) return;
+    ensureProjectMeta();
+    const library = await loadLibraryFile();
+    const entriesMap = new Map(normalizeLibraryEntries(library).map((entry) => [entry.id, entry]));
+    const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    let applied = 0;
+
+    state.project.chapters.forEach((chapter) => {
+      chapter.rows.forEach((row) => {
+        if (row.kind === "section") return;
+        ensureWorkstate(row);
+        const ws = row.workstate;
+        Object.entries(ws.libraryActions || {}).forEach(([levelKey, action]) => {
+          if (action === "off") return;
+          const text = getRecommendationText(row, levelKey).trim();
+          if (!text) return;
+          const currentHash = hashText(text);
+          if (ws.libraryHashes?.[levelKey] === currentHash) return;
+          const entry = entriesMap.get(row.id) || { id: row.id, levels: {} };
+          entry.levels = entry.levels || {};
+          if (action === "replace") {
+            entry.levels[levelKey] = text;
+          } else if (action === "append") {
+            const existing = toText(entry.levels[levelKey]).trim();
+            entry.levels[levelKey] = existing ? `${existing}\n\n${text}` : text;
+          }
+          entriesMap.set(row.id, entry);
+          ws.libraryHashes[levelKey] = currentHash;
+          applied += 1;
+        });
+      });
+    });
+
+    const meta = {
+      author: state.project.meta.author || "",
+      initials: state.project.meta.initials || "",
+      locale: state.project.meta.locale || "",
+      updatedAt: new Date().toISOString(),
+    };
+    const output = { meta, entries: Array.from(entriesMap.values()) };
+    await saveLibraryFile(output, timestamp);
+    await saveSidecar();
+    setStatus(`Library updated (${applied} changes).`);
+    debug.logLine("info", `Library updated (${applied} changes).`);
   };
 
   const ensureWorkstate = (row) => {
@@ -693,11 +888,37 @@
       recControls.appendChild(levelGroup);
       recControls.appendChild(overrideLabel);
 
+      const libraryGroup = document.createElement("div");
+      libraryGroup.className = "library-group";
+      const libraryLabel = document.createElement("span");
+      libraryLabel.textContent = "Library";
+      libraryGroup.appendChild(libraryLabel);
+      const actionButtons = [
+        { key: "off", label: "Off" },
+        { key: "append", label: "Append" },
+        { key: "replace", label: "Replace" },
+      ];
+      actionButtons.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = option.label;
+        if ((ws.libraryActions?.[levelKey] || "off") === option.key) {
+          button.classList.add("is-active");
+        }
+        button.addEventListener("click", () => {
+          ws.libraryActions[levelKey] = option.key;
+          renderRows();
+        });
+        libraryGroup.appendChild(button);
+      });
+      recControls.appendChild(libraryGroup);
+
       const recArea = document.createElement("textarea");
       recArea.value = getRecommendationText(row, ws.selectedLevel);
       recArea.disabled = !ws.useLevelOverride?.[levelKey];
       recArea.addEventListener("input", () => {
         ws.levelOverrides[levelKey] = recArea.value;
+        ws.libraryHashes[levelKey] = "";
       });
 
       recLabel.appendChild(recHint);
@@ -804,38 +1025,34 @@
       sidecarDoc = JSON.parse(text);
       const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
       state.project = reportProject;
+      ensureProjectMeta();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded project_sidecar.json");
       debug.logLine("info", "Loaded project_sidecar.json");
     } catch (err) {
-      state.project = structuredClone(defaultProject);
-      state.selectedChapterId = state.project.chapters[0].id;
-      sidecarDoc = null;
-      render();
-      setStatus("Sidecar not found; loaded default template.");
-      debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+      try {
+        state.project = await loadSeedsForProject();
+        ensureProjectMeta();
+        state.selectedChapterId = state.project.chapters[0]?.id || "";
+        render();
+        setStatus("Sidecar not found; loaded seed data.");
+        debug.logLine("warn", `Sidecar not found; loaded seeds (${err.message || err})`);
+      } catch (seedErr) {
+        state.project = structuredClone(defaultProject);
+        state.selectedChapterId = state.project.chapters[0].id;
+        sidecarDoc = null;
+        render();
+        setStatus("Sidecar not found; loaded default template.");
+        debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+      }
     }
   });
 
   saveSidecarBtn.addEventListener("click", async () => {
     if (!dirHandle) return;
     try {
-      let existing = sidecarDoc;
-      try {
-        const handle = await dirHandle.getFileHandle("project_sidecar.json");
-        const file = await handle.getFile();
-        const text = await file.text();
-        existing = JSON.parse(text);
-      } catch (err) {
-        existing = sidecarDoc;
-      }
-      const payload = mergeSidecar(existing, state.project);
-      const handle = await dirHandle.getFileHandle("project_sidecar.json", { create: true });
-      const writable = await handle.createWritable();
-      await writable.write(JSON.stringify(payload, null, 2));
-      await writable.close();
-      sidecarDoc = payload;
+      await saveSidecar();
       setStatus("Saved project_sidecar.json");
       debug.logLine("info", "Saved project_sidecar.json");
     } catch (err) {
@@ -844,23 +1061,11 @@
     }
   });
 
-  const readJsonFromPath = async (rootHandle, pathParts) => {
-    let currentHandle = rootHandle;
-    for (let i = 0; i < pathParts.length - 1; i += 1) {
-      currentHandle = await currentHandle.getDirectoryHandle(pathParts[i]);
-    }
-    const fileHandle = await currentHandle.getFileHandle(pathParts[pathParts.length - 1]);
-    const file = await fileHandle.getFile();
-    const text = await file.text();
-    return JSON.parse(text);
-  };
-
   loadSeedsBtn.addEventListener("click", async () => {
     if (!dirHandle) return;
     try {
-      const selbst = await readJsonFromPath(dirHandle, ["data", "seed", "selbstbeurteilung_ids.json"]);
-      const library = await readJsonFromPath(dirHandle, ["data", "seed", "library_master.json"]);
-      state.project = buildProjectFromSeeds(selbst, library);
+      state.project = await loadSeedsForProject();
+      ensureProjectMeta();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded seed data from data/seed.");
@@ -897,6 +1102,56 @@
     state.filters.doneOnly = filterDoneOnlyEl.checked;
     renderRows();
   });
+
+  const openSettings = () => {
+    if (!settingsModal) return;
+    settingsAuthorEl.value = state.project.meta?.author || "";
+    settingsInitialsEl.value = state.project.meta?.initials || "";
+    settingsLocaleEl.value = state.project.meta?.locale || "";
+    settingsLibraryFileEl.value = state.project.meta?.libraryFile || "";
+    settingsModal.classList.add("is-open");
+    settingsModal.setAttribute("aria-hidden", "false");
+  };
+
+  const closeSettings = () => {
+    if (!settingsModal) return;
+    settingsModal.classList.remove("is-open");
+    settingsModal.setAttribute("aria-hidden", "true");
+  };
+
+  const saveSettings = () => {
+    ensureProjectMeta();
+    state.project.meta.author = settingsAuthorEl.value.trim();
+    state.project.meta.initials = settingsInitialsEl.value.trim();
+    state.project.meta.locale = settingsLocaleEl.value.trim() || "de-CH";
+    state.project.meta.libraryFile = settingsLibraryFileEl.value.trim();
+    setStatus("Settings saved (remember to save sidecar).");
+  };
+
+  if (openSettingsBtn) {
+    openSettingsBtn.addEventListener("click", openSettings);
+  }
+  if (closeSettingsBtn) {
+    closeSettingsBtn.addEventListener("click", closeSettings);
+  }
+  if (settingsModal) {
+    settingsModal.addEventListener("click", (event) => {
+      if (event.target === settingsModal) closeSettings();
+    });
+  }
+  if (saveSettingsBtn) {
+    saveSettingsBtn.addEventListener("click", saveSettings);
+  }
+  if (generateLibraryBtn) {
+    generateLibraryBtn.addEventListener("click", async () => {
+      try {
+        await generateLibrary();
+      } catch (err) {
+        setStatus(`Library update failed: ${err.message}`);
+        debug.logLine("error", `Library update failed: ${err.message || err}`);
+      }
+    });
+  }
 
   ensureFsAccess();
   restoreLastHandle();
