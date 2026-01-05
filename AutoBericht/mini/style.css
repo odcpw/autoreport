@@ -106,6 +106,9 @@ button[disabled] {
   padding: 6px 10px;
   font-size: 0.9rem;
   color: #1f2933;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .sidebar nav button.active {
@@ -138,6 +141,16 @@ button[disabled] {
   border: 1px solid #efe5dc;
   margin-bottom: 16px;
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.05);
+}
+
+.section-row {
+  margin: 14px 0 8px;
+  padding: 6px 10px;
+  border-left: 4px solid #f6d365;
+  background: #f8f5ef;
+  font-weight: 600;
+  color: #1f2933;
+  border-radius: 8px;
 }
 
 .row-header {

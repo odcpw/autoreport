@@ -260,8 +260,12 @@
         rows: [],
       };
       const master = libraryMap.get(group.id) || null;
+      const sectionLabel = group.items.find((item) => item.sectionLabel)?.sectionLabel || "";
+      const sectionId = String(group.id).split(".").slice(0, 2).join(".");
       chapter.rows.push({
         id: group.id,
+        sectionId,
+        sectionLabel,
         titleOverride: group.items[0]?.question || "",
         master,
         customer: {
@@ -291,6 +295,20 @@
     });
     chapters.forEach((chapter) => {
       chapter.rows.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      const withSections = [];
+      let lastSection = "";
+      chapter.rows.forEach((row) => {
+        if (row.sectionLabel && row.sectionId !== lastSection) {
+          withSections.push({
+            kind: "section",
+            id: row.sectionId,
+            title: row.sectionLabel,
+          });
+          lastSection = row.sectionId;
+        }
+        withSections.push(row);
+      });
+      chapter.rows = withSections;
     });
 
     return {
@@ -387,7 +405,10 @@
     chapterListEl.innerHTML = "";
     state.project.chapters.forEach((chapter) => {
       const button = document.createElement("button");
-      button.textContent = `${chapter.id} ${getChapterTitle(chapter)}`;
+      const chapterLabel = getChapterTitle(chapter);
+      const buttonLabel = chapterLabel || chapter.id;
+      button.textContent = buttonLabel;
+      button.title = buttonLabel;
       button.className = chapter.id === state.selectedChapterId ? "active" : "";
       button.addEventListener("click", () => {
         state.selectedChapterId = chapter.id;
@@ -401,9 +422,17 @@
     rowsEl.innerHTML = "";
     const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
     if (!chapter) return;
-    chapterTitleEl.textContent = `${chapter.id} ${getChapterTitle(chapter)}`;
+    const chapterTitle = getChapterTitle(chapter);
+    chapterTitleEl.textContent = chapterTitle || chapter.id;
 
     chapter.rows.forEach((row) => {
+      if (row.kind === "section") {
+        const sectionRow = document.createElement("div");
+        sectionRow.className = "section-row";
+        sectionRow.textContent = row.title;
+        rowsEl.appendChild(sectionRow);
+        return;
+      }
       ensureWorkstate(row);
       const ws = row.workstate;
 
