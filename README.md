@@ -71,7 +71,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    ```
 
 2. **VBA Development**
-   - Install VBA modules from `/macros/` folder
+   - Install VBA modules from `/legacy/macros/` folder
    - See legacy docs in `legacy/docs/guides/vba-workflow.md`
 
 3. **Web UI Development**
@@ -92,7 +92,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 | [System Architecture](docs/architecture/system-overview.md) | Current redesign architecture |
 | [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md) | Interview-based requirements |
 | [Redesign Workflow](docs/guides/redesign-workflow.md) | Minimal editor workflow |
-| [VBA Modules Reference](macros/README.md) | VBA module documentation (legacy export layer) |
+| [VBA Modules Reference](legacy/macros/README.md) | VBA module documentation (legacy export layer) |
 
 Legacy documentation is archived under `legacy/docs/`.
 
@@ -112,9 +112,9 @@ autoreport/
 │   ├── architecture/           # Redesign architecture
 │   └── guides/                 # Redesign workflows
 ├── legacy/                      # Legacy UI + docs archive
-│   └── docs/                   # Legacy documentation
-├── macros/                      # VBA modules (.bas, .cls, .frm)
-│   └── README.md               # VBA module overview
+│   ├── docs/                   # Legacy documentation
+│   └── macros/                 # Legacy VBA modules (.bas, .cls, .frm)
+│       └── README.md           # VBA module overview
 ├── AutoBericht/                 # Offline web UI
 │   ├── index.html              # Entry point
 │   ├── css/                    # Styles

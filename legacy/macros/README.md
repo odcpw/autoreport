@@ -1,6 +1,6 @@
 # AutoBericht VBA Modules (Structured Sheets)
 
-Import the `.bas` files under `macros/` into the macro-enabled workbook. All read/write operations then occur against the JSON-aligned structured sheets, ready for AutoBericht and VBA orchestration.
+Import the `.bas` files under `legacy/macros/` into the macro-enabled workbook. All read/write operations then occur against the JSON-aligned structured sheets, ready for AutoBericht and VBA orchestration.
 
 ## Module Overview
 
