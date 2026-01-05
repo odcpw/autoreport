@@ -22,6 +22,8 @@
     observations: document.getElementById("panel-observations"),
     training: document.getElementById("panel-training"),
   };
+  const observationsSlot = document.getElementById("panel-observations-slot");
+  const viewerObservations = document.querySelector(".viewer__observations");
 
   const debug = window.AutoReportDebug || {
     logLine: () => {},
@@ -84,6 +86,14 @@
     document.body.classList.toggle("layout-stacked", layoutMode === "stacked");
   };
 
+  const placeObservationsPanel = () => {
+    const panel = panels.observations;
+    if (!panel) return;
+    const target = layoutMode === "tabs" ? observationsSlot : viewerObservations;
+    if (!target || panel.parentElement === target) return;
+    target.appendChild(panel);
+  };
+
   const updateLayoutToggle = () => {
     layoutToggleButtons.forEach((button) => {
       const isActive = button.dataset.layout === layoutMode;
@@ -99,6 +109,7 @@
       window.localStorage.setItem("photosorterLayout", mode);
     }
     applyLayoutMode();
+    placeObservationsPanel();
     updateLayoutToggle();
     renderPanels();
   };
@@ -794,6 +805,7 @@
   const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
   updateStatusVisibility(statusHidden);
   applyLayoutMode();
+  placeObservationsPanel();
   updateLayoutToggle();
   setActivePanel(state.activePanel);
   ensureFsAccess();

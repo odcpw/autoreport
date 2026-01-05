@@ -284,6 +284,10 @@ button[disabled] {
   overflow: hidden;
 }
 
+.panel-slot {
+  display: none;
+}
+
 .panel__chapters {
   display: grid;
   grid-template-columns: repeat(10, minmax(0, 1fr));
@@ -369,11 +373,15 @@ body.layout-tabs .panel.is-active {
 }
 
 body.layout-tabs .panel__tags {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 
 body.layout-tabs .viewer__observations {
   display: none;
+}
+
+body.layout-tabs .panel-slot {
+  display: block;
 }
 
 body.layout-stacked .panel-tabs {
