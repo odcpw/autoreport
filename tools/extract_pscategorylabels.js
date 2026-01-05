@@ -11,6 +11,38 @@ const readWorkbook = (filePath) => {
   return XLSX.read(buffer, { type: "buffer" });
 };
 
+const EXTRA_OBSERVATIONS = [
+  "Absturzsicherung",
+  "Arbeiten in der Höhe",
+  "Arbeitsmittelprüfung",
+  "Beleuchtung",
+  "Brandschutz",
+  "Chemikalien",
+  "Druckbehälter",
+  "Elektrik",
+  "Ergonomie",
+  "Erste Hilfe",
+  "Fluchtwege",
+  "Gefährdungsbeurteilung",
+  "Handwerkzeuge",
+  "Kennzeichnung",
+  "Lagerung",
+  "Lärm",
+  "Leitern",
+  "Maschinenwartung",
+  "Maschinensicherung",
+  "Notfallorganisation",
+  "PSA",
+  "Rutschgefahr",
+  "Sauberkeit",
+  "Schulung / Unterweisung",
+  "Schweißarbeiten",
+  "Sicherheitsdatenblätter",
+  "Staplerverkehr",
+  "Verkehrswege",
+  "Werkstatt / Ordnung",
+];
+
 const parsePSCategoryLabels = (rows) => {
   const reportLabels = [];
   const trainingLabels = [];
@@ -58,6 +90,13 @@ if (!sheetName) {
 
 const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, blankrows: false });
 const options = parsePSCategoryLabels(rows);
+const seenObservations = new Set(options.observations.map((opt) => opt.value.toLowerCase()));
+EXTRA_OBSERVATIONS.forEach((label) => {
+  const key = label.toLowerCase();
+  if (seenObservations.has(key)) return;
+  seenObservations.add(key);
+  options.observations.push({ value: label, label });
+});
 
 const payload = {
   meta: {

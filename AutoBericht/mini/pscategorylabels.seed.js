@@ -2,7 +2,7 @@
 window.PS_CATEGORY_LABELS_META = {
   "sourceWorkbook": "2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx",
   "sheet": "PSCategoryLabels",
-  "generatedAt": "2026-01-05T15:01:47.388Z"
+  "generatedAt": "2026-01-05T15:41:48.560Z"
 };
 window.PS_CATEGORY_LABELS_SEED = {
   "report": [
@@ -317,6 +317,118 @@ window.PS_CATEGORY_LABELS_SEED = {
     {
       "value": "Palettenrolli",
       "label": "Palettenrolli"
+    },
+    {
+      "value": "Absturzsicherung",
+      "label": "Absturzsicherung"
+    },
+    {
+      "value": "Arbeiten in der Höhe",
+      "label": "Arbeiten in der Höhe"
+    },
+    {
+      "value": "Arbeitsmittelprüfung",
+      "label": "Arbeitsmittelprüfung"
+    },
+    {
+      "value": "Beleuchtung",
+      "label": "Beleuchtung"
+    },
+    {
+      "value": "Brandschutz",
+      "label": "Brandschutz"
+    },
+    {
+      "value": "Chemikalien",
+      "label": "Chemikalien"
+    },
+    {
+      "value": "Druckbehälter",
+      "label": "Druckbehälter"
+    },
+    {
+      "value": "Elektrik",
+      "label": "Elektrik"
+    },
+    {
+      "value": "Ergonomie",
+      "label": "Ergonomie"
+    },
+    {
+      "value": "Erste Hilfe",
+      "label": "Erste Hilfe"
+    },
+    {
+      "value": "Fluchtwege",
+      "label": "Fluchtwege"
+    },
+    {
+      "value": "Gefährdungsbeurteilung",
+      "label": "Gefährdungsbeurteilung"
+    },
+    {
+      "value": "Handwerkzeuge",
+      "label": "Handwerkzeuge"
+    },
+    {
+      "value": "Kennzeichnung",
+      "label": "Kennzeichnung"
+    },
+    {
+      "value": "Lagerung",
+      "label": "Lagerung"
+    },
+    {
+      "value": "Lärm",
+      "label": "Lärm"
+    },
+    {
+      "value": "Maschinenwartung",
+      "label": "Maschinenwartung"
+    },
+    {
+      "value": "Maschinensicherung",
+      "label": "Maschinensicherung"
+    },
+    {
+      "value": "Notfallorganisation",
+      "label": "Notfallorganisation"
+    },
+    {
+      "value": "PSA",
+      "label": "PSA"
+    },
+    {
+      "value": "Rutschgefahr",
+      "label": "Rutschgefahr"
+    },
+    {
+      "value": "Sauberkeit",
+      "label": "Sauberkeit"
+    },
+    {
+      "value": "Schulung / Unterweisung",
+      "label": "Schulung / Unterweisung"
+    },
+    {
+      "value": "Schweißarbeiten",
+      "label": "Schweißarbeiten"
+    },
+    {
+      "value": "Sicherheitsdatenblätter",
+      "label": "Sicherheitsdatenblätter"
+    },
+    {
+      "value": "Staplerverkehr",
+      "label": "Staplerverkehr"
+    },
+    {
+      "value": "Verkehrswege",
+      "label": "Verkehrswege"
+    },
+    {
+      "value": "Werkstatt / Ordnung",
+      "label": "Werkstatt / Ordnung"
     }
   ]
 };
