@@ -1,7 +1,7 @@
 {
   "meta": {
     "source": "2025-10-02 OPUS 4.1 recommendations.docx",
-    "importedAt": "2026-01-05T11:09:12+00:00"
+    "importedAt": "2026-01-05T11:22:23+00:00"
   },
   "entries": [
     {
@@ -21,7 +21,8 @@
         "4": [
           "Die Charta als lebendiges Instrument weiterentwickeln. Jährliche Reflexionsworkshops durchführen. Best Practices aus allen Bereichen integrieren. Mit messbaren Erfolgsindikatoren verknüpfen. Eine Kultur schaffen, in der die Werte selbstverständlich gelebt werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.2",
@@ -40,7 +41,8 @@
         "4": [
           "Sicherheit als integralen Bestandteil der Unternehmens-DNA etablieren. Einen Sicherheitskultur-Index entwickeln. Regelmässige 360-Grad-Feedbacks einführen. Sicherheit als Wettbewerbsvorteil positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.3",
@@ -59,7 +61,8 @@
         "4": [
           "Leitbild-Botschafter in allen Bereichen etablieren. Innovative Kommunikationsformate entwickeln. Eine App für tägliche Leitbild-Impulse erstellen. Erfolgsgeschichten systematisch sammeln und teilen. Kontinuierliche Weiterentwicklung ermöglichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.4",
@@ -78,7 +81,8 @@
         "4": [
           "Die Leitbildkonformität in alle Managementprozesse einweben. Regelmässige Kulturaudits durchführen. Ein Frühwarnsystem entwickeln. Aus Abweichungen systematisch lernen. Eine Kultur der kontinuierlichen Angleichung schaffen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.5",
@@ -97,7 +101,8 @@
         "4": [
           "Ein umfassendes Leadership-Excellence-Programm entwickeln. Interne Führungs-Coaches zertifizieren. 360-Grad-Assessments nutzen. Best-Practice-Austausch institutionalisieren. Führungserfolg mit Kulturentwicklung verknüpfen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.6",
@@ -116,7 +121,8 @@
         "4": [
           "Sicherheitsführung zur Kernkompetenz entwickeln. Ein Reifegradmodell erstellen. Leadership-Assessments durchführen. Eine Learning Community aufbauen. Mit führenden Unternehmen benchmarken."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.7",
@@ -135,7 +141,8 @@
         "4": [
           "Über die Charta-Anforderungen hinausgehen. Eigene, ambitioniertere Standards setzen. Vorbild für andere werden. Erfahrungen in Netzwerken teilen. Auszeichnungen anstreben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.1.8",
@@ -154,7 +161,8 @@
         "4": [
           "Mehrere Systeme intelligent integrieren. Ein ganzheitliches Managementsystem entwickeln. Benchmark in der Branche werden. Systeme für Innovation nutzen. Andere Unternehmen unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.2.1",
@@ -173,7 +181,8 @@
         "4": [
           "Die GL zu Sicherheits-Champions entwickeln. Patenschaften für Sicherheitsthemen vergeben. Externe Auftritte ermöglichen. Den kulturellen Impact systematisch evaluieren. Best Practices multiplizieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.2.2",
@@ -192,7 +201,8 @@
         "4": [
           "Sicherheit zum Wettbewerbsvorteil machen. Die positive Wechselwirkung beweisen. Innovative Integrationsansätze entwickeln. Thought Leadership übernehmen. Nach aussen kommunizieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.2.3",
@@ -211,7 +221,8 @@
         "4": [
           "GL-Rundgänge als Kulturinstrument optimieren. Digitale Tools nutzen. Trends analysieren. Coaching-Kompetenzen aufbauen. Wirkung auf Engagement messen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.2.4",
@@ -230,7 +241,8 @@
         "4": [
           "Datenbasierte Budgetoptimierung betreiben. Prädiktive Analysen nutzen. Innovative Finanzierungsmodelle entwickeln. Business Value beweisen. Best Practice werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.2.5",
@@ -249,7 +261,8 @@
         "4": [
           "Die GL zu aktiven Kulturtreibern machen. Innovative Beteiligungsformen entwickeln. Digitale Plattformen nutzen. Best Practices exportieren. Kontinuierliches Engagement sichern."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.3.1",
@@ -268,7 +281,8 @@
         "4": [
           "Vorgesetzte zu Sicherheitsmentoren entwickeln. Peer-Coaching etablieren. 360-Grad-Feedback nutzen. Lernkultur schaffen. Exzellenz zertifizieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.3.2.a",
@@ -287,7 +301,8 @@
         "4": [
           "Vorgesetzte zu Innovatoren machen. Eigeninitiativen fördern. Wettbewerbe organisieren. Best-Practice-Datenbank aufbauen. Pilotprojekte ermöglichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.3.3",
@@ -306,7 +321,8 @@
         "4": [
           "Vorgesetzte zu Rechtsexperten entwickeln. Vertiefungsmodule anbieten. Interne Berater ausbilden. Aktuell halten. Entscheidungstools bereitstellen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.4.1.a",
@@ -325,7 +341,8 @@
         "4": [
           "Prädiktive Zielsteuerung entwickeln. Analytics nutzen. Vision Zero verfolgen. In Zieldefinition innovieren. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.4.2",
@@ -344,7 +361,8 @@
         "4": [
           "Best-in-Class anstreben. Prädiktive Modelle entwickeln. Wohlbefinden integrieren. Fürsorgliche Kultur schaffen. Attraktiver Arbeitgeber werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.4.3",
@@ -363,7 +381,8 @@
         "4": [
           "Integrierte Zielsteuerung entwickeln. OKR oder ähnliches nutzen. Synergien fördern. In Unternehmensstrategie verankern. Erfolge kommunizieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.4.4",
@@ -382,7 +401,8 @@
         "4": [
           "Ziel-Innovation fördern. Stretch-Goals ermöglichen. Mit Expertise unterstützen. Austauschplattformen schaffen. Interne Beratung entwickeln."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.4.5",
@@ -401,7 +421,8 @@
         "4": [
           "Zum Benchmark-Setter werden. Innovative KPIs entwickeln. Branche führen. Erfolge publizieren. Standards mitgestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.1",
@@ -420,7 +441,8 @@
         "4": [
           "Agilen Strategieprozess entwickeln. Moderne Methoden nutzen. Echtzeit-Daten integrieren. Bottom-up fördern. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.2",
@@ -439,7 +461,8 @@
         "4": [
           "Nach Exzellenz streben. Six Sigma nutzen. Disruptiv denken. Lernende Organisation werden. Methoden exportieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.3",
@@ -458,7 +481,8 @@
         "4": [
           "Mitarbeiter zu Co-Designern machen. Eigeninitiative fördern. Team-Ziele ermöglichen. Ownership schaffen. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.4",
@@ -477,7 +501,8 @@
         "4": [
           "Intelligente Systeme entwickeln. KI für Muster nutzen. IoT integrieren. Vorausschauend steuern. Datengetrieben werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.5",
@@ -496,7 +521,8 @@
         "4": [
           "Autonomie mit Vernetzung fördern. Selbstlernende Systeme entwickeln. Gamification nutzen. Virtuelle Steuerung schaffen. Modern führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.6",
@@ -515,7 +541,8 @@
         "4": [
           "Abweichungen als Chancen nutzen. Fehlerkultur fördern. Für Systemverbesserungen nutzen. Resilienz entwickeln. High-Reliability werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "1.5.7",
@@ -539,7 +566,8 @@
           "2.",
           "Organisation"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.1",
@@ -550,7 +578,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.1.1",
@@ -569,7 +598,8 @@
         "4": [
           "Die Organisationsform kontinuierlich optimieren. Agile Elemente integrieren. Best Practices aus verschiedenen Formen kombinieren. Die Organisation als lebendiges System gestalten. Benchmark mit führenden Unternehmen durchführen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.2",
@@ -580,7 +610,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.2.1",
@@ -599,7 +630,8 @@
         "4": [
           "Ein dynamisches Verantwortungssystem entwickeln. Verantwortlichkeiten mit Kompetenzen und Ressourcen synchronisieren. Regelmässige Reviews durchführen. Best Practices zwischen Abteilungen teilen. Als Vorbild für klare Governance dienen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.2.2",
@@ -618,7 +650,8 @@
         "4": [
           "Ein integriertes Organisationshandbuch entwickeln. Digitale Lösungen für dynamische Anpassungen nutzen. Dokumentation schlank und nutzerfreundlich halten. Kontinuierliche Verbesserung durch Feedback. Als Best Practice positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.2.3",
@@ -637,7 +670,8 @@
         "4": [
           "Sicherheitsverantwortung als integralen Bestandteil jeder Rolle etablieren. Innovative Ansätze zur Verantwortungsübernahme entwickeln. Mitarbeitende zu Sicherheitsbotschaftern machen. Excellence in der Integration vorleben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3",
@@ -648,7 +682,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.1",
@@ -667,7 +702,8 @@
         "4": [
           "Ein integriertes Planungssystem mit KI-Unterstützung entwickeln. Prädiktive Planung einführen. Best-in-Class werden. Andere Unternehmen beraten. Innovation in der Arbeitsplanung vorantreiben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.2",
@@ -686,7 +722,8 @@
         "4": [
           "Prädiktive Sicherheitsplanung entwickeln. KI für Gefahrenerkennung nutzen. Innovative Planungsmethoden pilotieren. Zero-Accident-Planung anstreben. Als Benchmark etablieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.3",
@@ -705,7 +742,8 @@
         "4": [
           "Vollständig integrierte Arbeitsorganisation entwickeln. Agile Planungsmethoden nutzen. Echtzeit-Anpassungen ermöglichen. Selbstorganisierende Teams fördern. Als Vorreiter für moderne Arbeitsorganisation positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.4",
@@ -724,7 +762,8 @@
         "4": [
           "Co-Creation in der Arbeitsplanung etablieren. Ausführende zu Planungsexperten entwickeln. Innovative Beteiligungsformate schaffen. Vollständige Integration erreichen. Als Modell für andere dienen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.5",
@@ -743,7 +782,8 @@
         "4": [
           "Exzellenz in Auftragskommunikation erreichen. Innovative Vermittlungsmethoden entwickeln. Gamification nutzen. Vollständiges Verständnis sicherstellen. Best Practice werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.6",
@@ -762,7 +802,8 @@
         "4": [
           "Sicherheit zum selbstverständlichen Auftragselement machen. Intelligente Systeme für kontextbezogene Sicherheitshinweise nutzen. Null-Fehler-Kultur etablieren. Innovation vorantreiben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.7",
@@ -781,7 +822,8 @@
         "4": [
           "Papierlose, intelligente Auftragssysteme etablieren. Echtzeitdokumentation ermöglichen. Predictive Analytics nutzen. Vollständige Transparenz schaffen. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.3.8",
@@ -800,7 +842,8 @@
         "4": [
           "Intelligente, adaptive Sicherheitsanweisungen entwickeln. AR/VR für Visualisierung nutzen. Kontextbezogene Hinweise bieten. Kontinuierliche Optimierung durch KI. Innovationsführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.4",
@@ -811,7 +854,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.4.1",
@@ -830,7 +874,8 @@
         "4": [
           "Die Betriebsordnung als lebendiges Instrument gestalten. Digitale Zugänglichkeit sicherstellen. Regelmässige Dialoge führen. Best Practice in der Ausgestaltung werden. Andere unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.1.4.2",
@@ -849,7 +894,8 @@
         "4": [
           "Eine vorbildliche Sicherheitskultur durch die Betriebsordnung fördern. Innovative Ansätze integrieren. Mitarbeitende zu Mitgestaltern machen. Als Best Practice positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1",
@@ -860,7 +906,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.1",
@@ -879,7 +926,8 @@
         "4": [
           "GL-Mitglied als Sicherheits-Champion positionieren. Externe Mandate wahrnehmen. Thought Leadership entwickeln. Innovation vorantreiben. Die Organisation inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.2",
@@ -898,7 +946,8 @@
         "4": [
           "Eine exzellente Sicherheitsorganisation als Kompetenzzentrum etablieren. Innovative Ansätze entwickeln. Interne Beratung bieten. Externe Anerkennung erreichen. Andere inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.3",
@@ -917,7 +966,8 @@
         "4": [
           "Ein dynamisches, intelligentes Organisationsmodell entwickeln. Virtuelle Strukturen abbilden. Netzwerkorganisation darstellen. Als Vorbild für moderne Organisationsdarstellung dienen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.4",
@@ -936,7 +986,8 @@
         "4": [
           "Ein Expertennetzwerk aufbauen. Innovative Kooperationsmodelle entwickeln. Wissenstransfer maximieren. Eigene Expertise entwickeln. Als Kompetenzzentrum positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.5",
@@ -955,7 +1006,8 @@
         "4": [
           "Ein dynamisches Kompetenzmodell entwickeln. Rollen flexibel gestalten. Selbstorganisation fördern. Kontinuierliche Entwicklung ermöglichen. Als moderne Organisation positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.6",
@@ -974,7 +1026,8 @@
         "4": [
           "Intelligentes Real-time-Reporting etablieren. Predictive Analytics nutzen. Interaktive Dashboards bieten. Strategic Insights generieren. Als Best Practice positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.1.7",
@@ -993,7 +1046,8 @@
         "4": [
           "Eine Einheit aus Linie und Sicherheitsorganisation schaffen. Grenzen aufheben. Gemeinsame Vision leben. Als Vorbild für integrierte Sicherheit dienen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.2",
@@ -1004,7 +1058,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.2.1",
@@ -1023,7 +1078,8 @@
         "4": [
           "Ein lebendes Sicherheitsmanagementsystem etablieren. Mit anderen Systemen integrieren. Innovation fördern. Als Benchmark positionieren. Andere inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.2.2",
@@ -1042,7 +1098,8 @@
         "4": [
           "Einen dynamischen Geltungsbereich managen. Automatisch neue Bereiche erfassen. Präventiv agieren. Vollständige Abdeckung sicherstellen. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.2.3",
@@ -1061,7 +1118,8 @@
         "4": [
           "Ein intelligentes Wissensmanagementsystem etablieren. KI-gestützte Dokumentenverwaltung. Automatische Updates. Kontextbezogene Informationen. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.3",
@@ -1072,7 +1130,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.3.1",
@@ -1091,7 +1150,8 @@
         "4": [
           "Ein Kompetenzzentrum für Sicherheit werden. Eigene Ausbildungen anbieten. Externe beraten. Innovation vorantreiben. Als Talentschmiede positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.3.2",
@@ -1110,7 +1170,8 @@
         "4": [
           "Strategische Partnerschaft mit Suva entwickeln. Als Pilotbetrieb agieren. Eigene Erfahrungen einbringen. Andere Betriebe unterstützen. Vorreiter werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.2.3.3",
@@ -1129,7 +1190,8 @@
         "4": [
           "Zur lernenden Organisation in Sicherheit werden. Innovative Lernformate nutzen. Eigene Standards setzen. Wissen multiplizieren. Andere inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.1",
@@ -1140,7 +1202,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.1.1",
@@ -1159,7 +1222,8 @@
         "4": [
           "Intelligentes Legal Compliance System etablieren. Automatische Updates. KI-gestützte Relevanzprüfung. Proaktive Anpassungen. Als Benchmark dienen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.1.2",
@@ -1178,7 +1242,8 @@
         "4": [
           "Rechtssicherheit als Wettbewerbsvorteil nutzen. Präventive Rechtsberatung. Innovative Compliance-Ansätze. Vorbildfunktion einnehmen. Andere unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.1.3",
@@ -1197,7 +1262,8 @@
         "4": [
           "Über Compliance hinaus Excellence anstreben. Best Practices entwickeln. Gesetzgeber beraten. Standards setzen. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.1.4",
@@ -1216,7 +1282,8 @@
         "4": [
           "Intelligentes Legal Management System. KI-gestützte Überwachung. Predictive Compliance. Thought Leadership. Innovation treiben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2",
@@ -1227,7 +1294,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2.1",
@@ -1246,7 +1314,8 @@
         "4": [
           "Normenkompetenz als Wettbewerbsvorteil nutzen. An Normierung mitwirken. Best Practices einbringen. Innovation fördern. Andere beraten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2.2",
@@ -1265,7 +1334,8 @@
         "4": [
           "Intelligente Informationsbereitstellung. KI-gestützte Relevanzfilterung. Proaktive Hinweise. Nahtlose Integration. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2.3",
@@ -1284,7 +1354,8 @@
         "4": [
           "Normenkompetenz als Kernkompetenz etablieren. Innovation durch Normenkenntnis. Wettbewerbsvorteile nutzen. Standards mitgestalten. Führend werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2.4",
@@ -1303,7 +1374,8 @@
         "4": [
           "Über Normen hinaus Massstäbe setzen. Best Practices entwickeln. Normierung beeinflussen. Innovation vorantreiben. Andere inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.2.5",
@@ -1322,7 +1394,8 @@
         "4": [
           "State-of-the-art Normenmanagementsystem. KI-Unterstützung. Predictive Updates. Seamless Integration. Thought Leadership."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.3",
@@ -1333,7 +1406,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.3.1",
@@ -1352,7 +1426,8 @@
         "4": [
           "Intelligentes Wissensmanagementsystem etablieren. KI-gestützte Kategorisierung. Automatische Vernetzung. Predictive Search. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.3.2",
@@ -1371,7 +1446,8 @@
         "4": [
           "Personalisierte Wissensvermittlung. KI-gestützte Relevanzfilterung. Adaptive Lernsysteme. Kontinuierliche Optimierung. Massstäbe setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.3.3",
@@ -1390,7 +1466,8 @@
         "4": [
           "Seamless Information Access. Intelligente Assistenten. Augmented Reality. Predictive Information. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "2.3.3.4",
@@ -1414,7 +1491,8 @@
           "3.",
           "Befähigung, Schulung, Kommunikation"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.1",
@@ -1433,7 +1511,8 @@
         "4": [
           "Datenbasierte Personalauswahl perfektionieren. Prädiktive Analysen nutzen. Cultural Fit optimieren. KI-unterstützte Verfahren testen. Als Employer of Choice positionieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.2",
@@ -1452,7 +1531,8 @@
         "4": [
           "Sicherheitskultur-Fit als Kernkriterium etablieren. Innovative Assessments entwickeln. Prädiktive Sicherheitsperformance. Best-in-Class Auswahl. Andere Unternehmen beraten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.3",
@@ -1471,7 +1551,8 @@
         "4": [
           "State-of-the-art Diagnostik einsetzen. Innovative Testverfahren entwickeln. Wissenschaftliche Standards setzen. Prädiktive Validität maximieren. Thought Leader werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.4",
@@ -1490,7 +1571,8 @@
         "4": [
           "Mehrsprachigkeit als Ressource nutzen. Innovative Sprachförderung. Interkulturelle Kompetenz stärken. Diversity fördern. Als inklusiver Arbeitgeber brillieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.5",
@@ -1509,7 +1591,8 @@
         "4": [
           "Innovative Vertragsgestaltung für Sicherheitskultur. Positive Anreize integrieren. Partnerschaftliche Ansätze. Best Practice entwickeln. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.1.6",
@@ -1528,7 +1611,8 @@
         "4": [
           "Zero-Difference-Ansatz perfektionieren. Alle Beschäftigten gleichwertig schützen. Innovative Beschäftigungsmodelle. Sicherheit als USP. Branchenführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.2.1",
@@ -1547,7 +1631,8 @@
         "4": [
           "Excellence im Onboarding erreichen. Personalisierte Journey. Gamification integrieren. Predictive Success Factors. Benchmark setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.2.2",
@@ -1566,7 +1651,8 @@
         "4": [
           "Intelligentes Onboarding-Management. KI-gestützte Personalisierung. Predictive Analytics. Seamless Experience. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.2.3",
@@ -1585,7 +1671,8 @@
         "4": [
           "Sicherheit als Kernwert vom Start vermitteln. Immersive Experiences. VR-Training. Kulturelle Integration. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.2.4",
@@ -1604,7 +1691,8 @@
         "4": [
           "Intelligente Informationsvermittlung. Adaptive Systeme. Just-in-Time-Delivery. Augmented Reality. Neue Standards setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.2.5",
@@ -1623,7 +1711,8 @@
         "4": [
           "Probezeit als Kulturintegration gestalten. Prädiktive Erfolgsfaktoren. Personalisiertes Coaching. Excellence sichern. Vorbild sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.3.1",
@@ -1642,7 +1731,8 @@
         "4": [
           "Dynamisches Kompetenzmanagement perfektionieren. Real-time Assessments. Prädiktive Entwicklung. KI-Unterstützung. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.3.2",
@@ -1661,7 +1751,8 @@
         "4": [
           "Sicherheitskompetenz als Kernkompetenz etablieren. Innovative Lernansätze. Predictive Learning. Excellence erreichen. Standards setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.3.3",
@@ -1680,7 +1771,8 @@
         "4": [
           "Personalentwicklung als Wettbewerbsvorteil nutzen. Innovative Fördermodelle. Selbstgesteuerte Entwicklung. Talentmagnet werden. Zukunft prägen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.3.4",
@@ -1699,7 +1791,8 @@
         "4": [
           "Sicherheit und Gesundheit als DNA verankern. Holistische Ansätze. Wellbeing-Excellence. Arbeitgebermarke stärken. Pionier sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.3.5",
@@ -1718,7 +1811,8 @@
         "4": [
           "Intelligentes Kompetenzmanagement. KI-gestützte Empfehlungen. Predictive Learning Paths. Seamless Integration. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.4.1",
@@ -1737,7 +1831,8 @@
         "4": [
           "Learning Ecosystem gestalten. Personalisierte Lernreisen. Mikrolearning. KI-Tutoren. Zukunft des Lernens."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.4.2",
@@ -1756,7 +1851,8 @@
         "4": [
           "Sicherheit als Lernkultur etablieren. Immersive Learning. VR/AR nutzen. Kontinuierliches Lernen. Excellence erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.4.3",
@@ -1775,7 +1871,8 @@
         "4": [
           "Aktive Mitgestaltung von Verbandsangeboten. Eigene Expertise einbringen. Best Practices teilen. Standards mitprägen. Thought Leader werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.4.4",
@@ -1794,7 +1891,8 @@
         "4": [
           "Sicherheit in alle Schulungen integrieren. Co-Creation mit Anbietern. Innovative Formate entwickeln. Standards prägen. Multiplikator sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.1",
@@ -1813,7 +1911,8 @@
         "4": [
           "Arbeitsplatz als primären Lernort gestalten. 70-20-10 Modell. Mikrolearning. KI-Assistenten. Zukunft des Lernens."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.2",
@@ -1832,7 +1931,8 @@
         "4": [
           "Learning Organization in Sicherheit werden. Prädiktive Analysen. KI-gestützte Mustererkennung. Proaktive Kompetenzentwicklung. Excellence erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.3",
@@ -1851,7 +1951,8 @@
         "4": [
           "Vorgesetzte zu Lernbegleitern entwickeln. Moderne Pädagogik. Digital unterstützt. Personalisierte Entwicklung. Exzellente Ausbilder."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.4",
@@ -1870,7 +1971,8 @@
         "4": [
           "State-of-the-art Instruktionsmethoden. AR-gestützte Anleitungen. Intelligente Assistenzsysteme. Just-in-Time-Support. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.5",
@@ -1889,7 +1991,8 @@
         "4": [
           "Agile Lernorganisation für Prozesse. Kontinuierliche Anpassung. Selbstlernende Teams. Digitale Prozessbegleitung. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.5.6",
@@ -1908,7 +2011,8 @@
         "4": [
           "Exzellenz im Chemikalienmanagement. Digitale Stoffdatenbank. Real-time Informationen. Predictive Safety. Null-Risiko anstreben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.1",
@@ -1927,7 +2031,8 @@
         "4": [
           "Next-Gen Performance Management. Echtzeit-Feedback. KI-gestützte Insights. Stärkenorientierung. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.2",
@@ -1946,7 +2051,8 @@
         "4": [
           "Sicherheitsführung als Kernkompetenz bewerten. Innovative Assessments. Prädiktive Erfolgsfaktoren. Leadership Excellence. Massstäbe setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.3",
@@ -1965,7 +2071,8 @@
         "4": [
           "Konsequenzen als Entwicklungschance nutzen. Präventive Ansätze. Coaching-orientiert. Kulturfördernd. Excellence unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.4",
@@ -1984,7 +2091,8 @@
         "4": [
           "Sicherheitsexzellenz als Karrieretreiber etablieren. Innovative Karrieremodelle. Sicherheits-Champions fördern. Kulturelle Transformation. Zukunft prägen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.5",
@@ -2003,7 +2111,8 @@
         "4": [
           "Sicherheit als Selbstverständlichkeit bewerten. Positive Verstärkung. Intrinsische Motivation. Excellence anerkennen. Vorbild sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.6.6",
@@ -2022,7 +2131,8 @@
         "4": [
           "Sicherheitsverhalten als Kulturthema gestalten. Positive Verhaltenskultur. Peer-Interventionen. Selbstregulation. Zero-Tolerance wo nötig."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.7.1",
@@ -2041,7 +2151,8 @@
         "4": [
           "Exzellente Kommunikationskultur etablieren. Omnichannel-Ansatz. KI-gestützte Personalisierung. Real-time Information. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.7.2",
@@ -2060,7 +2171,8 @@
         "4": [
           "Kommunikation als Wettbewerbsvorteil nutzen. Innovative Formate. Kulturelle Integration. Thought Leadership. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.7.3",
@@ -2079,7 +2191,8 @@
         "4": [
           "Kommunikation als strategische Funktion positionieren. Innovative Ansätze. Digitale Excellence. Kulturprägend. Zukunftsweisend."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.8.1",
@@ -2098,7 +2211,8 @@
         "4": [
           "Omnichannel-Sicherheitskommunikation perfektionieren. Personalisierte Ansprache. KI-gestützte Content-Creation. Virale Effekte. Excellence erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.9.1",
@@ -2117,7 +2231,8 @@
         "4": [
           "Sicherheit als selbstverständlichen Gesprächsinhalt kultivieren. Innovative Formate. Kulturelle Verankerung. Thought Leadership. Andere inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.9.2",
@@ -2136,7 +2251,8 @@
         "4": [
           "Proaktive Sicherheitsdialoge kultivieren. Präventionsfokus. Innovation fördern. Positive Sicherheitskultur. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.1",
@@ -2147,7 +2263,8 @@
         "2": [],
         "3": [],
         "4": []
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.2",
@@ -2166,7 +2283,8 @@
         "4": [
           "Exzellentes Fremdfirmenmanagement als Standard. Digitale Plattform. Präqualifikation. Real-time Monitoring. Partnerschaftsansatz."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.3",
@@ -2185,7 +2303,8 @@
         "4": [
           "Innovative Vertragsmodelle für Sicherheitspartnerschaft. Anreizssysteme. Shared Value Creation. Best-in-Class Standards. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.4",
@@ -2204,7 +2323,8 @@
         "4": [
           "Intelligentes Contractor Safety Management. Real-time Monitoring. Predictive Analytics. Automated Compliance. Partnership Excellence."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.5",
@@ -2223,7 +2343,8 @@
         "4": [
           "Sicherheitspartnerschaft als Ziel. Gemeinsame Entwicklung. Win-Win-Ansätze. Cultural Alignment. Excellence gemeinsam erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.6",
@@ -2242,7 +2363,8 @@
         "4": [
           "Sicherheit als nicht verhandelbaren Wert etablieren. Präqualifikation perfektionieren. Partnernetzwerk aufbauen. Null-Toleranz wo nötig. Vorbild sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.7",
@@ -2261,7 +2383,8 @@
         "4": [
           "Sicherheit als Wettbewerbsvorteil in Lieferkette. Innovative Bewertungsmodelle. Shared Value. Nachhaltigkeitsintegration. Supply Chain Excellence."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "3.10.8",
@@ -2285,7 +2408,8 @@
           "4.",
           "Sicherheitsstandards"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.1",
@@ -2304,7 +2428,8 @@
         "4": [
           "Intelligentes Wissensmanagementsystem etablieren. Kontextbezogene Bereitstellung. Multimediale Aufbereitung. Kontinuierliche Aktualisierung. Best-in-Class werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.2",
@@ -2323,7 +2448,8 @@
         "4": [
           "Checklistenkultur als Präventionsinstrument perfektionieren. Digitale Workflows. Predictive Analytics. Kontinuierliche Optimierung. Vorreiter werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.3",
@@ -2342,7 +2468,8 @@
         "4": [
           "Sicherheitskultur auf lebenswichtigen Regeln aufbauen. Intrinsische Motivation fördern. Peer-Intervention stärken. Vision Zero verfolgen. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.4",
@@ -2361,7 +2488,8 @@
         "4": [
           "Seamless Information Access perfektionieren. KI-gestützte Relevanzfilterung. Augmented Reality Integration. Predictive Information. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.5",
@@ -2380,7 +2508,8 @@
         "4": [
           "Integriertes Regelwerksmanagement perfektionieren. Dynamische Anpassung. Verhaltensorientierte Gestaltung. Innovation in Sicherheitsstandards. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.6",
@@ -2399,7 +2528,8 @@
         "4": [
           "Mitarbeitende als Standardentwickler empowern. Bottom-up Innovation. Agile Anpassung. Selbstregulierung fördern. Exzellenzkultur schaffen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.1.7",
@@ -2418,7 +2548,8 @@
         "4": [
           "Intelligentes selbstaktualisierendes System. KI-gestützte Relevanzprüfung. Predictive Updates. Blockchain-Verifizierung. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.2.1",
@@ -2437,7 +2568,8 @@
         "4": [
           "PSA-Excellence erreichen. Innovative Schutzkonzepte. Predictive Safety Equipment. Smarte PSA integrieren. Technologieführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.1",
@@ -2456,7 +2588,8 @@
         "4": [
           "Co-Design von PSA fördern. Innovative Beteiligungsmodelle. Customized Safety Solutions. Höchste Akzeptanz erreichen. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.2",
@@ -2475,7 +2608,8 @@
         "4": [
           "Intelligente PSA-Guidance entwickeln. Kontextbezogene Hinweise. AR-Unterstützung. Verhaltensbasierte Sicherheit. Innovation demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.3",
@@ -2494,7 +2628,8 @@
         "4": [
           "PSA-Leadership als Selbstverständlichkeit. Intrinsische Motivation. Peer-Leadership. Null-Toleranz bei Führungskräften. Excellence vorleben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.4",
@@ -2513,7 +2648,8 @@
         "4": [
           "Exzellente Risikokommunikation als Standard. Real-time Hazard Information. Predictive Risk Alerts. Gamification. Benchmark setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.5",
@@ -2532,7 +2668,8 @@
         "4": [
           "PSA-Kompetenz als Kernfähigkeit verankern. Innovative Trainingsmethoden. VR-Simulationen. Predictive Maintenance. Excellence erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.6",
@@ -2551,7 +2688,8 @@
         "4": [
           "Selbstregulierte PSA-Kultur erreichen. Peer-Observation. Gamification-Ansätze. Smart PSA Monitoring. Zero-Incident anstreben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.3.7",
@@ -2570,7 +2708,8 @@
         "4": [
           "PSA-Innovation für maximale Akzeptanz. Co-Creation mit Nutzern. Disruptive Schutzkonzepte. Technologieintegration. Branchenführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.4.1",
@@ -2589,7 +2728,8 @@
         "4": [
           "Intelligente Anweisungsintegration perfektionieren. AR-gestützte Anleitungen. Predictive Guidance. Real-time Compliance. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.4.2",
@@ -2608,7 +2748,8 @@
         "4": [
           "State-of-the-art Betriebsmanagement. Intelligente Assistenzsysteme. Predictive Operations. Autonome Sicherheit. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.4.3",
@@ -2627,7 +2768,8 @@
         "4": [
           "Intelligente Betriebsanalyse perfektionieren. Machine Learning für Mustererkennung. Proaktive Intervention. Zero-Incident-Strategien. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.1",
@@ -2646,7 +2788,8 @@
         "4": [
           "Excellence in Asset Management erreichen. IoT-Integration. KI-gestützte Wartung. Reliability Centered Maintenance. Industry 4.0 führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.2",
@@ -2665,7 +2808,8 @@
         "4": [
           "Instandhaltungsakademie etablieren. Herstellerpartnerschaften. Innovative Trainingskonzepte. Augmented Maintenance. Kompetenzzentrum werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.3",
@@ -2684,7 +2828,8 @@
         "4": [
           "Intelligente Instandhaltungssteuerung perfektionieren. Adaptive Procedures. Real-time Guidance. Predictive Safety. Innovation vorantreiben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.4",
@@ -2703,7 +2848,8 @@
         "4": [
           "Selbstregulierende Compliance-Kultur erreichen. Gamification. Positive Verstärkung. Predictive Compliance. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.5",
@@ -2722,7 +2868,8 @@
         "4": [
           "Intelligente vorausschauende Planung perfektionieren. AI-Optimierung. Selbstorganisierende Teams. Nahtlose Integration. Benchmark setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.5.6",
@@ -2741,7 +2888,8 @@
         "4": [
           "Fail-Safe Freigabesysteme perfektionieren. Intelligente Verriegelungen. Blockchain-Dokumentation. Zero-Defect-Freigaben. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.6.1",
@@ -2760,7 +2908,8 @@
         "4": [
           "Smart Building Management perfektionieren. IoT-Sensoren. Predictive Maintenance. Sustainability Integration. Technologieführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.6.2",
@@ -2779,7 +2928,8 @@
         "4": [
           "Proaktives Facility-Safety-Management perfektionieren. Digitale Risikomodelle. Real-time Monitoring. Innovative Schutzkonzepte. Best-in-Class werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.6.3",
@@ -2798,7 +2948,8 @@
         "4": [
           "State-of-the-art Facility Safety Standards. Intelligente Sicherheitssysteme. Augmented Safety. Zero-Accident-Facility. Innovation demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.6.4",
@@ -2817,7 +2968,8 @@
         "4": [
           "Facility Excellence Academy etablieren. Innovative Lernkonzepte. VR-Training. Internationale Standards. Talentschmiede werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.1",
@@ -2836,7 +2988,8 @@
         "4": [
           "Safety-by-Design Beschaffung perfektionieren. Innovationspartnerschaften. Lifecycle Safety. Circular Economy. Thought Leader werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.2",
@@ -2855,7 +3008,8 @@
         "4": [
           "Intelligente Beschaffungssysteme perfektionieren. AI-gestützte Risikoanalyse. Predictive Procurement. Blockchain-Verifizierung. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.3",
@@ -2874,7 +3028,8 @@
         "4": [
           "Zero-Defect Inbound Systeme perfektionieren. Automatisierte Prüfungen. IoT-Integration. Real-time Compliance. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.4",
@@ -2893,7 +3048,8 @@
         "4": [
           "Blockchain-basierte Prüfdokumentation. Unveränderbare Records. Smart Contracts. AI-Auswertungen. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.5",
@@ -2912,7 +3068,8 @@
         "4": [
           "Next-Gen Supplier Integration perfektionieren. Blockchain-Zertifikate. Real-time Verification. Co-Innovation. Industry Standard setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.6",
@@ -2931,7 +3088,8 @@
         "4": [
           "Intelligentes Regulatory Compliance System. AI-gestützte Dokumentenprüfung. Predictive Compliance. Blockchain-Archivierung. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "4.7.7",
@@ -2955,7 +3113,8 @@
           "5.",
           "Gefährdungsermittlung, Risikobeurteilung"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.1.1",
@@ -2974,7 +3133,8 @@
         "4": [
           "Die ASA-Betreuung als strategischen Vorteil nutzen. Über Mindestanforderungen hinausgehen. Präventionskultur mit Spezialisten entwickeln. Andere Betriebe unterstützen. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.1",
@@ -2993,7 +3153,8 @@
         "4": [
           "Gefährdungsermittlung als kontinuierlichen Prozess perfektionieren. Präventive Ansätze entwickeln. Mitarbeitende als Gefahrenmelder aktivieren. Branchenführer in Prävention werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.2",
@@ -3012,7 +3173,8 @@
         "4": [
           "Ganzheitliche Gefährdungsbetrachtung als Standard etablieren. Proaktiv neue Bereiche identifizieren. Lieferkette einbeziehen. Best Practice entwickeln. Massstäbe setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.3",
@@ -3031,7 +3193,8 @@
         "4": [
           "Dynamische Gefährdungsermittlung perfektionieren. Echtzeitanpassungen. Predictive Hazard Identification. Selbstlernende Organisation. Innovation vorantreiben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.4",
@@ -3050,7 +3213,8 @@
         "4": [
           "Gefährdungsmanagement als Kompetenzzentrum positionieren. Expertise aufbauen. Innovativ arbeiten. Andere Bereiche beraten. Externe Anerkennung erreichen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.5",
@@ -3069,7 +3233,8 @@
         "4": [
           "Mitarbeitende zu aktiven Sicherheitspartnern entwickeln. Eigenverantwortung stärken. Innovation fördern. Beste Ideen prämieren. Sicherheitskultur leben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.2.7",
@@ -3088,7 +3253,8 @@
         "4": [
           "Gefährdungsbasierte Zielsteuerung perfektionieren. Predictive Goal Setting. Dynamische Anpassung. Zero-Accident-Vision verfolgen. Branchenbester werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.1",
@@ -3107,7 +3273,8 @@
         "4": [
           "Exzellentes Risikomanagementsystem etablieren. Dynamische Risikomodelle. Echtzeitbewertung. Präventionsinnovation. Null-Risiko-Bereiche schaffen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.2",
@@ -3126,7 +3293,8 @@
         "4": [
           "Proaktives Risikomanagement perfektionieren. Antizipative Bewertungen. Innovationsrisiken managen. Agile Methoden. Thought Leadership."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.3",
@@ -3145,7 +3313,8 @@
         "4": [
           "Living Risk Assessment perfektionieren. Real-time Updates. Machine Learning nutzen. Predictive Risk Modeling. Zukunft gestalten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.4",
@@ -3164,7 +3333,8 @@
         "4": [
           "Chief Risk Officer für Arbeitssicherheit positionieren. Thought Leadership entwickeln. Innovation treiben. Externe Vernetzung. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.5",
@@ -3183,7 +3353,8 @@
         "4": [
           "Mitarbeitende als Co-Risk-Manager etablieren. Selbstorganisierte Teams. Innovationsworkshops. Beste Ideen umsetzen. Excellence demonstrieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.6",
@@ -3202,7 +3373,8 @@
         "4": [
           "State-of-the-art Risikoinformationssystem etablieren. Integrierte Plattform. Real-time Dashboards. Predictive Analytics. Best-in-Class werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.3.7",
@@ -3221,7 +3393,8 @@
         "4": [
           "Risikogetriebene Strategieentwicklung perfektionieren. Predictive Goal Achievement. Agile Anpassung. Zero-Risk-Ziele erreichen. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.4.1",
@@ -3240,7 +3413,8 @@
         "4": [
           "Proaktive Ereigniskultur etablieren. Präventivmeldungen fördern. Positive Fehlerkultur. Real-time Reporting. Lernen maximieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.4.3",
@@ -3259,7 +3433,8 @@
         "4": [
           "Centre of Excellence für Ereignisanalyse werden. Advanced Analytics. Machine Learning für Mustererkennung. Präventionsinnovation. Null-Ereignis-Ziel."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.4.4",
@@ -3278,7 +3453,8 @@
         "4": [
           "Exzellenz in Ereignisuntersuchung erreichen. Innovative Methoden entwickeln. Systemisches Denken. Präventionsfokus. Andere schulen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.4.5",
@@ -3297,7 +3473,8 @@
         "4": [
           "Holistische Ereignisbetrachtung perfektionieren. Weak Signal Detection. Proaktive Untersuchungen. Branchenführer in Learning from Events."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "5.4.6",
@@ -3321,7 +3498,8 @@
           "6.",
           "Massnahmen"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.1",
@@ -3340,7 +3518,8 @@
         "4": [
           "Proaktive Massnahmenkultur perfektionieren. Präventive Massnahmen vor Gefahrenentstehung. Innovation in Schutzmassnahmen. Beste Praktiken entwickeln. Andere Betriebe beraten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.2",
@@ -3359,7 +3538,8 @@
         "4": [
           "Massnahmenexzellenz als Wettbewerbsvorteil etablieren. Zukunftsweisende Schutzkonzepte. Technologieführerschaft. Null-Unfall-Strategie verwirklichen. Branchenvorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.3",
@@ -3378,7 +3558,8 @@
         "4": [
           "Co-Creation von Sicherheitslösungen perfektionieren. Selbstorganisierte Sicherheitsteams. Innovationslabor für Arbeitssicherheit. Crowdsourcing nutzen. Kulturwandel vollenden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.4",
@@ -3397,7 +3578,8 @@
         "4": [
           "Agiles Massnahmenmanagement perfektionieren. Real-time Tracking. Predictive Completion. Automatisierte Workflows. KI-gestützte Optimierung. Benchmark setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.5",
@@ -3416,7 +3598,8 @@
         "4": [
           "Evidenzbasierte Massnahmenoptimierung perfektionieren. A/B-Testing für Sicherheit. Wirkungsmodelle entwickeln. Best-Practice-Datenbank. Wissenschaftliche Evaluation."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.1.6",
@@ -3435,7 +3618,8 @@
         "4": [
           "Lernende Organisation in Sicherheit perfektionieren. Predictive Goal Setting basierend auf Massnahmenerfolgen. Innovationspipeline. Thought Leadership. Exzellenz multiplizieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.2.1",
@@ -3454,7 +3638,8 @@
         "4": [
           "Ganzheitliche Sicherheits- und Gesundheitskultur etablieren. Innovative Programmformate. Präventionsführerschaft. Work-Life-Safety-Balance. Andere Unternehmen inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "6.2.2",
@@ -3478,7 +3663,8 @@
           "7.",
           "Notfallorganisation"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.1",
@@ -3497,7 +3683,8 @@
         "4": [
           "Exzellentes Notfallmanagement als Standortvorteil etablieren. Best Practice entwickeln. Nachbarbetriebe einbeziehen. Notfallverbund aufbauen. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.2",
@@ -3516,7 +3703,8 @@
         "4": [
           "Vorbildliche Rettungskette perfektionieren. Überdurchschnittliche Ersthelferquote. Regelmässige Simulationen. Beste Überlebenschancen bieten. Leben retten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.3",
@@ -3535,7 +3723,8 @@
         "4": [
           "Strategische Partnerschaft mit Blaulichtorganisationen leben. Gemeinsame Präventionsarbeit. Innovative Rettungskonzepte. Regional führend. Andere unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.4",
@@ -3554,7 +3743,8 @@
         "4": [
           "State-of-the-art Notfallalarmierung perfektionieren. Intelligente Systeme. Standortbezogene Alarmierung. Echtzeitinformation. Bestmögliche Reaktionszeiten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.5",
@@ -3573,7 +3763,8 @@
         "4": [
           "Innovative Notfallinformation perfektionieren. Augmented Reality nutzen. Sprachgesteuerte Notrufe. Universelles Design. Neue Standards setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.6",
@@ -3592,7 +3783,8 @@
         "4": [
           "Exzellente Notfallbereitschaft perfektionieren. Redundante Systeme. Predictive Maintenance. Beste Verfügbarkeitsquote. Andere Betriebe beraten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.7",
@@ -3611,7 +3803,8 @@
         "4": [
           "Vorbildliche Rund-um-die-Uhr-Sicherheit etablieren. Innovative Schutzkonzepte. Präventive Überwachung. Null Lücken. Branchenführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.8",
@@ -3630,7 +3823,8 @@
         "4": [
           "Exzellentes Gesundheitsdatenmanagement perfektionieren. Predictive Analytics. Präventionssteuerung. Benchmark-Vergleiche. Gesundheit optimieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.1.9",
@@ -3649,7 +3843,8 @@
         "4": [
           "Notfallkompetenz als Kernfähigkeit verankern. Alle sind Ersthelfer. Regelmässige Simulationen. Beste Reaktionsfähigkeit. Lebensretter-Kultur."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.1",
@@ -3668,7 +3863,8 @@
         "4": [
           "Innovative Notfallkommunikation perfektionieren. Interaktive Anleitungen. Situationsgerechte Information. Höchste Verständlichkeit. Standards setzen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.2",
@@ -3687,7 +3883,8 @@
         "4": [
           "Innovative Notfallidentifikation perfektionieren. Smarte Lösungen. Integration in PSA. Schnellste Identifikation. Leben retten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.3",
@@ -3706,7 +3903,8 @@
         "4": [
           "Exzellenz in Notfallbereitschaft perfektionieren. Überraschungsübungen. Stressresistenz trainieren. Beste Performance. Andere Betriebe schulen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.4",
@@ -3725,7 +3923,8 @@
         "4": [
           "Vorbildlichen Betriebssanitätsdienst perfektionieren. Überdurchschnittliche Ausstattung. Kontinuierliche Weiterbildung. Regionale Zusammenarbeit. Best Practice."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.5",
@@ -3744,7 +3943,8 @@
         "4": [
           "Exzellente Sanitätsversorgung perfektionieren. Höchste Ersthelferquote. Trainer-Ausbildungen. Innovationen einführen. Vorbild werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.6",
@@ -3763,7 +3963,8 @@
         "4": [
           "Vorbildliche Sanitätsinfrastruktur perfektionieren. State-of-the-art Ausrüstung. Trainingsmöglichkeiten. Regionaler Stützpunkt. Andere unterstützen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.2.7",
@@ -3782,7 +3983,8 @@
         "4": [
           "Exzellente Krisenkommunikation perfektionieren. Proaktive Information. Transparenz mit Diskretion. Vertrauen erhalten. Vorbild in Kommunikation."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.3.1",
@@ -3801,7 +4003,8 @@
         "4": [
           "Exzellenten Brandschutz perfektionieren. Über gesetzliche Anforderungen hinaus. Innovative Konzepte. Null-Brand-Strategie. Regional führend."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.3.2",
@@ -3820,7 +4023,8 @@
         "4": [
           "State-of-the-art Brandfrüherkennung perfektionieren. Intelligente Systeme. Präventive Überwachung. Schnellste Reaktion. Neue Standards."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.3.3",
@@ -3839,7 +4043,8 @@
         "4": [
           "Brandschutzkultur perfektionieren. Alle sind Brandschutzhelfer. Regelmässige Trainings. Höchste Reaktionsfähigkeit. Null Brandopfer."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.3.4",
@@ -3858,7 +4063,8 @@
         "4": [
           "Exzellenz in Brandschutzübungen perfektionieren. Komplexe Szenarien. Stresstest. Beste Evakuierungszeiten. Andere Betriebe trainieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "7.3.5",
@@ -3882,7 +4088,8 @@
           "8.",
           "Mitwirkung"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.1.1",
@@ -3901,7 +4108,8 @@
         "4": [
           "Vorbildliche Partizipationskultur perfektionieren. Mitarbeitende als Partner auf Augenhöhe. Innovative Mitwirkungsformen. Best Practice entwickeln. Andere Betriebe inspirieren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.1.2",
@@ -3920,7 +4128,8 @@
         "4": [
           "Exzellente Sozialpartnerschaft perfektionieren. Gemeinsame Sicherheitsziele. Co-Management in Prävention. Vorbildliche Zusammenarbeit. Win-Win-Kultur."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.1.3",
@@ -3939,7 +4148,8 @@
         "4": [
           "Transparenzkultur perfektionieren. Echtzeitinformation. Alle Mitarbeitenden erreichen. Verständnis sicherstellen. Informationsexzellenz leben."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.1.4",
@@ -3958,7 +4168,8 @@
         "4": [
           "Sicherheits-Co-Creation perfektionieren. Mitarbeitende treiben Sicherheit. Bottom-up Innovation. Höchste Identifikation. Null Unfälle durch Partizipation."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.1.5",
@@ -3977,7 +4188,8 @@
         "4": [
           "Vorbildliche Sozialpartnerschaft perfektionieren. Strategische Allianz für Sicherheit. Gemeinsame Vision. Beste Arbeitsbedingungen. Andere Betriebe beraten."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.1",
@@ -3996,7 +4208,8 @@
         "4": [
           "Innovationskultur perfektionieren. Alle sind Innovatoren. Kontinuierlicher Ideenfluss. Beste Umsetzungsrate. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.2",
@@ -4015,7 +4228,8 @@
         "4": [
           "Sicherheitsinnovationskultur perfektionieren. Alle denken Sicherheit weiter. Disruptive Ideen fördern. Patente anmelden. Branchenführer werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.3",
@@ -4034,7 +4248,8 @@
         "4": [
           "Höchste Vorschlagsquote erreichen. Alle Mitarbeitende beteiligt. Beste Ideen pro Kopf. Innovationsmotor. Andere Betriebe übertreffen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.4",
@@ -4053,7 +4268,8 @@
         "4": [
           "Sicherheitsinnovation als DNA verankern. Höchste Ideendichte. Revolutionäre Konzepte. Null-Unfall durch Innovation. Vorreiter sein."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.5",
@@ -4072,7 +4288,8 @@
         "4": [
           "Innovationsbelohnung perfektionieren. Gewinnbeteiligung an Einsparungen. Innovatoren-Status. Beste Konditionen. Start-up-Mentalität."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.6",
@@ -4091,7 +4308,8 @@
         "4": [
           "Intrinsische Sicherheitsmotivation perfektionieren. Anreize überflüssig machen. Sicherheit als Selbstverständlichkeit. Höchste Eigenverantwortung. Kulturexzellenz."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "8.2.7",
@@ -4115,7 +4333,8 @@
           "9.",
           "Gesundheitsschutz"
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.1",
@@ -4134,7 +4353,8 @@
         "4": [
           "Selbstbestimmte Arbeitskultur perfektionieren. Maximale Flexibilität. Vertrauensarbeitszeit. Höchste Produktivität. Vorbild für moderne Arbeitsgestaltung."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.2",
@@ -4153,7 +4373,8 @@
         "4": [
           "Resiliente Arbeitssysteme perfektionieren. Menschengerechte Prozesse. Null Stress durch Zwang. Gesundheit als Priorität."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.3",
@@ -4172,7 +4393,8 @@
         "4": [
           "Exzellente Verständigungskultur perfektionieren. Nahtlose Kommunikation. Alle verstehen sich. Null Fehler durch Kommunikation. Best Practice."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.4",
@@ -4191,7 +4413,8 @@
         "4": [
           "Kristallklare Organisationsstruktur perfektionieren. Selbsterklärende Zuständigkeiten. Agile Anpassung. Null Konflikte. Organisationsexzellenz."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.5",
@@ -4210,7 +4433,8 @@
         "4": [
           "Fehlerfreie Arbeitsabläufe perfektionieren. Intelligente Systeme. Automatische Fehlervermeidung. Höchste Prozesssicherheit. Benchmark werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.6",
@@ -4229,7 +4453,8 @@
         "4": [
           "Stimulierende Arbeitsumgebung perfektionieren. Keine Monotonie mehr. Alle Arbeiten bereichernd. Höchste Motivation. Attraktivster Arbeitgeber."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.1.7",
@@ -4248,7 +4473,8 @@
         "4": [
           "Arbeitsplatz-Revolution vollenden. Alle Tätigkeiten sinnstiftend. Modernste Konzepte. Null Monotonie. Zukunft der Arbeit."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.1",
@@ -4267,7 +4493,8 @@
         "4": [
           "Gesundheitsförderliche Arbeitsplätze perfektionieren. Null Beschwerden. Vitale Belegschaft. Gesundheit als Erfolgsfaktor."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.2",
@@ -4286,7 +4513,8 @@
         "4": [
           "Optimale Belastungsbalance perfektionieren. Individualisierte Arbeitsplätze. Höchste Ergonomie. Null einseitige Belastungen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.3",
@@ -4305,7 +4533,8 @@
         "4": [
           "Stressfreie Hochleistung perfektionieren. Flow-Zustände fördern. Optimale Herausforderung. Null Überforderung. Excellence."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.4",
@@ -4324,7 +4553,8 @@
         "4": [
           "Begeisterungskultur perfektionieren. Höchste Zufriedenheit. Positive Energie. Beste Stimmung. Traumarbeitgeber."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.5",
@@ -4343,7 +4573,8 @@
         "4": [
           "Harmonische Zusammenarbeit perfektionieren. Konflikte als Chance. Höchster Teamgeist. Null destruktive Konflikte."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.2.6",
@@ -4362,7 +4593,8 @@
         "4": [
           "Vorbildliche Konfliktkultur perfektionieren. Präventive Systeme. Konstruktive Lösungen. Konfliktresilienz. Best Practice."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.3.1",
@@ -4381,7 +4613,8 @@
         "4": [
           "Optimale Arbeitsumgebung perfektionieren. Minimale Belastungen. Innovative Lösungen. Gesündeste Arbeitsplätze. Branchenführer."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.4.1",
@@ -4400,7 +4633,8 @@
         "4": [
           "Psychisch gesunde Organisation perfektionieren. Positive Psychologie. Höchstes Wohlbefinden. Null psychische Gefährdungen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "9.5.1",
@@ -4417,15 +4651,37 @@
           "Professionelles Arbeitszeitmanagement implementieren. Moderne Modelle. Work-Life-Balance. Digitale Erfassung. Faire Regelungen."
         ],
         "4": [
-          "Innovative Arbeitszeitkultur perfektionieren. Maximale Flexibilität. Individuelle Lösungen. Gesundheitsfördernd. Attraktivster Arbeitgeber.",
-          "9.5.2-7.",
-          "Es gibt keine flexiblen Arbeitszeitmodelle (Gleitzeit, andere Modelle) oder gesundheitskritische Regelungen (Wochenend-, Schichtarbeit).",
-          "Flexibilisierungsmöglichkeiten prüfen. Mitarbeiterwünsche erfragen. Erste Tests durchführen. Schichtpläne optimieren. Gesundheit priorisieren.",
-          "Verschiedene Arbeitszeitmodelle systematisch evaluieren. Pilotprojekte. Gesundheitsverträglichkeit sichern. Faire Kompensation.",
-          "Moderne Arbeitszeitmodelle professionell implementieren. Alle Bedürfnisse ausbalancieren. Digitale Planung. Gesundheitsschutz integriert.",
-          "Zukunftsweisende Arbeitszeitgestaltung perfektionieren. Individualisierte Modelle. Chronobiologie beachten. Höchste Zufriedenheit."
+          "Innovative Arbeitszeitkultur perfektionieren. Maximale Flexibilität. Individuelle Lösungen. Gesundheitsfördernd. Attraktivster Arbeitgeber."
         ]
-      }
+      },
+      "children": [
+        {
+          "idRange": "9.5.2-7",
+          "ids": [
+            "9.5.2",
+            "9.5.3",
+            "9.5.4",
+            "9.5.5",
+            "9.5.6",
+            "9.5.7"
+          ],
+          "finding": "Es gibt keine flexiblen Arbeitszeitmodelle (Gleitzeit, andere Modelle) oder gesundheitskritische Regelungen (Wochenend-, Schichtarbeit).",
+          "levels": {
+            "1": [
+              "Flexibilisierungsmöglichkeiten prüfen. Mitarbeiterwünsche erfragen. Erste Tests durchführen. Schichtpläne optimieren. Gesundheit priorisieren."
+            ],
+            "2": [
+              "Verschiedene Arbeitszeitmodelle systematisch evaluieren. Pilotprojekte. Gesundheitsverträglichkeit sichern. Faire Kompensation."
+            ],
+            "3": [
+              "Moderne Arbeitszeitmodelle professionell implementieren. Alle Bedürfnisse ausbalancieren. Digitale Planung. Gesundheitsschutz integriert."
+            ],
+            "4": [
+              "Zukunftsweisende Arbeitszeitgestaltung perfektionieren. Individualisierte Modelle. Chronobiologie beachten. Höchste Zufriedenheit."
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "9.9.1",
@@ -4442,21 +4698,59 @@
           "Sicherheitskultur professionell transformieren. Neue Werte verankern. Verhaltensänderung. Nachhaltiger Wandel."
         ],
         "4": [
-          "Vorbildliche Sicherheitskultur perfektionieren. Intrinsische Motivation. Höchste Standards. Null Risikoverhalten.",
-          "9.9.2-7.",
-          "Der Umgang mit Suchtmitteln ist nicht geregelt oder Suchtprävention fehlt.",
-          "Klare Regeln zu Alkohol/Drogen einführen. Nulltoleranz bei Sicherheitsrisiken. Erste Präventionsschritte. Führungskräfte instruieren.",
-          "Umfassendes Suchtkonzept entwickeln. Präventionsprogramm. Früherkennung. Interventionskette. Externe Partner.",
-          "Professionelles Suchtmanagement implementieren. Präventionskultur. Beratungsangebote. Wiedereingliederung.",
-          "Suchtfreie Organisation perfektionieren. Gesundheitskultur. Präventionsexzellenz. Null Suchtprobleme.",
-          "9.9.8-9.",
-          "Besondere Personengruppen werden nicht geschützt oder Massnahmen gegen übertragbare Krankheiten fehlen.",
-          "Schutzbedürftige identifizieren. Jugend-/Mutterschutz beachten. Pandemiegrundschutz einführen. Hygieneregeln etablieren.",
-          "Systematischen Schutz vulnerabler Gruppen aufbauen. Pandemieplan erstellen. Präventionsmassnahmen. Regelmässige Updates.",
-          "Umfassenden Gesundheitsschutz implementieren. Alle Gruppen berücksichtigen. Notfallpläne. Präventionskultur.",
-          "Vorbildlichen Gesundheitsschutz perfektionieren. Proaktive Massnahmen. Höchste Standards. Null Gefährdungen."
+          "Vorbildliche Sicherheitskultur perfektionieren. Intrinsische Motivation. Höchste Standards. Null Risikoverhalten."
         ]
-      }
+      },
+      "children": [
+        {
+          "idRange": "9.9.2-7",
+          "ids": [
+            "9.9.2",
+            "9.9.3",
+            "9.9.4",
+            "9.9.5",
+            "9.9.6",
+            "9.9.7"
+          ],
+          "finding": "Der Umgang mit Suchtmitteln ist nicht geregelt oder Suchtprävention fehlt.",
+          "levels": {
+            "1": [
+              "Klare Regeln zu Alkohol/Drogen einführen. Nulltoleranz bei Sicherheitsrisiken. Erste Präventionsschritte. Führungskräfte instruieren."
+            ],
+            "2": [
+              "Umfassendes Suchtkonzept entwickeln. Präventionsprogramm. Früherkennung. Interventionskette. Externe Partner."
+            ],
+            "3": [
+              "Professionelles Suchtmanagement implementieren. Präventionskultur. Beratungsangebote. Wiedereingliederung."
+            ],
+            "4": [
+              "Suchtfreie Organisation perfektionieren. Gesundheitskultur. Präventionsexzellenz. Null Suchtprobleme."
+            ]
+          }
+        },
+        {
+          "idRange": "9.9.8-9",
+          "ids": [
+            "9.9.8",
+            "9.9.9"
+          ],
+          "finding": "Besondere Personengruppen werden nicht geschützt oder Massnahmen gegen übertragbare Krankheiten fehlen.",
+          "levels": {
+            "1": [
+              "Schutzbedürftige identifizieren. Jugend-/Mutterschutz beachten. Pandemiegrundschutz einführen. Hygieneregeln etablieren."
+            ],
+            "2": [
+              "Systematischen Schutz vulnerabler Gruppen aufbauen. Pandemieplan erstellen. Präventionsmassnahmen. Regelmässige Updates."
+            ],
+            "3": [
+              "Umfassenden Gesundheitsschutz implementieren. Alle Gruppen berücksichtigen. Notfallpläne. Präventionskultur."
+            ],
+            "4": [
+              "Vorbildlichen Gesundheitsschutz perfektionieren. Proaktive Massnahmen. Höchste Standards. Null Gefährdungen."
+            ]
+          }
+        }
+      ]
     },
     {
       "id": "10.1.1",
@@ -4475,7 +4769,8 @@
         "4": [
           "Exzellentes Kontrollsystem perfektionieren. Präventive Überwachung. Echtzeitmonitoring. Predictive Safety. Null Überraschungen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.2",
@@ -4494,7 +4789,8 @@
         "4": [
           "Audit-Excellence erreichen. Cross-Audits. Externe Benchmarks. Beste Erkennungsrate. Präventionsmotor werden."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.3",
@@ -4513,7 +4809,8 @@
         "4": [
           "Dynamische Auditsteuerung perfektionieren. Risikobasierte Intervalle. Real-time Anpassung. Maximale Abdeckung. Null blinde Flecken."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.4",
@@ -4532,7 +4829,8 @@
         "4": [
           "Intelligente Auditsteuerung perfektionieren. Adaptive Planung. KI-gestützte Schwerpunkte. Predictive Auditing. Innovation führen."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.5",
@@ -4551,7 +4849,8 @@
         "4": [
           "Vorgesetzte zu Audit-Experten entwickeln. Lead-Auditor-Qualifikation. Trainer ausbilden. Beste Auditqualität. Multiplikatoren."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.6",
@@ -4570,7 +4869,8 @@
         "4": [
           "Innovative Auditansätze perfektionieren. Selbstlernende Systeme. Predictive Risk Focus. Branchenführende Methodik. Best Practice."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.7",
@@ -4589,7 +4889,8 @@
         "4": [
           "State-of-the-art Audit-Technologie perfektionieren. KI-Unterstützung. Augmented Reality. Sprachsteuerung. Technologieführer."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.8",
@@ -4608,7 +4909,8 @@
         "4": [
           "Intelligente Dokumentation perfektionieren. Blockchain-Verifizierung. Automatisierte Auswertungen. Real-time Dashboards. Null Informationsverlust."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.1.9",
@@ -4627,7 +4929,8 @@
         "4": [
           "Selbstlernendes Sicherheitssystem perfektionieren. Audit-getriebene Evolution. Höchste Systemreife. Zero-Defect-Ansatz."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.2.1",
@@ -4646,7 +4949,8 @@
         "4": [
           "Business Intelligence für Sicherheit perfektionieren. Real-time Analytics. Machine Learning. Präventive Steuerung. Null-Ereignis-Ziel."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.2.2",
@@ -4665,7 +4969,8 @@
         "4": [
           "Intelligentes Ereignis-Monitoring perfektionieren. Echtzeitdaten aller Ebenen. Predictive Insights. Proaktive Steuerung. Best-in-Class."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.2.3",
@@ -4684,7 +4989,8 @@
         "4": [
           "Datengetriebene Sicherheitsführung perfektionieren. Predictive Management. AI-Empfehlungen. Höchste Entscheidungsqualität."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.3.1",
@@ -4703,7 +5009,8 @@
         "4": [
           "Strategisches Retention Management perfektionieren. Predictive Turnover. Präventive Massnahmen. Niedrigste Fluktuation. Employer of Choice."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.3.2",
@@ -4722,7 +5029,8 @@
         "4": [
           "Lernende Organisation durch Exit-Insights perfektionieren. 360-Grad-Analysen. Präventionsstrategien. Null vermeidbare Austritte."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.3.3",
@@ -4741,7 +5049,8 @@
         "4": [
           "Proaktive Mitarbeiterbindung perfektionieren. Null vermeidbare Fluktuation. Höchste Zufriedenheit. Magnetische Arbeitgebermarke."
         ]
-      }
+      },
+      "children": []
     },
     {
       "id": "10.3.4",
@@ -4765,7 +5074,8 @@
           "11.",
           "Absenzenmanagement"
         ]
-      }
+      },
+      "children": []
     }
   ]
 }

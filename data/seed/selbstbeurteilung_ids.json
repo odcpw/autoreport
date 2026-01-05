@@ -1,0 +1,4736 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sichereheit d.V14.xlsx",
+    "importedAt": "2026-01-05T11:22:23+00:00"
+  },
+  "items": [
+    {
+      "id": "1.1.1",
+      "groupId": "1.1.1",
+      "collapsedId": "1.1.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Verfügt das Unternehmen über ein Unternehmensleitbild?"
+    },
+    {
+      "id": "1.1.2",
+      "groupId": "1.1.2",
+      "collapsedId": "1.1.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheit der Beschäftigten Bestandteil des Unternehmensleitbildes?"
+    },
+    {
+      "id": "1.1.3",
+      "groupId": "1.1.3",
+      "collapsedId": "1.1.3",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Sind alle Mitarbeiter über den Sinn und die praktischen Konsequenzen des Unternehmensleitbildes informiert, resp. sind die Mitarbeiter „im Bild“?"
+    },
+    {
+      "id": "1.1.4",
+      "groupId": "1.1.4",
+      "collapsedId": "1.1.4",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Stimmt das betriebliche Geschehen mit dem Unternehmensleitbild überein?"
+    },
+    {
+      "id": "1.1.5",
+      "groupId": "1.1.5",
+      "collapsedId": "1.1.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Richtet sich das Führungsverhalten der Vorgesetzten in Ihrem Unternehmen nach bestimmten Führungsgrundsätzen oder Führungsrichtlinien? Wenn ja, nach welchen?"
+    },
+    {
+      "id": "1.1.6",
+      "groupId": "1.1.6",
+      "collapsedId": "1.1.6",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheitsschutz ein ausdrücklicher Bestandteil der Führungsgrundsätze oder Führungsrichtlinien?"
+    },
+    {
+      "id": "1.1.7",
+      "groupId": "1.1.7",
+      "collapsedId": "1.1.7",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Hat das Unternehmen die Sicherheitscharta der Suva unterzeichnet?"
+    },
+    {
+      "id": "1.1.8.a",
+      "groupId": "1.1.8",
+      "collapsedId": "1.1.8",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Ist eines der Folgenden Managementsysteme/Zertifizierungen im Betrieb eingefürt? \nISO 9001, ISO 14001, ISO 45001, OHSAS18001\nFalls ja, welches?"
+    },
+    {
+      "id": "1.1.8.b",
+      "groupId": "1.1.8",
+      "collapsedId": "1.1.8",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Sind im Betrieb andere Managementsysteme/Zertifizierungen eingeführt? Falls ja, welche?"
+    },
+    {
+      "id": "1.2.1",
+      "groupId": "1.2.1",
+      "collapsedId": "1.2.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Werden Sicherheit und Gesundheit von der obersten Geschäftsleitung vorgelebt und mit Forderungen, Entscheidungen, Regelungen und Anweisungen massgebend gefördert?"
+    },
+    {
+      "id": "1.2.2",
+      "groupId": "1.2.2",
+      "collapsedId": "1.2.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Hat in Ihrer Unternehmen Arbeitssicherheit den gleichen Stellenwert wie Qualität und Produktivität?"
+    },
+    {
+      "id": "1.2.3",
+      "groupId": "1.2.3",
+      "collapsedId": "1.2.3",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Spricht die Geschäftsleitung bei Betriebsrundgängen unsichere Zustände und Handlungen an?"
+    },
+    {
+      "id": "1.2.4",
+      "groupId": "1.2.4",
+      "collapsedId": "1.2.4",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Besteht für Arbeitssicherheit und Gesundheitsschutz eine Budgetposition?"
+    },
+    {
+      "id": "1.2.5.a",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Unterstützt die Geschäftsleitung die folgenden Aktivitäten im Betrieb:\nRisikobeurteilungen?"
+    },
+    {
+      "id": "1.2.5.b",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Audits und Kontrollen?"
+    },
+    {
+      "id": "1.2.5.c",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Unfallabklärungen?"
+    },
+    {
+      "id": "1.2.5.d",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Mitarbeiterschulungen am Arbeitsplatz?"
+    },
+    {
+      "id": "1.2.5.e",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Umsetzung von Massnahmen?"
+    },
+    {
+      "id": "1.2.5.f",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Kampagnen zur Arbeitssicherheit?"
+    },
+    {
+      "id": "1.2.5.g",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Kampagnen zur Freizeitsicherheit?"
+    },
+    {
+      "id": "1.2.5.h",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Absenzenmanagement?"
+    },
+    {
+      "id": "1.2.5.i",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Weitere/andere? Falls ja, welche?"
+    },
+    {
+      "id": "1.3.1.a",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Wird Sicherheit und Gesundheit von den Linienvorgesetzten gefördert durch:\nVorleben der Sicherheitsvorschriften (z.B. Tragen von persönlicher Schutzausrüstung (PSA))?"
+    },
+    {
+      "id": "1.3.1.b",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Durchsetzen von Sicherheitsvorschriften?"
+    },
+    {
+      "id": "1.3.1.c",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Weitere/andere Verhaltensweisen und Anreize? Falls ja, welche?"
+    },
+    {
+      "id": "1.3.2.a",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Engagieren sich die Linienvorgesetzten für Sicherheit und Gesundheit der Beschäftigten, indem sie die folgenden Aktivitäten durchführen:\nRisikobeurteilungen?"
+    },
+    {
+      "id": "1.3.2.b",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Audits/Kontrollen?"
+    },
+    {
+      "id": "1.3.2.c",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Unfallabklärungen?"
+    },
+    {
+      "id": "1.3.2.d",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Mitarbeiterschulungen am Arbeitsplatz?"
+    },
+    {
+      "id": "1.3.2.e",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Kampagnen für Arbeitssicherheit?"
+    },
+    {
+      "id": "1.3.2.f",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Kampagnen für Freizeitsicherheit?"
+    },
+    {
+      "id": "1.3.2.g",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Absenzenmanagement?"
+    },
+    {
+      "id": "1.3.2.h",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Weitere/andere? Falls ja, welche?"
+    },
+    {
+      "id": "1.3.3",
+      "groupId": "1.3.3",
+      "collapsedId": "1.3.3",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Kennen die Linienvorgesetzten Pflichten und Rechte, die sich aus gesetzlichen Anforderungen bezüglich Sicherheit und Gesundheit ergeben?"
+    },
+    {
+      "id": "1.4.1.a",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Bestehen messbare Ziele in Bezug auf die Begrenzung der Häufigkeiten* der folgenden Ereignisse:\n*Häufigkeit: Anzahl Ereignisse im Verhältnis zur produktiven Arbeitszeit oder Anzahl Ereignisse im Verhältnis zur Anzahl der Vollbeschäftigten während einer bestimmten Periode.\nBerufsunfälle/Berufskrankheiten?"
+    },
+    {
+      "id": "1.4.1.b",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Nichtberufsunfälle?"
+    },
+    {
+      "id": "1.4.1.c",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Krankheiten?"
+    },
+    {
+      "id": "1.4.1.d",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Sachschäden?"
+    },
+    {
+      "id": "1.4.1.e",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Störungen?"
+    },
+    {
+      "id": "1.4.1.f",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Andere Ereignisse? Falls ja, welche Ereignisse?"
+    },
+    {
+      "id": "1.4.2.a",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Bestehen messbare Ziele in Bezug auf die Begrenzung von Ausfallzeiten die durch die folgenden Ereignisse  verursacht werden:\nBerufsunfälle/Berufskrankheiten"
+    },
+    {
+      "id": "1.4.2.b",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Nichtberufsunfälle?"
+    },
+    {
+      "id": "1.4.2.c",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Krankheiten?"
+    },
+    {
+      "id": "1.4.2.d",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Andere Ereignisse? Falls ja, welche Ereignisse?"
+    },
+    {
+      "id": "1.4.3",
+      "groupId": "1.4.3",
+      "collapsedId": "1.4.3",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Beziehen sich Ihre Sicherheits- und Gesundheitsziele auf das ganze Unternehmen?"
+    },
+    {
+      "id": "1.4.4",
+      "groupId": "1.4.4",
+      "collapsedId": "1.4.4",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Beziehen sich Ihre Sicherheits- und Gesundheitsziele auf einzelne Organisationseinheiten?"
+    },
+    {
+      "id": "1.4.5",
+      "groupId": "1.4.5",
+      "collapsedId": "1.4.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über Vergleichsmöglichkeiten mit den Zahlen Ihrer Branche oder vergleichbarer Unternehmen? Wenn ja, welche?"
+    },
+    {
+      "id": "1.5.1",
+      "groupId": "1.5.1",
+      "collapsedId": "1.5.1",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Gibt es einen definierten Prozess für die Festlegung der Sicherheitsziele?"
+    },
+    {
+      "id": "1.5.2",
+      "groupId": "1.5.2",
+      "collapsedId": "1.5.2",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Enthalten die Ziele auch die Verpflichtung zur kontinuierlichen Verbesserung des Sicherheitssystems?"
+    },
+    {
+      "id": "1.5.3",
+      "groupId": "1.5.3",
+      "collapsedId": "1.5.3",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Werden Beschäftigte oder deren Vertretungen in den Zielbildungsprozess für die Sicherheitsziele einbezogen?"
+    },
+    {
+      "id": "1.5.4",
+      "groupId": "1.5.4",
+      "collapsedId": "1.5.4",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Werden Zielabweichungen für das ganze Unternehmen durch eine zweckmässige Ereignisüberwachung bzw. ein Controlling frühzeitig festgestellt?"
+    },
+    {
+      "id": "1.5.5",
+      "groupId": "1.5.5",
+      "collapsedId": "1.5.5",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Werden Zielabweichungen für einzelne Organisationseinheiten durch eine zweckmässige Ereignisüberwachung bzw. ein Controlling frühzeitig festgestellt?"
+    },
+    {
+      "id": "1.5.6",
+      "groupId": "1.5.6",
+      "collapsedId": "1.5.6",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Werden beim Nichterreichen von Sicherheitszielen entsprechende Konsequenzen gezogen und die notwendigen Korrekturmassnahmen eingeleitet?                                                                                  Wenn ja, welche Konsequenzen?"
+    },
+    {
+      "id": "1.5.7",
+      "groupId": "1.5.7",
+      "collapsedId": "1.5.7",
+      "chapter": 1,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über eine Sicherheitsstrategie um Ihre Sicherheitsziele zu erreichen (z.B. mittelfristig ausgelegte Massnahmenpakete, zukünftige Trends, Anforderungen und Erwartungen interessierter Parteien)? Wenn ja, welche?"
+    },
+    {
+      "id": "10.1.1",
+      "groupId": "10.1.1",
+      "collapsedId": "10.1.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Besteht in Ihrem Unternehmen ein Kontroll- oder Überwachungskonzept bezüglich Sicherheit und Gesundheit der Beschäftigten?"
+    },
+    {
+      "id": "10.1.2",
+      "groupId": "10.1.2",
+      "collapsedId": "10.1.2",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen regelmässig Sicherheitsaudits durchgeführt? Wenn ja, durch wen?"
+    },
+    {
+      "id": "10.1.3.a",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Wie häufig werden regelmässige Sicherheitsaudits durchgeführt:\nWöchentlich?"
+    },
+    {
+      "id": "10.1.3.b",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Monatlich?"
+    },
+    {
+      "id": "10.1.3.c",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Halbjährlich?"
+    },
+    {
+      "id": "10.1.3.d",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Jährlich?"
+    },
+    {
+      "id": "10.1.3.e",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "In anderen Intervallen? Wenn ja, in welchen Intervallen?"
+    },
+    {
+      "id": "10.1.4",
+      "groupId": "10.1.4",
+      "collapsedId": "10.1.4",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden Inhalt und Ablauf der Sicherheitsaudits vor der Durchführung vorbereitet und geplant?"
+    },
+    {
+      "id": "10.1.5",
+      "groupId": "10.1.5",
+      "collapsedId": "10.1.5",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Sind die Vorgesetzten in der Durchführung und Auswertung von Sicherheitsaudits ausgebildet?"
+    },
+    {
+      "id": "10.1.6",
+      "groupId": "10.1.6",
+      "collapsedId": "10.1.6",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Verwenden Sie Auditverfahren, die speziell an die Risikostruktur und die betrieblichen Verhältnisse Ihres Unternehmens angepasst sind?"
+    },
+    {
+      "id": "10.1.7",
+      "groupId": "10.1.7",
+      "collapsedId": "10.1.7",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Verwenden Sie bei der Durchführung von Sicherheitsaudits bestimmte Hilfsmittel wie z.B. Stichwortlisten, Checklisten, Formulare?"
+    },
+    {
+      "id": "10.1.8",
+      "groupId": "10.1.8",
+      "collapsedId": "10.1.8",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden Feststellungen und die eingeleiteten Massnahmen schriftlich dokumentiert?"
+    },
+    {
+      "id": "10.1.9",
+      "groupId": "10.1.9",
+      "collapsedId": "10.1.9",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden die Feststellungen in das betriebliche Sicherheitssystem einbezogen?"
+    },
+    {
+      "id": "10.2.1.a",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen Statistiken geführt über:\nBerufsunfälle und Berufskrankheiten?"
+    },
+    {
+      "id": "10.2.1.b",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Nichtberufsunfälle?"
+    },
+    {
+      "id": "10.2.1.c",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Krankheit?"
+    },
+    {
+      "id": "10.2.1.d",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Sachschäden?"
+    },
+    {
+      "id": "10.2.1.e",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Betriebsstörungen?"
+    },
+    {
+      "id": "10.2.1.f",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Absenzentage?"
+    },
+    {
+      "id": "10.2.1.g",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Beinaheunfälle?"
+    },
+    {
+      "id": "10.2.2.a",
+      "groupId": "10.2.2",
+      "collapsedId": "10.2.2",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Bestehen Ereignisstatistiken für: \nDas gesamte Unternehmen? Wenn ja, von welcher Stelle bzw. Person wird die zentrale Ereignisstatistik geführt und behandelt?"
+    },
+    {
+      "id": "10.2.2.b",
+      "groupId": "10.2.2",
+      "collapsedId": "10.2.2",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Organisationseinheiten (z.B. Bereiche, Abteilungen)?"
+    },
+    {
+      "id": "10.2.3",
+      "groupId": "10.2.3",
+      "collapsedId": "10.2.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Wird die Ereignisstatistik als Führungsmittel verwendet?"
+    },
+    {
+      "id": "10.3.1",
+      "groupId": "10.3.1",
+      "collapsedId": "10.3.1",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Wird die jährliche Fluktuationsrate* in Ihrem Unternehmen statistisch erfasst und ausgewertet? Wenn ja, wie hoch ist die aktuelle Fluktuationsrate in Ihrem Unternehmen?\n*Fluktuationsrate: Die Fluktuationsrate benennt die Beziehung zwischen den Personalabgängen und der Anzahl Beschäftigten während einem Jahr; Fluktuationsrate = Austritte / Beschäftigte x 100."
+    },
+    {
+      "id": "10.3.2",
+      "groupId": "10.3.2",
+      "collapsedId": "10.3.2",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden die Austrittsgründe ermittelt und ausgewertet?"
+    },
+    {
+      "id": "10.3.3",
+      "groupId": "10.3.3",
+      "collapsedId": "10.3.3",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Werden bei bestimmten Austrittsgründen konkrete Konsequenzen abgeleitet und Massnahmen getroffen?"
+    },
+    {
+      "id": "10.3.4",
+      "groupId": "10.3.4",
+      "collapsedId": "10.3.4",
+      "chapter": 10,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über Vergleichsmöglichkeiten mit der Fluktuationsrate Ihrer Branche oder vergleichbarer Unternehmenen der Region?"
+    },
+    {
+      "id": "11.1",
+      "groupId": "11.1",
+      "collapsedId": "11.1",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Gibt es eine ausdrückliche Willenserklärung der Geschäftsleitung, dass sie ein Absenzenmanagement will?"
+    },
+    {
+      "id": "11.10",
+      "groupId": "11.10",
+      "collapsedId": "11.10",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Erkundigen sich die direkten Vorgesetzen bei ihren verunfallten und erkrankten Mitarbeitenden während derer Abwesenheit über das  gesundheitliche Befinden und bieten Unterstützung an?"
+    },
+    {
+      "id": "11.11",
+      "groupId": "11.11",
+      "collapsedId": "11.11",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Wird die Teilzeitbeschäftigung oder die vorübergehende Beschäftigung mit alternativen Tätigkeiten (Schonarbeitsplatz) von Verunfallten und Erkrankten durch die Vorgesetzen systematisch geprüft?"
+    },
+    {
+      "id": "11.12",
+      "groupId": "11.12",
+      "collapsedId": "11.12",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die behandelnden Ärzte über Möglichkeiten der Teilzeitarbeit oder alternativer Beschäftigungsmöglichkeiten informiert?"
+    },
+    {
+      "id": "11.13.a",
+      "groupId": "11.13",
+      "collapsedId": "11.13",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Vorgesetzten bei ihren Betreuungs- und Integrationsbemühungen unterstützt:\ndurch die Personalabteilung?"
+    },
+    {
+      "id": "11.13.b",
+      "groupId": "11.13",
+      "collapsedId": "11.13",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "durch andere Stellen? Wenn ja, welche?"
+    },
+    {
+      "id": "11.2.a",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Daten zu den Unfällen und Krankheiten und deren Ausfalltagen:\nerfasst?"
+    },
+    {
+      "id": "11.2.b",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "analysiert?"
+    },
+    {
+      "id": "11.2.c",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "ausgewertet?"
+    },
+    {
+      "id": "11.2.d",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "kommuniziert ?"
+    },
+    {
+      "id": "11.3",
+      "groupId": "11.3",
+      "collapsedId": "11.3",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Kennzahlen jährlich bewertet und Präventions-Ziele definiert?"
+    },
+    {
+      "id": "11.4",
+      "groupId": "11.4",
+      "collapsedId": "11.4",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Ist ein Vorgehen und sind Verantwortlichkeiten (und Aufgaben) festgelegt, wie Mitarbeitende bei kurzen und längeren ungeplanten Absenzen betreut und wieder in den Arbeitsprozess integriert werden sollen?"
+    },
+    {
+      "id": "11.5",
+      "groupId": "11.5",
+      "collapsedId": "11.5",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Führungskräfte (und die weiteren involvierten Stellen) ins Absenzenmangement eingeführt und für ihre Betreuungs- und Administrationsaufgaben ausgebildet?"
+    },
+    {
+      "id": "11.6",
+      "groupId": "11.6",
+      "collapsedId": "11.6",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Mitarbeitenden periodisch über die Ziele des Absenzenmanagements und das richtige Verhalten im Absenzfall informiert?"
+    },
+    {
+      "id": "11.7.a",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden die Rückkehrgespräche geführt:\ndurch die Vorgesetzten?"
+    },
+    {
+      "id": "11.7.b",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "nach jeder ungeplanten längeren Absenz?"
+    },
+    {
+      "id": "11.7.c",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "nach jeder ungeplanten Absenz?"
+    },
+    {
+      "id": "11.8",
+      "groupId": "11.8",
+      "collapsedId": "11.8",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Werden aus den Resultaten der Rückkehrgespräche Präventionsmassnahmen abgeleitet?"
+    },
+    {
+      "id": "11.9",
+      "groupId": "11.9",
+      "collapsedId": "11.9",
+      "chapter": 11,
+      "chapterLabel": "",
+      "question": "Ist ein Vorgehen bei häufigeren Absenzen definiert?"
+    },
+    {
+      "id": "12.1",
+      "groupId": "12.1",
+      "collapsedId": "12.1",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Gibt es eine explizite Willenserklärung der Geschäftsleitung, die Mitarbeitenden in sicherem und gesundem Freizeitverhalten zu unterstützen?"
+    },
+    {
+      "id": "12.10",
+      "groupId": "12.10",
+      "collapsedId": "12.10",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Hat es im Unternehmen Mitarbeitende mit gutem Wissen und Können im Sport (bspw. Fussball-Trainer, Laufgruppen-Leiter, Fitness-Instruktoren usw.) ?"
+    },
+    {
+      "id": "12.11.a",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Wurden im Unternehmen bereits Projekte/Massnahmen zur Förderung der Freizeitsicherheit durchgeführt? Wenn ja, welche Schwerpunktthemen wurden behandelt?"
+    },
+    {
+      "id": "12.11.b",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Stolpern und Stürzen?"
+    },
+    {
+      "id": "12.11.c",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Ballsport?"
+    },
+    {
+      "id": "12.11.d",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Wintersport?"
+    },
+    {
+      "id": "12.11.e",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Haus und Garten?"
+    },
+    {
+      "id": "12.11.f",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "weitere Schwerpunktthemen?"
+    },
+    {
+      "id": "12.12",
+      "groupId": "12.12",
+      "collapsedId": "12.12",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Werden mit den Massnahmen/ Projekten zur Freizeitsicherheit konkrete Ziele verfolgt? Wenn ja, welche?"
+    },
+    {
+      "id": "12.13",
+      "groupId": "12.13",
+      "collapsedId": "12.13",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Werden die Massnahmen/Projekte evaluiert und Konsequenzen für künftige Massnahmen/Projekte abgeleitet?"
+    },
+    {
+      "id": "12.2",
+      "groupId": "12.2",
+      "collapsedId": "12.2",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Besteht ein Budgetrahmen für Freizeitsicherheits-Projekte?"
+    },
+    {
+      "id": "12.3",
+      "groupId": "12.3",
+      "collapsedId": "12.3",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Gibt es eine(n) Verantwortliche(n) oder eine Arbeitsgruppe, die Massnahmen zur Verhütung von Freizeitunfällen plant und koordiniert?"
+    },
+    {
+      "id": "12.4",
+      "groupId": "12.4",
+      "collapsedId": "12.4",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Verfügt diese Verantwortliche bzw. Mitglieder der Arbeitsgruppe über eine Ausbildung im Bereich Freizeitunfall-Prävention (z.B. Suva- Kurse, bfu, ...)?"
+    },
+    {
+      "id": "12.5",
+      "groupId": "12.5",
+      "collapsedId": "12.5",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Werden die Mitarbeitenden regelmässig über das Unfallgeschehen NBU im Betrieb informiert (Besprechungen, Zeitschrift, Intranet, Mail, Anschlagbrett…)?"
+    },
+    {
+      "id": "12.6.a",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Werden Freizeitunfälle:\nerfasst?"
+    },
+    {
+      "id": "12.6.b",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "analysiert?"
+    },
+    {
+      "id": "12.6.c",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "ausgewertet?"
+    },
+    {
+      "id": "12.6.d",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "kommuniziert ?"
+    },
+    {
+      "id": "12.7",
+      "groupId": "12.7",
+      "collapsedId": "12.7",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Werden aus den Freizeitunfällen Handlungsschwerpunkte abgeleitet?"
+    },
+    {
+      "id": "12.8",
+      "groupId": "12.8",
+      "collapsedId": "12.8",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Gibt es Arbeitnehmer-Gruppen (jüngere MA, ältere MA, Männer, Frauen), die besonders viele Unfälle verursachen?"
+    },
+    {
+      "id": "12.9",
+      "groupId": "12.9",
+      "collapsedId": "12.9",
+      "chapter": 12,
+      "chapterLabel": "",
+      "question": "Hat das Unternehmen eigene Firmensportvereine?"
+    },
+    {
+      "id": "13.1",
+      "groupId": "13.1",
+      "collapsedId": "13.1",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Gibt es eine explizite Willenserklärung der Geschäftsleitung, das betriebliche Gesundheitsmanagement in die Unternehmenspolitik und in den Führungsgrundsätzen zu integrieren?"
+    },
+    {
+      "id": "13.2.a",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Besteht ein Konzept mit:\nZielen?"
+    },
+    {
+      "id": "13.2.b",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Vorgehens- und Zeitplan?"
+    },
+    {
+      "id": "13.2.c",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Kommunikation an Zielgruppen?"
+    },
+    {
+      "id": "13.2.d",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Budgetrahmen für BGM-Projekte?"
+    },
+    {
+      "id": "13.3",
+      "groupId": "13.3",
+      "collapsedId": "13.3",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Gibt es eine(n) Verantwortliche(n) oder eine Arbeitsgruppe, die BGM-Massnahmen plant und koordiniert?"
+    },
+    {
+      "id": "13.4",
+      "groupId": "13.4",
+      "collapsedId": "13.4",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Verfügen diese Verantwortliche bzw. einzelne Mitglieder der Arbeitsgruppe über eine Ausbildung im Bereich BGM und Pävention?"
+    },
+    {
+      "id": "13.5",
+      "groupId": "13.5",
+      "collapsedId": "13.5",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Basieren Massnahmen und Umsetzungsschwerpunkte auf einer betrieblichen Bedarfs- oder einer Bedürfnisanalyse bei den Mitarbeitenden (z.B. mittels Mitarbeiterbefragung oder durch Gesundheitszirkel)?"
+    },
+    {
+      "id": "13.6.a",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Werden die Mitarbeitenden in folgenden Themen mit Kursen, Workshops oder Angeboten in ihrer Eigenverantwortung im Gesundheitsverhalten unterstützt:\nGenügend Bewegung / Sport?"
+    },
+    {
+      "id": "13.6.b",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Ernährung / gesundes Körpergewicht?"
+    },
+    {
+      "id": "13.6.c",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Strategien gegen Stress und Burnout (Stressmanagement / Entspannungsmethoden und –möglichkeiten, Zeitmanagement, Umgang mit Veränderung?"
+    },
+    {
+      "id": "13.6.d",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Umgang mit besonderen organisatorischen Rahmenbedingungen wie Schicht-/ Nachtarbeit?"
+    },
+    {
+      "id": "13.6.e",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Work-Life Balance?"
+    },
+    {
+      "id": "13.6.f",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Schlaf und Erholung?"
+    },
+    {
+      "id": "13.6.g",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Suchtprävention?"
+    },
+    {
+      "id": "13.7.a",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Werden folgende arbeitsbezogenen Ressourcen gefördert:\nFührungsschulungen (Bedeutung/Rolle der Führungskräfte im BGM, Pflege einer Anerkennungs- und Wertschätzungskultur, Förderung der Teamzusammenarbeit, Vorgehen im Konflikt- oder Suchtfall etc.)?"
+    },
+    {
+      "id": "13.7.b",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Gesundheitsbezogene Infrastruktur wie Aufenthaltsräume, Pausenräume, Verpflegungsmöglichkeiten, Duschen, Ruheräume?"
+    },
+    {
+      "id": "13.7.c",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Gesundheitsförderliche und ergonomische Gestaltung von Arbeitsräumen und Arbeitsplätzen z.B. periodische Überprüfung und systematische Beurteilung bei Veränderungen und Neubeschaffungen?"
+    },
+    {
+      "id": "13.7.d",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Schulung zu körperschonender Haltung und Verhalten bei der Arbeit z.B. durch Schulung zu richtig heben & tragen von Lasten, Bildschirmergonomie?"
+    },
+    {
+      "id": "13.7.e",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Integration neuer Mitarbeiter/innen (z.B. durch ein systematisches Einführungskonzept, Göttisystem)?"
+    },
+    {
+      "id": "13.7.f",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Regelmässige Weiterbildung auch in Persönlichkeits- und Sozialkompetenz?"
+    },
+    {
+      "id": "13.7.g",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Förderung der guten Zusammenarbeit im Team (gemeinsame Projekte, Teamsitzungen, informelle Anlässe)?"
+    },
+    {
+      "id": "13.7.h",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Förderung der abteilungs- und hierarchieübergreifenden Zusammenarbeit und Kommunikation?"
+    },
+    {
+      "id": "13.7.i",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Angebote und Massnahmen zur Vereinbarkeit von Beruf, Familie/ Freizeit?"
+    },
+    {
+      "id": "13.7.j",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Angebot einer neutralen Ansprechstelle in Konfliktsituationen oder bei persönlichen Problemen?"
+    },
+    {
+      "id": "13.8",
+      "groupId": "13.8",
+      "collapsedId": "13.8",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Werden im Unternehmen aktuell BGM-Projekte durchgeführt? \nWenn ja, seit wann und zu welchen Themen?"
+    },
+    {
+      "id": "13.9",
+      "groupId": "13.9",
+      "collapsedId": "13.9",
+      "chapter": 13,
+      "chapterLabel": "",
+      "question": "Wird die Qualität und Wirkung der Massnahmen und der Projekte im BGM evaluiert und Konsequenzen für künftige Massnahmen/Projekte abgeleitet?"
+    },
+    {
+      "id": "14.1.1",
+      "groupId": "14.1.1",
+      "collapsedId": "14.1.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Sind die interessierten Parteien, die zusätzlich zu ihren Beschäftigten für ihr Sicherheits- und Gesundheitsmanegementsystem relevant sind, bestimmt?  (z.B. Behörden,  Lieferanten, Arbeitnehmerorganisationen, Besucher, allgemeine Öffentlichkeit, Kunden, Medien, Nichtregierungsorganisationen (NGO))"
+    },
+    {
+      "id": "14.1.2",
+      "groupId": "14.1.2",
+      "collapsedId": "14.1.2",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Sind die relevanten Erfordernisse und Erwartungen (Anforderungen) von Beschäftigten als auch weiteren interessierten Parteien bestimmt? (z.B. Tabelle mit Beschäftigten und relevanten interessierten Parteien bezogen auf das SGA-MS mit ermittelten Anforderungen und Erwartungen, Chancen und Risiken und Zielsetzungen/Massnahmen)"
+    },
+    {
+      "id": "14.1.3",
+      "groupId": "14.1.3",
+      "collapsedId": "14.1.3",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Werden die relevanten Erfordernisse und Erwartungen bewertet und überwacht?"
+    },
+    {
+      "id": "14.2.1",
+      "groupId": "14.2.1",
+      "collapsedId": "14.2.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Werden dokumentierte Informationen im erforderlichen Umfang aufbewahrt, sodass darauf vertraut werden kann, dass die Prozesse wie geplant durchgeführt werden? (z.B. Aufzeichnungen aus den Prozessen, Änderungsnachweise, Berichte, Protokolle etc.)"
+    },
+    {
+      "id": "14.3.1",
+      "groupId": "14.3.1",
+      "collapsedId": "14.3.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Ist für die Organisation ein Verfahren zur Bestimmung von Risiken und Chancen festgelegt? (z.B. durch Gefährdungsanalysen, Erstellung einer Risiko-Matrix, SWOT-Analyse mit Handlungsbedarf)"
+    },
+    {
+      "id": "14.3.2",
+      "groupId": "14.3.2",
+      "collapsedId": "14.3.2",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Werden die zu berücksichtigenden SGA-Risiken und Chancen als dokumentierte Information gepflegt und entsprechend aufrechterhalten?"
+    },
+    {
+      "id": "14.4.1",
+      "groupId": "14.4.1",
+      "collapsedId": "14.4.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Erfolgen Informationen über Änderungen rechtlicher Verpflichtungen und anderer Anforderungen so, dass deren Weitergabe entsprechend dokumentiert und dadurch zweifelsfrei nachgewiesen werden kann?"
+    },
+    {
+      "id": "14.5.1",
+      "groupId": "14.5.1",
+      "collapsedId": "14.5.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Liegen die für das SGA-MS geforderten dokumentierten Informationen vor? (u.a. dokumentierte Information zu\n• Anwendungsbereich\n• SGA-Politik und SGA-Ziele\n• Rechtliche Verpflichtungen oder andere Anforderungen \n• Kompetenzen \n• SGA-Risiken und -Chancen\n• Informationen, die für den Betrieb der Organisation geschaffen werden\n• Nachweis erreichter Ergebnisse usw.)"
+    },
+    {
+      "id": "14.5.2",
+      "groupId": "14.5.2",
+      "collapsedId": "14.5.2",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Wird beim Erstellen und Aktualisieren dokumentierter Informationen eine angemessene Kennzeichnung und Beschreibung sichergestellt? (z.B. Titel, Datum, Autor, Referenznummer, aktuelle Revisionsstand )"
+    },
+    {
+      "id": "14.5.3",
+      "groupId": "14.5.3",
+      "collapsedId": "14.5.3",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Ist ein Prozess für die Lenkung der dokumentierten Informationen festgelegt? (Erstellung, Zuordnung, Klassifizierung, Genehmigung, Verteilung, Anwendung, Revision, Rückzug, Ablage, Entsorgung)"
+    },
+    {
+      "id": "14.6.1",
+      "groupId": "14.6.1",
+      "collapsedId": "14.6.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Wird sichergestellt, dass ausgegliederte Funktionen und Prozesse, die sich auf das SGA-MS auswirken, gesteuert werden?"
+    },
+    {
+      "id": "14.7.1",
+      "groupId": "14.7.1",
+      "collapsedId": "14.7.1",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Werden Prozesse zur Überwachung, Messung, Analyse und SGA-Leistungsbewertung festgelegt, umgesetzt und aufrechterhalten?"
+    },
+    {
+      "id": "14.7.2",
+      "groupId": "14.7.2",
+      "collapsedId": "14.7.2",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Sind die zur Bewertung der Compliance mit rechtlichen Verpflichtungen und anderen Anforderungen notwendigen Prozesse, festgelegt, umgesetzt und aufrechterhalten?"
+    },
+    {
+      "id": "14.7.3",
+      "groupId": "14.7.3",
+      "collapsedId": "14.7.3",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Sind die Auditoren zur Durchführung von Systemaudits ausgebildet?"
+    },
+    {
+      "id": "14.7.4",
+      "groupId": "14.7.4",
+      "collapsedId": "14.7.4",
+      "chapter": 14,
+      "chapterLabel": "",
+      "question": "Wird durch die internen Audits festgestellt, dass die Anforderungen an die ISO 45001 erfüllt werden?"
+    },
+    {
+      "id": "2.1.1",
+      "groupId": "2.1.1",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Organisationsform"
+    },
+    {
+      "id": "2.1.1.1.a",
+      "groupId": "2.1.1.1",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Welche Form der Aufbauorganisation besteht in Ihrem Unternehmen:\nLinienorganisation?"
+    },
+    {
+      "id": "2.1.1.2.b",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Linien-Stab-Organisation?"
+    },
+    {
+      "id": "2.1.1.2.c",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Funktionale Organisation?"
+    },
+    {
+      "id": "2.1.1.2.d",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Matrixorganisation?"
+    },
+    {
+      "id": "2.1.1.2.e",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Projektorganisation?"
+    },
+    {
+      "id": "2.1.1.2.f",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Andere Organisationsform? Wenn ja, welche?"
+    },
+    {
+      "id": "2.1.2",
+      "groupId": "2.1.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Aufgaben, Kompetenzen, Verantwortung"
+    },
+    {
+      "id": "2.1.2.1",
+      "groupId": "2.1.2.1",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die Zuständigkeit und Verantwortlichkeit für die Sicherheit und Gesundheit der Mitarbeitenden schriftlich geregelt?"
+    },
+    {
+      "id": "2.1.2.2.a",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügt Ihr Unternehmen über Organisationsdokumente wie:\nStellenbeschreibungen?"
+    },
+    {
+      "id": "2.1.2.2.b",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Pflichtenhefte?"
+    },
+    {
+      "id": "2.1.2.2.c",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Funktionsdiagramme?"
+    },
+    {
+      "id": "2.1.2.2.d",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Reglemente?"
+    },
+    {
+      "id": "2.1.2.2.e",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Einzelarbeitsverträge?"
+    },
+    {
+      "id": "2.1.2.2.f",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Gesamtarbeitsverträge?"
+    },
+    {
+      "id": "2.1.2.2.g",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werkverträge?"
+    },
+    {
+      "id": "2.1.2.2.h",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Andere Organisationsdokumente? Wenn ja, welche?"
+    },
+    {
+      "id": "2.1.2.3.a",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind Aufgaben, Kompetenzen, Verantwortlichkeit (Pflichten und Rechte) bezüglich Sicherheit und Gesundheit Bestandteil von: \nStellenbeschreibungen?"
+    },
+    {
+      "id": "2.1.2.3.b",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Pflichtenheften?"
+    },
+    {
+      "id": "2.1.2.3.c",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Funktionsdiagrammen?"
+    },
+    {
+      "id": "2.1.2.3.d",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Reglementen?"
+    },
+    {
+      "id": "2.1.2.3.e",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Einzelarbeitsverträgen?"
+    },
+    {
+      "id": "2.1.2.3.f",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Gesamtarbeitsverträgen?"
+    },
+    {
+      "id": "2.1.2.3.g",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werkverträgen?"
+    },
+    {
+      "id": "2.1.2.3.h",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Anderen Organisationsdokumenten?\nWenn ja, von welchen?"
+    },
+    {
+      "id": "2.1.3",
+      "groupId": "2.1.3",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Arbeitsplanung und -organisation"
+    },
+    {
+      "id": "2.1.3.1.a",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Wird die Planung, Kalkulation, Organisation und Vorbereitung von Arbeitsaufträgen durchgeführt von: \nLinienvorgesetzten?"
+    },
+    {
+      "id": "2.1.3.1.b",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Projektteams?"
+    },
+    {
+      "id": "2.1.3.1.c",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Einer speziellen Organisationseinheit (AVOR)?"
+    },
+    {
+      "id": "2.1.3.1.d",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Anderen/weiteren Organen/Personen? Wenn ja, von welchen Organen/Personen?"
+    },
+    {
+      "id": "2.1.3.2",
+      "groupId": "2.1.3.2",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden in der Phase der Planung, Organisation und Vorbereitung Aspekte der Arbeitssicherheit und des Gesundheitsschutzes berücksichtigt?"
+    },
+    {
+      "id": "2.1.3.3",
+      "groupId": "2.1.3.3",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Besteht eine strikte Trennung zwischen der Planung, Organisation und Vorbereitung (AVOR) von Arbeiten und der Ausführung von Arbeiten?"
+    },
+    {
+      "id": "2.1.3.4",
+      "groupId": "2.1.3.4",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Wird die Ausführungsebene in die Arbeitsvorbereitung einbezogen?"
+    },
+    {
+      "id": "2.1.3.5",
+      "groupId": "2.1.3.5",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden Arbeitsaufträge erläutert und besprochen?"
+    },
+    {
+      "id": "2.1.3.6",
+      "groupId": "2.1.3.6",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheitsschutz Bestandteil der Arbeitsaufträge?"
+    },
+    {
+      "id": "2.1.3.7",
+      "groupId": "2.1.3.7",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden Arbeitsaufträge in schriftlicher Form erteilt und dokumentiert?"
+    },
+    {
+      "id": "2.1.3.8",
+      "groupId": "2.1.3.8",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Enthalten schriftliche Arbeitsanweisungen Hinweise auf Sicherheits- und Gesundheitsschutzmassnahmen?"
+    },
+    {
+      "id": "2.1.4",
+      "groupId": "2.1.4",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Betriebsordnung"
+    },
+    {
+      "id": "2.1.4.1",
+      "groupId": "2.1.4.1",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügt Ihr Unternehmen über eine obligatorische Betriebsordnung im Sinne des Arbeitsgesetzes?"
+    },
+    {
+      "id": "2.1.4.2",
+      "groupId": "2.1.4.2",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügt Ihr Unternehmen über eine freiwillige Betriebsordnung? Wenn ja: Wie lautet der Text bezüglich Sicherheit und Gesundheitsförderung der Beschäftigten?"
+    },
+    {
+      "id": "2.2.1",
+      "groupId": "2.2.1",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Organisationsgestaltung"
+    },
+    {
+      "id": "2.2.1.1",
+      "groupId": "2.2.1.1",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist ein Mitglied der Geschäftsleitung für Arbeitssicherheit und Gesundheitsschutz zuständig?"
+    },
+    {
+      "id": "2.2.1.2",
+      "groupId": "2.2.1.2",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügen Sie in Ihrem Unternehmen über eine Sicherheitsorganisation, die direkt der Unternehmensleitung unterstellt ist?"
+    },
+    {
+      "id": "2.2.1.3",
+      "groupId": "2.2.1.3",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die Sicherheitsorganisation in einem Organigramm dargestellt?"
+    },
+    {
+      "id": "2.2.1.4.a",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen ausserbetriebliche Spezialisten beigezogen:\nArbeitsärzte?"
+    },
+    {
+      "id": "2.2.1.4.b",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Arbeitshygieniker?"
+    },
+    {
+      "id": "2.2.1.4.c",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sicherheitsingenieure?"
+    },
+    {
+      "id": "2.2.1.4.d",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sicherheitsfachleute?"
+    },
+    {
+      "id": "2.2.1.4.e",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Andere ausserbetriebliche Spezialisten? Wenn ja, welche?"
+    },
+    {
+      "id": "2.2.1.5",
+      "groupId": "2.2.1.5",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind Aufgaben, Pflichten und Rechte der einzelnen Organe der Sicherheitsorganisation schriftlich festgehalten?"
+    },
+    {
+      "id": "2.2.1.6",
+      "groupId": "2.2.1.6",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist der Sicherheitsbeauftragte verantwortlich für die Berichterstattung über Sicherheit und Gesundheitsschutz an die Geschäftsleitung?"
+    },
+    {
+      "id": "2.2.1.7",
+      "groupId": "2.2.1.7",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Wird die Sicherheitsorganisation durch die Linienvorgesetzten aktiv unterstützt?"
+    },
+    {
+      "id": "2.2.2",
+      "groupId": "2.2.2",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sicherheitskonzept"
+    },
+    {
+      "id": "2.2.2.1",
+      "groupId": "2.2.2.1",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügen Sie in Ihrem Unternehmen über ein Sicherheitskonzept?\nWenn ja, seit wann ist dieses in Kraft?"
+    },
+    {
+      "id": "2.2.2.2",
+      "groupId": "2.2.2.2",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist der Geltungsbereich des Sicherheitskonzeptes festgelegt und dokumentiert?"
+    },
+    {
+      "id": "2.2.2.3",
+      "groupId": "2.2.2.3",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die Struktur der Systemdokumente für das Sicherheitskonzept definiert und der Bezug zu den mitgeltenden Unterlagen aufgezeigt?"
+    },
+    {
+      "id": "2.2.3",
+      "groupId": "2.2.3",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sicherheitsausbildung"
+    },
+    {
+      "id": "2.2.3.1",
+      "groupId": "2.2.3.1",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Haben Mitarbeitende Ihres Unternehmens die Ausbildung zum Sicherheitsassistenten, Sicherheitsfachmann resp. Sicherheitsingenieur absolviert?"
+    },
+    {
+      "id": "2.2.3.2",
+      "groupId": "2.2.3.2",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Haben Mitarbeitende Ihres Unternehmens Suva-Ausbildungen bez. Sicherheit + Gesundheit besucht?\nWenn ja, welche Suva-Ausbildungen?"
+    },
+    {
+      "id": "2.2.3.3",
+      "groupId": "2.2.3.3",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Haben Mitarbeitende Ihres Unternehmens andere Sicherheitsausbildungen besucht? Wenn ja, welche Ausbildungen?"
+    },
+    {
+      "id": "2.3.1",
+      "groupId": "2.3.1",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Gesetzliche Grundlagen"
+    },
+    {
+      "id": "2.3.1.1",
+      "groupId": "2.3.1.1",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind die gesetzlichen Grundlagen bezüglich Arbeitssicherheit und Gesundheitsschutz im Unternehmen vorhanden?"
+    },
+    {
+      "id": "2.3.1.2",
+      "groupId": "2.3.1.2",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Kennen die Betriebsangehörigen Ihre Aufgaben, Pflichten und Rechte, die sich aus den gesetzlichen Grundlagen ergeben?"
+    },
+    {
+      "id": "2.3.1.3",
+      "groupId": "2.3.1.3",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden die rechtlichen Bestimmungen vom Unternehmen sinngemäss erfüllt?"
+    },
+    {
+      "id": "2.3.1.4",
+      "groupId": "2.3.1.4",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die permanente Aktualisierung und Verfügbarkeit der gesetzlichen Grundlagendokumente durch ein festgelegtes Vorgehen sichergestellt? Wenn ja, welche Stelle bzw. Person ist damit beauftragt?"
+    },
+    {
+      "id": "2.3.2",
+      "groupId": "2.3.2",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Richtlinien und Normen"
+    },
+    {
+      "id": "2.3.2.1",
+      "groupId": "2.3.2.1",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind die Sicherheits- und Gesundheitsrelevanten Richtlinien und Normen im Unternehmen vorhanden?"
+    },
+    {
+      "id": "2.3.2.2",
+      "groupId": "2.3.2.2",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind die betroffenen Personen im Besitz der sicherheits- und gesundheitsrelevanten Richtlinien und Normen oder haben sie jederzeit Zugang dazu?"
+    },
+    {
+      "id": "2.3.2.3",
+      "groupId": "2.3.2.3",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Kennen die betroffenen Personen Ihre Aufgaben, Pflichten und Rechte, die sich aus den Richtlinien und Normen ergeben?"
+    },
+    {
+      "id": "2.3.2.4",
+      "groupId": "2.3.2.4",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden die Richtlinien und Normen vom Unternehmen sinngemäss erfüllt?"
+    },
+    {
+      "id": "2.3.2.5",
+      "groupId": "2.3.2.5",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die permanente Aktualisierung und Verfügbarkeit der Richtlinien- und Normendokumente durch ein festgelegtes Vorgehen sichergestellt? Wenn ja, welche Stelle oder Person ist damit beauftragt?"
+    },
+    {
+      "id": "2.3.3",
+      "groupId": "2.3.3",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Dokumentation über S & G"
+    },
+    {
+      "id": "2.3.3.1",
+      "groupId": "2.3.3.1",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Verfügt Ihre Unternehmen über eine zentrale Sammlung von Dokumentationen über Sicherheit und Gesundheitsschutz?"
+    },
+    {
+      "id": "2.3.3.2",
+      "groupId": "2.3.3.2",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Werden wichtige Dokumentationen als persönliche Exemplare einzelnen Mitarbeitenden zur Verfügung gestellt?"
+    },
+    {
+      "id": "2.3.3.3",
+      "groupId": "2.3.3.3",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Sind die Dokumentationen über Sicherheit und Gesundheitsschutz allen Beschäftigten leicht zugänglich (Bibliothek oder ähnliche Einrichtungen)?"
+    },
+    {
+      "id": "2.3.3.4",
+      "groupId": "2.3.3.4",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "",
+      "question": "Ist die permanente Aktualisierung und Verfügbarkeit der Dokumentationen über Sicherheit und Gesundheitsschutz durch ein festgelegtes Vorgehen sichergestellt? Wenn ja, welche Stelle oder Person ist damit beauftragt?"
+    },
+    {
+      "id": "3.1.1",
+      "groupId": "3.1.1",
+      "collapsedId": "3.1.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über Auswahlkriterien für die Personalauswahl?"
+    },
+    {
+      "id": "3.1.2",
+      "groupId": "3.1.2",
+      "collapsedId": "3.1.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden bei der Personalauswahl Aspekte der Sicherheit und Gesundheit berücksichtigt?"
+    },
+    {
+      "id": "3.1.3",
+      "groupId": "3.1.3",
+      "collapsedId": "3.1.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden bei der Personalauswahl bestimmte Eignungstests durchgeführt? Wenn Ja, für welche Tätigkeiten oder Belastungen?"
+    },
+    {
+      "id": "3.1.4",
+      "groupId": "3.1.4",
+      "collapsedId": "3.1.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wird das Verstehen der betriebsüblichen Sprache geprüft und ist dies ein Kriterium bei der Personalauswahl?"
+    },
+    {
+      "id": "3.1.5",
+      "groupId": "3.1.5",
+      "collapsedId": "3.1.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Führungs- und Arbeitsverhalten Gegenstand von Arbeitsverträgen mit Festangestellten?"
+    },
+    {
+      "id": "3.1.6",
+      "groupId": "3.1.6",
+      "collapsedId": "3.1.6",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Arbeitsverhalten Gegenstand von Arbeitsverträgen mit Teilzeitbeschäftigten, saisonal Beschäftigten oder Aushilfskräften?"
+    },
+    {
+      "id": "3.10.1.a",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wie häufig werden in ihrem Unternehmen Fremdfirmen beschäftigt:\nNiemals?"
+    },
+    {
+      "id": "3.10.1.b",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Selten?"
+    },
+    {
+      "id": "3.10.1.c",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Gelegentlich?"
+    },
+    {
+      "id": "3.10.1.d",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Oft?"
+    },
+    {
+      "id": "3.10.1.e",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Dauernd?"
+    },
+    {
+      "id": "3.10.2",
+      "groupId": "3.10.2",
+      "collapsedId": "3.10.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Fremdfirmen auf Gefahren und Sicherheitsanforderungen in Ihrem Unternehmen aufmerksam gemacht?"
+    },
+    {
+      "id": "3.10.3",
+      "groupId": "3.10.3",
+      "collapsedId": "3.10.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist das Einhalten von Sicherheitsbestimmungen Bestandteil schriftlicher Werkverträge, die Sie mit Fremdfirmen abschliessen?"
+    },
+    {
+      "id": "3.10.4",
+      "groupId": "3.10.4",
+      "collapsedId": "3.10.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wird das Einhalten von Sicherheitsbestimmungen bei Fremdfirmen überwacht und systematisch kontrolliert?"
+    },
+    {
+      "id": "3.10.5",
+      "groupId": "3.10.5",
+      "collapsedId": "3.10.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wird das Einhalten von Sicherheitsbestimmungen bei Fremdfirmen konsequent durchgesetzt?"
+    },
+    {
+      "id": "3.10.6",
+      "groupId": "3.10.6",
+      "collapsedId": "3.10.6",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Sind Sie bereit, Werkverträge mit Fremdfirmen aufzulösen, wenn Sicherheitsbestimmungen nicht eingehalten werden?"
+    },
+    {
+      "id": "3.10.7",
+      "groupId": "3.10.7",
+      "collapsedId": "3.10.7",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wird das Sicherheits- und Gesundheitsschutz-Verhalten bei Fremdfirmen in der Lieferantenbeurteilung (Q-System) mitberücksichtigt?"
+    },
+    {
+      "id": "3.10.8",
+      "groupId": "3.10.8",
+      "collapsedId": "3.10.8",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Besteht in Ihrem Unternehmen ein Angebot für die Sicherheitsausbildung der beauftragten Fremdfirmen?"
+    },
+    {
+      "id": "3.2.1.a",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verfügt das Unternehmen über standardisierte Einführungsprogramme für:\nneue Mitarbeitende?"
+    },
+    {
+      "id": "3.2.1.b",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "temporäre Mitarbeitende?"
+    },
+    {
+      "id": "3.2.1.c",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "versetzte Mitarbeitende?"
+    },
+    {
+      "id": "3.2.2",
+      "groupId": "3.2.2",
+      "collapsedId": "3.2.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verwenden Sie für die Dokumentation der Einführung bestimmte Checklisten oder Stichwortlisten?"
+    },
+    {
+      "id": "3.2.3.a",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheitsschutz Bestandteil der Einführung bei:\nneue Mitarbeitenden?"
+    },
+    {
+      "id": "3.2.3.b",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "temporären Mitarbeitenden?"
+    },
+    {
+      "id": "3.2.3.c",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "versetzten Mitarbeitenden?"
+    },
+    {
+      "id": "3.2.4.b",
+      "groupId": "3.2.4",
+      "collapsedId": "3.2.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "temporäre Mitarbeitende?"
+    },
+    {
+      "id": "3.2.4.c",
+      "groupId": "3.2.4",
+      "collapsedId": "3.2.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "versetzte Mitarbeitende?"
+    },
+    {
+      "id": "3.2.5",
+      "groupId": "3.2.5",
+      "collapsedId": "3.2.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Führungs- und Arbeitsverhalten Gegenstand der Beurteilungskriterien während der Probezeit?"
+    },
+    {
+      "id": "3.3.1",
+      "groupId": "3.3.1",
+      "collapsedId": "3.3.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Anforderungsprofile und Leistungsprofile der Beschäftigten regelmässig und systematisch überprüft?"
+    },
+    {
+      "id": "3.3.2",
+      "groupId": "3.3.2",
+      "collapsedId": "3.3.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Sicherheit und Gesundheitsschutz bei der Ermittlung von Qualifikationslücken und Schulungsbedürfnissen berücksichtigt?"
+    },
+    {
+      "id": "3.3.3",
+      "groupId": "3.3.3",
+      "collapsedId": "3.3.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verfügt Ihr Unternehmen über ein Personalförderungskonzept?"
+    },
+    {
+      "id": "3.3.4",
+      "groupId": "3.3.4",
+      "collapsedId": "3.3.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wenn ja, sind Sicherheit und Gesundheitsförderung* Schwerpunkte?\n*Der Begriff „Gesundheitsförderung“ geht über den konventionellen Begriff „Gesundheitsschutz“ hinaus. Gesundheitsförderung umfasst alle individuellen und sozialen Aspekte, die zur Förderung der Gesundheit beitragen."
+    },
+    {
+      "id": "3.3.5",
+      "groupId": "3.3.5",
+      "collapsedId": "3.3.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Führen Sie eine namentliche Kontrolle über Ausbildung, Fortbildung, Weiterbildung und andere Personalförderungsmassnahmen?"
+    },
+    {
+      "id": "3.4.1",
+      "groupId": "3.4.1",
+      "collapsedId": "3.4.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über bestimmte Schulungsangebote und Schulungsprogramme?"
+    },
+    {
+      "id": "3.4.2",
+      "groupId": "3.4.2",
+      "collapsedId": "3.4.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheitsschutz Bestandteil der Schulungsangebote?"
+    },
+    {
+      "id": "3.4.3",
+      "groupId": "3.4.3",
+      "collapsedId": "3.4.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Macht Ihr Unternehmen von den Schulungsangeboten von Wirtschafts- und Berufsverbänden Gebrauch?"
+    },
+    {
+      "id": "3.4.4",
+      "groupId": "3.4.4",
+      "collapsedId": "3.4.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Enthalten die externen Schulungsangebote auch Themen betreffend Sicherheit und Gesundheitsschutz? Wenn ja, welche Themen?"
+    },
+    {
+      "id": "3.5.1",
+      "groupId": "3.5.1",
+      "collapsedId": "3.5.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Wird das „Lernen am Arbeitsplatz“ in Ihrem Unternehmen bewusst praktiziert und gefördert?"
+    },
+    {
+      "id": "3.5.2",
+      "groupId": "3.5.2",
+      "collapsedId": "3.5.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Unfälle, Beinaheunfälle und andere unerwünschte Ereignisse dazu benützt, Lehren zu ziehen, konkrete Massnahmen zu treffen und Ausbildungslücken zu schliessen?"
+    },
+    {
+      "id": "3.5.3",
+      "groupId": "3.5.3",
+      "collapsedId": "3.5.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Vorgesetzte in der Methodik für die Durchführung von Ausbildungen am Arbeitsplatz geschult?"
+    },
+    {
+      "id": "3.5.4",
+      "groupId": "3.5.4",
+      "collapsedId": "3.5.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Vorgesetzte und Mitarbeitende über neue oder veränderte Arbeitsmittel* instruiert?\n*Arbeitsmittel: Maschinen, Anlagen, Apparate, Werkzeuge, Einrichtungen und Geräte, PSA."
+    },
+    {
+      "id": "3.5.5",
+      "groupId": "3.5.5",
+      "collapsedId": "3.5.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Vorgesetzte und Mitarbeitende über neue oder veränderte Arbeitsabläufe instruiert?"
+    },
+    {
+      "id": "3.5.6",
+      "groupId": "3.5.6",
+      "collapsedId": "3.5.6",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden Vorgesetzte und Mitarbeitende über neue Arbeitsstoffe** instruiert?\n**Arbeitsstoffe: Die bei der Arbeit eingesetzte Materie: fest, flüssig oder gasförmig."
+    },
+    {
+      "id": "3.6.1",
+      "groupId": "3.6.1",
+      "collapsedId": "3.6.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Verfügt Ihre Unternehmen über ein System zur Mitarbeiterbeurteilung?"
+    },
+    {
+      "id": "3.6.2",
+      "groupId": "3.6.2",
+      "collapsedId": "3.6.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Führungsverhalten Bestandteil der Beurteilung von Vorgesetzten?"
+    },
+    {
+      "id": "3.6.3",
+      "groupId": "3.6.3",
+      "collapsedId": "3.6.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Haben ungenügende Führungsleistungen im Bereich Arbeitssicherheit Konsequenzen zur Folge? Wenn ja, welche?"
+    },
+    {
+      "id": "3.6.4",
+      "groupId": "3.6.4",
+      "collapsedId": "3.6.4",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Führungs- und Arbeitsverhalten ein entscheidendes Kriterium bei Beförderungen?"
+    },
+    {
+      "id": "3.6.5",
+      "groupId": "3.6.5",
+      "collapsedId": "3.6.5",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist sicheres Arbeitsverhalten Bestandteil der Mitarbeiterbeurteilung?"
+    },
+    {
+      "id": "3.6.6",
+      "groupId": "3.6.6",
+      "collapsedId": "3.6.6",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Hat unsicheres Arbeitsverhalten Konsequenzen zur Folge? Wenn ja, welche?"
+    },
+    {
+      "id": "3.7.1",
+      "groupId": "3.7.1",
+      "collapsedId": "3.7.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Besteht in Ihrem Unternehmen ein Informations- und Kommunikationskonzept?"
+    },
+    {
+      "id": "3.7.2",
+      "groupId": "3.7.2",
+      "collapsedId": "3.7.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Bestehen in Ihrem Unternehmen andere Regelungen oder Gewohnheiten bezüglich Information und Kommunikation? \nWenn ja, welche?"
+    },
+    {
+      "id": "3.7.3",
+      "groupId": "3.7.3",
+      "collapsedId": "3.7.3",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ist in Ihrem Unternehmen eine Stelle oder Person mit Aufgaben der Information und Kommunikation beauftragt? Wenn ja, welche Stelle oder Person?"
+    },
+    {
+      "id": "3.8.1.a",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Welche Informationsmittel und –anlässe werden im Unternehmen in Zusammenhang mit Sicherheit und Gesundheitsschutz benützt:\nSpontane Gespräche?"
+    },
+    {
+      "id": "3.8.1.b",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Mitarbeiterbesprechungen?"
+    },
+    {
+      "id": "3.8.1.c",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Arbeitsbesprechungen?"
+    },
+    {
+      "id": "3.8.1.d",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Auftragserteilungen?"
+    },
+    {
+      "id": "3.8.1.e",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Arbeitsanleitungen?"
+    },
+    {
+      "id": "3.8.1.f",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Arbeitsinstruktionen?"
+    },
+    {
+      "id": "3.8.1.g",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Sicherheitsgespräche?"
+    },
+    {
+      "id": "3.8.1.h",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "ERFA-Gespräche?"
+    },
+    {
+      "id": "3.8.1.i",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Schriftliche Arbeitsaufträge?"
+    },
+    {
+      "id": "3.8.1.j",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Schriftliche Weisungen/Bestimmungen?"
+    },
+    {
+      "id": "3.8.1.k",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Vorschriften/Normen?"
+    },
+    {
+      "id": "3.8.1.l",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Schriftliche Anleitungen/Anweisungen?"
+    },
+    {
+      "id": "3.8.1.m",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Broschüren?"
+    },
+    {
+      "id": "3.8.1.n",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Merkblätter?"
+    },
+    {
+      "id": "3.8.1.o",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Rundschreiben?"
+    },
+    {
+      "id": "3.8.1.p",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Persönliche Briefe?"
+    },
+    {
+      "id": "3.8.1.q",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Firmenzeitschrift?"
+    },
+    {
+      "id": "3.8.1.r",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Personalzeitschrift?"
+    },
+    {
+      "id": "3.8.1.s",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Fachzeitschriften?"
+    },
+    {
+      "id": "3.8.1.t",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Bibliothek?"
+    },
+    {
+      "id": "3.8.1.u",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Jahresberichte?"
+    },
+    {
+      "id": "3.8.1.v",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Mitarbeiterbefragungen?"
+    },
+    {
+      "id": "3.8.1.w",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Internet?"
+    },
+    {
+      "id": "3.8.1.x",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Intranet?"
+    },
+    {
+      "id": "3.8.1.y",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "E-Mails?"
+    },
+    {
+      "id": "3.8.1.z",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Software?"
+    },
+    {
+      "id": "3.9.1.a",
+      "groupId": "3.9.1",
+      "collapsedId": "3.9.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Sind Sicherheit und Gesundheitsförderung regelmässige Gesprächsthemen an:\nInnerbetrieblichen Besprechungen?"
+    },
+    {
+      "id": "3.9.1.b",
+      "groupId": "3.9.1",
+      "collapsedId": "3.9.1",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Ausserbetrieblichen Besprechungen (z.B. mit Dritten, Fremdfirmen, Mitgliedern von Arbeitsgemeinschaften)?"
+    },
+    {
+      "id": "3.9.2",
+      "groupId": "3.9.2",
+      "collapsedId": "3.9.2",
+      "chapter": 3,
+      "chapterLabel": "",
+      "question": "Werden bei Gesprächen über Sicherheit und Gesundheitsförderung nicht nur Probleme diskutiert, sondern auch Schutzziele* festgelegt und Massnahmen getroffen?\n*Schutzziele: Ziele, die erreicht werden müssen, um Sicherheit und Gesundheit gemäss der allgemeinen Erfahrung und dem Stand der Technik zu gewährleisten. Schutzziele lassen Mittel und Wege der Zielerreichung offen."
+    },
+    {
+      "id": "4.1.1",
+      "groupId": "4.1.1",
+      "collapsedId": "4.1.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Sind sicherheits- und gesundheitsrelevante Merkblätter und Arbeitsanweisungen im Unternehmen vorhanden?"
+    },
+    {
+      "id": "4.1.2",
+      "groupId": "4.1.2",
+      "collapsedId": "4.1.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die Checklisten von Suva und der Branchenlösung eingesetzt?"
+    },
+    {
+      "id": "4.1.3",
+      "groupId": "4.1.3",
+      "collapsedId": "4.1.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Wird das Booklet \"Lebenswichtigen Regeln\" der Suva im Unternehmen eingesetzt?"
+    },
+    {
+      "id": "4.1.4",
+      "groupId": "4.1.4",
+      "collapsedId": "4.1.4",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Sind die Adressaten im Besitz der sicherheits- und gesund-heitsrelevanten Merkblätter und Arbeitsanweisungen oder haben sie jederzeit Zugang dazu?"
+    },
+    {
+      "id": "4.1.5",
+      "groupId": "4.1.5",
+      "collapsedId": "4.1.5",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen, als Ergänzung zu den offiziellen Merkblätter und Arbeitsanweisungen, interne Weisungen bezüglich Arbeitssicherheit und Gesundheitsschutz abgefasst und verwendet? Wenn ja, welche?"
+    },
+    {
+      "id": "4.1.6",
+      "groupId": "4.1.6",
+      "collapsedId": "4.1.6",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die betroffenen Mitarbeiter beim Erstellen betriebs-interner Weisungen miteinbezogen?"
+    },
+    {
+      "id": "4.1.7",
+      "groupId": "4.1.7",
+      "collapsedId": "4.1.7",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Ist die permanente Aktualisierung der Merkblätter, Arbeits-anweisungen, und betriebsinterner Weisungen sichergestellt? Wenn ja, welche Stelle oder Person ist damit beauftragt?"
+    },
+    {
+      "id": "4.2.1.a",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Welche persönlichen Schutzausrüstungen sind aufgrund der Gefährdungssituationen in Ihrem Unternehmen notwendig:\nSchutzelme?"
+    },
+    {
+      "id": "4.2.1.b",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzhelme/Gesichtsschutze?"
+    },
+    {
+      "id": "4.2.1.c",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Haarschutznetze?"
+    },
+    {
+      "id": "4.2.1.d",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzbrillen?"
+    },
+    {
+      "id": "4.2.1.e",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzschilde?"
+    },
+    {
+      "id": "4.2.1.f",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzhauben?"
+    },
+    {
+      "id": "4.2.1.g",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzschirme?"
+    },
+    {
+      "id": "4.2.1.h",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Gehörschutzstöpsel?"
+    },
+    {
+      "id": "4.2.1.i",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Gehörschutzkapseln?"
+    },
+    {
+      "id": "4.2.1.j",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Gehörschutzhelme?"
+    },
+    {
+      "id": "4.2.1.k",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schallschutzanzüge?"
+    },
+    {
+      "id": "4.2.1.l",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Filtergeräte?"
+    },
+    {
+      "id": "4.2.1.m",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schlauchgeräte  für den Atemschutz?"
+    },
+    {
+      "id": "4.2.1.n",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Regenerationsgeräte für den Atemschutz?"
+    },
+    {
+      "id": "4.2.1.o",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Behältergeräte für den Atemschutz?"
+    },
+    {
+      "id": "4.2.1.p",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Atemschutzhelme?"
+    },
+    {
+      "id": "4.2.1.q",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Atemschutzanzüge?"
+    },
+    {
+      "id": "4.2.1.r",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzhandschuhe?"
+    },
+    {
+      "id": "4.2.1.s",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Armschützer?"
+    },
+    {
+      "id": "4.2.1.t",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Hautschutzmittel?"
+    },
+    {
+      "id": "4.2.1.u",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzschuhe?"
+    },
+    {
+      "id": "4.2.1.v",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzgamaschen?"
+    },
+    {
+      "id": "4.2.1.w",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schienbeinschützer?"
+    },
+    {
+      "id": "4.2.1.x",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Knieschützer?"
+    },
+    {
+      "id": "4.2.1.y",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Warnkleider, Signalfarben?"
+    },
+    {
+      "id": "4.2.1.z",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Schutzanzüge?"
+    },
+    {
+      "id": "4.3.1",
+      "groupId": "4.3.1",
+      "collapsedId": "4.3.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die betroffenen Mitarbeiter bei der Auswahl persönlicher Schutzmittel einbezogen?"
+    },
+    {
+      "id": "4.3.2",
+      "groupId": "4.3.2",
+      "collapsedId": "4.3.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Bestehen betriebsinterne schriftliche Weisungen bezüglich der Verwendung persönlicher Schutzmittel?"
+    },
+    {
+      "id": "4.3.3",
+      "groupId": "4.3.3",
+      "collapsedId": "4.3.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Wird das Benützen persönlicher Schutzmittel von den Vorgesetzten vorgelebt?"
+    },
+    {
+      "id": "4.3.4",
+      "groupId": "4.3.4",
+      "collapsedId": "4.3.4",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die Beschäftigten über die an ihrem Arbeitsplatz auftretenden Gefahren und entsprechenden Sicherheitsmassnahmen aufgeklärt?"
+    },
+    {
+      "id": "4.3.5",
+      "groupId": "4.3.5",
+      "collapsedId": "4.3.5",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die Beschäftigten in der korrekten Anwendung und Pflege der persönlichen Schutzmittel angeleitet?"
+    },
+    {
+      "id": "4.3.6",
+      "groupId": "4.3.6",
+      "collapsedId": "4.3.6",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Wird die korrekte Anwendung der persönlichen Schutzausrüstung kontrolliert und durchgesetzt?"
+    },
+    {
+      "id": "4.3.7",
+      "groupId": "4.3.7",
+      "collapsedId": "4.3.7",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Gibt es Arbeitsplätze oder Tätigkeiten, bei denen sie eine unbefriedigende Akzeptanz von Schutzmitteln feststellen? Falls ja, welche Schutzmittel und Arbeitsplätze/Tätigkeiten sind betroffen?"
+    },
+    {
+      "id": "4.4.1",
+      "groupId": "4.4.1",
+      "collapsedId": "4.4.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden Anweisungen der Hersteller und Lieferanten betreffend Normal*- und Sonderbetrieb** von Anlagen, Maschinen und Geräten befolgt?\n* Normalbetrieb: Bestimmungsgemässer Einsatz, vorgesehene Funktion des Arbeitsmittels.\n** Sonderbetrieb:alle übrigen Arbeitsverrichtungen an Arbeitsmitteln, wie rüsten/umrüsten, einrichten/einstallen, Probelauf, Fehler \nsuchen/beheben, reinigen."
+    },
+    {
+      "id": "4.4.2",
+      "groupId": "4.4.2",
+      "collapsedId": "4.4.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Bestehen betriebsinterne Weisungen betreffend Normal- und Sonderbetrieb von Anlagen, Maschinen und Geräten?"
+    },
+    {
+      "id": "4.4.3",
+      "groupId": "4.4.3",
+      "collapsedId": "4.4.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Kennen Sie bei Ihren Anlagen, Maschinen und Geräten das Verhältnis zwischen der Anzahl Unfälle, Beinaheunfälle und Prozessstörungen im Normalbetrieb und im Sonderbetrieb?"
+    },
+    {
+      "id": "4.5.1",
+      "groupId": "4.5.1",
+      "collapsedId": "4.5.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Hat Ihre Unternehmen eine spezielle Organisationseinheit die mit der Instandhaltung von Arbeitsmitteln* beauftragt ist?\n*Arbeitsmittel: Maschinen, Anlagen, Apparate und Werkzeuge, die bei der Arbeit benutzt werden; technische Einrichtungen und Geräte (TEG), die  zur Arbeits- umgebung gehören (z.B. Lüftung, Heizung, Beleuchtung) sowie die persönliche Schutzausrüstungen (PSA)."
+    },
+    {
+      "id": "4.5.2",
+      "groupId": "4.5.2",
+      "collapsedId": "4.5.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden bestimmte Mitarbeiter Ihres Unternehmens von Herstellerfirmen oder Lieferanten von Arbeitsmitteln in der Instandhaltung gründlich geschult?"
+    },
+    {
+      "id": "4.5.3",
+      "groupId": "4.5.3",
+      "collapsedId": "4.5.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Bestehen betriebsinterne Weisungen betreffend der Instandhaltung von Arbeitsmitteln?"
+    },
+    {
+      "id": "4.5.4",
+      "groupId": "4.5.4",
+      "collapsedId": "4.5.4",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden Anweisungen der Hersteller und Lieferanten bzw. interne Weisungen betreffend der Instandhaltung von Arbeitsmitteln befolgt?"
+    },
+    {
+      "id": "4.5.5",
+      "groupId": "4.5.5",
+      "collapsedId": "4.5.5",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden Instandhaltungsarbeiten geplant (Instandhaltungsplan) und mit den betroffenen Mitarbeitern besprochen?"
+    },
+    {
+      "id": "4.5.6",
+      "groupId": "4.5.6",
+      "collapsedId": "4.5.6",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Erfolgt die Freigabe der Arbeitsmittel, im Anschluss an die Instandhaltungsarbeiten, nach bestimmten Sicherheitsregeln?"
+    },
+    {
+      "id": "4.6.1",
+      "groupId": "4.6.1",
+      "collapsedId": "4.6.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Verfügt Ihre Unternehmen über eine spezielle Organisationseinheit, die mit der Instandhaltung von Gebäuden und Anlagen beauftragt ist?"
+    },
+    {
+      "id": "4.6.2",
+      "groupId": "4.6.2",
+      "collapsedId": "4.6.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Sind Gefährdungen, die beim Unterhalt von Gebäuden und Anlagen auftreten können, ermittelt und dokumentiert?"
+    },
+    {
+      "id": "4.6.3",
+      "groupId": "4.6.3",
+      "collapsedId": "4.6.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Bestehen Sicherheitsbestimmungen und Regelungen betreffend der Instandhaltung von Gebäuden und Anlagen? (z.B. über die Begehbarkeit von Gebäudeteilen)"
+    },
+    {
+      "id": "4.6.4",
+      "groupId": "4.6.4",
+      "collapsedId": "4.6.4",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden bestimmte Mitarbeiter Ihres Unternehmens in der Instandhaltung von Gebäuden und Anlagen ausgebildet und instruiert?"
+    },
+    {
+      "id": "4.7.1",
+      "groupId": "4.7.1",
+      "collapsedId": "4.7.1",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden bei der Beschaffung von Arbeitsmitteln sicherheitstechnische Aspekte berücksichtigt?"
+    },
+    {
+      "id": "4.7.2",
+      "groupId": "4.7.2",
+      "collapsedId": "4.7.2",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Verwenden Sie bei der Beschaffung von Arbeitsmitteln besondere Checklisten, Stichwortlisten oder betriebsinterne Bestimmungen um sicherheitstechnische Aspekte zu überprüfen?"
+    },
+    {
+      "id": "4.7.3",
+      "groupId": "4.7.3",
+      "collapsedId": "4.7.3",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Wird überprüft, dass Arbeitsmittel, Anlagen, Werkstoffe und Gefahrenstoffe sicher sind, bevor diese durch ihre Beschäftigten verwendet werden?"
+    },
+    {
+      "id": "4.7.4",
+      "groupId": "4.7.4",
+      "collapsedId": "4.7.4",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Wird die  Überprüfung der Arbeitsmittel, Anlagen und Werkstoffe vor der Verwendung durch ihre Beschäftigte dokumentiert?"
+    },
+    {
+      "id": "4.7.5",
+      "groupId": "4.7.5",
+      "collapsedId": "4.7.5",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Verlangen Sie von Lieferanten schon bei der Offerte entsprechende sicherheitstechnische Daten, Prüfberichte, Zertifikate, Testergebnisse, Referenzen?"
+    },
+    {
+      "id": "4.7.6",
+      "groupId": "4.7.6",
+      "collapsedId": "4.7.6",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Verlangen Sie von den Lieferanten für neue Maschinen die Konformitätserklärung und die Bedienungsanleitung, bzw. für unvollständige Maschinen die Einbauerklärung und die Montageanleitung gemäss MaschV*?\n* MaschV: Verordnung über die Sicherheit von Maschinen"
+    },
+    {
+      "id": "4.7.7",
+      "groupId": "4.7.7",
+      "collapsedId": "4.7.7",
+      "chapter": 4,
+      "chapterLabel": "",
+      "question": "Werden die Konformitätserklärungen auf Vollständigkeit geprüft und archiviert?"
+    },
+    {
+      "id": "5.1.1.a",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Wie haben Sie den Beizug von Arbeitsärzten und anderen Spezialisten der Arbeitssicherheit in Ihrem Unternehmen geregelt:\nUnternehmenseigene Lösung?\nWenn ja, Namen der zuständigen Arbeitsärzte und Spezialisten im Tabellenblatt „Schlüsselpersonen Sicherheit“ eintragen."
+    },
+    {
+      "id": "5.1.1.b",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Branchenlösung? Wenn ja, über welche Branchenlösung?"
+    },
+    {
+      "id": "5.1.1.c",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Betriebsgruppenlösung? Wenn ja, über welche Betriebsgruppenlösung?"
+    },
+    {
+      "id": "5.1.1.d",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Modellösung? Wenn ja, über welche Modellösung"
+    },
+    {
+      "id": "5.1.1.e",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Andere Lösung? Wenn ja, welche?"
+    },
+    {
+      "id": "5.2.1",
+      "groupId": "5.2.1",
+      "collapsedId": "5.2.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Sind die Gefahren bezüglich Sicherheit und Gesundheit der Arbeitnehmenden in Ihrem Unternehmen ermittelt und dokumentiert? Wenn ja, mit welchen Methoden?"
+    },
+    {
+      "id": "5.2.2.a",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Auf welche Sachverhalte bzw. Gegenstände bezieht sich die Gefährdungsermittlung:\nArbeitsmittel?"
+    },
+    {
+      "id": "5.2.2.b",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Arbeitsprozesse, Verfahren, Methoden?"
+    },
+    {
+      "id": "5.2.2.c",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Tätigkeiten?"
+    },
+    {
+      "id": "5.2.2.d",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Arbeitsplätze?"
+    },
+    {
+      "id": "5.2.2.e",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Tätigkeiten / Arbeitsplätze mit Auftragnehmer (z.B. Fremdfirmen)?"
+    },
+    {
+      "id": "5.2.2.f",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Produkte?"
+    },
+    {
+      "id": "5.2.2.g",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Gesundheitsgefährdende Stoffe?"
+    },
+    {
+      "id": "5.2.2.h",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Andere Sachverhalte oder Gegenstände? Wenn ja, welche?"
+    },
+    {
+      "id": "5.2.3",
+      "groupId": "5.2.3",
+      "collapsedId": "5.2.3",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Wird die Gefährdungsermittlung regelmässig überprüft und den Veränderungen im Unternehmen angepasst?"
+    },
+    {
+      "id": "5.2.4",
+      "groupId": "5.2.4",
+      "collapsedId": "5.2.4",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Gibt es in Ihrem Unternehmen eine Person/Stelle, die für die systematische Gefährdungsermittlung zuständig ist? Wenn ja, welche Person/Stelle?"
+    },
+    {
+      "id": "5.2.5",
+      "groupId": "5.2.5",
+      "collapsedId": "5.2.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden die Mitarbeitenden in die Gefährdungsermittlung einbezogen?"
+    },
+    {
+      "id": "5.2.7",
+      "groupId": "5.2.7",
+      "collapsedId": "5.2.7",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden die Ergebnisse aus der Gefährdungsermittlung bei der Festlegung der Ziele für Sicherheit und Gesundheitsschutz berücksichtigt?"
+    },
+    {
+      "id": "5.3.1",
+      "groupId": "5.3.1",
+      "collapsedId": "5.3.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen Risikobeurteilungen durchgeführt? Wenn ja, mit welcher Methode?"
+    },
+    {
+      "id": "5.3.2.a",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "In welchen Situationen werden Risikobeurteilungen durchgeführt:\nBei neuen Arbeitsprozessen, Arbeitsmitteln und neuen Arbeitsstoffen?"
+    },
+    {
+      "id": "5.3.2.b",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Bei Veränderung oder Anpassung von Arbeitsprozessen, -mitteln?"
+    },
+    {
+      "id": "5.3.2.c",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Bei fehlenden oder unvollständigen Regeln der Technik?"
+    },
+    {
+      "id": "5.3.3",
+      "groupId": "5.3.3",
+      "collapsedId": "5.3.3",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Wird die Risikobeurteilung regelmässig überprüft und den Veränderungen im Unternehmen angepasst?"
+    },
+    {
+      "id": "5.3.4",
+      "groupId": "5.3.4",
+      "collapsedId": "5.3.4",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Gibt es in Ihrem Unternehmen eine Person/Stelle, die für die systematische Risikobeurteilung zuständig ist? Wenn ja, welche Person/Stelle?"
+    },
+    {
+      "id": "5.3.5",
+      "groupId": "5.3.5",
+      "collapsedId": "5.3.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden die Mitarbeitenden in die Risikobeurteilung einbezogen?"
+    },
+    {
+      "id": "5.3.6",
+      "groupId": "5.3.6",
+      "collapsedId": "5.3.6",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Sind die Ergebnisse der Risikobeurteilungen dokumentiert? Wenn ja, wie?"
+    },
+    {
+      "id": "5.3.7",
+      "groupId": "5.3.7",
+      "collapsedId": "5.3.7",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden die Ergebnisse aus der Risikobeurteilung bei der Festlegung der Ziele für Sicherheit und Gesundheitsschutz berücksichtigt?"
+    },
+    {
+      "id": "5.4.1.a",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Besteht in Ihrem Unternehmen eine Weisung, dass die folgenden Ereignisse innerhalb einer bestimmten Zeit gemeldet werden müssen:\nBerufsunfälle und Berufskrankheiten?"
+    },
+    {
+      "id": "5.4.1.b",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Nichtberufsunfälle?"
+    },
+    {
+      "id": "5.4.1.c",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Krankheiten?"
+    },
+    {
+      "id": "5.4.1.d",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Sachschäden?"
+    },
+    {
+      "id": "5.4.1.e",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Beinaheunfälle?"
+    },
+    {
+      "id": "5.4.1.f",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Prozessstörungen?"
+    },
+    {
+      "id": "5.4.1.g",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Andere Ereignisse?\nWenn ja, welche?"
+    },
+    {
+      "id": "5.4.3",
+      "groupId": "5.4.3",
+      "collapsedId": "5.4.3",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Ist eine Stelle bestimmt, die alle Unfallmeldungen sammelt und auswertet?"
+    },
+    {
+      "id": "5.4.4",
+      "groupId": "5.4.4",
+      "collapsedId": "5.4.4",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Ist für die Untersuchung von unerwünschten Ereignissen ein Verfahren definiert und schriftlich festgelegt?"
+    },
+    {
+      "id": "5.4.5.a",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Werden die folgenden Ereignisse regelmässig  und systematisch untersucht:\nBerufsunfälle und Berufskrankheiten?"
+    },
+    {
+      "id": "5.4.5.b",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Nichtberufsunfälle?"
+    },
+    {
+      "id": "5.4.5.c",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Krankheiten?"
+    },
+    {
+      "id": "5.4.5.d",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Sachschäden?"
+    },
+    {
+      "id": "5.4.5.e",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Beinaheunfälle?"
+    },
+    {
+      "id": "5.4.5.f",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Prozessstörungen?"
+    },
+    {
+      "id": "5.4.5.g",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Andere sicherheits- und gesundheitsrelevante Ereignisse? Wenn ja, welche?"
+    },
+    {
+      "id": "5.4.6",
+      "groupId": "5.4.6",
+      "collapsedId": "5.4.6",
+      "chapter": 5,
+      "chapterLabel": "",
+      "question": "Sind Unfallereignisse nach der Meldung des Falls an die Suva für Sie in der Regel abgeschlossen?"
+    },
+    {
+      "id": "6.1.1",
+      "groupId": "6.1.1",
+      "collapsedId": "6.1.1",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Werden nach dem Erkennen einer Gefährdung in jedem Fall Massnahmen getroffen?"
+    },
+    {
+      "id": "6.1.2",
+      "groupId": "6.1.2",
+      "collapsedId": "6.1.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Werden Sicherheitsmassnahmen aufgrund bestimmter Strategien (Ziele, Mittel und Verfahren) getroffen?"
+    },
+    {
+      "id": "6.1.3.a",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Welche Stellen/Personen sind an der Massnahmenfindung beteiligt:\nLinienvorgesetzte?"
+    },
+    {
+      "id": "6.1.3.b",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Mitarbeitende?"
+    },
+    {
+      "id": "6.1.3.c",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Sicherheitsbeauftragte?"
+    },
+    {
+      "id": "6.1.3.d",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Die Sicherheitsorganisation?"
+    },
+    {
+      "id": "6.1.3.e",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Andere Personen/Stellen? Wenn ja, welche?"
+    },
+    {
+      "id": "6.1.4",
+      "groupId": "6.1.4",
+      "collapsedId": "6.1.4",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Wird die Ausführung der zu treffenden Massnahmen terminiert und überwacht?"
+    },
+    {
+      "id": "6.1.5",
+      "groupId": "6.1.5",
+      "collapsedId": "6.1.5",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Wird die Wirksamkeit der getroffenen Massnahmen kontrolliert?"
+    },
+    {
+      "id": "6.1.6",
+      "groupId": "6.1.6",
+      "collapsedId": "6.1.6",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Werden die Auswirkungen der eingeleiteten bzw. umgesetzten Massnahmen bei der Festlegung der Ziele für Sicherheit und Gesundheitsschutz berücksichtigt?"
+    },
+    {
+      "id": "6.2.1.a",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Wurden in Ihrem Unternehmen in den letzten zwei Jahren Sicherheitsprogramme in den folgenden Bereichen durchgeführt, gestartet oder für dieses oder nächstes Jahr geplant:\nArbeitssicherheit?"
+    },
+    {
+      "id": "6.2.1.b",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Freizeitsicherheit?"
+    },
+    {
+      "id": "6.2.1.c",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Gesundheitsförderung?"
+    },
+    {
+      "id": "6.2.2.a",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Wurden in Ihrem Unternehmen in den letzten zwei Jahren die folgenden Sicherheitsprogramme durchgeführt, gestartet oder für dieses oder das nächste Jahr geplant?\nSichere Arbeitsgerüste?"
+    },
+    {
+      "id": "6.2.2.b",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Sicherheit an Pressen?"
+    },
+    {
+      "id": "6.2.2.c",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "STOP dem Manipulieren von Schutzeinrichtungen?"
+    },
+    {
+      "id": "6.2.2.d",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "stolpern.ch?"
+    },
+    {
+      "id": "6.2.2.e",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Asbest?"
+    },
+    {
+      "id": "6.2.2.f",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Sichere Instandhaltung?"
+    },
+    {
+      "id": "6.2.2.g",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Sichere Lehrzeit?"
+    },
+    {
+      "id": "6.2.2.h",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "",
+      "question": "Andere Sicherheitsprogramme? Wenn ja, welche?"
+    },
+    {
+      "id": "7.1.1",
+      "groupId": "7.1.1",
+      "collapsedId": "7.1.1",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über ein Notfallkonzept, das den betrieblichen Risiken gerecht wird?"
+    },
+    {
+      "id": "7.1.2",
+      "groupId": "7.1.2",
+      "collapsedId": "7.1.2",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Ist eine rasche und sachdienliche Soforthilfe bei Unfällen und akuten Erkrankungen gewährleistet?"
+    },
+    {
+      "id": "7.1.3.a",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Sind die folgenden Institutionen Ihrer Region über spezifische Risiken bzw. mögliche Ereignisse und die in Ihrem Unternehmen gelagerten und verwendeten Arbeitsstoffe informiert:\nÄrzte?"
+    },
+    {
+      "id": "7.1.3.b",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Spitäler/Ambulanzen?"
+    },
+    {
+      "id": "7.1.3.c",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Feuerwehr?"
+    },
+    {
+      "id": "7.1.3.d",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Polizei?"
+    },
+    {
+      "id": "7.1.4",
+      "groupId": "7.1.4",
+      "collapsedId": "7.1.4",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Besteht in Ihrem Unternehmen ein Melde- oder Alarmsystem für Notfälle?"
+    },
+    {
+      "id": "7.1.5",
+      "groupId": "7.1.5",
+      "collapsedId": "7.1.5",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Sind die Notfallnummern bei allen Kommunikationsmittel leicht erkennbar angebracht?"
+    },
+    {
+      "id": "7.1.6",
+      "groupId": "7.1.6",
+      "collapsedId": "7.1.6",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Ist der rasche und unbehinderte Zugang zum Notfallmaterial jederzeit gewährleistet?"
+    },
+    {
+      "id": "7.1.7.a",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Ist der Notfalldienst auch gewährleistet bei: \nSchichtarbeit?"
+    },
+    {
+      "id": "7.1.7.b",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Wochenendarbeit?"
+    },
+    {
+      "id": "7.1.7.c",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Überzeit?"
+    },
+    {
+      "id": "7.1.7.d",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Speziellen Arbeitseinsätzen?"
+    },
+    {
+      "id": "7.1.7.e",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Allein arbeitenden Personen?"
+    },
+    {
+      "id": "7.1.8",
+      "groupId": "7.1.8",
+      "collapsedId": "7.1.8",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Werden Erste-Hilfe-Leistungen dokumentiert? Wenn ja, wie?"
+    },
+    {
+      "id": "7.1.9",
+      "groupId": "7.1.9",
+      "collapsedId": "7.1.9",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Ist das richtige Verhalten bei Notfällen den Mitarbeitenden aller Stufen bekannt?"
+    },
+    {
+      "id": "7.2.1",
+      "groupId": "7.2.1",
+      "collapsedId": "7.2.1",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Bestehen schriftliche Anweisungen an das Personal bezüglich des Verhaltens in Notsituationen?"
+    },
+    {
+      "id": "7.2.2",
+      "groupId": "7.2.2",
+      "collapsedId": "7.2.2",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Tragen die Beschäftigten einen Notfallausweis mit den wichtigsten Angaben für Notfallmeldungen auf sich?"
+    },
+    {
+      "id": "7.2.3.a",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Wird das konkrete Verhalten der Beschäftigten in Notfallsituationen, wie Unfällen, Zwischenfällen usw:\ninstruiert?"
+    },
+    {
+      "id": "7.2.3.b",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "geübt?"
+    },
+    {
+      "id": "7.2.3.c",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "überprüft?"
+    },
+    {
+      "id": "7.2.4",
+      "groupId": "7.2.4",
+      "collapsedId": "7.2.4",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über einen betriebseigenen Sanitätsdienst?"
+    },
+    {
+      "id": "7.2.5",
+      "groupId": "7.2.5",
+      "collapsedId": "7.2.5",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Stehen speziell geschulte Betriebssanitäter/-innen jederzeit zur Verfügung? Wenn ja, wieviele?"
+    },
+    {
+      "id": "7.2.6",
+      "groupId": "7.2.6",
+      "collapsedId": "7.2.6",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über einen betriebseigenen Sanitätsraum mit Erste-Hilfe-Einrichtungen, die den auftretenden Risiken entsprechen?"
+    },
+    {
+      "id": "7.2.7.a",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Ist festgelegt, wer bei besonderen Ereignissen (Unfälle, Brände, usw.) die folgenden Personen/Stellen informiert?\nAngehörige von Verletzten?"
+    },
+    {
+      "id": "7.2.7.b",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Versicherungen?"
+    },
+    {
+      "id": "7.2.7.c",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Amtsstellen?"
+    },
+    {
+      "id": "7.2.7.d",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Die Medien?"
+    },
+    {
+      "id": "7.3.1",
+      "groupId": "7.3.1",
+      "collapsedId": "7.3.1",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Verfügen Sie über eine betriebsinterne Brandschutzorganisation?"
+    },
+    {
+      "id": "7.3.2",
+      "groupId": "7.3.2",
+      "collapsedId": "7.3.2",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Bestehen eine zweckmässige Brandmeldeorganisation (Alarmorganisation) und entsprechende Brandmeldeeinrichtungen?"
+    },
+    {
+      "id": "7.3.3",
+      "groupId": "7.3.3",
+      "collapsedId": "7.3.3",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Sind die Beschäftigten über das Verhalten bei einem Brand instruiert?"
+    },
+    {
+      "id": "7.3.4",
+      "groupId": "7.3.4",
+      "collapsedId": "7.3.4",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Werden praktische Übungen bezüglich des Verhaltens bei einem Brand durchgeführt? Wenn ja, wann wurde die letzte Übung durchgeführt?"
+    },
+    {
+      "id": "7.3.5",
+      "groupId": "7.3.5",
+      "collapsedId": "7.3.5",
+      "chapter": 7,
+      "chapterLabel": "",
+      "question": "Haben an der letzten Übung alle Betriebsangehörige teilgenommen?"
+    },
+    {
+      "id": "8.1.1",
+      "groupId": "8.1.1",
+      "collapsedId": "8.1.1",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Ist die Information und Mitsprache der Mitarbeitenden gemäss Mitwirkungsgesetz* geregelt?\n* Mitwirkungsgesetz: Bundesgesetz über die Information und Mitsprache der Arbeitnehmerinnen und Arbeitnehmer in den Betrieben"
+    },
+    {
+      "id": "8.1.2.a",
+      "groupId": "8.1.2",
+      "collapsedId": "8.1.2",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Welche Form der Arbeitnehmervertretung besteht in Ihrem Unternehmen:\nEinzelne Mitarbeiterinnen und Mitarbeiter direkt?"
+    },
+    {
+      "id": "8.1.2.b",
+      "groupId": "8.1.2",
+      "collapsedId": "8.1.2",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Von den Arbeitnehmenden gewählte Vertretung?"
+    },
+    {
+      "id": "8.1.3",
+      "groupId": "8.1.3",
+      "collapsedId": "8.1.3",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Ist die rechtzeitige und umfassende Information der Mitarbeitenden bzw. der Arbeitnehmervertretung sichergestellt?"
+    },
+    {
+      "id": "8.1.4",
+      "groupId": "8.1.4",
+      "collapsedId": "8.1.4",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Sind die besonderen Mitwirkungsrechte der Mitarbeitenden bzw. der Arbeitnehmervertretung in Belangen der Arbeitssicherheit und des Gesundheitsschutzes gewährleistet?"
+    },
+    {
+      "id": "8.1.5",
+      "groupId": "8.1.5",
+      "collapsedId": "8.1.5",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Wird die Arbeitnehmervertretung von Arbeitgeberseite in ihrer Tätigkeit unterstützt?"
+    },
+    {
+      "id": "8.2.1",
+      "groupId": "8.2.1",
+      "collapsedId": "8.2.1",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Ist in Ihrem Unternehmen ein Vorschlagswesen institutionalisiert?"
+    },
+    {
+      "id": "8.2.2",
+      "groupId": "8.2.2",
+      "collapsedId": "8.2.2",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Werden Vorschläge bezüglich Sicherheit und Gesundheitsschutz ausdrücklich gewünscht?"
+    },
+    {
+      "id": "8.2.3",
+      "groupId": "8.2.3",
+      "collapsedId": "8.2.3",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht? Wenn ja, wie viele?"
+    },
+    {
+      "id": "8.2.4",
+      "groupId": "8.2.4",
+      "collapsedId": "8.2.4",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht, welche im weitesten Sinne die Sicherheit und den Gesundheitsschutz betrafen? Wenn ja, wie viele?"
+    },
+    {
+      "id": "8.2.5",
+      "groupId": "8.2.5",
+      "collapsedId": "8.2.5",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Werden Vorschläge bezüglich der Verbesserung der Sicherheit honoriert? Wenn ja, wie?"
+    },
+    {
+      "id": "8.2.6",
+      "groupId": "8.2.6",
+      "collapsedId": "8.2.6",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Kommt in Ihrem Unternehmen ein bestimmtes Anreizsystem zur Förderung der Sicherheit und Gesundheit zur Anwendung? Wenn ja, worin besteht dieses Anreizsystem?"
+    },
+    {
+      "id": "8.2.7",
+      "groupId": "8.2.7",
+      "collapsedId": "8.2.7",
+      "chapter": 8,
+      "chapterLabel": "",
+      "question": "Bestehen in Ihrem Unternehmen Qualitätszirkel* oder andere Mittel und Formen zur Nutzung des Kreativpotenzials der Mitarbeitenden? Wenn ja, welche?\n*Qualitätszirkel: Arbeitsgruppe für die kontinuierliche Qualitätsverbesserung."
+    },
+    {
+      "id": "9.1.1",
+      "groupId": "9.1.1",
+      "collapsedId": "9.1.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Können die Mitarbeitenden Ihre Arbeit selbständig einteilen?"
+    },
+    {
+      "id": "9.1.2",
+      "groupId": "9.1.2",
+      "collapsedId": "9.1.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Können die Mitarbeitenden den Arbeitsfluss notfalls ohne nachteilige Folgen unterbrechen?"
+    },
+    {
+      "id": "9.1.3",
+      "groupId": "9.1.3",
+      "collapsedId": "9.1.3",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Können sich Mitarbeitende so oft wie nötig miteinander verständigen?"
+    },
+    {
+      "id": "9.1.4",
+      "groupId": "9.1.4",
+      "collapsedId": "9.1.4",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Tauchen öfter Unklarheiten bezüglich Zuständigkeiten auf, obwohl sie der Meinung waren, alles sei klar geregelt?"
+    },
+    {
+      "id": "9.1.5",
+      "groupId": "9.1.5",
+      "collapsedId": "9.1.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es Bereiche mit häufigen Störungen im Arbeitsablauf (Verwechslungen, Vergessen, Übersehen, Vergreifen)?\nWenn ja, welche?"
+    },
+    {
+      "id": "9.1.6",
+      "groupId": "9.1.6",
+      "collapsedId": "9.1.6",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es bei Ihnen monotone, reizarme Tätigkeiten mit geringen Anforderungen?"
+    },
+    {
+      "id": "9.1.7",
+      "groupId": "9.1.7",
+      "collapsedId": "9.1.7",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Falls Sie 9.1.6. mit \"Ja\" beantwortet haben:  Wäre es Ihrer Meinung nach möglich, einige dieser Tätigkeiten durch Aufgabenerweiterung oder Aufgabenwechsel zu bereichern?"
+    },
+    {
+      "id": "9.10.1",
+      "groupId": "9.10.1",
+      "collapsedId": "9.10.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Berücksichtigen Sie ergonomische Grundsätze bei der Planung von neuen Arbeitsmitteln, Arbeitsplätzen und Arbeitsverfahren?"
+    },
+    {
+      "id": "9.10.2",
+      "groupId": "9.10.2",
+      "collapsedId": "9.10.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden die Arbeitsplätze periodisch nach ergonomischen Grundsätzen überprüft?"
+    },
+    {
+      "id": "9.10.3",
+      "groupId": "9.10.3",
+      "collapsedId": "9.10.3",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Verfügen Ihre Arbeits- und Betriebsmittelplaner über ergonomische Kenntnisse?"
+    },
+    {
+      "id": "9.10.4",
+      "groupId": "9.10.4",
+      "collapsedId": "9.10.4",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden andere interne oder externe Stellen bei ergonomischen Problemstellungen und Fragen konsultiert? Wenn ja, welche?"
+    },
+    {
+      "id": "9.10.5",
+      "groupId": "9.10.5",
+      "collapsedId": "9.10.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind ergonomische Kriterien und Anforderungen fester Bestandteil Ihrer Kaufverträge und Bestellungen?"
+    },
+    {
+      "id": "9.2.1",
+      "groupId": "9.2.1",
+      "collapsedId": "9.2.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es Bereiche in denen häufig über Müdigkeit, Kopfweh, Schlafstörungen oder Magenbeschwerden geklagt wird? Wenn ja, in welchen Bereichen?"
+    },
+    {
+      "id": "9.2.2",
+      "groupId": "9.2.2",
+      "collapsedId": "9.2.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es Klagen über monotone Arbeiten oder einseitige Belastungen?\nWenn ja, in welchen Bereichen?"
+    },
+    {
+      "id": "9.2.3",
+      "groupId": "9.2.3",
+      "collapsedId": "9.2.3",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es Klagen über Termindruck, Hektik oder Überforderung?"
+    },
+    {
+      "id": "9.2.4",
+      "groupId": "9.2.4",
+      "collapsedId": "9.2.4",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Kommt es vor, dass Sie eine diffuse Unzufriedenheit wahrnehmen, ohne einen einsichtigen Grund für dieses Unbehagen finden zu können (ständiges Nörgeln)?"
+    },
+    {
+      "id": "9.2.5.a",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es menschliche Konflikte zwischen:\nMitarbeitenden?"
+    },
+    {
+      "id": "9.2.5.b",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Abteilungen?"
+    },
+    {
+      "id": "9.2.5.c",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Vorgesetzten und Untergebenen?"
+    },
+    {
+      "id": "9.2.5.d",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Vorgesetzten?"
+    },
+    {
+      "id": "9.2.6",
+      "groupId": "9.2.6",
+      "collapsedId": "9.2.6",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wird ein dokumentiertes Konfliktlösungsverfahren angewendet?"
+    },
+    {
+      "id": "9.3.1.a",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Treten an den Arbeitsplätzen Ihres Unternehmens die folgenden sicherheits-und gesundheitsrelevante Belastungen physischer Art auf:\nHohe Herz-Kreislaufbelastungen, körperliche Schwerarbeit?"
+    },
+    {
+      "id": "9.3.1.b",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohe Belastungen des Knochen- und Muskelapparats?"
+    },
+    {
+      "id": "9.3.1.c",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohe einseitige, lokale Körperbelastungen?"
+    },
+    {
+      "id": "9.3.1.d",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohe Belastungen der Atemorgane?"
+    },
+    {
+      "id": "9.3.1.e",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohe Anteile an statischen Arbeitshaltungen/ Muskelarbeit auf?"
+    },
+    {
+      "id": "9.3.1.f",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Ungünstige Körperhaltungen und Zwangshaltungen auf?"
+    },
+    {
+      "id": "9.3.1.g",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Belastungen aufgrund des Hebens, Haltens, Tragens und Bewegens schwerer Lasten auf?"
+    },
+    {
+      "id": "9.3.1.h",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Lärm?"
+    },
+    {
+      "id": "9.3.1.i",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Vibration?"
+    },
+    {
+      "id": "9.3.1.j",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Abgase?"
+    },
+    {
+      "id": "9.3.1.k",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hitze?"
+    },
+    {
+      "id": "9.3.1.l",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Kälte?"
+    },
+    {
+      "id": "9.3.1.m",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Feuchtigkeit?"
+    },
+    {
+      "id": "9.3.1.n",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Nässe?"
+    },
+    {
+      "id": "9.3.1.o",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Zugluft?"
+    },
+    {
+      "id": "9.3.1.p",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Dämpfe?"
+    },
+    {
+      "id": "9.3.1.q",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Stäube?"
+    },
+    {
+      "id": "9.3.1.r",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Nebel?"
+    },
+    {
+      "id": "9.3.1.s",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Rauch?"
+    },
+    {
+      "id": "9.3.1.t",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gase?"
+    },
+    {
+      "id": "9.3.1.u",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Stoffe?"
+    },
+    {
+      "id": "9.3.1.v",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Strahlen/Strahlungsfelder?"
+    },
+    {
+      "id": "9.3.1.w",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Geruchsbelästigungen?"
+    },
+    {
+      "id": "9.3.1.x",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Lichtverhältnisse, Beleuchtung?"
+    },
+    {
+      "id": "9.3.1.y",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sichtverhältnisse?"
+    },
+    {
+      "id": "9.3.1.z",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Andere physische Belastungen? Wenn ja, welche?"
+    },
+    {
+      "id": "9.4.1.a",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Treten an den Arbeitsplätzen Ihres Unternehmens die folgenden sicherheits-und gesundheitsrelevante Belastungen psychischer Art auf:\nUnklare Zuständigkeiten?"
+    },
+    {
+      "id": "9.4.1.b",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Unverhältnismässigkeit von Aufgaben, Kompetenzen und Verantwortlichkeit?"
+    },
+    {
+      "id": "9.4.1.c",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Widersprüchliche Informationen und Arbeitsanweisungen?"
+    },
+    {
+      "id": "9.4.1.d",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Informations- und Kommunikationsmängel?"
+    },
+    {
+      "id": "9.4.1.e",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Führungsmängel?"
+    },
+    {
+      "id": "9.4.1.f",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Soziale Spannungen im Betrieb?"
+    },
+    {
+      "id": "9.4.1.g",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Soziale Spannungen in Gruppen?"
+    },
+    {
+      "id": "9.4.1.h",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Mangelhafte Zusammenarbeit zwischen einzelnen Organisationseinheiten?"
+    },
+    {
+      "id": "9.4.1.i",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Unbefriedigenden Arbeitsinhalte?"
+    },
+    {
+      "id": "9.4.1.j",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohen Arbeitstempo, welches von technischen Einrichtungen und Geräten bestimmt wird?"
+    },
+    {
+      "id": "9.4.1.k",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Häufig auftretende Belastungsspitzen?"
+    },
+    {
+      "id": "9.4.1.l",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Häufige Überzeit?"
+    },
+    {
+      "id": "9.4.1.m",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hohe Arbeitsbelastung durch unverhältnismässige Arbeitsvolumen?"
+    },
+    {
+      "id": "9.4.1.n",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Häufige Stresssituationen?"
+    },
+    {
+      "id": "9.4.1.o",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Hoher Grad an Fremdbestimmung?"
+    },
+    {
+      "id": "9.5.1.a",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wie sind die Arbeitszeiten in Ihrem Unternehmen geregelt?\nTagesarbeitszeit?\nWenn ja, wieviele Stunden beträgt die Tagesarbeitszeit?"
+    },
+    {
+      "id": "9.5.1.b",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wochenarbeitszeit?\nWenn ja, wieviele Stunden beträgt die Wochenarbeitszeit?"
+    },
+    {
+      "id": "9.5.1.c",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Jahresarbeitszeit (Sollarbeitszeit)? Wenn ja, wieviele Stunden beträgt die Jahresarbeitszeit?"
+    },
+    {
+      "id": "9.5.2",
+      "groupId": "9.5.2",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Haben Sie gleitende Arbeitszeiten? Wenn ja, wie sind die Blockzeiten geregelt?"
+    },
+    {
+      "id": "9.5.3",
+      "groupId": "9.5.3",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Haben Sie andere Arbeitszeitmodelle? Wenn ja, welche?"
+    },
+    {
+      "id": "9.5.4",
+      "groupId": "9.5.4",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wird in Ihrem Unternehmen an Samstagen gearbeitet?"
+    },
+    {
+      "id": "9.5.5",
+      "groupId": "9.5.5",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wird in Ihrem Unternehmen an Sonn- und Feiertagen gearbeitet?"
+    },
+    {
+      "id": "9.5.6",
+      "groupId": "9.5.6",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es in ihrem Unternehmen Schichtarbeit? Falls ja, wann beginnen und Enden die Früh-, Spät- und Nachtschicht?"
+    },
+    {
+      "id": "9.5.7",
+      "groupId": "9.5.7",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es in Ihrem Unternehmen andere Arbeitszeitregelungen? Falls ja, welche?"
+    },
+    {
+      "id": "9.6.1",
+      "groupId": "9.6.1",
+      "collapsedId": "9.6.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind die offiziellen Arbeitspausen in Ihrem Unternehmen geregelt?"
+    },
+    {
+      "id": "9.6.2.a",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es in Ihrem Unternehmen eine offizielle Arbeitspause:\nAm Vormittag? Wenn ja, wie lange dauert diese?"
+    },
+    {
+      "id": "9.6.2.b",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Am Mittag? Falls ja, wie lange dauert diese?"
+    },
+    {
+      "id": "9.6.2.c",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Am Nachmittag? Falls ja, wie lange dauert diese?"
+    },
+    {
+      "id": "9.6.2.d",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Schichtpausen? Falls ja, wie lange dauern diese?"
+    },
+    {
+      "id": "9.6.3",
+      "groupId": "9.6.3",
+      "collapsedId": "9.6.3",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Besteht für die Beschäftigten die Möglichkeit, Kurzpausen in einem vernünftigen Rahmen selbständig einzuschalten?"
+    },
+    {
+      "id": "9.6.4",
+      "groupId": "9.6.4",
+      "collapsedId": "9.6.4",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Stehen für die Pausenzeiten geeignete Räume zur Verfügung?"
+    },
+    {
+      "id": "9.6.5",
+      "groupId": "9.6.5",
+      "collapsedId": "9.6.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Stehen für Raucher bzw. Nichtraucher getrennte Pausenräume zu Verfügung?"
+    },
+    {
+      "id": "9.7.1.a",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Welche Lohnform wird in Ihrem Unternehmen angewendet:\nZeitlohn (feste Anstellung, Monats- oder Stundenlohn)?"
+    },
+    {
+      "id": "9.7.1.b",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Prämienlohn (Zeitlohn plus Prämien)?"
+    },
+    {
+      "id": "9.7.1.c",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Leistungslohn (Akkordlohn, Stücklohn)?"
+    },
+    {
+      "id": "9.7.1.e",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gruppenakkordlohn?"
+    },
+    {
+      "id": "9.7.2",
+      "groupId": "9.7.2",
+      "collapsedId": "9.7.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wird bei Akkordlohn ein leistungsunabhängiger Grundlohn garantiert?"
+    },
+    {
+      "id": "9.8.1",
+      "groupId": "9.8.1",
+      "collapsedId": "9.8.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen gesundheitsgefährdende Stoffe hergestellt oder verarbeitet?"
+    },
+    {
+      "id": "9.8.2",
+      "groupId": "9.8.2",
+      "collapsedId": "9.8.2",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen gesundheitsgefährdende Stoffe gelagert?"
+    },
+    {
+      "id": "9.8.3",
+      "groupId": "9.8.3",
+      "collapsedId": "9.8.3",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden in Ihrem Unternehmen die Sicherheitsbestimmungen im Zusammenhang mit gesundheitsgefährdenden Stoffen eingehalten?"
+    },
+    {
+      "id": "9.8.4",
+      "groupId": "9.8.4",
+      "collapsedId": "9.8.4",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind in Ihrem Unternehmen zu allen gesundheitsgefährdenden Stoffen die entsprechenden Sicherheitsdatenblätter vorhanden?"
+    },
+    {
+      "id": "9.8.5",
+      "groupId": "9.8.5",
+      "collapsedId": "9.8.5",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind diese Datenblätter an den Arbeitsplätzen verfügbar?"
+    },
+    {
+      "id": "9.8.6",
+      "groupId": "9.8.6",
+      "collapsedId": "9.8.6",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind die Mitarbeitenden über den Inhalt der Datenblätter geschult?"
+    },
+    {
+      "id": "9.8.7",
+      "groupId": "9.8.7",
+      "collapsedId": "9.8.7",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Sind die erforderlichen Infrastrukturmittel zur Einhaltung der Regeln der Datenblätter vorhanden?"
+    },
+    {
+      "id": "9.9.1",
+      "groupId": "9.9.1",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es heimliche Verstärker von riskantem Verhalten? (Hohe Leistung ist gefragt, egal, wie sie zustande kommt; Rambos werden bewundert, sicherheitsgerechtes Arbeiten ausgelacht)."
+    },
+    {
+      "id": "9.9.2",
+      "groupId": "9.9.2",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Ist der Umgang mit Suchtmitteln (z.B. Alkohol, Drogen, Nikotin) im Betrieb geregelt?"
+    },
+    {
+      "id": "9.9.3",
+      "groupId": "9.9.3",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wird in der Kantine oder im Betrieb Alkohol ausgeschenkt?"
+    },
+    {
+      "id": "9.9.4",
+      "groupId": "9.9.4",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es in Ihrem Betrieb ein Suchtpräventionsprogramm?"
+    },
+    {
+      "id": "9.9.5",
+      "groupId": "9.9.5",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Gibt es aktuelle Fälle von erkannten Suchtproblemen? Wenn ja, wieviele Fälle?"
+    },
+    {
+      "id": "9.9.6",
+      "groupId": "9.9.6",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden diese Fälle konkret und systematisch behandelt? Wenn ja, welche Stelle oder Person befasst sich mit diesen Fällen?"
+    },
+    {
+      "id": "9.9.7",
+      "groupId": "9.9.7",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Wissen alle Vorgesetzten, wie sie handeln sollen, wenn sich zeigt, dass ein Mitarbeiter Suchtprobleme hat (Alkohol etc.)?"
+    },
+    {
+      "id": "9.9.8",
+      "groupId": "9.9.8",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden Massnahmen zum Schutz von besonderen Personengruppen getroffen (z. B. Jugendschutz, Mutterschutz, behinderte Personen)?"
+    },
+    {
+      "id": "9.9.9",
+      "groupId": "9.9.9",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "",
+      "question": "Werden Massnahmen zum Schutz vor übertragbaren Krankheiten getroffen? (z.B. BAG Pandemieplan Handbuch für die betriebliche Vorbereitung, kantonale oder branchenspezifische Vorgaben)"
+    }
+  ]
+}

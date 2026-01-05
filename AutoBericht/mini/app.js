@@ -2,6 +2,7 @@
   const pickFolderBtn = document.getElementById("pick-folder");
   const loadSidecarBtn = document.getElementById("load-sidecar");
   const saveSidecarBtn = document.getElementById("save-sidecar");
+  const loadSeedsBtn = document.getElementById("load-seeds");
   const saveLogBtn = document.getElementById("save-log");
   const statusEl = document.getElementById("status");
   const chapterListEl = document.getElementById("chapter-list");
@@ -43,7 +44,17 @@
                 "4": "Die Charta als aktives Fuehrungsinstrument nutzen.",
               },
             },
-            customer: { answer: 1, remark: "Leitbild vorhanden" },
+            customer: {
+              answer: 1,
+              remark: "Leitbild vorhanden",
+              items: [
+                {
+                  id: "1.1.1",
+                  question: "Gibt es ein Sicherheitsleitbild?",
+                  collapsedId: "1.1.1",
+                },
+              ],
+            },
             workstate: {
               selectedLevel: 2,
               includeFinding: true,
@@ -67,7 +78,17 @@
                 "4": "Strategie in allen Bereichen verankern.",
               },
             },
-            customer: { answer: 0, remark: "" },
+            customer: {
+              answer: 0,
+              remark: "",
+              items: [
+                {
+                  id: "1.1.2",
+                  question: "Gibt es eine dokumentierte Sicherheitsstrategie?",
+                  collapsedId: "1.1.2",
+                },
+              ],
+            },
             workstate: {
               selectedLevel: 3,
               includeFinding: true,
@@ -97,7 +118,17 @@
                 "4": "Regalmanagement im Sicherheitsprogramm verankern.",
               },
             },
-            customer: { answer: 0, remark: "" },
+            customer: {
+              answer: 0,
+              remark: "",
+              items: [
+                {
+                  id: "4.6.1",
+                  question: "Sind Regale gegen Kippen gesichert?",
+                  collapsedId: "4.6.1",
+                },
+              ],
+            },
             workstate: {
               selectedLevel: 1,
               includeFinding: true,
@@ -142,6 +173,7 @@
     const enabled = !!dirHandle;
     loadSidecarBtn.disabled = !enabled;
     saveSidecarBtn.disabled = !enabled;
+    loadSeedsBtn.disabled = !enabled;
   };
 
   const getChapterTitle = (chapter) => {
@@ -151,7 +183,13 @@
     return chapter.id || "";
   };
 
-  const ensureWorkstate = (row) => {
+  const toText = (value) => {
+    if (Array.isArray(value)) return value.join("\n");
+    if (value == null) return "";
+    return String(value);
+  };
+
+  const ensureWorkstateDefaults = (row) => {
     if (!row.workstate) row.workstate = {};
     const ws = row.workstate;
     if (ws.selectedLevel == null) ws.selectedLevel = 1;
@@ -164,10 +202,91 @@
     ws.levelOverrides = ws.levelOverrides || { "1": "", "2": "", "3": "", "4": "" };
   };
 
+  const buildProjectFromSeeds = (selbstData, libraryData) => {
+    const libraryMap = new Map(
+      (libraryData.entries || []).map((entry) => [entry.id, entry])
+    );
+    const groups = new Map();
+
+    (selbstData.items || []).forEach((item) => {
+      const collapsedId = item.collapsedId || item.groupId || item.id;
+      if (!collapsedId) return;
+      const chapterId = String(collapsedId).split(".")[0];
+      const group = groups.get(collapsedId) || {
+        id: collapsedId,
+        chapterId,
+        items: [],
+        chapterLabel: item.chapterLabel || "",
+      };
+      group.items.push(item);
+      if (!group.chapterLabel && item.chapterLabel) {
+        group.chapterLabel = item.chapterLabel;
+      }
+      groups.set(collapsedId, group);
+    });
+
+    const chaptersById = new Map();
+    groups.forEach((group) => {
+      const chapterId = group.chapterId || "0";
+      const chapter = chaptersById.get(chapterId) || {
+        id: chapterId,
+        title: { de: group.chapterLabel || `Kapitel ${chapterId}` },
+        rows: [],
+      };
+      const master = libraryMap.get(group.id) || null;
+      chapter.rows.push({
+        id: group.id,
+        titleOverride: group.items[0]?.question || "",
+        master,
+        customer: {
+          answer: null,
+          remark: "",
+          items: group.items,
+        },
+        workstate: {
+          selectedLevel: 1,
+          includeFinding: true,
+          includeRecommendation: true,
+          done: false,
+          useFindingOverride: false,
+          findingOverride: "",
+          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
+          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+        },
+      });
+      chaptersById.set(chapterId, chapter);
+    });
+
+    const chapters = Array.from(chaptersById.values()).sort((a, b) => {
+      const aNum = Number(a.id);
+      const bNum = Number(b.id);
+      if (Number.isNaN(aNum) || Number.isNaN(bNum)) return String(a.id).localeCompare(String(b.id));
+      return aNum - bNum;
+    });
+    chapters.forEach((chapter) => {
+      chapter.rows.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+    });
+
+    return {
+      meta: {
+        projectId: "seed-import",
+        company: "",
+        locale: "de-CH",
+        author: "",
+        createdAt: new Date().toISOString(),
+      },
+      chapters,
+    };
+  };
+
+  const ensureWorkstate = (row) => {
+    ensureWorkstateDefaults(row);
+  };
+
   const getFindingText = (row) => {
     const ws = row.workstate;
     if (ws.useFindingOverride && ws.findingOverride) return ws.findingOverride;
-    return row.master?.finding || "";
+    return toText(row.master?.finding);
   };
 
   const getRecommendationText = (row, level) => {
@@ -176,7 +295,7 @@
     if (ws.useLevelOverride?.[levelKey] && ws.levelOverrides?.[levelKey]) {
       return ws.levelOverrides[levelKey];
     }
-    return row.master?.levels?.[levelKey] || "";
+    return toText(row.master?.levels?.[levelKey]);
   };
 
   const renderChapterList = () => {
@@ -217,10 +336,34 @@
       meta.textContent = `${row.id} ${row.titleOverride || ""}`.trim();
       const badge = document.createElement("span");
       badge.className = "badge";
-      badge.textContent = row.customer?.answer === 1 ? "Answer: Yes" : "Answer: No";
+      if (row.customer?.answer === 1) {
+        badge.textContent = "Answer: Yes";
+      } else if (row.customer?.answer === 0) {
+        badge.textContent = "Answer: No";
+      } else {
+        badge.textContent = "Answer: —";
+      }
       header.appendChild(meta);
       header.appendChild(badge);
       card.appendChild(header);
+
+      const selfItems = row.customer?.items || [];
+      if (selfItems.length) {
+        const details = document.createElement("details");
+        details.className = "self-details";
+        const summary = document.createElement("summary");
+        summary.textContent = `Selbstbeurteilung (${selfItems.length})`;
+        details.appendChild(summary);
+        const list = document.createElement("ul");
+        list.className = "self-list";
+        selfItems.forEach((item) => {
+          const li = document.createElement("li");
+          li.textContent = `${item.id} — ${item.question || ""}`.trim();
+          list.appendChild(li);
+        });
+        details.appendChild(list);
+        card.appendChild(details);
+      }
 
       const checkboxRow = document.createElement("div");
       checkboxRow.className = "checkbox-row";
@@ -262,7 +405,7 @@
       findingCheckbox.addEventListener("change", () => {
         ws.useFindingOverride = findingCheckbox.checked;
         if (ws.useFindingOverride && !ws.findingOverride) {
-          ws.findingOverride = row.master?.finding || "";
+          ws.findingOverride = toText(row.master?.finding);
         }
         renderRows();
       });
@@ -310,7 +453,7 @@
       overrideCheckbox.addEventListener("change", () => {
         ws.useLevelOverride[levelKey] = overrideCheckbox.checked;
         if (ws.useLevelOverride[levelKey] && !ws.levelOverrides[levelKey]) {
-          ws.levelOverrides[levelKey] = row.master?.levels?.[levelKey] || "";
+          ws.levelOverrides[levelKey] = toText(row.master?.levels?.[levelKey]);
         }
         renderRows();
       });
@@ -331,6 +474,44 @@
       recField.appendChild(controls);
       recField.appendChild(recArea);
       card.appendChild(recField);
+
+      const children = row.master?.children || [];
+      if (children.length) {
+        const childDetails = document.createElement("details");
+        childDetails.className = "child-details";
+        const childSummary = document.createElement("summary");
+        childSummary.textContent = `Combined sub-blocks (${children.length})`;
+        childDetails.appendChild(childSummary);
+
+        children.forEach((child) => {
+          const childCard = document.createElement("div");
+          childCard.className = "child-card";
+          const childHeader = document.createElement("div");
+          childHeader.className = "child-header";
+          const childTitle = document.createElement("div");
+          childTitle.textContent = child.idRange || "Sub-block";
+          const childIds = document.createElement("div");
+          childIds.className = "child-ids";
+          childIds.textContent = child.ids?.length ? child.ids.join(", ") : "";
+          childHeader.appendChild(childTitle);
+          childHeader.appendChild(childIds);
+          childCard.appendChild(childHeader);
+
+          const childFinding = document.createElement("div");
+          childFinding.className = "child-finding";
+          childFinding.textContent = child.finding || "";
+          childCard.appendChild(childFinding);
+
+          const childRec = document.createElement("div");
+          childRec.className = "child-rec";
+          const childLevelText = toText(child.levels?.[levelKey]);
+          childRec.textContent = childLevelText || "";
+          childCard.appendChild(childRec);
+          childDetails.appendChild(childCard);
+        });
+
+        card.appendChild(childDetails);
+      }
 
       rowsEl.appendChild(card);
     });
@@ -386,6 +567,33 @@
     } catch (err) {
       setStatus(`Save failed: ${err.message}`);
       debug.logLine("error", `Save failed: ${err.message}`);
+    }
+  });
+
+  const readJsonFromPath = async (rootHandle, pathParts) => {
+    let currentHandle = rootHandle;
+    for (let i = 0; i < pathParts.length - 1; i += 1) {
+      currentHandle = await currentHandle.getDirectoryHandle(pathParts[i]);
+    }
+    const fileHandle = await currentHandle.getFileHandle(pathParts[pathParts.length - 1]);
+    const file = await fileHandle.getFile();
+    const text = await file.text();
+    return JSON.parse(text);
+  };
+
+  loadSeedsBtn.addEventListener("click", async () => {
+    if (!dirHandle) return;
+    try {
+      const selbst = await readJsonFromPath(dirHandle, ["data", "seed", "selbstbeurteilung_ids.json"]);
+      const library = await readJsonFromPath(dirHandle, ["data", "seed", "library_master.json"]);
+      state.project = buildProjectFromSeeds(selbst, library);
+      state.selectedChapterId = state.project.chapters[0]?.id || "";
+      render();
+      setStatus("Loaded seed data from data/seed.");
+      debug.logLine("info", "Loaded seed data from data/seed.");
+    } catch (err) {
+      setStatus(`Seed load failed: ${err.message}`);
+      debug.logLine("error", `Seed load failed: ${err.message}`);
     }
   });
 

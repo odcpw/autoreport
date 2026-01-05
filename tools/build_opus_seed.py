@@ -4,7 +4,7 @@ from __future__ import annotations
 import json
 import re
 import zipfile
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
 import xml.etree.ElementTree as ET
@@ -25,6 +25,18 @@ SPECIAL_COLLAPSE = {
     ("9", "5"): {"2", "3", "4", "5", "6", "7"},
     ("9", "9"): {"2", "3", "4", "5", "6", "7", "8", "9"},
 }
+RANGE_RE = re.compile(
+    r"^(?P<start>\d+\.\d+\.\d+)\s*-\s*(?P<end>\d+(?:\.\d+\.\d+)?)\.?$",
+    re.IGNORECASE,
+)
+
+
+@dataclass
+class OpusChild:
+    id_range: str
+    ids: list[str]
+    finding: str
+    levels: dict[str, list[str]]
 
 
 @dataclass
@@ -33,6 +45,7 @@ class OpusEntry:
     group_id: str
     finding: str
     levels: dict[str, list[str]]
+    children: list[OpusChild] = field(default_factory=list)
 
 
 def normalize_id(raw: str) -> str:
@@ -70,6 +83,26 @@ def collapse_id(item_id: str) -> str:
             return f"{parts[0]}.{parts[1]}.1"
 
     return cleaned
+
+
+def expand_range(start_id: str, end_raw: str, label: str) -> tuple[list[str], str]:
+    start_parts = start_id.split(".")
+    if "." in end_raw:
+        end_parts = end_raw.split(".")
+    else:
+        end_parts = start_parts[:-1] + [end_raw]
+
+    try:
+        start_num = int(start_parts[-1])
+        end_num = int(end_parts[-1])
+    except ValueError:
+        return [start_id], label
+
+    prefix = ".".join(start_parts[:-1])
+    if end_num < start_num:
+        start_num, end_num = end_num, start_num
+    ids = [f"{prefix}.{i}" for i in range(start_num, end_num + 1)]
+    return ids, label
 
 
 def parse_docx_paragraphs(docx: Path) -> list[str]:
@@ -112,6 +145,7 @@ def parse_opus(docx: Path) -> list[OpusEntry]:
                 group_id=group_id_for(item_id),
                 finding="",
                 levels={"1": [], "2": [], "3": [], "4": []},
+                children=[],
             )
             entries.append(current)
             expecting_finding = True
@@ -147,6 +181,42 @@ def parse_opus(docx: Path) -> list[OpusEntry]:
         auto_level += 1
 
     return entries
+
+
+def extract_children(entry: OpusEntry) -> None:
+    level4 = entry.levels.get("4", [])
+    if not level4:
+        return
+
+    children: list[OpusChild] = []
+    remaining: list[str] = []
+    idx = 0
+    while idx < len(level4):
+        line = level4[idx].strip()
+        match = RANGE_RE.match(line)
+        if not match:
+            remaining.append(level4[idx])
+            idx += 1
+            continue
+
+        start_id = match.group("start")
+        end_raw = match.group("end")
+        label = line.rstrip(".")
+        ids, id_range = expand_range(start_id, end_raw, label)
+        finding = level4[idx + 1].strip() if idx + 1 < len(level4) else ""
+        recs = [level4[idx + offset].strip() for offset in range(2, 6) if idx + offset < len(level4)]
+        levels = {
+            "1": [recs[0]] if len(recs) > 0 else [],
+            "2": [recs[1]] if len(recs) > 1 else [],
+            "3": [recs[2]] if len(recs) > 2 else [],
+            "4": [recs[3]] if len(recs) > 3 else [],
+        }
+        children.append(OpusChild(id_range=id_range, ids=ids, finding=finding, levels=levels))
+        idx += 6
+
+    entry.levels["4"] = remaining
+    if children:
+        entry.children = children
 
 
 def parse_selbstbeurteilung_ids(xlsx: Path) -> dict[str, dict[str, str]]:
@@ -297,6 +367,17 @@ def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]
                 "groupId": e.group_id,
                 "finding": e.finding,
                 "levels": e.levels,
+                "children": [
+                    {
+                        "idRange": child.id_range,
+                        "ids": child.ids,
+                        "finding": child.finding,
+                        "levels": child.levels,
+                    }
+                    for child in e.children
+                ]
+                if e.children
+                else [],
             }
             for e in entries
         ],
@@ -443,6 +524,29 @@ def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]
     placeholders_path = OUTPUT_DIR / "placeholders.json"
     placeholders_path.write_text(json.dumps(placeholder_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    selbst_payload = {
+        "meta": {
+            "source": SELBST_XLSX.name,
+            "importedAt": timestamp,
+        },
+        "items": [],
+    }
+    for item_id, meta in selbst_ids.items():
+        chapter = chapter_for(item_id)
+        selbst_payload["items"].append(
+            {
+                "id": item_id,
+                "groupId": group_id_for(item_id),
+                "collapsedId": collapse_id(item_id),
+                "chapter": chapter,
+                "chapterLabel": meta.get("chapterLabel", ""),
+                "question": meta.get("question", ""),
+            }
+        )
+    selbst_payload["items"].sort(key=lambda item: item.get("id", ""))
+
+    selbst_path = OUTPUT_DIR / "selbstbeurteilung_ids.json"
+    selbst_path.write_text(json.dumps(selbst_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 def main():
     if not OPUS_DOCX.exists():
@@ -451,6 +555,8 @@ def main():
         raise SystemExit(f"Missing {SELBST_XLSX}")
 
     entries = parse_opus(OPUS_DOCX)
+    for entry in entries:
+        extract_children(entry)
     selbst_ids = parse_selbstbeurteilung_ids(SELBST_XLSX)
     coverage = build_coverage(entries, selbst_ids)
     write_outputs(entries, selbst_ids, coverage)
@@ -458,6 +564,7 @@ def main():
     print(f"Wrote {OUTPUT_DIR / 'library_master.json'}")
     print(f"Wrote {OUTPUT_DIR / 'coverage-report.md'}")
     print(f"Wrote {OUTPUT_DIR / 'placeholders.json'}")
+    print(f"Wrote {OUTPUT_DIR / 'selbstbeurteilung_ids.json'}")
 
 
 if __name__ == "__main__":
