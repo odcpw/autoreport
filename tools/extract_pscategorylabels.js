@@ -54,8 +54,8 @@ const parsePSCategoryLabels = (rows) => {
     const reportB = String(row[3] || "").trim();
     if (reportA) reportLabels.push(reportA);
     if (reportB) reportLabels.push(reportB);
-    if (training) trainingLabels.push(training);
-    if (observation) observationLabels.push(observation);
+    if (training && training.toLowerCase() !== "unsorted") trainingLabels.push(training);
+    if (observation && observation.toLowerCase() !== "unsorted") observationLabels.push(observation);
   });
 
   const reportOptions = reportLabels.map((label) => {

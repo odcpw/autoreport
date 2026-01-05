@@ -303,6 +303,15 @@ button[disabled] {
   margin-bottom: 4px;
 }
 
+.panel__unsorted {
+  margin: 2px 0 6px;
+}
+
+.tag-button--unsorted {
+  font-weight: 600;
+  text-align: center;
+}
+
 .panel--report .panel__tags {
   grid-template-columns: repeat(5, 1fr);
 }

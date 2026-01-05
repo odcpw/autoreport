@@ -2,7 +2,7 @@
   "meta": {
     "sourceWorkbook": "2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx",
     "sheet": "PSCategoryLabels",
-    "generatedAt": "2026-01-05T15:41:48.560Z"
+    "generatedAt": "2026-01-05T15:54:31.057Z"
   },
   "options": {
     "report": [
@@ -298,10 +298,6 @@
       }
     ],
     "observations": [
-      {
-        "value": "Unsorted",
-        "label": "Unsorted"
-      },
       {
         "value": "Stapler",
         "label": "Stapler"

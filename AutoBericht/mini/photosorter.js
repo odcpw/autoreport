@@ -41,6 +41,10 @@
       : storedLayout === "tabs"
         ? "tabs"
         : "stacked";
+  const demoPhotosMode =
+    urlParams.get("demoPhotos") === "1" ||
+    urlParams.get("demoPhotos") === "true" ||
+    demoMode;
   const panelTabButtons = Array.from(document.querySelectorAll("[data-panel-tab]"));
   const layoutToggleButtons = Array.from(document.querySelectorAll("[data-layout]"));
 
@@ -80,6 +84,14 @@
     ],
     training: ["Vorbildliches Verhalten", "Risikoanalyse", "Audit", "Kommunikation"],
   };
+
+  const DEMO_PHOTO_URLS = [
+    "./demo-photos/1.jpg",
+    "./demo-photos/2.jpg",
+    "./demo-photos/3.jpg",
+    "./demo-photos/4.jpg",
+    "./demo-photos/5.jpg",
+  ];
 
   const state = {
     projectHandle: null,
@@ -196,14 +208,18 @@
     });
   });
 
+  const isUnsortedLabel = (value) => String(value || "").trim().toLowerCase() === "unsorted";
+
   const normalizeTagOption = (option) => {
     if (!option) return null;
     if (typeof option === "string") {
+      if (isUnsortedLabel(option)) return null;
       return { value: option, label: option };
     }
     if (typeof option === "object") {
       const value = option.value || option.label;
       if (!value) return null;
+      if (isUnsortedLabel(value)) return null;
       return { value, label: option.label || value };
     }
     return null;
@@ -260,10 +276,11 @@
 
   const normalizePhotoTags = (tags) => {
     const incoming = normalizeIncomingOptions(tags || {});
+    const sanitize = (list) => Array.from(list || []).filter((value) => !isUnsortedLabel(value));
     return {
-      report: Array.from(incoming.report || []),
-      observations: Array.from(incoming.observations || []),
-      training: Array.from(incoming.training || []),
+      report: sanitize(incoming.report),
+      observations: sanitize(incoming.observations),
+      training: sanitize(incoming.training),
     };
   };
 
@@ -457,6 +474,21 @@
       ? splitChapterOptions(filteredOptions)
       : { chapters: [], rest: filteredOptions };
 
+    const unsortedRow = document.createElement("div");
+    unsortedRow.className = "panel__unsorted";
+    const unsortedBtn = document.createElement("button");
+    unsortedBtn.type = "button";
+    unsortedBtn.className = "tag-button tag-button--unsorted";
+    unsortedBtn.textContent = "Unsorted";
+    unsortedBtn.title = "Unsorted";
+    if (selected.size === 0) {
+      unsortedBtn.classList.add("active");
+    }
+    unsortedBtn.addEventListener("click", () => {
+      setGroupUnsorted(group);
+    });
+    unsortedRow.appendChild(unsortedBtn);
+
     if (config.splitChapters) {
       const chapterRow = document.createElement("div");
       chapterRow.className = "panel__chapters";
@@ -495,7 +527,7 @@
       tagsEl.appendChild(button);
     });
 
-    container.append(title, description, controls, tagsEl);
+    container.append(title, description, controls, unsortedRow, tagsEl);
   };
 
   const renderPanels = () => {
@@ -530,6 +562,13 @@
     renderThumbs();
     renderPanels();
     enableActions();
+  };
+
+  const setGroupUnsorted = (group) => {
+    const current = getCurrentPhoto();
+    if (!current) return;
+    current.tags[group] = [];
+    renderAll();
   };
 
   const toggleTag = (group, tag) => {
@@ -574,6 +613,31 @@
       setStatus("Sidecar not found; starting fresh.");
       debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
     }
+    renderAll();
+  };
+
+  const loadDemoPhotos = async () => {
+    if (!DEMO_PHOTO_URLS.length) return;
+    if (!state.projectDoc) {
+      state.projectDoc = createEmptyProjectDoc();
+    }
+    setStatus("Loading demo photos...");
+    const collection = [];
+    for (let i = 0; i < DEMO_PHOTO_URLS.length; i += 1) {
+      const url = DEMO_PHOTO_URLS[i];
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`Failed to fetch ${url}`);
+      }
+      const blob = await response.blob();
+      const file = new File([blob], `${i + 1}.jpg`, { type: blob.type || "image/jpeg" });
+      collection.push(buildPhotoEntry(`demo-photos/${i + 1}.jpg`, file));
+    }
+    state.photoRootName = "demo-photos";
+    state.photos = collection;
+    state.filterMode = "all";
+    state.currentIndex = 0;
+    setStatus(`Loaded ${collection.length} demo photos`);
     renderAll();
   };
 
@@ -669,8 +733,8 @@
       const reportB = String(row[3] || "").trim();
       if (reportA) reportLabels.push(reportA);
       if (reportB) reportLabels.push(reportB);
-      if (training) trainingLabels.push(training);
-      if (observation) observationLabels.push(observation);
+      if (training && !isUnsortedLabel(training)) trainingLabels.push(training);
+      if (observation && !isUnsortedLabel(observation)) observationLabels.push(observation);
     });
 
     const reportOptions = reportLabels.map((label) => {
@@ -861,5 +925,12 @@
         setStatus(`Demo load failed: ${err.message}`);
         debug.logLine("error", `Demo load failed: ${err.message}`);
       });
+  }
+
+  if (demoPhotosMode) {
+    loadDemoPhotos().catch((err) => {
+      setStatus(`Demo photos failed: ${err.message}`);
+      debug.logLine("error", `Demo photos failed: ${err.message}`);
+    });
   }
 })();
