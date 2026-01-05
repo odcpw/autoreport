@@ -109,6 +109,7 @@ RecommendationLibrary (per engineer)
 - No internal scrollbars in tag panes (Report / Observations / Training).
 - Photo preview and tagging controls must be visible simultaneously.
 - Tag buttons should be uniform width, dense grid, and single-click.
+- Button labels may be abbreviated to fit; full text shown on hover (tooltip).
 - Provide two layout variants:
   - **Stacked panels** (all three panes visible at once).
   - **Tabbed panels** (1/2/3 keys to switch panes).

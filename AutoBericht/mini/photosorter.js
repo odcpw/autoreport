@@ -355,6 +355,7 @@
       button.type = "button";
       button.className = "tag-button";
       button.textContent = option.label;
+      button.title = option.label;
       if (selected.has(option.value)) {
         button.classList.add("active");
       }

@@ -250,7 +250,7 @@ button[disabled] {
 
 .panel__tags {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(2, 1fr);
   gap: 4px;
   align-content: start;
   overflow: hidden;
@@ -265,6 +265,11 @@ button[disabled] {
   font-size: 0.68rem;
   cursor: pointer;
   text-align: left;
+  width: 100%;
+  min-height: 28px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .tag-button.active {
@@ -307,6 +312,10 @@ body.layout-tabs .panel {
 
 body.layout-tabs .panel.is-active {
   display: flex;
+}
+
+body.layout-tabs .panel__tags {
+  grid-template-columns: repeat(3, 1fr);
 }
 
 body.layout-stacked .panel-tabs {
