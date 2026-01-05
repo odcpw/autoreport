@@ -924,8 +924,8 @@
     setStatus("Loaded categories from bundled seed.");
   }
 
-  if (demoMode) {
-    const workbookPath = demoWorkbookParam || "/fromWork/2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx";
+  if (demoMode && demoWorkbookParam) {
+    const workbookPath = demoWorkbookParam;
     loadCategoriesFromUrl(workbookPath)
       .then(() => {
         setStatus(`Demo loaded categories from ${workbookPath}`);
