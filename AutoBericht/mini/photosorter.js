@@ -26,6 +26,10 @@
     saveLog: async () => ({ location: "none", filename: "" }),
   };
 
+  const urlParams = new URLSearchParams(window.location.search);
+  const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
+  const demoWorkbookParam = urlParams.get("demoWorkbook");
+
   const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tif", ".tiff"]);
   const DEFAULT_TAGS = {
     bericht: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
@@ -65,7 +69,7 @@
     const hasPhotoFolder = !!state.photoHandle;
     const hasVisiblePhotos = getFilteredPhotos().length > 0;
     loadSidecarBtn.disabled = !hasProject;
-    loadCategoriesBtn.disabled = !hasProject;
+    loadCategoriesBtn.disabled = !hasProject && !demoMode;
     pickPhotosBtn.disabled = !hasProject;
     scanPhotosBtn.disabled = !hasPhotoFolder;
     saveSidecarBtn.disabled = !hasProject;
@@ -507,6 +511,30 @@
     }
   });
 
+  const loadCategoriesFromUrl = async (rawUrl) => {
+    if (!window.XLSX) {
+      throw new Error("SheetJS not available.");
+    }
+    const resolved = new URL(rawUrl, window.location.origin);
+    const response = await fetch(resolved.toString());
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${resolved.pathname}`);
+    }
+    const buffer = await response.arrayBuffer();
+    const workbook = window.XLSX.read(buffer, { type: "array" });
+    const sheetName = workbook.SheetNames.find(
+      (name) => name.toLowerCase() === "pscategorylabels"
+    );
+    if (!sheetName) {
+      throw new Error("Sheet PSCategoryLabels not found.");
+    }
+    const sheet = workbook.Sheets[sheetName];
+    const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
+    const options = parsePSCategoryLabels(rows);
+    state.tagOptions = ensureTagOptions(options);
+    renderAll();
+  };
+
   pickPhotosBtn.addEventListener("click", async () => {
     if (!state.projectHandle) return;
     try {
@@ -582,4 +610,17 @@
   state.tagOptions = ensureTagOptions(DEFAULT_TAGS);
   ensureFsAccess();
   enableActions();
+
+  if (demoMode) {
+    const workbookPath = demoWorkbookParam || "/fromWork/2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx";
+    loadCategoriesFromUrl(workbookPath)
+      .then(() => {
+        setStatus(`Demo loaded categories from ${workbookPath}`);
+        debug.logLine("info", `Demo loaded categories from ${workbookPath}`);
+      })
+      .catch((err) => {
+        setStatus(`Demo load failed: ${err.message}`);
+        debug.logLine("error", `Demo load failed: ${err.message}`);
+      });
+  }
 })();
