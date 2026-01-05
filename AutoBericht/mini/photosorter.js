@@ -397,24 +397,26 @@
       renderPanels();
     });
 
-    const addInput = document.createElement("input");
-    addInput.type = "text";
-    addInput.placeholder = "Add new tag";
-    addInput.addEventListener("keydown", (event) => {
-      if (event.key !== "Enter") return;
-      event.preventDefault();
-      const value = addInput.value.trim();
-      if (!value) return;
-      const existing = state.tagOptions[group] || [];
-      if (!existing.some((option) => option.value === value)) {
-        const next = sortOptionsForGroup(group, [...existing, { value, label: value }]);
-        state.tagOptions[group] = next;
-      }
-      addInput.value = "";
-      renderPanels();
-    });
-
-    controls.append(filterInput, addInput);
+    controls.append(filterInput);
+    if (config.allowAdd) {
+      const addInput = document.createElement("input");
+      addInput.type = "text";
+      addInput.placeholder = "Add new tag";
+      addInput.addEventListener("keydown", (event) => {
+        if (event.key !== "Enter") return;
+        event.preventDefault();
+        const value = addInput.value.trim();
+        if (!value) return;
+        const existing = state.tagOptions[group] || [];
+        if (!existing.some((option) => option.value === value)) {
+          const next = sortOptionsForGroup(group, [...existing, { value, label: value }]);
+          state.tagOptions[group] = next;
+        }
+        addInput.value = "";
+        renderPanels();
+      });
+      controls.append(addInput);
+    }
 
     const current = getCurrentPhoto();
     const selected = new Set(current?.tags?.[group] || []);
@@ -472,16 +474,19 @@
       description: "Kapitel & Unterkapitel (1.x / 1.2 / 4.8 etc.)",
       filter: state.tagFilters.report,
       splitChapters: true,
+      allowAdd: false,
     });
     renderTagPanel("observations", {
       title: "Beobachtungen",
       description: "Themen/Begriffe aus der Begehung.",
       filter: state.tagFilters.observations,
+      allowAdd: true,
     });
     renderTagPanel("training", {
       title: "Training",
       description: "Seminar-/Schulungskategorien.",
       filter: state.tagFilters.training,
+      allowAdd: false,
     });
   };
 
