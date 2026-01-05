@@ -1,7 +1,7 @@
 # OPUS Coverage Report
 
 Source: `fromWork/extracted/2025-10-02 OPUS 4.1 recommendations.docx`
-Generated: `2026-01-05T11:22:23+00:00`
+Generated: `2026-01-05T11:47:06+00:00`
 
 - OPUS entries: **252**
 - Selbstbeurteilung IDs: **591**

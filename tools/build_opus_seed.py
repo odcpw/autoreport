@@ -17,6 +17,7 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 NS_WORD = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
 NS_SHEET = {"main": "http://schemas.openxmlformats.org/spreadsheetml/2006/main"}
 NS_REL = {"rel": "http://schemas.openxmlformats.org/package/2006/relationships"}
+STRUCTURE_VERSION = "2026-01-05"
 
 ID_RE = re.compile(r"^\d+(?:\.\d+)+(?:\.[a-z])?\.?$", re.IGNORECASE)
 LEVEL_RE = re.compile(r"^level\s*([1-4])$", re.IGNORECASE)
@@ -83,6 +84,10 @@ def collapse_id(item_id: str) -> str:
             return f"{parts[0]}.{parts[1]}.1"
 
     return cleaned
+
+
+def split_id_parts(item_id: str) -> list[str]:
+    return [part for part in str(item_id).split(".") if part]
 
 
 def expand_range(start_id: str, end_raw: str, label: str) -> tuple[list[str], str]:
@@ -548,6 +553,60 @@ def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]
     selbst_path = OUTPUT_DIR / "selbstbeurteilung_ids.json"
     selbst_path.write_text(json.dumps(selbst_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
+    group_map: dict[str, list[str]] = {}
+    collapsed_map: dict[str, list[str]] = {}
+    presentation_tags: set[str] = set()
+    chapter_tags: set[str] = set()
+
+    for item in selbst_payload["items"]:
+        group_id = item["groupId"]
+        collapsed_id = item["collapsedId"]
+        group_map.setdefault(group_id, []).append(item["id"])
+        collapsed_map.setdefault(collapsed_id, []).append(item["id"])
+        parts = split_id_parts(collapsed_id)
+        if len(parts) >= 2:
+            presentation_tags.add(".".join(parts[:2]))
+        if parts:
+            chapter_tags.add(parts[0])
+
+    for group_id in group_map:
+        group_map[group_id].sort()
+    for collapsed_id in collapsed_map:
+        collapsed_map[collapsed_id].sort()
+
+    def sort_key(value: str) -> list[int]:
+        return [int(p) if p.isdigit() else 0 for p in value.split(".")]
+
+    structure_payload = {
+        "meta": {
+            "version": STRUCTURE_VERSION,
+            "generatedAt": timestamp,
+            "sources": {
+                "selbstbeurteilung": SELBST_XLSX.name,
+                "opus": OPUS_DOCX.name,
+            },
+        },
+        "rules": {
+            "collapse": {
+                "tiroirSuffix": "a-z",
+                "fourthLevelToThird": True,
+                "special": {
+                    "9.5": sorted(SPECIAL_COLLAPSE.get(("9", "5"), [])),
+                    "9.9": sorted(SPECIAL_COLLAPSE.get(("9", "9"), [])),
+                },
+            },
+            "presentationTagDepth": 2,
+        },
+        "items": selbst_payload["items"],
+        "groupMap": group_map,
+        "collapsedMap": collapsed_map,
+        "presentationTags": sorted(presentation_tags, key=sort_key),
+        "chapterTags": sorted(chapter_tags, key=sort_key),
+    }
+
+    structure_path = OUTPUT_DIR / "structure_manifest.json"
+    structure_path.write_text(json.dumps(structure_payload, indent=2, ensure_ascii=False), encoding="utf-8")
+
 def main():
     if not OPUS_DOCX.exists():
         raise SystemExit(f"Missing {OPUS_DOCX}")
@@ -565,6 +624,7 @@ def main():
     print(f"Wrote {OUTPUT_DIR / 'coverage-report.md'}")
     print(f"Wrote {OUTPUT_DIR / 'placeholders.json'}")
     print(f"Wrote {OUTPUT_DIR / 'selbstbeurteilung_ids.json'}")
+    print(f"Wrote {OUTPUT_DIR / 'structure_manifest.json'}")
 
 
 if __name__ == "__main__":
