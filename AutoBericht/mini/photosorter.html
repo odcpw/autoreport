@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoBericht Photo Sorter</title>
+  <link rel="stylesheet" href="photosorter.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div>
+        <h1>Photo Sorter</h1>
+        <p>Tag images by report chapter, topic, and seminar without moving files.</p>
+      </div>
+      <div class="actions">
+        <button id="pick-project">Open Project Folder</button>
+        <button id="load-sidecar" disabled>Reload sidecar</button>
+        <button id="pick-photos" disabled>Select Photo Folder</button>
+        <button id="scan-photos" disabled>Scan Photos</button>
+        <button id="save-sidecar" disabled>Save tags</button>
+        <button id="save-log">Save debug log</button>
+      </div>
+    </header>
+
+    <section class="status" id="status"></section>
+
+    <main class="layout">
+      <section class="viewer">
+        <div class="viewer__header">
+          <div class="viewer__meta" id="photo-meta">No photos loaded</div>
+          <div class="viewer__controls">
+            <button id="filter-toggle" class="ghost" disabled>Show Unsorted</button>
+            <button id="prev-photo" disabled>Prev (A)</button>
+            <button id="next-photo" disabled>Next (D)</button>
+          </div>
+        </div>
+        <div class="viewer__image">
+          <img id="photo-image" alt="Selected photo preview" />
+        </div>
+        <div class="viewer__thumbs" id="thumbs"></div>
+      </section>
+
+      <aside class="sidebar">
+        <div class="panel" id="panel-bericht"></div>
+        <div class="panel" id="panel-topic"></div>
+        <div class="panel" id="panel-seminar"></div>
+
+        <div class="notes">
+          <label for="photo-notes">Notes</label>
+          <textarea id="photo-notes" rows="4" placeholder="Add context for this photo..."></textarea>
+        </div>
+      </aside>
+    </main>
+  </div>
+
+  <script src="../shared/debug-log.js"></script>
+  <script src="photosorter.js"></script>
+</body>
+</html>

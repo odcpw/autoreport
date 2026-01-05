@@ -30,6 +30,13 @@ body {
 .actions {
   display: flex;
   gap: 12px;
+  align-items: center;
+}
+
+.inline-link {
+  color: #f6d365;
+  text-decoration: none;
+  font-weight: 600;
 }
 
 button {
