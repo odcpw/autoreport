@@ -1,0 +1,427 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sichereheit d.V14.xlsx",
+    "importedAt": "2026-01-05T10:59:58+00:00",
+    "notes": "Placeholder chapters 11-14 derived from Selbstbeurteilung (raw IDs)."
+  },
+  "chapters": {
+    "11": [
+      {
+        "id": "11.1",
+        "collapsedId": "11.1",
+        "question": "Gibt es eine ausdrückliche Willenserklärung der Geschäftsleitung, dass sie ein Absenzenmanagement will?"
+      },
+      {
+        "id": "11.10",
+        "collapsedId": "11.10",
+        "question": "Erkundigen sich die direkten Vorgesetzen bei ihren verunfallten und erkrankten Mitarbeitenden während derer Abwesenheit über das  gesundheitliche Befinden und bieten Unterstützung an?"
+      },
+      {
+        "id": "11.11",
+        "collapsedId": "11.11",
+        "question": "Wird die Teilzeitbeschäftigung oder die vorübergehende Beschäftigung mit alternativen Tätigkeiten (Schonarbeitsplatz) von Verunfallten und Erkrankten durch die Vorgesetzen systematisch geprüft?"
+      },
+      {
+        "id": "11.12",
+        "collapsedId": "11.12",
+        "question": "Werden die behandelnden Ärzte über Möglichkeiten der Teilzeitarbeit oder alternativer Beschäftigungsmöglichkeiten informiert?"
+      },
+      {
+        "id": "11.13.a",
+        "collapsedId": "11.13",
+        "question": "Werden die Vorgesetzten bei ihren Betreuungs- und Integrationsbemühungen unterstützt:\ndurch die Personalabteilung?"
+      },
+      {
+        "id": "11.13.b",
+        "collapsedId": "11.13",
+        "question": "durch andere Stellen? Wenn ja, welche?"
+      },
+      {
+        "id": "11.2.a",
+        "collapsedId": "11.2",
+        "question": "Werden die Daten zu den Unfällen und Krankheiten und deren Ausfalltagen:\nerfasst?"
+      },
+      {
+        "id": "11.2.b",
+        "collapsedId": "11.2",
+        "question": "analysiert?"
+      },
+      {
+        "id": "11.2.c",
+        "collapsedId": "11.2",
+        "question": "ausgewertet?"
+      },
+      {
+        "id": "11.2.d",
+        "collapsedId": "11.2",
+        "question": "kommuniziert ?"
+      },
+      {
+        "id": "11.3",
+        "collapsedId": "11.3",
+        "question": "Werden die Kennzahlen jährlich bewertet und Präventions-Ziele definiert?"
+      },
+      {
+        "id": "11.4",
+        "collapsedId": "11.4",
+        "question": "Ist ein Vorgehen und sind Verantwortlichkeiten (und Aufgaben) festgelegt, wie Mitarbeitende bei kurzen und längeren ungeplanten Absenzen betreut und wieder in den Arbeitsprozess integriert werden sollen?"
+      },
+      {
+        "id": "11.5",
+        "collapsedId": "11.5",
+        "question": "Werden die Führungskräfte (und die weiteren involvierten Stellen) ins Absenzenmangement eingeführt und für ihre Betreuungs- und Administrationsaufgaben ausgebildet?"
+      },
+      {
+        "id": "11.6",
+        "collapsedId": "11.6",
+        "question": "Werden die Mitarbeitenden periodisch über die Ziele des Absenzenmanagements und das richtige Verhalten im Absenzfall informiert?"
+      },
+      {
+        "id": "11.7.a",
+        "collapsedId": "11.7",
+        "question": "Werden die Rückkehrgespräche geführt:\ndurch die Vorgesetzten?"
+      },
+      {
+        "id": "11.7.b",
+        "collapsedId": "11.7",
+        "question": "nach jeder ungeplanten längeren Absenz?"
+      },
+      {
+        "id": "11.7.c",
+        "collapsedId": "11.7",
+        "question": "nach jeder ungeplanten Absenz?"
+      },
+      {
+        "id": "11.8",
+        "collapsedId": "11.8",
+        "question": "Werden aus den Resultaten der Rückkehrgespräche Präventionsmassnahmen abgeleitet?"
+      },
+      {
+        "id": "11.9",
+        "collapsedId": "11.9",
+        "question": "Ist ein Vorgehen bei häufigeren Absenzen definiert?"
+      }
+    ],
+    "12": [
+      {
+        "id": "12.1",
+        "collapsedId": "12.1",
+        "question": "Gibt es eine explizite Willenserklärung der Geschäftsleitung, die Mitarbeitenden in sicherem und gesundem Freizeitverhalten zu unterstützen?"
+      },
+      {
+        "id": "12.10",
+        "collapsedId": "12.10",
+        "question": "Hat es im Unternehmen Mitarbeitende mit gutem Wissen und Können im Sport (bspw. Fussball-Trainer, Laufgruppen-Leiter, Fitness-Instruktoren usw.) ?"
+      },
+      {
+        "id": "12.11.a",
+        "collapsedId": "12.11",
+        "question": "Wurden im Unternehmen bereits Projekte/Massnahmen zur Förderung der Freizeitsicherheit durchgeführt? Wenn ja, welche Schwerpunktthemen wurden behandelt?"
+      },
+      {
+        "id": "12.11.b",
+        "collapsedId": "12.11",
+        "question": "Stolpern und Stürzen?"
+      },
+      {
+        "id": "12.11.c",
+        "collapsedId": "12.11",
+        "question": "Ballsport?"
+      },
+      {
+        "id": "12.11.d",
+        "collapsedId": "12.11",
+        "question": "Wintersport?"
+      },
+      {
+        "id": "12.11.e",
+        "collapsedId": "12.11",
+        "question": "Haus und Garten?"
+      },
+      {
+        "id": "12.11.f",
+        "collapsedId": "12.11",
+        "question": "weitere Schwerpunktthemen?"
+      },
+      {
+        "id": "12.12",
+        "collapsedId": "12.12",
+        "question": "Werden mit den Massnahmen/ Projekten zur Freizeitsicherheit konkrete Ziele verfolgt? Wenn ja, welche?"
+      },
+      {
+        "id": "12.13",
+        "collapsedId": "12.13",
+        "question": "Werden die Massnahmen/Projekte evaluiert und Konsequenzen für künftige Massnahmen/Projekte abgeleitet?"
+      },
+      {
+        "id": "12.2",
+        "collapsedId": "12.2",
+        "question": "Besteht ein Budgetrahmen für Freizeitsicherheits-Projekte?"
+      },
+      {
+        "id": "12.3",
+        "collapsedId": "12.3",
+        "question": "Gibt es eine(n) Verantwortliche(n) oder eine Arbeitsgruppe, die Massnahmen zur Verhütung von Freizeitunfällen plant und koordiniert?"
+      },
+      {
+        "id": "12.4",
+        "collapsedId": "12.4",
+        "question": "Verfügt diese Verantwortliche bzw. Mitglieder der Arbeitsgruppe über eine Ausbildung im Bereich Freizeitunfall-Prävention (z.B. Suva- Kurse, bfu, ...)?"
+      },
+      {
+        "id": "12.5",
+        "collapsedId": "12.5",
+        "question": "Werden die Mitarbeitenden regelmässig über das Unfallgeschehen NBU im Betrieb informiert (Besprechungen, Zeitschrift, Intranet, Mail, Anschlagbrett…)?"
+      },
+      {
+        "id": "12.6.a",
+        "collapsedId": "12.6",
+        "question": "Werden Freizeitunfälle:\nerfasst?"
+      },
+      {
+        "id": "12.6.b",
+        "collapsedId": "12.6",
+        "question": "analysiert?"
+      },
+      {
+        "id": "12.6.c",
+        "collapsedId": "12.6",
+        "question": "ausgewertet?"
+      },
+      {
+        "id": "12.6.d",
+        "collapsedId": "12.6",
+        "question": "kommuniziert ?"
+      },
+      {
+        "id": "12.7",
+        "collapsedId": "12.7",
+        "question": "Werden aus den Freizeitunfällen Handlungsschwerpunkte abgeleitet?"
+      },
+      {
+        "id": "12.8",
+        "collapsedId": "12.8",
+        "question": "Gibt es Arbeitnehmer-Gruppen (jüngere MA, ältere MA, Männer, Frauen), die besonders viele Unfälle verursachen?"
+      },
+      {
+        "id": "12.9",
+        "collapsedId": "12.9",
+        "question": "Hat das Unternehmen eigene Firmensportvereine?"
+      }
+    ],
+    "13": [
+      {
+        "id": "13.1",
+        "collapsedId": "13.1",
+        "question": "Gibt es eine explizite Willenserklärung der Geschäftsleitung, das betriebliche Gesundheitsmanagement in die Unternehmenspolitik und in den Führungsgrundsätzen zu integrieren?"
+      },
+      {
+        "id": "13.2.a",
+        "collapsedId": "13.2",
+        "question": "Besteht ein Konzept mit:\nZielen?"
+      },
+      {
+        "id": "13.2.b",
+        "collapsedId": "13.2",
+        "question": "Vorgehens- und Zeitplan?"
+      },
+      {
+        "id": "13.2.c",
+        "collapsedId": "13.2",
+        "question": "Kommunikation an Zielgruppen?"
+      },
+      {
+        "id": "13.2.d",
+        "collapsedId": "13.2",
+        "question": "Budgetrahmen für BGM-Projekte?"
+      },
+      {
+        "id": "13.3",
+        "collapsedId": "13.3",
+        "question": "Gibt es eine(n) Verantwortliche(n) oder eine Arbeitsgruppe, die BGM-Massnahmen plant und koordiniert?"
+      },
+      {
+        "id": "13.4",
+        "collapsedId": "13.4",
+        "question": "Verfügen diese Verantwortliche bzw. einzelne Mitglieder der Arbeitsgruppe über eine Ausbildung im Bereich BGM und Pävention?"
+      },
+      {
+        "id": "13.5",
+        "collapsedId": "13.5",
+        "question": "Basieren Massnahmen und Umsetzungsschwerpunkte auf einer betrieblichen Bedarfs- oder einer Bedürfnisanalyse bei den Mitarbeitenden (z.B. mittels Mitarbeiterbefragung oder durch Gesundheitszirkel)?"
+      },
+      {
+        "id": "13.6.a",
+        "collapsedId": "13.6",
+        "question": "Werden die Mitarbeitenden in folgenden Themen mit Kursen, Workshops oder Angeboten in ihrer Eigenverantwortung im Gesundheitsverhalten unterstützt:\nGenügend Bewegung / Sport?"
+      },
+      {
+        "id": "13.6.b",
+        "collapsedId": "13.6",
+        "question": "Ernährung / gesundes Körpergewicht?"
+      },
+      {
+        "id": "13.6.c",
+        "collapsedId": "13.6",
+        "question": "Strategien gegen Stress und Burnout (Stressmanagement / Entspannungsmethoden und –möglichkeiten, Zeitmanagement, Umgang mit Veränderung?"
+      },
+      {
+        "id": "13.6.d",
+        "collapsedId": "13.6",
+        "question": "Umgang mit besonderen organisatorischen Rahmenbedingungen wie Schicht-/ Nachtarbeit?"
+      },
+      {
+        "id": "13.6.e",
+        "collapsedId": "13.6",
+        "question": "Work-Life Balance?"
+      },
+      {
+        "id": "13.6.f",
+        "collapsedId": "13.6",
+        "question": "Schlaf und Erholung?"
+      },
+      {
+        "id": "13.6.g",
+        "collapsedId": "13.6",
+        "question": "Suchtprävention?"
+      },
+      {
+        "id": "13.7.a",
+        "collapsedId": "13.7",
+        "question": "Werden folgende arbeitsbezogenen Ressourcen gefördert:\nFührungsschulungen (Bedeutung/Rolle der Führungskräfte im BGM, Pflege einer Anerkennungs- und Wertschätzungskultur, Förderung der Teamzusammenarbeit, Vorgehen im Konflikt- oder Suchtfall etc.)?"
+      },
+      {
+        "id": "13.7.b",
+        "collapsedId": "13.7",
+        "question": "Gesundheitsbezogene Infrastruktur wie Aufenthaltsräume, Pausenräume, Verpflegungsmöglichkeiten, Duschen, Ruheräume?"
+      },
+      {
+        "id": "13.7.c",
+        "collapsedId": "13.7",
+        "question": "Gesundheitsförderliche und ergonomische Gestaltung von Arbeitsräumen und Arbeitsplätzen z.B. periodische Überprüfung und systematische Beurteilung bei Veränderungen und Neubeschaffungen?"
+      },
+      {
+        "id": "13.7.d",
+        "collapsedId": "13.7",
+        "question": "Schulung zu körperschonender Haltung und Verhalten bei der Arbeit z.B. durch Schulung zu richtig heben & tragen von Lasten, Bildschirmergonomie?"
+      },
+      {
+        "id": "13.7.e",
+        "collapsedId": "13.7",
+        "question": "Integration neuer Mitarbeiter/innen (z.B. durch ein systematisches Einführungskonzept, Göttisystem)?"
+      },
+      {
+        "id": "13.7.f",
+        "collapsedId": "13.7",
+        "question": "Regelmässige Weiterbildung auch in Persönlichkeits- und Sozialkompetenz?"
+      },
+      {
+        "id": "13.7.g",
+        "collapsedId": "13.7",
+        "question": "Förderung der guten Zusammenarbeit im Team (gemeinsame Projekte, Teamsitzungen, informelle Anlässe)?"
+      },
+      {
+        "id": "13.7.h",
+        "collapsedId": "13.7",
+        "question": "Förderung der abteilungs- und hierarchieübergreifenden Zusammenarbeit und Kommunikation?"
+      },
+      {
+        "id": "13.7.i",
+        "collapsedId": "13.7",
+        "question": "Angebote und Massnahmen zur Vereinbarkeit von Beruf, Familie/ Freizeit?"
+      },
+      {
+        "id": "13.7.j",
+        "collapsedId": "13.7",
+        "question": "Angebot einer neutralen Ansprechstelle in Konfliktsituationen oder bei persönlichen Problemen?"
+      },
+      {
+        "id": "13.8",
+        "collapsedId": "13.8",
+        "question": "Werden im Unternehmen aktuell BGM-Projekte durchgeführt? \nWenn ja, seit wann und zu welchen Themen?"
+      },
+      {
+        "id": "13.9",
+        "collapsedId": "13.9",
+        "question": "Wird die Qualität und Wirkung der Massnahmen und der Projekte im BGM evaluiert und Konsequenzen für künftige Massnahmen/Projekte abgeleitet?"
+      }
+    ],
+    "14": [
+      {
+        "id": "14.1.1",
+        "collapsedId": "14.1.1",
+        "question": "Sind die interessierten Parteien, die zusätzlich zu ihren Beschäftigten für ihr Sicherheits- und Gesundheitsmanegementsystem relevant sind, bestimmt?  (z.B. Behörden,  Lieferanten, Arbeitnehmerorganisationen, Besucher, allgemeine Öffentlichkeit, Kunden, Medien, Nichtregierungsorganisationen (NGO))"
+      },
+      {
+        "id": "14.1.2",
+        "collapsedId": "14.1.2",
+        "question": "Sind die relevanten Erfordernisse und Erwartungen (Anforderungen) von Beschäftigten als auch weiteren interessierten Parteien bestimmt? (z.B. Tabelle mit Beschäftigten und relevanten interessierten Parteien bezogen auf das SGA-MS mit ermittelten Anforderungen und Erwartungen, Chancen und Risiken und Zielsetzungen/Massnahmen)"
+      },
+      {
+        "id": "14.1.3",
+        "collapsedId": "14.1.3",
+        "question": "Werden die relevanten Erfordernisse und Erwartungen bewertet und überwacht?"
+      },
+      {
+        "id": "14.2.1",
+        "collapsedId": "14.2.1",
+        "question": "Werden dokumentierte Informationen im erforderlichen Umfang aufbewahrt, sodass darauf vertraut werden kann, dass die Prozesse wie geplant durchgeführt werden? (z.B. Aufzeichnungen aus den Prozessen, Änderungsnachweise, Berichte, Protokolle etc.)"
+      },
+      {
+        "id": "14.3.1",
+        "collapsedId": "14.3.1",
+        "question": "Ist für die Organisation ein Verfahren zur Bestimmung von Risiken und Chancen festgelegt? (z.B. durch Gefährdungsanalysen, Erstellung einer Risiko-Matrix, SWOT-Analyse mit Handlungsbedarf)"
+      },
+      {
+        "id": "14.3.2",
+        "collapsedId": "14.3.2",
+        "question": "Werden die zu berücksichtigenden SGA-Risiken und Chancen als dokumentierte Information gepflegt und entsprechend aufrechterhalten?"
+      },
+      {
+        "id": "14.4.1",
+        "collapsedId": "14.4.1",
+        "question": "Erfolgen Informationen über Änderungen rechtlicher Verpflichtungen und anderer Anforderungen so, dass deren Weitergabe entsprechend dokumentiert und dadurch zweifelsfrei nachgewiesen werden kann?"
+      },
+      {
+        "id": "14.5.1",
+        "collapsedId": "14.5.1",
+        "question": "Liegen die für das SGA-MS geforderten dokumentierten Informationen vor? (u.a. dokumentierte Information zu\n• Anwendungsbereich\n• SGA-Politik und SGA-Ziele\n• Rechtliche Verpflichtungen oder andere Anforderungen \n• Kompetenzen \n• SGA-Risiken und -Chancen\n• Informationen, die für den Betrieb der Organisation geschaffen werden\n• Nachweis erreichter Ergebnisse usw.)"
+      },
+      {
+        "id": "14.5.2",
+        "collapsedId": "14.5.2",
+        "question": "Wird beim Erstellen und Aktualisieren dokumentierter Informationen eine angemessene Kennzeichnung und Beschreibung sichergestellt? (z.B. Titel, Datum, Autor, Referenznummer, aktuelle Revisionsstand )"
+      },
+      {
+        "id": "14.5.3",
+        "collapsedId": "14.5.3",
+        "question": "Ist ein Prozess für die Lenkung der dokumentierten Informationen festgelegt? (Erstellung, Zuordnung, Klassifizierung, Genehmigung, Verteilung, Anwendung, Revision, Rückzug, Ablage, Entsorgung)"
+      },
+      {
+        "id": "14.6.1",
+        "collapsedId": "14.6.1",
+        "question": "Wird sichergestellt, dass ausgegliederte Funktionen und Prozesse, die sich auf das SGA-MS auswirken, gesteuert werden?"
+      },
+      {
+        "id": "14.7.1",
+        "collapsedId": "14.7.1",
+        "question": "Werden Prozesse zur Überwachung, Messung, Analyse und SGA-Leistungsbewertung festgelegt, umgesetzt und aufrechterhalten?"
+      },
+      {
+        "id": "14.7.2",
+        "collapsedId": "14.7.2",
+        "question": "Sind die zur Bewertung der Compliance mit rechtlichen Verpflichtungen und anderen Anforderungen notwendigen Prozesse, festgelegt, umgesetzt und aufrechterhalten?"
+      },
+      {
+        "id": "14.7.3",
+        "collapsedId": "14.7.3",
+        "question": "Sind die Auditoren zur Durchführung von Systemaudits ausgebildet?"
+      },
+      {
+        "id": "14.7.4",
+        "collapsedId": "14.7.4",
+        "question": "Wird durch die internen Audits festgestellt, dass die Anforderungen an die ISO 45001 erfüllt werden?"
+      }
+    ]
+  }
+}

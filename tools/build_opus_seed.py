@@ -20,6 +20,7 @@ NS_REL = {"rel": "http://schemas.openxmlformats.org/package/2006/relationships"}
 
 ID_RE = re.compile(r"^\d+(?:\.\d+)+(?:\.[a-z])?\.?$", re.IGNORECASE)
 LEVEL_RE = re.compile(r"^level\s*([1-4])$", re.IGNORECASE)
+CHAPTER_PLACEHOLDER_RANGE = range(11, 15)
 
 
 @dataclass
@@ -39,6 +40,24 @@ def group_id_for(item_id: str) -> str:
     if item_id.endswith(tuple("abcdefghijklmnopqrstuvwxyz")):
         return item_id.rsplit(".", 1)[0]
     return item_id
+
+
+def chapter_for(item_id: str) -> int | None:
+    parts = item_id.split(".")
+    if not parts:
+        return None
+    try:
+        return int(parts[0])
+    except ValueError:
+        return None
+
+
+def collapse_id(item_id: str) -> str:
+    cleaned = group_id_for(item_id)
+    parts = [p for p in cleaned.split(".") if p]
+    if len(parts) > 3:
+        return ".".join(parts[:3])
+    return cleaned
 
 
 def parse_docx_paragraphs(docx: Path) -> list[str]:
@@ -206,6 +225,32 @@ def build_coverage(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str
             if not entry.levels.get(level):
                 missing_levels.append({"id": entry.id, "level": level})
 
+    def split_scope(items: set[str]) -> dict[str, list[str]]:
+        in_scope = []
+        placeholders = []
+        other = []
+        for item in sorted(items):
+            chapter = chapter_for(item)
+            if chapter is None:
+                other.append(item)
+            elif chapter in CHAPTER_PLACEHOLDER_RANGE:
+                placeholders.append(item)
+            elif 1 <= chapter <= 10:
+                in_scope.append(item)
+            else:
+                other.append(item)
+        return {
+            "in_scope": in_scope,
+            "placeholders": placeholders,
+            "other": other,
+        }
+
+    # Collapsed coverage: merge tiroir sub-IDs and 4th-level IDs to 3rd-level.
+    opus_collapsed = {collapse_id(item_id) for item_id in opus_ids}
+    selbst_collapsed = {collapse_id(item_id) for item_id in selbst_set}
+    missing_collapsed = sorted(selbst_collapsed - opus_collapsed)
+    extra_collapsed = sorted(opus_collapsed - selbst_collapsed)
+
     return {
         "opus_count": len(opus_ids),
         "selbst_count": len(selbst_set),
@@ -214,10 +259,20 @@ def build_coverage(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str
         "tiroir_groups": group_map,
         "missing_tiroir_groups_in_opus": missing_groups,
         "missing_levels": missing_levels,
+        "scope_raw": split_scope(selbst_set),
+        "scope_opus_raw": split_scope(opus_ids),
+        "collapsed": {
+            "opus_count": len(opus_collapsed),
+            "selbst_count": len(selbst_collapsed),
+            "missing_in_opus": missing_collapsed,
+            "extra_in_opus": extra_collapsed,
+            "scope_selbst": split_scope(selbst_collapsed),
+            "scope_opus": split_scope(opus_collapsed),
+        },
     }
 
 
-def write_outputs(entries: list[OpusEntry], coverage: dict[str, object]):
+def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]], coverage: dict[str, object]):
     timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
     output = {
         "meta": {
@@ -239,6 +294,11 @@ def write_outputs(entries: list[OpusEntry], coverage: dict[str, object]):
     library_path.write_text(json.dumps(output, indent=2, ensure_ascii=False), encoding="utf-8")
 
     report_path = OUTPUT_DIR / "coverage-report.md"
+    collapsed = coverage["collapsed"]
+    scope_raw = coverage["scope_raw"]
+    scope_opus_raw = coverage["scope_opus_raw"]
+    scope_selbst_collapsed = collapsed["scope_selbst"]
+    scope_opus_collapsed = collapsed["scope_opus"]
     report_lines = [
         "# OPUS Coverage Report",
         "",
@@ -250,6 +310,18 @@ def write_outputs(entries: list[OpusEntry], coverage: dict[str, object]):
         f"- Missing in OPUS: **{len(coverage['missing_in_opus'])}**",
         f"- Extra in OPUS: **{len(coverage['extra_in_opus'])}**",
         "",
+        "Scope: chapters 1-10 = in-scope, 11-14 = placeholders.",
+        "Collapsed coverage merges tiroir sub-IDs (a/b/...) and 4th-level IDs to 3rd-level.",
+        f"Placeholder export: `{OUTPUT_DIR / 'placeholders.json'}`",
+        "",
+        "## Scope Summary (raw IDs)",
+        f"- Selbstbeurteilung in-scope: **{len(scope_raw['in_scope'])}**",
+        f"- Selbstbeurteilung placeholders: **{len(scope_raw['placeholders'])}**",
+        f"- Selbstbeurteilung other: **{len(scope_raw['other'])}**",
+        f"- OPUS in-scope: **{len(scope_opus_raw['in_scope'])}**",
+        f"- OPUS placeholders: **{len(scope_opus_raw['placeholders'])}**",
+        f"- OPUS other: **{len(scope_opus_raw['other'])}**",
+        "",
         "## Missing in OPUS (present in Selbstbeurteilung)",
     ]
     if coverage["missing_in_opus"]:
@@ -260,6 +332,22 @@ def write_outputs(entries: list[OpusEntry], coverage: dict[str, object]):
     report_lines += ["", "## Extra in OPUS (not in Selbstbeurteilung)"]
     if coverage["extra_in_opus"]:
         report_lines += [f"- {item}" for item in coverage["extra_in_opus"]]
+    else:
+        report_lines.append("- None")
+
+    report_lines += ["", "## Missing in OPUS (in-scope 1-10)"]
+    if scope_raw["in_scope"]:
+        report_lines += [f"- {item}" for item in scope_raw["in_scope"] if item in coverage["missing_in_opus"]]
+        if not any(item in coverage["missing_in_opus"] for item in scope_raw["in_scope"]):
+            report_lines.append("- None")
+    else:
+        report_lines.append("- None")
+
+    report_lines += ["", "## Missing in OPUS (placeholders 11-14)"]
+    if scope_raw["placeholders"]:
+        report_lines += [f"- {item}" for item in scope_raw["placeholders"] if item in coverage["missing_in_opus"]]
+        if not any(item in coverage["missing_in_opus"] for item in scope_raw["placeholders"]):
+            report_lines.append("- None")
     else:
         report_lines.append("- None")
 
@@ -280,7 +368,67 @@ def write_outputs(entries: list[OpusEntry], coverage: dict[str, object]):
     else:
         report_lines.append("- None")
 
+    report_lines += [
+        "",
+        "## Collapsed Coverage Summary (letters + 4th-level -> 3rd-level)",
+        f"- OPUS collapsed entries: **{collapsed['opus_count']}**",
+        f"- Selbstbeurteilung collapsed IDs: **{collapsed['selbst_count']}**",
+        f"- Missing in OPUS (collapsed): **{len(collapsed['missing_in_opus'])}**",
+        f"- Extra in OPUS (collapsed): **{len(collapsed['extra_in_opus'])}**",
+        "",
+        "## Missing in OPUS (collapsed, in-scope 1-10)",
+    ]
+    if scope_selbst_collapsed["in_scope"]:
+        report_lines += [
+            f"- {item}"
+            for item in scope_selbst_collapsed["in_scope"]
+            if item in collapsed["missing_in_opus"]
+        ]
+        if not any(item in collapsed["missing_in_opus"] for item in scope_selbst_collapsed["in_scope"]):
+            report_lines.append("- None")
+    else:
+        report_lines.append("- None")
+
+    report_lines += ["", "## Missing in OPUS (collapsed, placeholders 11-14)"]
+    if scope_selbst_collapsed["placeholders"]:
+        report_lines += [
+            f"- {item}"
+            for item in scope_selbst_collapsed["placeholders"]
+            if item in collapsed["missing_in_opus"]
+        ]
+        if not any(item in collapsed["missing_in_opus"] for item in scope_selbst_collapsed["placeholders"]):
+            report_lines.append("- None")
+    else:
+        report_lines.append("- None")
+
     report_path.write_text("\n".join(report_lines), encoding="utf-8")
+
+    placeholder_payload: dict[str, object] = {
+        "meta": {
+            "source": SELBST_XLSX.name,
+            "importedAt": timestamp,
+            "notes": "Placeholder chapters 11-14 derived from Selbstbeurteilung (raw IDs).",
+        },
+        "chapters": {},
+    }
+    for item_id, meta in selbst_ids.items():
+        chapter = chapter_for(item_id)
+        if chapter in CHAPTER_PLACEHOLDER_RANGE:
+            chapter_key = str(chapter)
+            chapter_entries = placeholder_payload["chapters"].setdefault(chapter_key, [])
+            chapter_entries.append(
+                {
+                    "id": item_id,
+                    "collapsedId": collapse_id(item_id),
+                    "question": meta.get("question", ""),
+                }
+            )
+
+    for chapter_key, entries in placeholder_payload["chapters"].items():
+        entries.sort(key=lambda item: item.get("id", ""))
+
+    placeholders_path = OUTPUT_DIR / "placeholders.json"
+    placeholders_path.write_text(json.dumps(placeholder_payload, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def main():
@@ -292,10 +440,11 @@ def main():
     entries = parse_opus(OPUS_DOCX)
     selbst_ids = parse_selbstbeurteilung_ids(SELBST_XLSX)
     coverage = build_coverage(entries, selbst_ids)
-    write_outputs(entries, coverage)
+    write_outputs(entries, selbst_ids, coverage)
 
     print(f"Wrote {OUTPUT_DIR / 'library_master.json'}")
     print(f"Wrote {OUTPUT_DIR / 'coverage-report.md'}")
+    print(f"Wrote {OUTPUT_DIR / 'placeholders.json'}")
 
 
 if __name__ == "__main__":
