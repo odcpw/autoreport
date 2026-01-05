@@ -160,6 +160,32 @@
     debug.logLine("info", message);
   };
 
+  const readJsonFromHttp = async (path) => {
+    const response = await fetch(path);
+    if (!response.ok) {
+      throw new Error(`Failed to fetch ${path}`);
+    }
+    return response.json();
+  };
+
+  const autoLoadSeeds = async () => {
+    if (window.location.protocol !== "http:" && window.location.protocol !== "https:") {
+      debug.logLine("info", "Seed auto-load skipped (not on http).");
+      return;
+    }
+    try {
+      const selbst = await readJsonFromHttp("/data/seed/selbstbeurteilung_ids.json");
+      const library = await readJsonFromHttp("/data/seed/library_master.json");
+      state.project = buildProjectFromSeeds(selbst, library);
+      state.selectedChapterId = state.project.chapters[0]?.id || "";
+      render();
+      setStatus("Loaded seed data from /data/seed.");
+      debug.logLine("info", "Auto-loaded seed data from /data/seed.");
+    } catch (err) {
+      debug.logLine("warn", `Seed auto-load skipped: ${err.message}`);
+    }
+  };
+
   const ensureFsAccess = () => {
     if (!window.showDirectoryPicker) {
       setStatus("File System Access API is not available in this browser.");
@@ -626,4 +652,5 @@
 
   ensureFsAccess();
   render();
+  autoLoadSeeds();
 })();
