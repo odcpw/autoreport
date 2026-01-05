@@ -29,8 +29,16 @@
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
   const demoWorkbookParam = urlParams.get("demoWorkbook");
-  const layoutMode = urlParams.get("layout") === "tabs" ? "tabs" : "stacked";
+  const layoutParam = urlParams.get("layout");
+  const storedLayout = window.localStorage?.getItem("photosorterLayout");
+  let layoutMode =
+    layoutParam === "tabs" || layoutParam === "stacked"
+      ? layoutParam
+      : storedLayout === "tabs"
+        ? "tabs"
+        : "stacked";
   const panelTabButtons = Array.from(document.querySelectorAll("[data-panel-tab]"));
+  const layoutToggleButtons = Array.from(document.querySelectorAll("[data-layout]"));
 
   const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tif", ".tiff"]);
   const DEFAULT_TAGS = {
@@ -61,6 +69,25 @@
   const applyLayoutMode = () => {
     document.body.classList.toggle("layout-tabs", layoutMode === "tabs");
     document.body.classList.toggle("layout-stacked", layoutMode === "stacked");
+  };
+
+  const updateLayoutToggle = () => {
+    layoutToggleButtons.forEach((button) => {
+      const isActive = button.dataset.layout === layoutMode;
+      button.classList.toggle("active", isActive);
+      button.setAttribute("aria-pressed", String(isActive));
+    });
+  };
+
+  const setLayoutMode = (mode) => {
+    if (mode !== "tabs" && mode !== "stacked") return;
+    layoutMode = mode;
+    if (window.localStorage) {
+      window.localStorage.setItem("photosorterLayout", mode);
+    }
+    applyLayoutMode();
+    updateLayoutToggle();
+    renderPanels();
   };
 
   const setActivePanel = (group) => {
@@ -100,6 +127,12 @@
   panelTabButtons.forEach((button) => {
     button.addEventListener("click", () => {
       setActivePanel(button.dataset.panelTab);
+    });
+  });
+
+  layoutToggleButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setLayoutMode(button.dataset.layout);
     });
   });
 
@@ -669,6 +702,7 @@
 
   state.tagOptions = SEED_TAG_OPTIONS;
   applyLayoutMode();
+  updateLayoutToggle();
   setActivePanel(state.activePanel);
   ensureFsAccess();
   enableActions();

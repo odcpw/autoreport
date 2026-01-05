@@ -48,6 +48,29 @@ body {
   justify-content: flex-end;
 }
 
+.layout-toggle {
+  display: inline-flex;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.12);
+  padding: 4px;
+  border-radius: 999px;
+}
+
+.layout-toggle button {
+  background: transparent;
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+  padding: 6px 10px;
+  font-size: 0.75rem;
+}
+
+.layout-toggle button.active {
+  background: #f6d365;
+  color: #1a232f;
+  border-color: transparent;
+}
+
 button {
   border: none;
   border-radius: 999px;

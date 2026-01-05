@@ -112,6 +112,7 @@ RecommendationLibrary (per engineer)
 - Provide two layout variants:
   - **Stacked panels** (all three panes visible at once).
   - **Tabbed panels** (1/2/3 keys to switch panes).
+- User can toggle between the two layouts inside the UI.
 
 ## 9. Proposed Architecture (Policy-Safe)
 
