@@ -25,20 +25,19 @@ body {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px 20px;
+  padding: 10px 16px;
   background: linear-gradient(120deg, #1a232f 0%, #243b53 60%, #324b63 100%);
   color: #fff;
-  gap: 16px;
+  gap: 12px;
 }
 
 .app-header h1 {
   margin: 0 0 4px;
-  font-size: 1.3rem;
+  font-size: 1.15rem;
 }
 
 .app-header p {
-  margin: 0;
-  color: rgba(255, 255, 255, 0.8);
+  display: none;
 }
 
 .actions {
@@ -93,12 +92,33 @@ button[disabled] {
 }
 
 .status {
-  padding: 8px 20px;
+  padding: 6px 16px;
   background: #fff3cd;
   color: #5f4b00;
   border-bottom: 1px solid #efe5c1;
-  min-height: 20px;
-  font-size: 0.9rem;
+  min-height: 18px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.status.is-hidden {
+  display: none;
+}
+
+.status__text {
+  flex: 1;
+}
+
+.status__close {
+  background: transparent;
+  border: none;
+  color: #5f4b00;
+  font-size: 1rem;
+  line-height: 1;
+  padding: 0 4px;
 }
 
 .layout {
@@ -276,7 +296,11 @@ button[disabled] {
 }
 
 .panel--observations .panel__tags {
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
+}
+
+.panel--training .panel__tags {
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .tag-button {

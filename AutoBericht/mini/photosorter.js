@@ -7,6 +7,8 @@
   const saveSidecarBtn = document.getElementById("save-sidecar");
   const saveLogBtn = document.getElementById("save-log");
   const statusEl = document.getElementById("status");
+  const statusTextEl = document.getElementById("status-text");
+  const statusCloseBtn = document.getElementById("status-close");
   const photoMetaEl = document.getElementById("photo-meta");
   const photoImageEl = document.getElementById("photo-image");
   const thumbsEl = document.getElementById("thumbs");
@@ -61,8 +63,19 @@
   };
 
 
+  const updateStatusVisibility = (isHidden) => {
+    statusEl.classList.toggle("is-hidden", isHidden);
+  };
+
+  const setStatusHidden = (hidden) => {
+    if (window.localStorage) {
+      window.localStorage.setItem("photosorterStatusHidden", hidden ? "1" : "0");
+    }
+    updateStatusVisibility(hidden);
+  };
+
   const setStatus = (message) => {
-    statusEl.textContent = message;
+    statusTextEl.textContent = message;
     debug.logLine("info", message);
   };
 
@@ -123,6 +136,12 @@
     prevBtn.disabled = !hasVisiblePhotos;
     nextBtn.disabled = !hasVisiblePhotos;
   };
+
+  if (statusCloseBtn) {
+    statusCloseBtn.addEventListener("click", () => {
+      setStatusHidden(true);
+    });
+  }
 
   panelTabButtons.forEach((button) => {
     button.addEventListener("click", () => {
@@ -772,6 +791,8 @@
   });
 
   state.tagOptions = SEED_TAG_OPTIONS;
+  const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
+  updateStatusVisibility(statusHidden);
   applyLayoutMode();
   updateLayoutToggle();
   setActivePanel(state.activePanel);
