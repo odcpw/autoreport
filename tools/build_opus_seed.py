@@ -21,6 +21,10 @@ NS_REL = {"rel": "http://schemas.openxmlformats.org/package/2006/relationships"}
 ID_RE = re.compile(r"^\d+(?:\.\d+)+(?:\.[a-z])?\.?$", re.IGNORECASE)
 LEVEL_RE = re.compile(r"^level\s*([1-4])$", re.IGNORECASE)
 CHAPTER_PLACEHOLDER_RANGE = range(11, 15)
+SPECIAL_COLLAPSE = {
+    ("9", "5"): {"2", "3", "4", "5", "6", "7"},
+    ("9", "9"): {"2", "3", "4", "5", "6", "7", "8", "9"},
+}
 
 
 @dataclass
@@ -56,7 +60,15 @@ def collapse_id(item_id: str) -> str:
     cleaned = group_id_for(item_id)
     parts = [p for p in cleaned.split(".") if p]
     if len(parts) > 3:
-        return ".".join(parts[:3])
+        parts = parts[:3]
+        cleaned = ".".join(parts)
+
+    if len(parts) >= 3:
+        key = (parts[0], parts[1])
+        targets = SPECIAL_COLLAPSE.get(key)
+        if targets and parts[2] in targets:
+            return f"{parts[0]}.{parts[1]}.1"
+
     return cleaned
 
 
@@ -312,6 +324,7 @@ def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]
         "",
         "Scope: chapters 1-10 = in-scope, 11-14 = placeholders.",
         "Collapsed coverage merges tiroir sub-IDs (a/b/...) and 4th-level IDs to 3rd-level.",
+        "Custom collapse: 9.5.2-9.5.7 -> 9.5.1, 9.9.2-9.9.9 -> 9.9.1.",
         f"Placeholder export: `{OUTPUT_DIR / 'placeholders.json'}`",
         "",
         "## Scope Summary (raw IDs)",

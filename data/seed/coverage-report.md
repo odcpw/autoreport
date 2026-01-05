@@ -1,7 +1,7 @@
 # OPUS Coverage Report
 
 Source: `fromWork/extracted/2025-10-02 OPUS 4.1 recommendations.docx`
-Generated: `2026-01-05T10:59:58+00:00`
+Generated: `2026-01-05T11:09:12+00:00`
 
 - OPUS entries: **252**
 - Selbstbeurteilung IDs: **591**
@@ -10,6 +10,7 @@ Generated: `2026-01-05T10:59:58+00:00`
 
 Scope: chapters 1-10 = in-scope, 11-14 = placeholders.
 Collapsed coverage merges tiroir sub-IDs (a/b/...) and 4th-level IDs to 3rd-level.
+Custom collapse: 9.5.2-9.5.7 -> 9.5.1, 9.9.2-9.9.9 -> 9.9.1.
 Placeholder export: `data/seed/placeholders.json`
 
 ## Scope Summary (raw IDs)
@@ -926,8 +927,8 @@ Placeholder export: `data/seed/placeholders.json`
 
 ## Collapsed Coverage Summary (letters + 4th-level -> 3rd-level)
 - OPUS collapsed entries: **212**
-- Selbstbeurteilung collapsed IDs: **295**
-- Missing in OPUS (collapsed): **83**
+- Selbstbeurteilung collapsed IDs: **281**
+- Missing in OPUS (collapsed): **69**
 - Extra in OPUS (collapsed): **0**
 
 ## Missing in OPUS (collapsed, in-scope 1-10)
@@ -936,12 +937,6 @@ Placeholder export: `data/seed/placeholders.json`
 - 9.10.3
 - 9.10.4
 - 9.10.5
-- 9.5.2
-- 9.5.3
-- 9.5.4
-- 9.5.5
-- 9.5.6
-- 9.5.7
 - 9.6.1
 - 9.6.2
 - 9.6.3
@@ -956,14 +951,6 @@ Placeholder export: `data/seed/placeholders.json`
 - 9.8.5
 - 9.8.6
 - 9.8.7
-- 9.9.2
-- 9.9.3
-- 9.9.4
-- 9.9.5
-- 9.9.6
-- 9.9.7
-- 9.9.8
-- 9.9.9
 
 ## Missing in OPUS (collapsed, placeholders 11-14)
 - 11.1
