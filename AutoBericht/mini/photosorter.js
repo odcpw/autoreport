@@ -185,7 +185,9 @@
     const hasPhotoFolder = !!state.photoHandle;
     const hasVisiblePhotos = getFilteredPhotos().length > 0;
     loadSidecarBtn.disabled = !hasProject;
-    loadCategoriesBtn.disabled = !hasProject && !demoMode;
+    if (loadCategoriesBtn) {
+      loadCategoriesBtn.disabled = !hasProject && !demoMode;
+    }
     pickPhotosBtn.disabled = !hasProject;
     scanPhotosBtn.disabled = !hasPhotoFolder;
     saveSidecarBtn.disabled = !hasProject;
@@ -856,48 +858,50 @@
     };
   };
 
-  loadCategoriesBtn.addEventListener("click", async () => {
-    if (!state.projectHandle) return;
-    if (!window.showOpenFilePicker || !window.XLSX) {
-      setStatus("File picker or SheetJS not available in this browser.");
-      return;
-    }
-    try {
-      const [fileHandle] = await window.showOpenFilePicker({
-        types: [
-          {
-            description: "Excel workbook",
-            accept: {
-              "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
-                ".xlsx",
-                ".xlsm",
-              ],
-            },
-          },
-        ],
-        multiple: false,
-      });
-      const file = await fileHandle.getFile();
-      const buffer = await file.arrayBuffer();
-      const workbook = window.XLSX.read(buffer, { type: "array" });
-      const sheetName = workbook.SheetNames.find(
-        (name) => name.toLowerCase() === "pscategorylabels"
-      );
-      if (!sheetName) {
-        throw new Error("Sheet PSCategoryLabels not found.");
+  if (loadCategoriesBtn) {
+    loadCategoriesBtn.addEventListener("click", async () => {
+      if (!state.projectHandle) return;
+      if (!window.showOpenFilePicker || !window.XLSX) {
+        setStatus("File picker or SheetJS not available in this browser.");
+        return;
       }
-      const sheet = workbook.Sheets[sheetName];
-      const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
-      const options = parsePSCategoryLabels(rows);
-      state.tagOptions = ensureTagOptions(options);
-      setStatus(`Loaded categories from ${file.name}`);
-      debug.logLine("info", `Loaded categories from ${file.name}`);
-      renderAll();
-    } catch (err) {
-      setStatus(`Category load failed: ${err.message}`);
-      debug.logLine("error", `Category load failed: ${err.message}`);
-    }
-  });
+      try {
+        const [fileHandle] = await window.showOpenFilePicker({
+          types: [
+            {
+              description: "Excel workbook",
+              accept: {
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+                  ".xlsx",
+                  ".xlsm",
+                ],
+              },
+            },
+          ],
+          multiple: false,
+        });
+        const file = await fileHandle.getFile();
+        const buffer = await file.arrayBuffer();
+        const workbook = window.XLSX.read(buffer, { type: "array" });
+        const sheetName = workbook.SheetNames.find(
+          (name) => name.toLowerCase() === "pscategorylabels"
+        );
+        if (!sheetName) {
+          throw new Error("Sheet PSCategoryLabels not found.");
+        }
+        const sheet = workbook.Sheets[sheetName];
+        const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
+        const options = parsePSCategoryLabels(rows);
+        state.tagOptions = ensureTagOptions(options);
+        setStatus(`Loaded categories from ${file.name}`);
+        debug.logLine("info", `Loaded categories from ${file.name}`);
+        renderAll();
+      } catch (err) {
+        setStatus(`Category load failed: ${err.message}`);
+        debug.logLine("error", `Category load failed: ${err.message}`);
+      }
+    });
+  }
 
   const loadCategoriesFromUrl = async (rawUrl) => {
     if (!window.XLSX) {
