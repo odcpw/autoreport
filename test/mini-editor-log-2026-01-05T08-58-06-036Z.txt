@@ -1,0 +1,4 @@
+[2026-01-05T08:57:55.853Z] INFO: Selected folder: github
+[2026-01-05T08:57:55.853Z] INFO: Selected folder: github
+[2026-01-05T08:58:04.470Z] INFO: Saved project_sidecar.json
+[2026-01-05T08:58:04.470Z] INFO: Saved project_sidecar.json
