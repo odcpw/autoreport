@@ -11,6 +11,7 @@
   const statusCloseBtn = document.getElementById("status-close");
   const photoMetaEl = document.getElementById("photo-meta");
   const photoImageEl = document.getElementById("photo-image");
+  const photoUnsortedBtn = document.getElementById("photo-unsorted");
   const thumbsEl = document.getElementById("thumbs");
   const filterToggleBtn = document.getElementById("filter-toggle");
   const prevBtn = document.getElementById("prev-photo");
@@ -358,11 +359,17 @@
 
   const clearPhotoUrls = () => {
     state.photos.forEach((photo) => {
-      if (photo.url) {
+      if (photo.url && photo.url.startsWith("blob:")) {
         URL.revokeObjectURL(photo.url);
       }
     });
   };
+
+  if (photoUnsortedBtn) {
+    photoUnsortedBtn.addEventListener("click", () => {
+      setPhotoUnsorted();
+    });
+  }
 
   const renderViewer = () => {
     const current = getCurrentPhoto();
@@ -371,6 +378,10 @@
       photoImageEl.alt = "No photo loaded";
       notesEl.value = "";
       notesEl.disabled = true;
+      if (photoUnsortedBtn) {
+        photoUnsortedBtn.classList.remove("active");
+        photoUnsortedBtn.disabled = true;
+      }
       updateMeta();
       enableActions();
       return;
@@ -379,6 +390,11 @@
     photoImageEl.alt = current.path;
     notesEl.value = current.notes || "";
     notesEl.disabled = false;
+    if (photoUnsortedBtn) {
+      const isUnsorted = isPhotoUnsorted(current);
+      photoUnsortedBtn.classList.toggle("active", isUnsorted);
+      photoUnsortedBtn.disabled = false;
+    }
     updateMeta();
   };
 
@@ -474,21 +490,6 @@
       ? splitChapterOptions(filteredOptions)
       : { chapters: [], rest: filteredOptions };
 
-    const unsortedRow = document.createElement("div");
-    unsortedRow.className = "panel__unsorted";
-    const unsortedBtn = document.createElement("button");
-    unsortedBtn.type = "button";
-    unsortedBtn.className = "tag-button tag-button--unsorted";
-    unsortedBtn.textContent = "Unsorted";
-    unsortedBtn.title = "Unsorted";
-    if (selected.size === 0) {
-      unsortedBtn.classList.add("active");
-    }
-    unsortedBtn.addEventListener("click", () => {
-      setGroupUnsorted(group);
-    });
-    unsortedRow.appendChild(unsortedBtn);
-
     if (config.splitChapters) {
       const chapterRow = document.createElement("div");
       chapterRow.className = "panel__chapters";
@@ -527,7 +528,7 @@
       tagsEl.appendChild(button);
     });
 
-    container.append(title, description, controls, unsortedRow, tagsEl);
+    container.append(title, description, controls, tagsEl);
   };
 
   const renderPanels = () => {
@@ -568,6 +569,15 @@
     const current = getCurrentPhoto();
     if (!current) return;
     current.tags[group] = [];
+    renderAll();
+  };
+
+  const setPhotoUnsorted = () => {
+    const current = getCurrentPhoto();
+    if (!current) return;
+    current.tags.report = [];
+    current.tags.observations = [];
+    current.tags.training = [];
     renderAll();
   };
 

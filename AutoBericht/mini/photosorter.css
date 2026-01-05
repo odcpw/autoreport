@@ -174,6 +174,7 @@ button[disabled] {
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
   height: 34vh;
   min-height: 260px;
+  position: relative;
 }
 
 .viewer__observations {
@@ -185,6 +186,28 @@ button[disabled] {
   max-height: 100%;
   border-radius: 10px;
   object-fit: contain;
+}
+
+.photo-unsorted {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  border: 1px solid #d7d0c7;
+  background: #f8f5ef;
+  color: #1f2933;
+  font-weight: 700;
+  font-size: 0.7rem;
+  padding: 0;
+  cursor: pointer;
+}
+
+.photo-unsorted.active {
+  background: #1a232f;
+  color: #fff;
+  border-color: #1a232f;
 }
 
 .viewer__thumbs {
@@ -303,14 +326,6 @@ button[disabled] {
   margin-bottom: 4px;
 }
 
-.panel__unsorted {
-  margin: 2px 0 6px;
-}
-
-.tag-button--unsorted {
-  font-weight: 600;
-  text-align: center;
-}
 
 .panel--report .panel__tags {
   grid-template-columns: repeat(5, 1fr);
