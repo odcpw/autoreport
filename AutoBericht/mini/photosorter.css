@@ -103,16 +103,16 @@ button[disabled] {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 2fr) minmax(320px, 1fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   flex: 1;
   min-height: 0;
 }
 
 .viewer {
-  padding: 16px 20px;
+  padding: 12px 12px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 8px;
   min-height: 0;
 }
 
@@ -131,21 +131,21 @@ button[disabled] {
 
 .viewer__controls {
   display: flex;
-  gap: 8px;
+  gap: 6px;
   flex-wrap: wrap;
 }
 
 .viewer__image {
   background: #fff;
-  border-radius: 16px;
+  border-radius: 12px;
   border: 1px solid #efe5dc;
-  padding: 12px;
+  padding: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  flex: 1;
-  min-height: 0;
+  height: 42vh;
+  min-height: 260px;
 }
 
 .viewer__image img {
@@ -187,19 +187,19 @@ button[disabled] {
 }
 
 .sidebar {
-  padding: 16px;
+  padding: 12px;
   background: #fdfaf5;
   border-left: 1px solid #e5e0d7;
   display: grid;
   grid-template-rows: auto 1fr auto;
-  gap: 10px;
+  gap: 8px;
   min-height: 0;
 }
 
 .panel-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 10px;
+  gap: 8px;
   min-height: 0;
 }
 
@@ -221,9 +221,9 @@ button[disabled] {
 
 .panel {
   background: #fff;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid #efe5dc;
-  padding: 10px 12px;
+  padding: 8px 10px;
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
@@ -248,40 +248,40 @@ button[disabled] {
 .panel__controls {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 6px;
-  margin-bottom: 6px;
+  gap: 4px;
+  margin-bottom: 4px;
 }
 
 .panel__controls input {
-  border-radius: 8px;
+  border-radius: 6px;
   border: 1px solid #d7d0c7;
-  padding: 6px 8px;
-  font-size: 0.75rem;
+  padding: 4px 6px;
+  font-size: 0.68rem;
 }
 
 .panel__tags {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 4px;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 3px;
   align-content: start;
   overflow: hidden;
 }
 
 .panel--report .panel__tags {
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(5, 1fr);
 }
 
 .tag-button {
   border: 1px solid #d7d0c7;
   background: #f8f5ef;
   color: #1f2933;
-  border-radius: 8px;
-  padding: 4px 6px;
-  font-size: 0.68rem;
+  border-radius: 6px;
+  padding: 2px 4px;
+  font-size: 0.6rem;
   cursor: pointer;
   text-align: left;
   width: 100%;
-  min-height: 28px;
+  min-height: 22px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -306,9 +306,9 @@ button[disabled] {
   width: 100%;
   border-radius: 10px;
   border: 1px solid #d7d0c7;
-  padding: 8px;
+  padding: 6px;
   font-family: "Segoe UI", system-ui, sans-serif;
-  min-height: 50px;
+  min-height: 42px;
 }
 
 body.layout-tabs .sidebar {
