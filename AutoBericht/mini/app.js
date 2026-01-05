@@ -554,7 +554,13 @@
   const generateLibrary = async () => {
     if (!dirHandle) return;
     ensureProjectMeta();
-    const masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
+    let masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
+    if (!masterLibrary && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
+      masterLibrary = await readJsonFromHttp("/data/seed/library_master.json");
+    }
+    if (!masterLibrary) {
+      masterLibrary = { entries: [] };
+    }
     const userLibrary = await loadLibraryFile();
     const libraryMap = buildLibraryMap(masterLibrary, userLibrary);
     const entriesMap = new Map(Array.from(libraryMap.entries()).map(([id, entry]) => [id, entry]));
