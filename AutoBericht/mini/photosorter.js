@@ -149,6 +149,37 @@
     return null;
   };
 
+  const isNumericTag = (value) => /^\d+(?:\.\d+)*$/.test(value);
+
+  const compareNumericTags = (a, b) => {
+    const left = String(a.value || a.label || "");
+    const right = String(b.value || b.label || "");
+    const leftIsNum = isNumericTag(left);
+    const rightIsNum = isNumericTag(right);
+    if (leftIsNum && rightIsNum) {
+      const leftParts = left.split(".").map((part) => Number(part));
+      const rightParts = right.split(".").map((part) => Number(part));
+      const max = Math.max(leftParts.length, rightParts.length);
+      for (let i = 0; i < max; i += 1) {
+        const l = leftParts[i] ?? -1;
+        const r = rightParts[i] ?? -1;
+        if (l !== r) return l - r;
+      }
+      return 0;
+    }
+    if (leftIsNum) return -1;
+    if (rightIsNum) return 1;
+    return left.localeCompare(right, "de", { numeric: true });
+  };
+
+  const sortOptionsForGroup = (group, options) => {
+    const list = [...options];
+    if (group === "report") {
+      return list.sort(compareNumericTags);
+    }
+    return list.sort((a, b) => String(a.label || a.value || "").localeCompare(String(b.label || b.value || ""), "de", { numeric: true }));
+  };
+
   const normalizeIncomingOptions = (options) => {
     if (!options) return {};
     const mapped = { ...options };
@@ -184,9 +215,9 @@
       training: [...(DEFAULT_TAGS.training || []), ...(incoming.training || [])],
     };
     const normalized = normalizeTagOptions(merged);
-    normalized.report = dedupeOptions(normalized.report);
-    normalized.observations = dedupeOptions(normalized.observations);
-    normalized.training = dedupeOptions(normalized.training);
+    normalized.report = sortOptionsForGroup("report", dedupeOptions(normalized.report));
+    normalized.observations = sortOptionsForGroup("observations", dedupeOptions(normalized.observations));
+    normalized.training = sortOptionsForGroup("training", dedupeOptions(normalized.training));
     return normalized;
   };
 
@@ -332,8 +363,7 @@
       if (!value) return;
       const existing = state.tagOptions[group] || [];
       if (!existing.some((option) => option.value === value)) {
-        const next = [...existing, { value, label: value }];
-        next.sort((a, b) => a.label.localeCompare(b.label));
+        const next = sortOptionsForGroup(group, [...existing, { value, label: value }]);
         state.tagOptions[group] = next;
       }
       addInput.value = "";
