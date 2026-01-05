@@ -33,7 +33,6 @@
 
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
-  const demoWorkbookParam = urlParams.get("demoWorkbook");
   const layoutParam = urlParams.get("layout");
   const storedLayout = window.localStorage?.getItem("photosorterLayout");
   let layoutMode =
@@ -924,18 +923,6 @@
     setStatus("Loaded categories from bundled seed.");
   }
 
-  if (demoMode && demoWorkbookParam) {
-    const workbookPath = demoWorkbookParam;
-    loadCategoriesFromUrl(workbookPath)
-      .then(() => {
-        setStatus(`Demo loaded categories from ${workbookPath}`);
-        debug.logLine("info", `Demo loaded categories from ${workbookPath}`);
-      })
-      .catch((err) => {
-        setStatus(`Demo load failed: ${err.message}`);
-        debug.logLine("error", `Demo load failed: ${err.message}`);
-      });
-  }
 
   if (demoPhotosMode) {
     loadDemoPhotos().catch((err) => {
