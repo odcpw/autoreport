@@ -14,6 +14,7 @@
   const filterDoneOnlyEl = document.getElementById("filter-done-only");
 
   let dirHandle = null;
+  let sidecarDoc = null;
   const debug = window.AutoReportDebug || {
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
@@ -321,6 +322,21 @@
       },
       chapters,
     };
+  };
+
+  const extractReportProject = (doc) => {
+    if (!doc || typeof doc !== "object") return null;
+    if (doc.report && doc.report.project && doc.report.project.chapters) return doc.report.project;
+    if (doc.chapters) return doc;
+    return null;
+  };
+
+  const mergeSidecar = (baseDoc, project) => {
+    const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
+    if (!merged.meta) merged.meta = {};
+    merged.meta.updatedAt = new Date().toISOString();
+    merged.report = { project };
+    return merged;
   };
 
   const ensureWorkstate = (row) => {
@@ -716,7 +732,9 @@
       const handle = await dirHandle.getFileHandle("project_sidecar.json");
       const file = await handle.getFile();
       const text = await file.text();
-      state.project = JSON.parse(text);
+      sidecarDoc = JSON.parse(text);
+      const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
+      state.project = reportProject;
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded project_sidecar.json");
@@ -724,6 +742,7 @@
     } catch (err) {
       state.project = structuredClone(defaultProject);
       state.selectedChapterId = state.project.chapters[0].id;
+      sidecarDoc = null;
       render();
       setStatus("Sidecar not found; loaded default template.");
       debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
@@ -733,10 +752,21 @@
   saveSidecarBtn.addEventListener("click", async () => {
     if (!dirHandle) return;
     try {
+      let existing = sidecarDoc;
+      try {
+        const handle = await dirHandle.getFileHandle("project_sidecar.json");
+        const file = await handle.getFile();
+        const text = await file.text();
+        existing = JSON.parse(text);
+      } catch (err) {
+        existing = sidecarDoc;
+      }
+      const payload = mergeSidecar(existing, state.project);
       const handle = await dirHandle.getFileHandle("project_sidecar.json", { create: true });
       const writable = await handle.createWritable();
-      await writable.write(JSON.stringify(state.project, null, 2));
+      await writable.write(JSON.stringify(payload, null, 2));
       await writable.close();
+      sidecarDoc = payload;
       setStatus("Saved project_sidecar.json");
       debug.logLine("info", "Saved project_sidecar.json");
     } catch (err) {

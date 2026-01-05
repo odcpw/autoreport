@@ -97,6 +97,7 @@
     projectHandle: null,
     photoHandle: null,
     projectDoc: null,
+    sidecarDoc: null,
     photoRootName: "",
     tagOptions: null,
     tagFilters: { report: "", observations: "", training: "" },
@@ -318,9 +319,18 @@
       createdAt: new Date().toISOString(),
     },
     photos: {},
-    photoTagOptions: SEED_TAG_OPTIONS,
+    photoTagOptions: structuredClone(SEED_TAG_OPTIONS),
     photoRoot: "",
   });
+
+  const normalizePhotoDoc = (doc) => {
+    const base = doc && typeof doc === "object" ? structuredClone(doc) : {};
+    if (!base.meta) base.meta = { projectId: "", createdAt: new Date().toISOString() };
+    if (!base.photos) base.photos = {};
+    if (!base.photoTagOptions) base.photoTagOptions = structuredClone(SEED_TAG_OPTIONS);
+    if (!base.photoRoot) base.photoRoot = "";
+    return base;
+  };
 
   const isImageFile = (name) => {
     const lower = name.toLowerCase();
@@ -610,12 +620,16 @@
       const handle = await state.projectHandle.getFileHandle("project_sidecar.json");
       const file = await handle.getFile();
       const text = await file.text();
-      state.projectDoc = JSON.parse(text);
+      const sidecar = JSON.parse(text);
+      state.sidecarDoc = sidecar;
+      const photoDoc = sidecar?.photos || sidecar;
+      state.projectDoc = normalizePhotoDoc(photoDoc);
       state.tagOptions = ensureTagOptions(state.projectDoc.photoTagOptions);
       state.photoRootName = state.projectDoc.photoRoot || "";
       setStatus("Loaded project_sidecar.json");
       debug.logLine("info", "Loaded project_sidecar.json");
     } catch (err) {
+      state.sidecarDoc = null;
       state.projectDoc = createEmptyProjectDoc();
       state.tagOptions = ensureTagOptions(DEFAULT_TAGS);
       state.photoRootName = "";
@@ -652,21 +666,33 @@
 
   const saveProjectSidecar = async () => {
     if (!state.projectHandle) return;
-    const payload = state.projectDoc && typeof state.projectDoc === "object"
-      ? { ...state.projectDoc }
-      : createEmptyProjectDoc();
+    const payload = normalizePhotoDoc(state.projectDoc);
     payload.photos = serializePhotos();
     payload.photoTagOptions = structuredClone(state.tagOptions);
     payload.photoRoot = state.photoRootName || "";
     if (!payload.meta) payload.meta = {};
-    if (!payload.meta.updatedAt) payload.meta.updatedAt = new Date().toISOString();
+    payload.meta.updatedAt = new Date().toISOString();
 
     try {
+      let existing = state.sidecarDoc;
+      try {
+        const existingHandle = await state.projectHandle.getFileHandle("project_sidecar.json");
+        const existingFile = await existingHandle.getFile();
+        const existingText = await existingFile.text();
+        existing = JSON.parse(existingText);
+      } catch (err) {
+        existing = state.sidecarDoc;
+      }
+      const sidecar = existing && typeof existing === "object" ? structuredClone(existing) : {};
+      if (!sidecar.meta) sidecar.meta = {};
+      sidecar.meta.updatedAt = new Date().toISOString();
+      sidecar.photos = payload;
       const handle = await state.projectHandle.getFileHandle("project_sidecar.json", { create: true });
       const writable = await handle.createWritable();
-      await writable.write(JSON.stringify(payload, null, 2));
+      await writable.write(JSON.stringify(sidecar, null, 2));
       await writable.close();
       state.projectDoc = payload;
+      state.sidecarDoc = sidecar;
       setStatus("Saved photo tags to project_sidecar.json");
       debug.logLine("info", "Saved photo tags to project_sidecar.json");
     } catch (err) {
