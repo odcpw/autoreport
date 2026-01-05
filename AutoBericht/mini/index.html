@@ -9,16 +9,15 @@
 <body>
   <div class="app">
     <header class="app-header">
-      <div>
-        <h1>AutoBericht Minimal Editor</h1>
-        <p>Chapter-focused editor with sidecar load/save.</p>
+      <div class="app-switcher">
+        <a class="app-switcher__item is-active" href="./index.html">AutoBericht</a>
+        <a class="app-switcher__item" href="./photosorter.html">PhotoSorter</a>
       </div>
       <div class="actions">
         <button id="pick-folder">Open Project Folder</button>
         <button id="load-sidecar" disabled>Load sidecar</button>
         <button id="save-sidecar" disabled>Save sidecar</button>
         <button id="load-seeds" disabled>Load seed data</button>
-        <a class="inline-link" href="./photosorter.html">Open Photo Sorter</a>
         <button id="save-log">Save debug log</button>
       </div>
     </header>

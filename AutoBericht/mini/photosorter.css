@@ -31,13 +31,21 @@ body {
   gap: 12px;
 }
 
-.app-header h1 {
-  margin: 0 0 4px;
-  font-size: 1.15rem;
+.app-switcher {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 700;
 }
 
-.app-header p {
-  display: none;
+.app-switcher__item {
+  color: rgba(255, 255, 255, 0.5);
+  text-decoration: none;
+  font-size: 1.05rem;
+}
+
+.app-switcher__item.is-active {
+  color: #ffffff;
 }
 
 .actions {
