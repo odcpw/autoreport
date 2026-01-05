@@ -30,9 +30,11 @@
         <h2>Chapters</h2>
         <nav id="chapter-list"></nav>
         <div class="filters">
-          <label><input type="checkbox" id="filter-hide-yes" /> Hide answered yes</label>
-          <label><input type="checkbox" id="filter-include-only" /> Include only</label>
-          <label><input type="checkbox" id="filter-done-only" /> Done only</label>
+          <label><input type="radio" name="filter-mode" value="all" checked /> Show all</label>
+          <label><input type="radio" name="filter-mode" value="hide-yes" /> Hide answered yes</label>
+          <label><input type="radio" name="filter-mode" value="include-only" /> Show include only</label>
+          <label><input type="radio" name="filter-mode" value="done-only" /> Show done only</label>
+          <label><input type="radio" name="filter-mode" value="hide-done" /> Hide done only</label>
         </div>
       </aside>
 
@@ -59,7 +61,11 @@
           </label>
           <label>
             Language
-            <input id="settings-locale" type="text" placeholder="de-CH" />
+            <select id="settings-locale">
+              <option value="de-CH">DE</option>
+              <option value="fr-CH">FR</option>
+              <option value="it-CH">IT</option>
+            </select>
           </label>
           <label>
             Library file name

@@ -18,9 +18,7 @@
   const chapterTitleEl = document.getElementById("chapter-title");
   const rowsEl = document.getElementById("rows");
 
-  const filterHideYesEl = document.getElementById("filter-hide-yes");
-  const filterIncludeOnlyEl = document.getElementById("filter-include-only");
-  const filterDoneOnlyEl = document.getElementById("filter-done-only");
+  const filterModeEls = Array.from(document.querySelectorAll("input[name=\"filter-mode\"]"));
 
   let dirHandle = null;
   let sidecarDoc = null;
@@ -162,9 +160,7 @@
     project: structuredClone(defaultProject),
     selectedChapterId: defaultProject.chapters[0].id,
     filters: {
-      hideYes: false,
-      includeOnly: false,
-      doneOnly: false,
+      mode: "all",
     },
   };
 
@@ -715,9 +711,10 @@
       ensureWorkstate(row);
       const ws = row.workstate;
 
-      if (state.filters.hideYes && row.customer?.answer === 1) return;
-      if (state.filters.includeOnly && !ws.includeFinding) return;
-      if (state.filters.doneOnly && !ws.done) return;
+      if (state.filters.mode === "hide-yes" && row.customer?.answer === 1) return;
+      if (state.filters.mode === "include-only" && !ws.includeFinding) return;
+      if (state.filters.mode === "done-only" && !ws.done) return;
+      if (state.filters.mode === "hide-done" && ws.done) return;
 
       const card = document.createElement("div");
       card.className = "row-card";
@@ -1088,26 +1085,19 @@
     }
   });
 
-  filterHideYesEl.addEventListener("change", () => {
-    state.filters.hideYes = filterHideYesEl.checked;
-    renderRows();
-  });
-
-  filterIncludeOnlyEl.addEventListener("change", () => {
-    state.filters.includeOnly = filterIncludeOnlyEl.checked;
-    renderRows();
-  });
-
-  filterDoneOnlyEl.addEventListener("change", () => {
-    state.filters.doneOnly = filterDoneOnlyEl.checked;
-    renderRows();
+  filterModeEls.forEach((input) => {
+    input.addEventListener("change", () => {
+      if (!input.checked) return;
+      state.filters.mode = input.value;
+      renderRows();
+    });
   });
 
   const openSettings = () => {
     if (!settingsModal) return;
     settingsAuthorEl.value = state.project.meta?.author || "";
     settingsInitialsEl.value = state.project.meta?.initials || "";
-    settingsLocaleEl.value = state.project.meta?.locale || "";
+    settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
     settingsLibraryFileEl.value = state.project.meta?.libraryFile || "";
     settingsModal.classList.add("is-open");
     settingsModal.setAttribute("aria-hidden", "false");
@@ -1123,7 +1113,7 @@
     ensureProjectMeta();
     state.project.meta.author = settingsAuthorEl.value.trim();
     state.project.meta.initials = settingsInitialsEl.value.trim();
-    state.project.meta.locale = settingsLocaleEl.value.trim() || "de-CH";
+    state.project.meta.locale = settingsLocaleEl.value || "de-CH";
     state.project.meta.libraryFile = settingsLibraryFileEl.value.trim();
     setStatus("Settings saved (remember to save sidecar).");
   };

@@ -454,6 +454,14 @@ textarea[disabled] {
   font-size: 0.95rem;
 }
 
+.settings-body select {
+  border-radius: 10px;
+  border: 1px solid #d7d0c7;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  background: #fff;
+}
+
 .settings-actions {
   margin-top: 16px;
   display: flex;
