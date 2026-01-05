@@ -120,13 +120,17 @@
     });
   };
 
+  const SEED_TAG_OPTIONS = window.PS_CATEGORY_LABELS_SEED
+    ? ensureTagOptions(window.PS_CATEGORY_LABELS_SEED)
+    : ensureTagOptions(DEFAULT_TAGS);
+
   const createEmptyProjectDoc = () => ({
     meta: {
       projectId: "",
       createdAt: new Date().toISOString(),
     },
     photos: {},
-    photoTagOptions: ensureTagOptions(DEFAULT_TAGS),
+    photoTagOptions: SEED_TAG_OPTIONS,
     photoRoot: "",
   });
 
@@ -447,10 +451,12 @@
     const seminarLabels = [];
     const topicLabels = [];
     rows.forEach((row) => {
-      const report = String(row[0] || "").trim();
+      const reportA = String(row[0] || "").trim();
       const seminar = String(row[1] || "").trim();
       const topic = String(row[2] || "").trim();
-      if (report) reportLabels.push(report);
+      const reportB = String(row[3] || "").trim();
+      if (reportA) reportLabels.push(reportA);
+      if (reportB) reportLabels.push(reportB);
       if (seminar) seminarLabels.push(seminar);
       if (topic) topicLabels.push(topic);
     });
@@ -607,9 +613,13 @@
     }
   });
 
-  state.tagOptions = ensureTagOptions(DEFAULT_TAGS);
+  state.tagOptions = SEED_TAG_OPTIONS;
   ensureFsAccess();
   enableActions();
+
+  if (window.PS_CATEGORY_LABELS_SEED) {
+    setStatus("Loaded categories from bundled seed.");
+  }
 
   if (demoMode) {
     const workbookPath = demoWorkbookParam || "/fromWork/2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx";
