@@ -11,7 +11,7 @@
     <header class="app-header">
       <div>
         <h1>Photo Sorter</h1>
-        <p>Tag images by report chapter, topic, and seminar without moving files.</p>
+        <p>Tag images by report chapter, observations, and training without moving files.</p>
       </div>
       <div class="actions">
         <button id="pick-project">Open Project Folder</button>
@@ -43,9 +43,15 @@
       </section>
 
       <aside class="sidebar">
-        <div class="panel" id="panel-bericht"></div>
-        <div class="panel" id="panel-topic"></div>
-        <div class="panel" id="panel-seminar"></div>
+        <div class="panel-tabs" role="tablist" aria-label="Tag panels">
+          <button type="button" data-panel-tab="report">1 Bericht</button>
+          <button type="button" data-panel-tab="observations">2 Beobachtungen</button>
+          <button type="button" data-panel-tab="training">3 Training</button>
+        </div>
+
+        <div class="panel" id="panel-report"></div>
+        <div class="panel" id="panel-observations"></div>
+        <div class="panel" id="panel-training"></div>
 
         <div class="notes">
           <label for="photo-notes">Notes</label>

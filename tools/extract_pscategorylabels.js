@@ -13,17 +13,17 @@ const readWorkbook = (filePath) => {
 
 const parsePSCategoryLabels = (rows) => {
   const reportLabels = [];
-  const seminarLabels = [];
-  const topicLabels = [];
+  const trainingLabels = [];
+  const observationLabels = [];
   rows.forEach((row) => {
     const reportA = String(row[0] || "").trim();
-    const seminar = String(row[1] || "").trim();
-    const topic = String(row[2] || "").trim();
+    const training = String(row[1] || "").trim();
+    const observation = String(row[2] || "").trim();
     const reportB = String(row[3] || "").trim();
     if (reportA) reportLabels.push(reportA);
     if (reportB) reportLabels.push(reportB);
-    if (seminar) seminarLabels.push(seminar);
-    if (topic) topicLabels.push(topic);
+    if (training) trainingLabels.push(training);
+    if (observation) observationLabels.push(observation);
   });
 
   const reportOptions = reportLabels.map((label) => {
@@ -43,9 +43,9 @@ const parsePSCategoryLabels = (rows) => {
   };
 
   return {
-    bericht: toUnique(reportOptions),
-    seminar: toUnique(seminarLabels.map((label) => ({ value: label, label }))),
-    topic: toUnique(topicLabels.map((label) => ({ value: label, label }))),
+    report: toUnique(reportOptions),
+    training: toUnique(trainingLabels.map((label) => ({ value: label, label }))),
+    observations: toUnique(observationLabels.map((label) => ({ value: label, label }))),
   };
 };
 

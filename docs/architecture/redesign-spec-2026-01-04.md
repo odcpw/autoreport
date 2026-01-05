@@ -93,7 +93,7 @@ FieldObservation (Chapter 4.6)
 Photo
 - id
 - filename
-- tags (many-to-many: chapter, topic, training)
+- tags (many-to-many: report chapter, observation topic, training)
 - notes
 
 RecommendationLibrary (per engineer)
@@ -102,7 +102,18 @@ RecommendationLibrary (per engineer)
 - bullets (variant phrasing)
 - last_used
 
-## 8. Proposed Architecture (Policy-Safe)
+## 8. UX Requirements (Photo Sorter)
+
+- Target screen: 1920×1080 @ 125% scaling (≈1536×864 effective).
+- Entire workflow must fit on one screen: no page scrolling.
+- No internal scrollbars in tag panes (Report / Observations / Training).
+- Photo preview and tagging controls must be visible simultaneously.
+- Tag buttons should be uniform width, dense grid, and single-click.
+- Provide two layout variants:
+  - **Stacked panels** (all three panes visible at once).
+  - **Tabbed panels** (1/2/3 keys to switch panes).
+
+## 9. Proposed Architecture (Policy-Safe)
 
 Core principle: no unsafe flags, no implicit disk access.
 
@@ -119,7 +130,7 @@ Responsibilities:
 - Excel macros: import sidecar -> update Excel -> generate Word/PPT/PDF.
 - Templates: updated centrally; exports use latest templates.
 
-### 8a. System Diagram
+### 9a. System Diagram
 
 ```
 ┌──────────────────────────────────────────────────────────────┐
@@ -144,7 +155,7 @@ Responsibilities:
 └──────────────────────────────────────────────────────────────┘
 ```
 
-### 8b. Data Flow Diagram
+### 9b. Data Flow Diagram
 
 ```
 Self-assessment Excel + Photos

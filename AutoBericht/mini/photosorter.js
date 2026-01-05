@@ -16,9 +16,9 @@
   const notesEl = document.getElementById("photo-notes");
 
   const panels = {
-    bericht: document.getElementById("panel-bericht"),
-    topic: document.getElementById("panel-topic"),
-    seminar: document.getElementById("panel-seminar"),
+    report: document.getElementById("panel-report"),
+    observations: document.getElementById("panel-observations"),
+    training: document.getElementById("panel-training"),
   };
 
   const debug = window.AutoReportDebug || {
@@ -29,12 +29,14 @@
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
   const demoWorkbookParam = urlParams.get("demoWorkbook");
+  const layoutMode = urlParams.get("layout") === "tabs" ? "tabs" : "stacked";
+  const panelTabButtons = Array.from(document.querySelectorAll("[data-panel-tab]"));
 
   const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tif", ".tiff"]);
   const DEFAULT_TAGS = {
-    bericht: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-    topic: ["Forklifts", "PPE", "Housekeeping", "Chemicals", "Workplace"],
-    seminar: ["Vorbildliches Verhalten", "Risikoanalyse", "Audit", "Kommunikation"],
+    report: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+    observations: ["Forklifts", "PPE", "Housekeeping", "Chemicals", "Workplace"],
+    training: ["Vorbildliches Verhalten", "Risikoanalyse", "Audit", "Kommunikation"],
   };
 
   const state = {
@@ -43,16 +45,33 @@
     projectDoc: null,
     photoRootName: "",
     tagOptions: null,
-    tagFilters: { bericht: "", topic: "", seminar: "" },
+    tagFilters: { report: "", observations: "", training: "" },
     photos: [],
     filterMode: "all",
     currentIndex: 0,
+    activePanel: "report",
   };
 
 
   const setStatus = (message) => {
     statusEl.textContent = message;
     debug.logLine("info", message);
+  };
+
+  const applyLayoutMode = () => {
+    document.body.classList.toggle("layout-tabs", layoutMode === "tabs");
+    document.body.classList.toggle("layout-stacked", layoutMode === "stacked");
+  };
+
+  const setActivePanel = (group) => {
+    if (!panels[group]) return;
+    state.activePanel = group;
+    panelTabButtons.forEach((btn) => {
+      const isActive = btn.dataset.panelTab === group;
+      btn.classList.toggle("active", isActive);
+      btn.setAttribute("aria-pressed", String(isActive));
+    });
+    renderPanels();
   };
 
   const ensureFsAccess = () => {
@@ -78,6 +97,12 @@
     nextBtn.disabled = !hasVisiblePhotos;
   };
 
+  panelTabButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      setActivePanel(button.dataset.panelTab);
+    });
+  });
+
   const normalizeTagOption = (option) => {
     if (!option) return null;
     if (typeof option === "string") {
@@ -91,22 +116,44 @@
     return null;
   };
 
-  const normalizeTagOptions = (options) => ({
-    bericht: (options?.bericht || []).map(normalizeTagOption).filter(Boolean),
-    topic: (options?.topic || []).map(normalizeTagOption).filter(Boolean),
-    seminar: (options?.seminar || []).map(normalizeTagOption).filter(Boolean),
-  });
+  const normalizeIncomingOptions = (options) => {
+    if (!options) return {};
+    const mapped = { ...options };
+    if (!mapped.report && mapped.bericht) mapped.report = mapped.bericht;
+    if (!mapped.training && mapped.seminar) mapped.training = mapped.seminar;
+    if (!mapped.observations && mapped.topic) mapped.observations = mapped.topic;
+    return mapped;
+  };
+
+  const normalizeTagOptions = (options) => {
+    const incoming = normalizeIncomingOptions(options);
+    return {
+      report: (incoming.report || []).map(normalizeTagOption).filter(Boolean),
+      observations: (incoming.observations || []).map(normalizeTagOption).filter(Boolean),
+      training: (incoming.training || []).map(normalizeTagOption).filter(Boolean),
+    };
+  };
+
+  const normalizePhotoTags = (tags) => {
+    const incoming = normalizeIncomingOptions(tags || {});
+    return {
+      report: Array.from(incoming.report || []),
+      observations: Array.from(incoming.observations || []),
+      training: Array.from(incoming.training || []),
+    };
+  };
 
   const ensureTagOptions = (options) => {
+    const incoming = normalizeIncomingOptions(options);
     const merged = {
-      bericht: [...(DEFAULT_TAGS.bericht || []), ...(options?.bericht || [])],
-      topic: [...(DEFAULT_TAGS.topic || []), ...(options?.topic || [])],
-      seminar: [...(DEFAULT_TAGS.seminar || []), ...(options?.seminar || [])],
+      report: [...(DEFAULT_TAGS.report || []), ...(incoming.report || [])],
+      observations: [...(DEFAULT_TAGS.observations || []), ...(incoming.observations || [])],
+      training: [...(DEFAULT_TAGS.training || []), ...(incoming.training || [])],
     };
     const normalized = normalizeTagOptions(merged);
-    normalized.bericht = dedupeOptions(normalized.bericht);
-    normalized.topic = dedupeOptions(normalized.topic);
-    normalized.seminar = dedupeOptions(normalized.seminar);
+    normalized.report = dedupeOptions(normalized.report);
+    normalized.observations = dedupeOptions(normalized.observations);
+    normalized.training = dedupeOptions(normalized.training);
     return normalized;
   };
 
@@ -143,8 +190,8 @@
 
   const isPhotoUnsorted = (photo) => {
     if (!photo?.tags) return true;
-    const { bericht, topic, seminar } = photo.tags;
-    return !((bericht || []).length || (topic || []).length || (seminar || []).length);
+    const { report, observations, training } = photo.tags;
+    return !((report || []).length || (observations || []).length || (training || []).length);
   };
 
   const getFilteredPhotos = () => {
@@ -224,6 +271,7 @@
     const container = panels[group];
     if (!container) return;
 
+    container.classList.toggle("is-active", state.activePanel === group);
     container.innerHTML = "";
     const title = document.createElement("h3");
     title.textContent = config.title;
@@ -287,20 +335,20 @@
   };
 
   const renderPanels = () => {
-    renderTagPanel("bericht", {
-      title: "Report",
-      description: "Tag by report chapter or section.",
-      filter: state.tagFilters.bericht,
+    renderTagPanel("report", {
+      title: "Bericht",
+      description: "Kapitel & Unterkapitel (1.x / 1.2 / 4.8 etc.)",
+      filter: state.tagFilters.report,
     });
-    renderTagPanel("topic", {
-      title: "Topic",
-      description: "Topic or folder tags.",
-      filter: state.tagFilters.topic,
+    renderTagPanel("observations", {
+      title: "Beobachtungen",
+      description: "Themen/Begriffe aus der Begehung.",
+      filter: state.tagFilters.observations,
     });
-    renderTagPanel("seminar", {
-      title: "Seminar",
-      description: "Training deck categories.",
-      filter: state.tagFilters.seminar,
+    renderTagPanel("training", {
+      title: "Training",
+      description: "Seminar-/Schulungskategorien.",
+      filter: state.tagFilters.training,
     });
   };
 
@@ -388,17 +436,13 @@
 
   const buildPhotoEntry = (path, file) => {
     const previous = state.projectDoc?.photos?.[path];
-    const tags = previous?.tags || { bericht: [], topic: [], seminar: [] };
+    const tags = normalizePhotoTags(previous?.tags);
     return {
       path,
       file,
       url: URL.createObjectURL(file),
       notes: previous?.notes || "",
-      tags: {
-        bericht: Array.from(tags.bericht || []),
-        topic: Array.from(tags.topic || []),
-        seminar: Array.from(tags.seminar || []),
-      },
+      tags,
     };
   };
 
@@ -448,17 +492,17 @@
 
   const parsePSCategoryLabels = (rows) => {
     const reportLabels = [];
-    const seminarLabels = [];
-    const topicLabels = [];
+    const trainingLabels = [];
+    const observationLabels = [];
     rows.forEach((row) => {
       const reportA = String(row[0] || "").trim();
-      const seminar = String(row[1] || "").trim();
-      const topic = String(row[2] || "").trim();
+      const training = String(row[1] || "").trim();
+      const observation = String(row[2] || "").trim();
       const reportB = String(row[3] || "").trim();
       if (reportA) reportLabels.push(reportA);
       if (reportB) reportLabels.push(reportB);
-      if (seminar) seminarLabels.push(seminar);
-      if (topic) topicLabels.push(topic);
+      if (training) trainingLabels.push(training);
+      if (observation) observationLabels.push(observation);
     });
 
     const reportOptions = reportLabels.map((label) => {
@@ -468,9 +512,9 @@
     });
 
     return {
-      bericht: reportOptions,
-      seminar: seminarLabels.map((label) => ({ value: label, label })),
-      topic: topicLabels.map((label) => ({ value: label, label })),
+      report: reportOptions,
+      training: trainingLabels.map((label) => ({ value: label, label })),
+      observations: observationLabels.map((label) => ({ value: label, label })),
     };
   };
 
@@ -582,6 +626,16 @@
     renderAll();
   });
 
+  document.addEventListener("keydown", (event) => {
+    if (layoutMode !== "tabs") return;
+    const target = event.target;
+    const isInput = target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA");
+    if (isInput) return;
+    if (event.key === "1") setActivePanel("report");
+    if (event.key === "2") setActivePanel("observations");
+    if (event.key === "3") setActivePanel("training");
+  });
+
   notesEl.addEventListener("input", () => {
     const current = getCurrentPhoto();
     if (!current) return;
@@ -614,6 +668,8 @@
   });
 
   state.tagOptions = SEED_TAG_OPTIONS;
+  applyLayoutMode();
+  setActivePanel(state.activePanel);
   ensureFsAccess();
   enableActions();
 

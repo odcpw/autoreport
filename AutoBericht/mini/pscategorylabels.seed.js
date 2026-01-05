@@ -2,10 +2,10 @@
 window.PS_CATEGORY_LABELS_META = {
   "sourceWorkbook": "2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx",
   "sheet": "PSCategoryLabels",
-  "generatedAt": "2026-01-05T14:09:51.805Z"
+  "generatedAt": "2026-01-05T14:26:46.158Z"
 };
 window.PS_CATEGORY_LABELS_SEED = {
-  "bericht": [
+  "report": [
     {
       "value": "1",
       "label": "1 Leitbild, Sicherheitsziele und Strategien"
@@ -267,7 +267,7 @@ window.PS_CATEGORY_LABELS_SEED = {
       "label": "14 Erweiterung für ISO 45001 (Fakultativ)"
     }
   ],
-  "seminar": [
+  "training": [
     {
       "value": "Audit",
       "label": "Audit"
@@ -305,7 +305,7 @@ window.PS_CATEGORY_LABELS_SEED = {
       "label": "Vorbild"
     }
   ],
-  "topic": [
+  "observations": [
     {
       "value": "Unsorted",
       "label": "Unsorted"
