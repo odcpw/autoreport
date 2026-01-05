@@ -441,7 +441,7 @@
       card.appendChild(header);
 
       const selfItems = row.customer?.items || [];
-      if (selfItems.length) {
+      if (selfItems.length > 1) {
         const details = document.createElement("details");
         details.className = "self-details";
         const summary = document.createElement("summary");
