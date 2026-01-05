@@ -235,7 +235,43 @@ Tags are many-to-many. No primary tag requirement.
 - Template updates: strict mapping rules and warnings.
 - Large photo sets: lazy indexing and thumbnail caching.
 
-## 14. Phased Plan (Draft)
+## 14. Security & Data Handling (IT Review)
+
+Design goal: keep all customer data local, with explicit user consent for any file access.
+
+### Data locality
+- No cloud storage, no external API calls, no telemetry.
+- All data stays in the project folder on disk.
+- Editor state lives in `project_sidecar.json` (human-readable JSON).
+
+### File access model
+- Uses File System Access API with explicit folder picker each session.
+- Browser cannot access disk by path; access is capability-based only.
+- Optional convenience: the last picked folder handle is stored in browser IndexedDB.
+  - This is local to the browser profile, not transmitted anywhere.
+  - User can clear site data to revoke it.
+
+### Network exposure
+- App is served locally (e.g., `http://localhost`) or `file://` in a locked-down browser.
+- No outbound connections are required for normal operation.
+- Libraries (e.g., SheetJS) are bundled locally, not loaded from CDNs.
+
+### Data scope and mutation rules
+- AutoBericht only reads/writes `project_sidecar.json`.
+- PhotoSorter only reads images and writes tags/notes into `project_sidecar.json`.
+- No files are moved, deleted, or rewritten by the browser.
+- Export to Word/PPT/PDF is performed locally via Office/VBA (no cloud services).
+
+### Security assumptions
+- Endpoint security and disk encryption are managed by IT policy.
+- If the browser profile is compromised, local data could be exposed (same as any local file).
+- Folder access can be revoked by clearing site permissions/data.
+
+### Compliance notes
+- The system can operate fully offline.
+- No special browser flags or security bypasses are required.
+
+## 15. Phased Plan (Draft)
 
 1) Project folder + sidecar schema + minimal editor load/save.
 2) Chapter editor flow + recommendation library integration.
@@ -243,7 +279,7 @@ Tags are many-to-many. No primary tag requirement.
 4) Excel macro orchestration (import sidecar, export Word/PPT/PDF).
 5) Validation, logging, and error handling.
 
-## 15. Open Decisions
+## 16. Open Decisions
 
 - Confirm File System Access API availability in locked-down Edge.
 - Decide how much export logic stays in Excel vs browser.

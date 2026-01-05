@@ -23,3 +23,15 @@ Thumbs.db
 output/**
 !output/.gitkeep
 
+# Local project runtime data
+project_sidecar.json
+project_db.xlsx
+out/
+cache/
+
+# Debug logs / temp artifacts
+*.log
+*.tmp
+*.bak
+*.swp
+legacy/artifacts/**
