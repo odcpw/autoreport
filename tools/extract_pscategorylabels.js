@@ -28,9 +28,10 @@ const parsePSCategoryLabels = (rows) => {
 
   const reportOptions = reportLabels.map((label) => {
     const match = label.match(/^\d+(?:\.\d+)*(?:\.)?/);
-    const value = match ? match[0].replace(/\.$/, "") : label;
+    if (!match) return null;
+    const value = match[0].replace(/\.$/, "");
     return { value, label };
-  });
+  }).filter(Boolean);
 
   const toUnique = (options) => {
     const seen = new Set();

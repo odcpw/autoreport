@@ -331,6 +331,20 @@
     });
   };
 
+  const splitChapterOptions = (options) => {
+    const chapters = [];
+    const rest = [];
+    options.forEach((option) => {
+      const value = String(option.value || "");
+      if (isNumericTag(value) && !value.includes(".")) {
+        chapters.push(option);
+      } else {
+        rest.push(option);
+      }
+    });
+    return { chapters, rest };
+  };
+
   const renderTagPanel = (group, config) => {
     const container = panels[group];
     if (!container) return;
@@ -372,15 +386,39 @@
 
     controls.append(filterInput, addInput);
 
+    const current = getCurrentPhoto();
+    const selected = new Set(current?.tags?.[group] || []);
+    const filteredOptions = (state.tagOptions?.[group] || [])
+      .filter((option) => option.label.toLowerCase().includes((config.filter || "").toLowerCase()));
+
+    const { chapters, rest } = config.splitChapters
+      ? splitChapterOptions(filteredOptions)
+      : { chapters: [], rest: filteredOptions };
+
+    if (config.splitChapters) {
+      const chapterRow = document.createElement("div");
+      chapterRow.className = "panel__chapters";
+      chapters.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "tag-button tag-button--chapter";
+        button.textContent = option.label;
+        button.title = option.label;
+        if (selected.has(option.value)) {
+          button.classList.add("active");
+        }
+        button.addEventListener("click", () => {
+          toggleTag(group, option.value);
+        });
+        chapterRow.appendChild(button);
+      });
+      container.append(chapterRow);
+    }
+
     const tagsEl = document.createElement("div");
     tagsEl.className = "panel__tags";
 
-    const current = getCurrentPhoto();
-    const selected = new Set(current?.tags?.[group] || []);
-    const options = (state.tagOptions?.[group] || [])
-      .filter((option) => option.label.toLowerCase().includes((config.filter || "").toLowerCase()));
-
-    options.forEach((option) => {
+    rest.forEach((option) => {
       const button = document.createElement("button");
       button.type = "button";
       button.className = "tag-button";
@@ -403,6 +441,7 @@
       title: "Bericht",
       description: "Kapitel & Unterkapitel (1.x / 1.2 / 4.8 etc.)",
       filter: state.tagFilters.report,
+      splitChapters: true,
     });
     renderTagPanel("observations", {
       title: "Beobachtungen",
@@ -571,9 +610,10 @@
 
     const reportOptions = reportLabels.map((label) => {
       const match = label.match(/^\\d+(?:\\.\\d+)*(?:\\.)?/);
-      const value = match ? match[0].replace(/\\.$/, "") : label;
+      if (!match) return null;
+      const value = match[0].replace(/\\.$/, "");
       return { value, label };
-    });
+    }).filter(Boolean);
 
     return {
       report: reportOptions,

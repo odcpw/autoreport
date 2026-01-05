@@ -2,17 +2,13 @@
 window.PS_CATEGORY_LABELS_META = {
   "sourceWorkbook": "2025-07-10 AutoBericht v0 Berichtform report selectors.xlsx",
   "sheet": "PSCategoryLabels",
-  "generatedAt": "2026-01-05T14:26:46.158Z"
+  "generatedAt": "2026-01-05T15:01:47.388Z"
 };
 window.PS_CATEGORY_LABELS_SEED = {
   "report": [
     {
       "value": "1",
       "label": "1 Leitbild, Sicherheitsziele und Strategien"
-    },
-    {
-      "value": "Unsorted",
-      "label": "Unsorted"
     },
     {
       "value": "1.1",
@@ -33,10 +29,6 @@ window.PS_CATEGORY_LABELS_SEED = {
     {
       "value": "1.3",
       "label": "1.3. Engagement der Linienvorgesetzten"
-    },
-    {
-      "value": "Stapler",
-      "label": "Stapler"
     },
     {
       "value": "1.4",
