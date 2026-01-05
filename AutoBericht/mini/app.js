@@ -324,6 +324,65 @@
     return toText(row.master?.levels?.[levelKey]);
   };
 
+  const escapeHtml = (value) => value
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/\"/g, "&quot;")
+    .replace(/'/g, "&#39;");
+
+  const formatInlineMarkdown = (value) => {
+    let out = value;
+    out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+    out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
+    return out;
+  };
+
+  const markdownToHtml = (text) => {
+    const lines = String(text || "").split(/\r?\n/);
+    const parts = [];
+    let inList = false;
+    let paragraphLines = [];
+
+    const flushParagraph = () => {
+      if (!paragraphLines.length) return;
+      const safe = paragraphLines.map((line) => escapeHtml(line)).map((line) => formatInlineMarkdown(line));
+      parts.push(`<p>${safe.join("<br>")}</p>`);
+      paragraphLines = [];
+    };
+
+    lines.forEach((line) => {
+      const trimmed = line.trim();
+      if (!trimmed) {
+        if (inList) {
+          parts.push("</ul>");
+          inList = false;
+        }
+        flushParagraph();
+        parts.push('<div class="md-spacer"></div>');
+        return;
+      }
+      if (trimmed.startsWith("- ")) {
+        flushParagraph();
+        if (!inList) {
+          parts.push("<ul>");
+          inList = true;
+        }
+        const item = escapeHtml(trimmed.slice(2));
+        parts.push(`<li>${formatInlineMarkdown(item)}</li>`);
+        return;
+      }
+      if (inList) {
+        parts.push("</ul>");
+        inList = false;
+      }
+      paragraphLines.push(line);
+    });
+    if (inList) parts.push("</ul>");
+    flushParagraph();
+    return parts.join("");
+  };
+
   const renderChapterList = () => {
     chapterListEl.innerHTML = "";
     state.project.chapters.forEach((chapter) => {
@@ -369,8 +428,16 @@
       } else {
         badge.textContent = "Answer: —";
       }
+      const previewBtn = document.createElement("button");
+      previewBtn.className = "preview-btn";
+      previewBtn.type = "button";
+      previewBtn.textContent = "Preview";
+      const headerRight = document.createElement("div");
+      headerRight.className = "row-header__right";
+      headerRight.appendChild(badge);
+      headerRight.appendChild(previewBtn);
       header.appendChild(meta);
-      header.appendChild(badge);
+      header.appendChild(headerRight);
       card.appendChild(header);
 
       const selfItems = row.customer?.items || [];
@@ -391,9 +458,8 @@
         card.appendChild(details);
       }
 
-      const checkboxRow = document.createElement("div");
-      checkboxRow.className = "checkbox-row";
       const includeLabel = document.createElement("label");
+      includeLabel.className = "field-toggle";
       const includeCheckbox = document.createElement("input");
       includeCheckbox.type = "checkbox";
       includeCheckbox.checked = ws.includeFinding;
@@ -405,6 +471,7 @@
       includeLabel.appendChild(document.createTextNode("Include"));
 
       const doneLabel = document.createElement("label");
+      doneLabel.className = "field-toggle";
       const doneCheckbox = document.createElement("input");
       doneCheckbox.type = "checkbox";
       doneCheckbox.checked = ws.done;
@@ -415,16 +482,21 @@
       doneLabel.appendChild(doneCheckbox);
       doneLabel.appendChild(document.createTextNode("Done"));
 
-      checkboxRow.appendChild(includeLabel);
-      checkboxRow.appendChild(doneLabel);
-      card.appendChild(checkboxRow);
+      const rowBody = document.createElement("div");
+      rowBody.className = "row-body";
 
       const findingField = document.createElement("div");
       findingField.className = "field";
+      const findingHeader = document.createElement("div");
+      findingHeader.className = "field-header";
       const findingLabel = document.createElement("label");
       findingLabel.textContent = "Finding";
+      const findingHint = document.createElement("span");
+      findingHint.className = "hint";
+      findingHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
+      findingHint.textContent = "?";
       const findingToggle = document.createElement("label");
-      findingToggle.className = "checkbox-row";
+      findingToggle.className = "field-toggle";
       const findingCheckbox = document.createElement("input");
       findingCheckbox.type = "checkbox";
       findingCheckbox.checked = ws.useFindingOverride;
@@ -445,33 +517,50 @@
         ws.findingOverride = findingArea.value;
       });
 
-      findingField.appendChild(findingLabel);
-      findingField.appendChild(findingToggle);
+      findingLabel.appendChild(findingHint);
+      findingHeader.appendChild(findingLabel);
+      const findingControls = document.createElement("div");
+      findingControls.className = "field-controls";
+      findingControls.appendChild(findingToggle);
+      findingControls.appendChild(includeLabel);
+      findingControls.appendChild(doneLabel);
+      findingHeader.appendChild(findingControls);
+      findingField.appendChild(findingHeader);
       findingField.appendChild(findingArea);
-      card.appendChild(findingField);
+      rowBody.appendChild(findingField);
 
       const recField = document.createElement("div");
       recField.className = "field";
+      const recHeader = document.createElement("div");
+      recHeader.className = "field-header";
       const recLabel = document.createElement("label");
       recLabel.textContent = "Recommendation";
-      const controls = document.createElement("div");
-      controls.className = "controls";
+      const recHint = document.createElement("span");
+      recHint.className = "hint";
+      recHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
+      recHint.textContent = "?";
 
-      const levelSelect = document.createElement("select");
-      levelSelect.className = "level-select";
+      const levelGroup = document.createElement("div");
+      levelGroup.className = "level-group";
       [1, 2, 3, 4].forEach((level) => {
-        const option = document.createElement("option");
-        option.value = String(level);
-        option.textContent = `Level ${level}`;
-        if (ws.selectedLevel === level) option.selected = true;
-        levelSelect.appendChild(option);
-      });
-      levelSelect.addEventListener("change", () => {
-        ws.selectedLevel = Number(levelSelect.value);
-        renderRows();
+        const label = document.createElement("label");
+        label.className = "level-radio";
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `level-${row.id}`;
+        input.value = String(level);
+        input.checked = ws.selectedLevel === level;
+        input.addEventListener("change", () => {
+          ws.selectedLevel = level;
+          renderRows();
+        });
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(String(level)));
+        levelGroup.appendChild(label);
       });
 
       const overrideLabel = document.createElement("label");
+      overrideLabel.className = "field-toggle";
       const overrideCheckbox = document.createElement("input");
       overrideCheckbox.type = "checkbox";
       const levelKey = String(ws.selectedLevel);
@@ -486,8 +575,10 @@
       overrideLabel.appendChild(overrideCheckbox);
       overrideLabel.appendChild(document.createTextNode("Override"));
 
-      controls.appendChild(levelSelect);
-      controls.appendChild(overrideLabel);
+      const recControls = document.createElement("div");
+      recControls.className = "field-controls";
+      recControls.appendChild(levelGroup);
+      recControls.appendChild(overrideLabel);
 
       const recArea = document.createElement("textarea");
       recArea.value = getRecommendationText(row, ws.selectedLevel);
@@ -496,10 +587,39 @@
         ws.levelOverrides[levelKey] = recArea.value;
       });
 
-      recField.appendChild(recLabel);
-      recField.appendChild(controls);
+      recLabel.appendChild(recHint);
+      recHeader.appendChild(recLabel);
+      recHeader.appendChild(recControls);
+      recField.appendChild(recHeader);
       recField.appendChild(recArea);
-      card.appendChild(recField);
+      rowBody.appendChild(recField);
+      card.appendChild(rowBody);
+
+      const preview = document.createElement("div");
+      preview.className = "row-preview";
+      const previewFinding = document.createElement("div");
+      previewFinding.className = "row-preview__col";
+      const previewRec = document.createElement("div");
+      previewRec.className = "row-preview__col";
+      preview.appendChild(previewFinding);
+      preview.appendChild(previewRec);
+      card.appendChild(preview);
+
+      const showPreview = () => {
+        previewFinding.innerHTML = markdownToHtml(getFindingText(row));
+        previewRec.innerHTML = markdownToHtml(getRecommendationText(row, ws.selectedLevel));
+        preview.classList.add("is-visible");
+      };
+      const hidePreview = () => {
+        preview.classList.remove("is-visible");
+      };
+      previewBtn.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        showPreview();
+      });
+      previewBtn.addEventListener("pointerup", hidePreview);
+      previewBtn.addEventListener("pointerleave", hidePreview);
+      previewBtn.addEventListener("pointercancel", hidePreview);
 
       const children = row.master?.children || [];
       if (children.length) {
