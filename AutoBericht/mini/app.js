@@ -12,7 +12,7 @@
   const settingsAuthorEl = document.getElementById("settings-author");
   const settingsInitialsEl = document.getElementById("settings-initials");
   const settingsLocaleEl = document.getElementById("settings-locale");
-  const settingsLibraryFileEl = document.getElementById("settings-library-file");
+  const settingsLibraryHintEl = document.getElementById("settings-library-hint");
   const statusEl = document.getElementById("status");
   const chapterListEl = document.getElementById("chapter-list");
   const chapterTitleEl = document.getElementById("chapter-title");
@@ -295,9 +295,9 @@
 
   const getLibraryFileName = () => {
     const meta = state.project?.meta || {};
-    const explicit = sanitizeFilename(meta.libraryFile || "");
-    if (explicit) return explicit;
     const locale = sanitizeFilename(meta.locale || "de-CH");
+    const initials = sanitizeFilename(meta.initials || "");
+    if (initials) return `library_user_${initials}_${locale}.json`;
     return `library_user_${locale}.json`;
   };
 
@@ -554,8 +554,10 @@
   const generateLibrary = async () => {
     if (!dirHandle) return;
     ensureProjectMeta();
-    const library = await loadLibraryFile();
-    const entriesMap = new Map(normalizeLibraryEntries(library).map((entry) => [entry.id, entry]));
+    const masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
+    const userLibrary = await loadLibraryFile();
+    const libraryMap = buildLibraryMap(masterLibrary, userLibrary);
+    const entriesMap = new Map(Array.from(libraryMap.entries()).map(([id, entry]) => [id, entry]));
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     let applied = 0;
 
@@ -1098,7 +1100,10 @@
     settingsAuthorEl.value = state.project.meta?.author || "";
     settingsInitialsEl.value = state.project.meta?.initials || "";
     settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
-    settingsLibraryFileEl.value = state.project.meta?.libraryFile || "";
+    const libraryName = getLibraryFileName();
+    if (settingsLibraryHintEl) {
+      settingsLibraryHintEl.textContent = `Library file: ${libraryName} (timestamped backup on generate).`;
+    }
     settingsModal.classList.add("is-open");
     settingsModal.setAttribute("aria-hidden", "false");
   };
@@ -1114,7 +1119,9 @@
     state.project.meta.author = settingsAuthorEl.value.trim();
     state.project.meta.initials = settingsInitialsEl.value.trim();
     state.project.meta.locale = settingsLocaleEl.value || "de-CH";
-    state.project.meta.libraryFile = settingsLibraryFileEl.value.trim();
+    if (settingsLibraryHintEl) {
+      settingsLibraryHintEl.textContent = `Library file: ${getLibraryFileName()} (timestamped backup on generate).`;
+    }
     setStatus("Settings saved (remember to save sidecar).");
   };
 

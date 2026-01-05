@@ -469,6 +469,14 @@ textarea[disabled] {
   justify-content: flex-end;
 }
 
+.settings-hint {
+  font-size: 0.85rem;
+  color: #6c7780;
+  background: #f8f5ef;
+  border-radius: 10px;
+  padding: 10px;
+}
+
 
 @media (max-width: 1100px) {
   .row-body,
