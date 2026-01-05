@@ -127,6 +127,29 @@
     debug.logLine("info", message);
   };
 
+  const setDefaultPhotoHandle = async () => {
+    if (!state.projectHandle) return;
+    if (!state.photoHandle) {
+      state.photoHandle = state.projectHandle;
+    }
+    if (!state.photoRootName) {
+      state.photoRootName = "";
+    }
+    const rootName = state.projectDoc?.photoRoot || "";
+    if (rootName && rootName !== state.projectHandle.name) {
+      try {
+        const handle = await state.projectHandle.getDirectoryHandle(rootName);
+        state.photoHandle = handle;
+        state.photoRootName = rootName;
+      } catch (err) {
+        // Keep project root as fallback.
+      }
+    } else if (rootName === state.projectHandle.name) {
+      state.photoHandle = state.projectHandle;
+      state.photoRootName = "";
+    }
+  };
+
   const applyLayoutMode = () => {
     document.body.classList.toggle("layout-tabs", layoutMode === "tabs");
     document.body.classList.toggle("layout-stacked", layoutMode === "stacked");
@@ -707,6 +730,7 @@
       setStatus("Sidecar not found; starting fresh.");
       debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
     }
+    await setDefaultPhotoHandle();
     renderAll();
   };
 
@@ -802,7 +826,8 @@
     clearPhotoUrls();
     setStatus("Scanning photos...");
     const collection = [];
-    await collectImages(state.photoHandle, `${state.photoRootName}/`, collection);
+    const prefix = state.photoRootName ? `${state.photoRootName}/` : "";
+    await collectImages(state.photoHandle, prefix, collection);
     collection.sort((a, b) => a.path.localeCompare(b.path));
     state.photos = collection;
     state.filterMode = "all";
@@ -819,6 +844,8 @@
       await saveHandle(state.projectHandle);
       setStatus(`Project folder: ${state.projectHandle.name}`);
       await loadProjectSidecar();
+      await setDefaultPhotoHandle();
+      setStatus(`Project folder: ${state.projectHandle.name} (photos: project root)`);
     } catch (err) {
       setStatus(`Project pick canceled: ${err.message}`);
     }
