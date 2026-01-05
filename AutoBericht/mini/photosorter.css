@@ -313,7 +313,7 @@ button[disabled] {
   color: #1f2933;
   border-radius: 6px;
   padding: 2px 4px;
-  font-size: 0.6rem;
+  font-size: 0.625rem;
   cursor: pointer;
   text-align: left;
   width: 100%;
