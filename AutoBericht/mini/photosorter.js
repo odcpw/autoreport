@@ -30,6 +30,9 @@
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
   };
+  const HANDLE_DB_NAME = "autobericht";
+  const HANDLE_STORE = "handles";
+  const HANDLE_KEY = "projectDir";
 
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
@@ -170,7 +173,7 @@
 
   const ensureFsAccess = () => {
     if (!window.showDirectoryPicker) {
-      setStatus("File System Access API is not available in this browser.");
+      setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
       pickProjectBtn.disabled = true;
       return false;
     }
@@ -189,6 +192,72 @@
     filterToggleBtn.disabled = state.photos.length === 0;
     prevBtn.disabled = !hasVisiblePhotos;
     nextBtn.disabled = !hasVisiblePhotos;
+  };
+
+  const openHandleDb = () => new Promise((resolve, reject) => {
+    if (!window.indexedDB) {
+      resolve(null);
+      return;
+    }
+    const request = window.indexedDB.open(HANDLE_DB_NAME, 1);
+    request.onupgradeneeded = () => {
+      const db = request.result;
+      if (!db.objectStoreNames.contains(HANDLE_STORE)) {
+        db.createObjectStore(HANDLE_STORE);
+      }
+    };
+    request.onsuccess = () => resolve(request.result);
+    request.onerror = () => reject(request.error);
+  });
+
+  const saveHandle = async (handle) => {
+    try {
+      const db = await openHandleDb();
+      if (!db) return;
+      const tx = db.transaction(HANDLE_STORE, "readwrite");
+      tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+    } catch (err) {
+      debug.logLine("warn", `Failed to persist folder handle: ${err.message || err}`);
+    }
+  };
+
+  const loadHandle = async () => {
+    try {
+      const db = await openHandleDb();
+      if (!db) return null;
+      const tx = db.transaction(HANDLE_STORE, "readonly");
+      return await new Promise((resolve) => {
+        const req = tx.objectStore(HANDLE_STORE).get(HANDLE_KEY);
+        req.onsuccess = () => resolve(req.result || null);
+        req.onerror = () => resolve(null);
+      });
+    } catch (err) {
+      return null;
+    }
+  };
+
+  const requestHandlePermission = async (handle) => {
+    try {
+      const opts = { mode: "readwrite" };
+      if ((await handle.queryPermission(opts)) === "granted") return true;
+      if ((await handle.requestPermission(opts)) === "granted") return true;
+    } catch (err) {
+      return false;
+    }
+    return false;
+  };
+
+  const restoreLastHandle = async () => {
+    if (!window.showDirectoryPicker) return;
+    const handle = await loadHandle();
+    if (!handle) return;
+    const ok = await requestHandlePermission(handle);
+    if (!ok) return;
+    state.projectHandle = handle;
+    enableActions();
+    setStatus(`Restored project folder: ${state.projectHandle.name}`);
+    debug.logLine("info", `Restored project folder: ${state.projectHandle.name}`);
+    await loadProjectSidecar();
   };
 
   if (statusCloseBtn) {
@@ -744,7 +813,8 @@
   pickProjectBtn.addEventListener("click", async () => {
     if (!ensureFsAccess()) return;
     try {
-      state.projectHandle = await window.showDirectoryPicker();
+      state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+      await saveHandle(state.projectHandle);
       setStatus(`Project folder: ${state.projectHandle.name}`);
       await loadProjectSidecar();
     } catch (err) {
@@ -943,6 +1013,7 @@
   updateLayoutToggle();
   setActivePanel(state.activePanel);
   ensureFsAccess();
+  restoreLastHandle();
   enableActions();
 
   if (window.PS_CATEGORY_LABELS_SEED) {
