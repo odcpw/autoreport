@@ -249,6 +249,15 @@ button.ghost {
   color: #1f2933;
 }
 
+.comment-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fde68a;
+  color: #6b4b00;
+  cursor: help;
+}
+
 .preview-btn {
   border-radius: 10px;
   padding: 6px 12px;

@@ -2,6 +2,7 @@
   const pickFolderBtn = document.getElementById("pick-folder");
   const loadSidecarBtn = document.getElementById("load-sidecar");
   const saveSidecarBtn = document.getElementById("save-sidecar");
+  const importSelfBtn = document.getElementById("import-self");
   const loadSeedsBtn = document.getElementById("load-seeds");
   const saveLogBtn = document.getElementById("save-log");
   const openSettingsBtn = document.getElementById("open-settings");
@@ -210,6 +211,9 @@
     loadSidecarBtn.disabled = !enabled;
     saveSidecarBtn.disabled = !enabled;
     loadSeedsBtn.disabled = !enabled;
+    if (importSelfBtn) {
+      importSelfBtn.disabled = !enabled;
+    }
   };
 
   const openHandleDb = () => new Promise((resolve, reject) => {
@@ -663,6 +667,33 @@
     return toText(row.master?.levels?.[levelKey]);
   };
 
+  const getAnswerState = (row) => {
+    const direct = row.customer?.answer;
+    if (direct === 0 || direct === 1) return direct;
+    const items = row.customer?.items || [];
+    const answers = new Set();
+    items.forEach((item) => {
+      if (item.answer === 0 || item.answer === 1) answers.add(item.answer);
+    });
+    if (answers.size === 1) return Array.from(answers)[0];
+    if (answers.size > 1) return "mixed";
+    return null;
+  };
+
+  const getAnswerComments = (row) => {
+    const comments = [];
+    const items = row.customer?.items || [];
+    items.forEach((item) => {
+      if (item.comment) {
+        comments.push(`${item.id}: ${item.comment}`);
+      }
+    });
+    if (row.customer?.comment && !comments.length) {
+      comments.push(row.customer.comment);
+    }
+    return comments;
+  };
+
   const escapeHtml = (value) => value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -772,10 +803,13 @@
       meta.textContent = `${row.id} ${row.titleOverride || ""}`.trim();
       const badge = document.createElement("span");
       badge.className = "badge";
-      if (row.customer?.answer === 1) {
+      const answerState = getAnswerState(row);
+      if (answerState === 1) {
         badge.textContent = "Answer: Yes";
-      } else if (row.customer?.answer === 0) {
+      } else if (answerState === 0) {
         badge.textContent = "Answer: No";
+      } else if (answerState === "mixed") {
+        badge.textContent = "Answer: Mixed";
       } else {
         badge.textContent = "Answer: —";
       }
@@ -786,6 +820,14 @@
       const headerRight = document.createElement("div");
       headerRight.className = "row-header__right";
       headerRight.appendChild(badge);
+      const comments = getAnswerComments(row);
+      if (comments.length) {
+        const commentBadge = document.createElement("span");
+        commentBadge.className = "comment-badge";
+        commentBadge.textContent = "Comment";
+        commentBadge.title = comments.join("\n");
+        headerRight.appendChild(commentBadge);
+      }
       headerRight.appendChild(previewBtn);
       header.appendChild(meta);
       header.appendChild(headerRight);
@@ -1163,6 +1205,100 @@
       } catch (err) {
         setStatus(`Library update failed: ${err.message}`);
         debug.logLine("error", `Library update failed: ${err.message || err}`);
+      }
+    });
+  }
+
+  if (importSelfBtn) {
+    importSelfBtn.addEventListener("click", async () => {
+      if (!dirHandle) return;
+      if (!window.showOpenFilePicker || !window.XLSX) {
+        setStatus("File picker or SheetJS not available in this browser.");
+        return;
+      }
+      try {
+        const [fileHandle] = await window.showOpenFilePicker({
+          types: [
+            {
+              description: "Excel workbook",
+              accept: {
+                "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": [
+                  ".xlsx",
+                  ".xlsm",
+                ],
+              },
+            },
+          ],
+          multiple: false,
+        });
+        const file = await fileHandle.getFile();
+        const buffer = await file.arrayBuffer();
+        const workbook = window.XLSX.read(buffer, { type: "array" });
+        const sheetName = workbook.SheetNames.find((name) => {
+          const lower = name.toLowerCase();
+          return lower.includes("selbstbeurteilung")
+            || lower.includes("autoévaluation")
+            || lower.includes("autoevaluation")
+            || lower.includes("autovalutazione");
+        }) || workbook.SheetNames[0];
+        const sheet = workbook.Sheets[sheetName];
+        const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
+        const headerRowIndex = rows.findIndex((row) => String(row[0] || "").toLowerCase().includes("nr"));
+        const headerRow = headerRowIndex >= 0 ? rows[headerRowIndex] : [];
+        const findCol = (label) => headerRow.findIndex((cell) => String(cell || "").toLowerCase().includes(label));
+        const colId = headerRowIndex >= 0 ? findCol("nr") : 0;
+        const colYes = headerRowIndex >= 0 ? findCol("ja") : 3;
+        const colNo = headerRowIndex >= 0 ? findCol("nein") : 4;
+        const colComment = headerRowIndex >= 0 ? findCol("bemerk") : 5;
+        const dataRows = headerRowIndex >= 0 ? rows.slice(headerRowIndex + 1) : rows;
+        const answerMap = new Map();
+
+        dataRows.forEach((row) => {
+          const rawId = String(row[colId] || "").trim();
+          if (!rawId) return;
+          const normalized = rawId.replace(/[.\s]+$/g, "").toLowerCase();
+          if (!/^[0-9]/.test(normalized)) return;
+          const yesVal = String(row[colYes] || "").trim().toLowerCase();
+          const noVal = String(row[colNo] || "").trim().toLowerCase();
+          const comment = String(row[colComment] || "").trim();
+          let answer = null;
+          if (yesVal === "x" || yesVal === "ja") answer = 1;
+          if (noVal === "x" || noVal === "nein") answer = 0;
+          answerMap.set(normalized, { answer, comment });
+        });
+
+        const idMap = new Map();
+        state.project.chapters.forEach((chapter) => {
+          chapter.rows.forEach((row) => {
+            if (row.kind === "section") return;
+            row.customer = row.customer || { items: [] };
+            row.customer.items = row.customer.items || [];
+            row.customer.items.forEach((item) => {
+              const key = String(item.id || "").trim().toLowerCase();
+              if (key) idMap.set(key, item);
+            });
+          });
+        });
+
+        let applied = 0;
+        answerMap.forEach((payload, key) => {
+          const item = idMap.get(key);
+          if (!item) return;
+          if (payload.answer === 0 || payload.answer === 1) {
+            item.answer = payload.answer;
+          }
+          if (payload.comment) {
+            item.comment = payload.comment;
+          }
+          applied += 1;
+        });
+
+        setStatus(`Imported self-assessment answers (${applied}).`);
+        debug.logLine("info", `Imported self-assessment answers (${applied}).`);
+        renderRows();
+      } catch (err) {
+        setStatus(`Import failed: ${err.message}`);
+        debug.logLine("error", `Import failed: ${err.message || err}`);
       }
     });
   }
