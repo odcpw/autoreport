@@ -181,9 +181,9 @@
   };
 
   const seedPathCandidates = (filename) => ([
-    ["data", "seed", filename],
     ["AutoBericht", "data", "seed", filename],
     ["autobericht", "data", "seed", filename],
+    ["data", "seed", filename],
   ]);
 
   const readSeedFromProject = async (rootHandle, filename) => {
@@ -200,10 +200,10 @@
       return [];
     }
     const urls = [
-      `/data/seed/${filename}`,
       `/AutoBericht/data/seed/${filename}`,
-      new URL(`../data/seed/${filename}`, window.location.href).toString(),
+      `/data/seed/${filename}`,
       new URL(`data/seed/${filename}`, window.location.href).toString(),
+      new URL(`../data/seed/${filename}`, window.location.href).toString(),
     ];
     return Array.from(new Set(urls));
   };

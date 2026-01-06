@@ -222,11 +222,37 @@ Tags are many-to-many. No primary tag requirement.
 - Chapter 4.6 appended as field observations.
 - Spider chart uses consultant scores; company answers retained in data.
 
+## 11a. Export Path (Word Macro, Recommended)
+
+Goal: remove Excel as an orchestration hop while keeping Word in charge of layout.
+
+Phase A (browser)
+- The editor writes canonical state to `project_sidecar.json`.
+- Export uses the sidecar directly (or an optional lightweight “export.json” view).
+- Content is plain text + simple list markers (markdown-lite).
+
+Phase B (Word macro)
+- Word template contains one content control per chapter (e.g., `Chapter1`).
+- Macro reads sidecar/export JSON and injects chapter content into the controls.
+- Macro applies styles (Heading 1/2/3, body, tables), converts list markers to
+  proper Word lists, inserts section breaks, and updates TOC/fields.
+
+Benefits
+- Word remains the single source of formatting truth.
+- No unsafe browser flags and no Excel dependency for export.
+- Templates can be updated independently by corporate design.
+
 ## 12. Maintainability
 
 - project_db.xlsx is the human-readable fallback.
 - project_sidecar.json is the working state (portable, inspectable).
 - Recommendation library stored per engineer in a user folder; optional sharing.
+
+Seed and library resolution (fresh projects):
+- Prefer existing `project_sidecar.json` if present.
+- If no sidecar, load user library in project root (e.g., `library_user_XX.json`).
+- Load bundled seed data from `AutoBericht/data/seed/`.
+- Allow an optional project-level override at `data/seed/` when needed.
 
 ## 13. Risks and Mitigations
 
@@ -276,11 +302,11 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 1) Project folder + sidecar schema + minimal editor load/save.
 2) Chapter editor flow + recommendation library integration.
 3) Photo tagging + filtering + optional materialize.
-4) Excel macro orchestration (import sidecar, export Word/PPT/PDF).
+4) Word macro export (content controls → styled Word/PPT/PDF).
 5) Validation, logging, and error handling.
 
 ## 16. Open Decisions
 
 - Confirm File System Access API availability in locked-down Edge.
-- Decide how much export logic stays in Excel vs browser.
+- Decide final Word macro contract (content controls + JSON schema).
 - Decide default library storage location (user folder vs project).
