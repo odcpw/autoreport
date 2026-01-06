@@ -151,6 +151,19 @@
       state.photoHandle = state.projectHandle;
       state.photoRootName = "";
     }
+    if (!rootName) {
+      const candidates = ["Photos", "photos"];
+      for (const name of candidates) {
+        try {
+          const handle = await state.projectHandle.getDirectoryHandle(name);
+          state.photoHandle = handle;
+          state.photoRootName = name;
+          break;
+        } catch (err) {
+          // Try next candidate.
+        }
+      }
+    }
   };
 
   const applyLayoutMode = () => {
@@ -737,7 +750,10 @@
       debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
     }
     await setDefaultPhotoHandle();
-    renderAll();
+    const didScan = await maybeAutoScan();
+    if (!didScan) {
+      renderAll();
+    }
   };
 
   const loadDemoPhotos = async () => {
@@ -864,6 +880,17 @@
     renderAll();
   };
 
+  const maybeAutoScan = async () => {
+    if (!state.photoHandle) return false;
+    if (state.photos.length > 0) return false;
+    const savedPhotos = state.projectDoc?.photos || {};
+    const hasSaved = Object.keys(savedPhotos).length > 0;
+    const hasRoot = !!(state.projectDoc?.photoRoot || state.photoRootName);
+    if (!hasSaved && !hasRoot) return false;
+    await scanPhotos();
+    return true;
+  };
+
   pickProjectBtn.addEventListener("click", async () => {
     if (!ensureFsAccess()) return;
     try {
@@ -871,8 +898,7 @@
       await saveHandle(state.projectHandle);
       setStatus(`Project folder: ${state.projectHandle.name}`);
       await loadProjectSidecar();
-      await setDefaultPhotoHandle();
-      setStatus(`Project folder: ${state.projectHandle.name} (photos: project root)`);
+      setStatus(`Project folder: ${state.projectHandle.name}`);
     } catch (err) {
       setStatus(`Project pick canceled: ${err.message}`);
     }

@@ -180,6 +180,46 @@
     return response.json();
   };
 
+  const seedPathCandidates = (filename) => ([
+    ["data", "seed", filename],
+    ["AutoBericht", "data", "seed", filename],
+    ["autobericht", "data", "seed", filename],
+  ]);
+
+  const readSeedFromProject = async (rootHandle, filename) => {
+    if (!rootHandle) return null;
+    for (const parts of seedPathCandidates(filename)) {
+      const data = await readJsonIfExists(rootHandle, parts);
+      if (data) return data;
+    }
+    return null;
+  };
+
+  const seedHttpCandidates = (filename) => {
+    if (window.location.protocol !== "http:" && window.location.protocol !== "https:") {
+      return [];
+    }
+    const urls = [
+      `/data/seed/${filename}`,
+      `/AutoBericht/data/seed/${filename}`,
+      new URL(`../data/seed/${filename}`, window.location.href).toString(),
+      new URL(`data/seed/${filename}`, window.location.href).toString(),
+    ];
+    return Array.from(new Set(urls));
+  };
+
+  const readSeedFromHttp = async (filename) => {
+    const candidates = seedHttpCandidates(filename);
+    for (const url of candidates) {
+      try {
+        return await readJsonFromHttp(url);
+      } catch (err) {
+        // try next candidate
+      }
+    }
+    return null;
+  };
+
   const autoLoadSeeds = async () => {
     if (window.location.protocol !== "http:" && window.location.protocol !== "https:") {
       debug.logLine("info", "Seed auto-load skipped (not on http).");
@@ -190,8 +230,8 @@
       ensureProjectMeta();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
-      setStatus("Loaded seed data from /data/seed.");
-      debug.logLine("info", "Auto-loaded seed data from /data/seed.");
+      setStatus("Loaded seed data.");
+      debug.logLine("info", "Auto-loaded seed data.");
       return true;
     } catch (err) {
       debug.logLine("warn", `Seed auto-load skipped: ${err.message}`);
@@ -532,15 +572,15 @@
     let masterLibrary = null;
     let userLibrary = null;
     if (dirHandle) {
-      selbst = await readJsonIfExists(dirHandle, ["data", "seed", "selbstbeurteilung_ids.json"]);
-      masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
+      selbst = await readSeedFromProject(dirHandle, "selbstbeurteilung_ids.json");
+      masterLibrary = await readSeedFromProject(dirHandle, "library_master.json");
       userLibrary = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
     }
-    if (!selbst && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
-      selbst = await readJsonFromHttp("/data/seed/selbstbeurteilung_ids.json");
+    if (!selbst) {
+      selbst = await readSeedFromHttp("selbstbeurteilung_ids.json");
     }
-    if (!masterLibrary && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
-      masterLibrary = await readJsonFromHttp("/data/seed/library_master.json");
+    if (!masterLibrary) {
+      masterLibrary = await readSeedFromHttp("library_master.json");
     }
     if (!selbst) throw new Error("Self assessment seed not found.");
     if (!masterLibrary) throw new Error("Master library seed not found.");
@@ -624,9 +664,9 @@
   const generateLibrary = async () => {
     if (!dirHandle) return;
     ensureProjectMeta();
-    let masterLibrary = await readJsonIfExists(dirHandle, ["data", "seed", "library_master.json"]);
-    if (!masterLibrary && (window.location.protocol === "http:" || window.location.protocol === "https:")) {
-      masterLibrary = await readJsonFromHttp("/data/seed/library_master.json");
+    let masterLibrary = await readSeedFromProject(dirHandle, "library_master.json");
+    if (!masterLibrary) {
+      masterLibrary = await readSeedFromHttp("library_master.json");
     }
     if (!masterLibrary) {
       masterLibrary = { entries: [] };
@@ -1162,8 +1202,8 @@
       ensureProjectMeta();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
-      setStatus("Loaded seed data from data/seed.");
-      debug.logLine("info", "Loaded seed data from data/seed.");
+      setStatus("Loaded seed data.");
+      debug.logLine("info", "Loaded seed data.");
     } catch (err) {
       setStatus(`Seed load failed: ${err.message}`);
       debug.logLine("error", `Seed load failed: ${err.message}`);

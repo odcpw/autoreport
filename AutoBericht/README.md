@@ -27,6 +27,7 @@ three-tab MVP UI lives under `legacy/` for reference.
 
 ## Related Documentation
 
-- **[Redesign Spec](../docs/architecture/redesign-spec-2026-01-04.md)**
-- **[Redesign Workflow](../docs/guides/redesign-workflow.md)**
+- **Design Spec:** `docs/design-spec.md`
+- **System Overview:** `docs/system-overview.md`
+- **Workflow:** `docs/workflow.md`
 - **Legacy docs** live in `legacy/docs/`
