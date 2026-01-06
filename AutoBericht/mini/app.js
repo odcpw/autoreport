@@ -180,18 +180,19 @@
   const autoLoadSeeds = async () => {
     if (window.location.protocol !== "http:" && window.location.protocol !== "https:") {
       debug.logLine("info", "Seed auto-load skipped (not on http).");
-      return;
+      return false;
     }
     try {
-      const selbst = await readJsonFromHttp("/data/seed/selbstbeurteilung_ids.json");
-      const library = await readJsonFromHttp("/data/seed/library_master.json");
-      state.project = buildProjectFromSeeds(selbst, library);
+      state.project = await loadSeedsForProject();
+      ensureProjectMeta();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded seed data from /data/seed.");
       debug.logLine("info", "Auto-loaded seed data from /data/seed.");
+      return true;
     } catch (err) {
       debug.logLine("warn", `Seed auto-load skipped: ${err.message}`);
+      return false;
     }
   };
 
@@ -274,6 +275,43 @@
     enableActions();
     setStatus(`Restored project folder: ${dirHandle.name}`);
     debug.logLine("info", `Restored project folder: ${dirHandle.name}`);
+    await loadProjectFromFolder();
+  };
+
+  const loadProjectFromFolder = async () => {
+    if (!dirHandle) return false;
+    try {
+      const handle = await dirHandle.getFileHandle("project_sidecar.json");
+      const file = await handle.getFile();
+      const text = await file.text();
+      sidecarDoc = JSON.parse(text);
+      const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
+      state.project = reportProject;
+      ensureProjectMeta();
+      state.selectedChapterId = state.project.chapters[0]?.id || "";
+      render();
+      setStatus("Loaded project_sidecar.json");
+      debug.logLine("info", "Loaded project_sidecar.json");
+      return true;
+    } catch (err) {
+      try {
+        state.project = await loadSeedsForProject();
+        ensureProjectMeta();
+        state.selectedChapterId = state.project.chapters[0]?.id || "";
+        render();
+        setStatus("Sidecar not found; loaded seed data.");
+        debug.logLine("warn", `Sidecar not found; loaded seeds (${err.message || err})`);
+        return true;
+      } catch (seedErr) {
+        state.project = structuredClone(defaultProject);
+        state.selectedChapterId = state.project.chapters[0].id;
+        sidecarDoc = null;
+        render();
+        setStatus("Sidecar not found; loaded default template.");
+        debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+        return false;
+      }
+    }
   };
 
   const getChapterTitle = (chapter) => {
@@ -1015,6 +1053,7 @@
       enableActions();
       setStatus(`Selected folder: ${dirHandle.name}`);
       debug.logLine("info", `Selected folder: ${dirHandle.name}`);
+      await loadProjectFromFolder();
     } catch (err) {
       setStatus(`Folder pick canceled or failed: ${err.message}`);
       debug.logLine("warn", `Folder pick canceled or failed: ${err.message}`);
@@ -1023,35 +1062,7 @@
 
   loadSidecarBtn.addEventListener("click", async () => {
     if (!dirHandle) return;
-    try {
-      const handle = await dirHandle.getFileHandle("project_sidecar.json");
-      const file = await handle.getFile();
-      const text = await file.text();
-      sidecarDoc = JSON.parse(text);
-      const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
-      state.project = reportProject;
-      ensureProjectMeta();
-      state.selectedChapterId = state.project.chapters[0]?.id || "";
-      render();
-      setStatus("Loaded project_sidecar.json");
-      debug.logLine("info", "Loaded project_sidecar.json");
-    } catch (err) {
-      try {
-        state.project = await loadSeedsForProject();
-        ensureProjectMeta();
-        state.selectedChapterId = state.project.chapters[0]?.id || "";
-        render();
-        setStatus("Sidecar not found; loaded seed data.");
-        debug.logLine("warn", `Sidecar not found; loaded seeds (${err.message || err})`);
-      } catch (seedErr) {
-        state.project = structuredClone(defaultProject);
-        state.selectedChapterId = state.project.chapters[0].id;
-        sidecarDoc = null;
-        render();
-        setStatus("Sidecar not found; loaded default template.");
-        debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
-      }
-    }
+    await loadProjectFromFolder();
   });
 
   saveSidecarBtn.addEventListener("click", async () => {
@@ -1156,8 +1167,14 @@
     });
   }
 
-  ensureFsAccess();
-  restoreLastHandle();
-  render();
-  autoLoadSeeds();
+  const init = async () => {
+    ensureFsAccess();
+    await restoreLastHandle();
+    render();
+    if (!dirHandle) {
+      await autoLoadSeeds();
+    }
+  };
+
+  init();
 })();
