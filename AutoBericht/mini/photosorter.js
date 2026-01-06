@@ -110,6 +110,9 @@
     activePanel: "report",
   };
 
+  let autosaveTimer = null;
+  let autosaveInFlight = false;
+
 
   const updateStatusVisibility = (isHidden) => {
     statusEl.classList.toggle("is-hidden", isHidden);
@@ -672,6 +675,7 @@
     const current = getCurrentPhoto();
     if (!current) return;
     current.tags[group] = [];
+    scheduleAutosave();
     renderAll();
   };
 
@@ -681,6 +685,7 @@
     current.tags.report = [];
     current.tags.observations = [];
     current.tags.training = [];
+    scheduleAutosave();
     renderAll();
   };
 
@@ -694,6 +699,7 @@
       list.add(tag);
     }
     current.tags[group] = Array.from(list);
+    scheduleAutosave();
     renderAll();
   };
 
@@ -761,6 +767,8 @@
 
   const saveProjectSidecar = async () => {
     if (!state.projectHandle) return;
+    if (autosaveInFlight) return;
+    autosaveInFlight = true;
     const payload = normalizePhotoDoc(state.projectDoc);
     payload.photos = serializePhotos();
     payload.photoTagOptions = structuredClone(state.tagOptions);
@@ -793,7 +801,26 @@
     } catch (err) {
       setStatus(`Save failed: ${err.message}`);
       debug.logLine("error", `Save failed: ${err.message}`);
+    } finally {
+      autosaveInFlight = false;
     }
+  };
+
+  const scheduleAutosave = () => {
+    if (!state.projectHandle) return;
+    if (autosaveTimer) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(async () => {
+      autosaveTimer = null;
+      await saveProjectSidecar();
+    }, 2000);
+  };
+
+  const flushAutosave = async () => {
+    if (autosaveTimer) {
+      clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+    }
+    await saveProjectSidecar();
   };
 
   const buildPhotoEntry = (path, file) => {
@@ -1009,6 +1036,7 @@
     const current = getCurrentPhoto();
     if (!current) return;
     current.notes = notesEl.value;
+    scheduleAutosave();
   });
 
   window.addEventListener("keydown", (event) => {
@@ -1034,6 +1062,15 @@
     } catch (err) {
       setStatus(`Log save failed: ${err.message}`);
     }
+  });
+
+  window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      flushAutosave();
+    }
+  });
+  window.addEventListener("pagehide", () => {
+    flushAutosave();
   });
 
   state.tagOptions = SEED_TAG_OPTIONS;

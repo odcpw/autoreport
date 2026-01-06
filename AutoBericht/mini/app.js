@@ -23,6 +23,8 @@
 
   let dirHandle = null;
   let sidecarDoc = null;
+  let autosaveTimer = null;
+  let autosaveInFlight = false;
   const debug = window.AutoReportDebug || {
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
@@ -552,6 +554,8 @@
 
   const saveSidecar = async () => {
     if (!dirHandle) return;
+    if (autosaveInFlight) return;
+    autosaveInFlight = true;
     let existing = sidecarDoc;
     try {
       const handle = await dirHandle.getFileHandle("project_sidecar.json");
@@ -567,6 +571,30 @@
     await writable.write(JSON.stringify(payload, null, 2));
     await writable.close();
     sidecarDoc = payload;
+    autosaveInFlight = false;
+  };
+
+  const scheduleAutosave = () => {
+    if (!dirHandle) return;
+    if (autosaveTimer) clearTimeout(autosaveTimer);
+    autosaveTimer = setTimeout(async () => {
+      autosaveTimer = null;
+      try {
+        await saveSidecar();
+        setStatus("Autosaved.");
+      } catch (err) {
+        setStatus(`Autosave failed: ${err.message}`);
+      }
+    }, 2000);
+  };
+
+  const flushAutosave = async () => {
+    if (!dirHandle) return;
+    if (autosaveTimer) {
+      clearTimeout(autosaveTimer);
+      autosaveTimer = null;
+    }
+    await saveSidecar();
   };
 
   const loadLibraryFile = async () => {
@@ -858,6 +886,7 @@
       includeCheckbox.checked = ws.includeFinding;
       includeCheckbox.addEventListener("change", () => {
         ws.includeFinding = includeCheckbox.checked;
+        scheduleAutosave();
         renderRows();
       });
       includeLabel.appendChild(includeCheckbox);
@@ -870,6 +899,7 @@
       doneCheckbox.checked = ws.done;
       doneCheckbox.addEventListener("change", () => {
         ws.done = doneCheckbox.checked;
+        scheduleAutosave();
         renderRows();
       });
       doneLabel.appendChild(doneCheckbox);
@@ -898,6 +928,7 @@
         if (ws.useFindingOverride && !ws.findingOverride) {
           ws.findingOverride = toText(row.master?.finding);
         }
+        scheduleAutosave();
         renderRows();
       });
       findingToggle.appendChild(findingCheckbox);
@@ -908,6 +939,7 @@
       findingArea.disabled = !ws.useFindingOverride;
       findingArea.addEventListener("input", () => {
         ws.findingOverride = findingArea.value;
+        scheduleAutosave();
       });
 
       findingLabel.appendChild(findingHint);
@@ -945,6 +977,7 @@
         input.checked = ws.selectedLevel === level;
         input.addEventListener("change", () => {
           ws.selectedLevel = level;
+          scheduleAutosave();
           renderRows();
         });
         label.appendChild(input);
@@ -963,6 +996,7 @@
         if (ws.useLevelOverride[levelKey] && !ws.levelOverrides[levelKey]) {
           ws.levelOverrides[levelKey] = toText(row.master?.levels?.[levelKey]);
         }
+        scheduleAutosave();
         renderRows();
       });
       overrideLabel.appendChild(overrideCheckbox);
@@ -992,6 +1026,7 @@
         }
         button.addEventListener("click", () => {
           ws.libraryActions[levelKey] = option.key;
+          scheduleAutosave();
           renderRows();
         });
         libraryGroup.appendChild(button);
@@ -1004,6 +1039,7 @@
       recArea.addEventListener("input", () => {
         ws.levelOverrides[levelKey] = recArea.value;
         ws.libraryHashes[levelKey] = "";
+        scheduleAutosave();
       });
 
       recLabel.appendChild(recHint);
@@ -1209,6 +1245,15 @@
     });
   }
 
+  window.addEventListener("visibilitychange", () => {
+    if (document.visibilityState === "hidden") {
+      flushAutosave();
+    }
+  });
+  window.addEventListener("pagehide", () => {
+    flushAutosave();
+  });
+
   if (importSelfBtn) {
     importSelfBtn.addEventListener("click", async () => {
       if (!dirHandle) return;
@@ -1296,6 +1341,7 @@
         setStatus(`Imported self-assessment answers (${applied}).`);
         debug.logLine("info", `Imported self-assessment answers (${applied}).`);
         renderRows();
+        await saveSidecar();
       } catch (err) {
         setStatus(`Import failed: ${err.message}`);
         debug.logLine("error", `Import failed: ${err.message || err}`);
