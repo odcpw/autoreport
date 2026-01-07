@@ -1,0 +1,111 @@
+Attribute VB_Name = "modWordMarkdown"
+Option Explicit
+
+' Minimal markdown converter for Word:
+' - Lines starting with "- " become bullet list items
+' - **bold** and *italic* toggles within a line
+' - Blank lines become paragraph breaks
+
+Public Sub ConvertMarkdownInSelection()
+    Dim rng As Range
+    Set rng = Selection.Range
+    ConvertMarkdownRange rng
+End Sub
+
+Public Sub ConvertMarkdownInContentControl()
+    Dim cc As ContentControl
+    Set cc = FindContentControl("Chapter1")
+    If cc Is Nothing Then
+        MsgBox "Content control 'Chapter1' not found.", vbExclamation
+        Exit Sub
+    End If
+    ConvertMarkdownRange cc.Range
+End Sub
+
+Private Sub ConvertMarkdownRange(ByVal rng As Range)
+    Dim text As String
+    text = rng.Text
+    text = Replace(text, vbCrLf, vbLf)
+    text = Replace(text, vbCr, vbLf)
+    rng.Text = ""
+
+    Dim lines() As String
+    lines = Split(text, vbLf)
+
+    Dim i As Long
+    For i = LBound(lines) To UBound(lines)
+        Dim line As String
+        line = lines(i)
+
+        If Len(Trim$(line)) = 0 Then
+            rng.InsertParagraphAfter
+            rng.Collapse wdCollapseEnd
+        ElseIf Left$(line, 2) = "- " Then
+            InsertMarkdownLine rng, Mid$(line, 3), True
+        Else
+            InsertMarkdownLine rng, line, False
+        End If
+    Next i
+End Sub
+
+Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal asBullet As Boolean)
+    rng.Collapse wdCollapseEnd
+    rng.ParagraphFormat.SpaceAfter = 0
+
+    If asBullet Then
+        rng.ListFormat.ApplyBulletDefault
+    Else
+        rng.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
+    End If
+
+    AppendFormattedText rng, line
+    rng.InsertParagraphAfter
+    rng.Collapse wdCollapseEnd
+End Sub
+
+Private Sub AppendFormattedText(ByVal rng As Range, ByVal line As String)
+    Dim i As Long
+    Dim boldOn As Boolean
+    Dim italicOn As Boolean
+    Dim buffer As String
+
+    i = 1
+    Do While i <= Len(line)
+        If Mid$(line, i, 2) = "**" Then
+            FlushBuffer rng, buffer, boldOn, italicOn
+            buffer = ""
+            boldOn = Not boldOn
+            i = i + 2
+        ElseIf Mid$(line, i, 1) = "*" Then
+            FlushBuffer rng, buffer, boldOn, italicOn
+            buffer = ""
+            italicOn = Not italicOn
+            i = i + 1
+        Else
+            buffer = buffer & Mid$(line, i, 1)
+            i = i + 1
+        End If
+    Loop
+    FlushBuffer rng, buffer, boldOn, italicOn
+End Sub
+
+Private Sub FlushBuffer(ByVal rng As Range, ByVal buffer As String, ByVal boldOn As Boolean, ByVal italicOn As Boolean)
+    If Len(buffer) = 0 Then Exit Sub
+    Dim part As Range
+    Set part = rng.Duplicate
+    part.Collapse wdCollapseEnd
+    part.Text = buffer
+    part.Font.Bold = IIf(boldOn, True, False)
+    part.Font.Italic = IIf(italicOn, True, False)
+    rng.SetRange part.End, part.End
+End Sub
+
+Private Function FindContentControl(ByVal title As String) As ContentControl
+    Dim cc As ContentControl
+    For Each cc In ActiveDocument.ContentControls
+        If LCase$(cc.Title) = LCase$(title) Or LCase$(cc.Tag) = LCase$(title) Then
+            Set FindContentControl = cc
+            Exit Function
+        End If
+    Next cc
+End Function
