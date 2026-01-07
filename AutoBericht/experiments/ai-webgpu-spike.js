@@ -125,6 +125,13 @@ async function probeWasmFile(label, url) {
 }
 
 async function probeWasmFiles() {
+  if (!window.ort) {
+    log("WASM probe skipped: onnxruntime-web not loaded.");
+    return;
+  }
+  if (!window.ort?.env?.wasm?.wasmPaths) {
+    configureOrt();
+  }
   if (!window.ort?.env?.wasm?.wasmPaths) {
     log("WASM probe skipped: ort.env.wasm.wasmPaths not set yet.");
     return;
