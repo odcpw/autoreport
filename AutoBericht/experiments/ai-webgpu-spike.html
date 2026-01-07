@@ -46,6 +46,7 @@
               </a>
             </li>
           </ul>
+          <p class="hint">WASM runtime files are included in the repo under <code>vendor/</code>.</p>
         </div>
 
         <div class="download-block">
@@ -160,11 +161,11 @@
         <div class="grid">
           <label>
             Transformers.js URL
-            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" />
+            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" value="./vendor/transformers.min.js" />
           </label>
           <label>
             Local model path (optional)
-            <input id="local-model-path" type="text" placeholder="/models/" />
+            <input id="local-model-path" type="text" placeholder="/models/" value="/AutoBericht/experiments/models/" />
           </label>
           <label class="inline">
             <input id="allow-remote" type="checkbox" />
@@ -191,7 +192,7 @@
         <div class="grid">
           <label>
             ASR model id
-            <input id="asr-model" type="text" spellcheck="false" placeholder="Model id for ASR" />
+            <input id="asr-model" type="text" spellcheck="false" placeholder="Model id for ASR" value="Xenova/whisper-tiny.en" />
             <span class="hint">Using q4 dtype (matches the download list).</span>
           </label>
           <label>
@@ -222,7 +223,7 @@
           </label>
           <label>
             Vision model id
-            <input id="vision-model" type="text" spellcheck="false" placeholder="Model id for vision" />
+            <input id="vision-model" type="text" spellcheck="false" placeholder="Model id for vision" value="LiquidAI/LFM2.5-VL-1.6B-ONNX" />
             <span class="hint">LiquidAI ONNX models run embedding tests via onnxruntime-web.</span>
           </label>
           <label>

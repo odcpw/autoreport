@@ -60,6 +60,21 @@ const LIQUIDAI_MODELS = [
   },
 ];
 
+const DEFAULTS = {
+  transformersUrl: "./vendor/transformers.min.js",
+  localModelPath: "/AutoBericht/experiments/models/",
+  allowRemote: false,
+  asrModel: "Xenova/whisper-tiny.en",
+  visionModel: "LiquidAI/LFM2.5-VL-1.6B-ONNX",
+};
+
+function configureOrt() {
+  if (!window.ort?.env?.wasm) return;
+  window.ort.env.wasm.wasmPaths = "./vendor/";
+  window.ort.env.wasm.simd = true;
+  window.ort.env.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 1);
+}
+
 function log(message) {
   const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
   logEl.textContent += `[${timestamp}] ${message}\n`;
@@ -521,6 +536,7 @@ async function loadOrtSession(modelPath, providers) {
   if (!window.ort) {
     throw new Error("onnxruntime-web not loaded (vendor/ort.webgpu.min.js missing).");
   }
+  configureOrt();
   const session = await window.ort.InferenceSession.create(modelPath, {
     executionProviders: providers,
   });
@@ -707,6 +723,24 @@ async function runOrtChat(modelId, file, question) {
   }
 }
 
+function applyDefaults() {
+  transformersUrlEl.value = DEFAULTS.transformersUrl;
+  localModelPathEl.value = DEFAULTS.localModelPath;
+  allowRemoteEl.checked = DEFAULTS.allowRemote;
+  asrModelEl.value = DEFAULTS.asrModel;
+  visionModelEl.value = DEFAULTS.visionModel;
+  if ("gpu" in navigator) {
+    deviceSelectEl.value = "webgpu";
+  }
+}
+
+async function autoStart() {
+  applyDefaults();
+  configureOrt();
+  await checkWebGpu();
+  await loadLibrary();
+}
+
 loadLibBtn.addEventListener("click", () => {
   loadLibrary();
 });
@@ -751,8 +785,6 @@ localModelPathEl.addEventListener("change", () => {
   applyEnv();
 });
 
-transformersUrlEl.value = "./vendor/transformers.min.js";
-localModelPathEl.value = "/AutoBericht/experiments/models/";
-allowRemoteEl.checked = false;
-asrModelEl.value = "Xenova/whisper-tiny.en";
-visionModelEl.value = "LiquidAI/LFM2.5-VL-1.6B-ONNX";
+window.addEventListener("DOMContentLoaded", () => {
+  autoStart();
+});
