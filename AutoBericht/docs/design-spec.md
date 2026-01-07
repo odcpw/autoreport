@@ -54,7 +54,7 @@ Outputs:
 - Question IDs are stable (e.g., 1.1.1). Some questions are "tiroir" sub-items
   (e.g., 5.1.1a/b/c) used for self-assessment, but consolidated into one report line
   (5.1.1).
-- Chapter 4.6 contains freeform field observations tied to photos and topics.
+- Chapter 4.8 contains freeform field observations tied to photos and topics.
 - Field observations appear as their own chapter entry in the left sidebar
   (e.g., 4.8 Beobachtungen) and are handled separately from standard findings.
 - Report includes only improvement opportunities; positive findings are omitted.
@@ -88,12 +88,12 @@ ReportItem (what ends up in the report)
 - photo_refs (list)
 - include_in_report (bool)
 
-FieldObservation (Chapter 4.6)
+FieldObservation (Chapter 4.8)
 - topic
 - finding_text
 - recommendations
 - photo_refs
-- chapter = 4.6
+- chapter = 4.8
 
 Photo
 - id
@@ -218,7 +218,7 @@ Removing a tag clears it from all photos (no orphan tags).
   - find finding_text (reworded negative)
   - score percentage
   - recommendations (4 levels; switch, edit, save to report or library)
-  - photo attachment via tags or direct selection
+  - photo attachment via section tags only (no per-finding photo linkage)
 - Minimal formatting controls (markdown-lite: bold, bullets, links).
 - Word templates handle final formatting.
 - Optional preview panel to approximate Word layout.
