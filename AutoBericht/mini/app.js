@@ -433,7 +433,7 @@
       const text = await file.text();
       sidecarDoc = JSON.parse(text);
       const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
-      state.project = reportProject;
+      state.project = ensureObservationChapter(reportProject);
       ensureProjectMeta();
       buildPhotoIndex();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
@@ -444,6 +444,7 @@
     } catch (err) {
       try {
         state.project = await loadSeedsForProject();
+        ensureObservationChapter(state.project);
         ensureProjectMeta();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         sidecarDoc = null;
@@ -454,6 +455,7 @@
         return true;
       } catch (seedErr) {
         state.project = structuredClone(defaultProject);
+        ensureObservationChapter(state.project);
         state.selectedChapterId = state.project.chapters[0].id;
         sidecarDoc = null;
         buildPhotoIndex();
@@ -694,6 +696,20 @@
       },
       chapters,
     };
+  };
+
+  const ensureObservationChapter = (project) => {
+    if (!project?.chapters) return project;
+    const hasObservation = project.chapters.some((chapter) => chapter.id === "4.8");
+    if (!hasObservation) {
+      project.chapters.push({
+        id: "4.8",
+        title: { de: "Beobachtungen" },
+        rows: [],
+      });
+    }
+    project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
+    return project;
   };
 
   const extractReportProject = (doc) => {
