@@ -55,10 +55,14 @@ Outputs:
   (e.g., 5.1.1a/b/c) used for self-assessment, but consolidated into one report line
   (5.1.1).
 - Chapter 4.6 contains freeform field observations tied to photos and topics.
+- Field observations appear as their own chapter entry in the left sidebar
+  (e.g., 4.8 Beobachtungen) and are handled separately from standard findings.
 - Report includes only improvement opportunities; positive findings are omitted.
   Remaining items are renumbered within each chapter.
 - Self-assessment answers are binary; consultants adjust to percentage scores.
   These feed a spider chart in the report.
+- Score rule (derived): selected level 1=0%, 2=25%, 3=50%, 4=75%.
+  If a finding is excluded, treat it as 100%. Field observations have no score.
 - Reports are single-language (DE/FR/IT), templates are fixed but updated over time.
 
 ## 7. Data Model (Draft)
@@ -77,8 +81,9 @@ SelfAssessment
 
 ReportItem (what ends up in the report)
 - question_id (consolidated line, e.g., 5.1.1)
+- type (standard | field_observation)
 - finding_text (reworded negative; softened/qualified)
-- consultant_score_pct
+- consultant_score_pct (derived; see score rule above)
 - recommendations (list)
 - photo_refs (list)
 - include_in_report (bool)
@@ -199,6 +204,8 @@ Optional: materialize folders under `Photos/_views/` for disk-based browsing.
 - Photos/_views/by_training/
 
 Tags are many-to-many. No primary tag requirement.
+Observation tags can be added by the user and removed via Settings.
+Removing a tag clears it from all photos (no orphan tags).
 
 ## 10. Editor UX (Draft)
 
@@ -220,7 +227,7 @@ Tags are many-to-many. No primary tag requirement.
 
 - Report contains only improvement opportunities.
 - Items are renumbered within each chapter.
-- Chapter 4.6 appended as field observations.
+- Field observations are exported as their own chapter (e.g., 4.8 Beobachtungen).
 - Spider chart uses consultant scores; company answers retained in data.
 
 ## 11a. Export Path (Word Macro, Recommended)
@@ -237,6 +244,8 @@ Phase B (Word macro)
 - Macro reads sidecar/export JSON and injects chapter content into the controls.
 - Macro applies styles (Heading 1/2/3, body, tables), converts list markers to
   proper Word lists, inserts section breaks, and updates TOC/fields.
+- Macro is responsible for filtering, renumbering, and computing score values
+  (no separate export file required).
 
 Benefits
 - Word remains the single source of formatting truth.
