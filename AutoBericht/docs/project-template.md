@@ -4,7 +4,7 @@ Use this layout when zipping a project for engineers. The user selects the proje
 
 ```
 Projekt-<Kunde>-<YYYY>/
-  AutoBericht/              # app bundle + seeds + docs (do not rename)
+  AutoBericht/              # app bundle + seeds + docs (copy from repo, do not rename)
   Photos/                   # raw photos (root = unsorted)
   Inputs/                   # self-assessment + customer docs
   Outputs/                  # Word/PPT/PDF outputs

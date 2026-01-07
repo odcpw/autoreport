@@ -1,7 +1,7 @@
 # Getting Started with AutoBericht (Legacy)
 
 > This guide reflects the legacy Excel/VBA + three-tab web UI flow. For the
-> current minimal editor workflow, see `docs/guides/redesign-workflow.md`.
+> current minimal editor workflow, see `AutoBericht/docs/workflow.md`.
 
 This guide walks you through creating your first safety assessment report from start to finish.
 

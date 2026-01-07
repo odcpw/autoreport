@@ -11,11 +11,11 @@ This index points to the **current** redesign documentation.
 
 ### 👤 Report Creators (Non-Technical)
 
-1. **[Redesign Workflow](guides/redesign-workflow.md)** - Minimal editor workflow
+1. **[Workflow](../AutoBericht/docs/workflow.md)** - Minimal editor workflow
 
 ### 👨‍💻 Developers (Technical)
 
-1. **[System Overview](architecture/system-overview.md)** - Current architecture
+1. **[System Overview](../AutoBericht/docs/system-overview.md)** - Current architecture
 2. **[Design Spec](../AutoBericht/docs/design-spec.md)** - Detailed requirements
 
 ### 🔧 UI Developers
@@ -29,7 +29,7 @@ This index points to the **current** redesign documentation.
 
 | Document | What You'll Learn |
 |----------|-------------------|
-| [System Overview](architecture/system-overview.md) | Current system layout + flows |
+| [System Overview](../AutoBericht/docs/system-overview.md) | Current system layout + flows |
 | [Design Spec](../AutoBericht/docs/design-spec.md) | Interview notes, goals, and redesign direction |
 
 ### 📖 User Guides
@@ -44,10 +44,7 @@ This index points to the **current** redesign documentation.
 docs/
 ├── INDEX.md (you are here)          # Documentation roadmap
 ├── STATUS.md                        # Current state vs target
-├── architecture/                    # System design
-│   └── system-overview.md           # Current system overview
-└── guides/                          # How-to guides
-    └── redesign-workflow.md         # Minimal editor workflow
+└── (canonical docs live in AutoBericht/docs/)
 
 AutoBericht/docs/ contains the canonical design spec.
 ```

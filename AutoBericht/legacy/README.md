@@ -6,7 +6,7 @@ editor in `AutoBericht/mini/`.
 
 ## How to run
 
-- Start the local server with `start-autobericht.cmd`
+- Start the local server with `AutoBericht/start-autobericht.cmd`
 - Open `http://127.0.0.1:<port>/AutoBericht/legacy/`
 
 ## Docs

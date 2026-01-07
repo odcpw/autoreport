@@ -253,7 +253,6 @@ Seed and library resolution (fresh projects):
 - Prefer existing `project_sidecar.json` if present.
 - If no sidecar, load user library in project root (e.g., `library_user_XX.json`).
 - Load bundled seed data from `AutoBericht/data/seed/`.
-- Allow an optional project-level override at `data/seed/` when needed.
 
 ## 13. Risks and Mitigations
 

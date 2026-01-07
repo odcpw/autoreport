@@ -12,13 +12,14 @@ This guide describes the minimal, folder-first workflow.
 
 1. Create a project folder on local disk (for speed).
 2. Place the following inside:
-   - `project_sidecar.json` (editor state)
-   - `self_assessment.xlsx` (input)
-   - `photos/` (raw photos)
+   - `AutoBericht/` (the app bundle)
+   - `Inputs/` (self-assessment + customer docs)
+   - `Photos/` (raw photos)
+   - `Outputs/` (exports land here)
 
 ## Editor Workflow
 
-1. Start the local server:
+1. Start the local server (from the AutoBericht folder):
    ```
    start-autobericht.cmd
    ```

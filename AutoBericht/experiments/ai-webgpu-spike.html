@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI WebGPU Spike</title>
+    <link rel="stylesheet" href="ai-webgpu-spike.css" />
+  </head>
+  <body>
+    <header class="page-header">
+      <div>
+        <h1>AI WebGPU Spike</h1>
+        <p>Quick browser test for Transformers.js (ASR + vision) with optional WebGPU.</p>
+      </div>
+      <div class="badge">experiments</div>
+    </header>
+
+    <main>
+      <section class="card" id="download-section">
+        <h2>Offline downloads (local-only)</h2>
+        <p class="hint">
+          Download files once, save them under <code>AutoBericht/experiments/</code>,
+          then serve this folder via the local server. Model IDs stay the same, but
+          the files are loaded from <code>/AutoBericht/experiments/models/</code>.
+        </p>
+
+        <div class="download-block">
+          <h3>Transformers.js (ESM bundle)</h3>
+          <p class="hint">Save into <code>AutoBericht/experiments/vendor/transformers.min.js</code>.</p>
+          <ul class="download-list">
+            <li>
+              <a href="https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.0" target="_blank" rel="noreferrer">
+                Download @huggingface/transformers@3.8.0 (ESM entry)
+              </a>
+            </li>
+          </ul>
+        </div>
+
+        <details class="download-block">
+          <summary>Whisper tiny.en (ASR) — required files</summary>
+          <p class="hint">Save into <code>AutoBericht/experiments/models/Xenova/whisper-tiny.en/</code>.</p>
+          <ul class="download-list">
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/config.json" target="_blank" rel="noreferrer">config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/generation_config.json" target="_blank" rel="noreferrer">generation_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/preprocessor_config.json" target="_blank" rel="noreferrer">preprocessor_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/tokenizer.json" target="_blank" rel="noreferrer">tokenizer.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/tokenizer_config.json" target="_blank" rel="noreferrer">tokenizer_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/special_tokens_map.json" target="_blank" rel="noreferrer">special_tokens_map.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/merges.txt" target="_blank" rel="noreferrer">merges.txt</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/vocab.json" target="_blank" rel="noreferrer">vocab.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/normalizer.json" target="_blank" rel="noreferrer">normalizer.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/added_tokens.json" target="_blank" rel="noreferrer">added_tokens.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/quantize_config.json" target="_blank" rel="noreferrer">quantize_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/encoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/decoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/decoder_with_past_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/tree/main" target="_blank" rel="noreferrer">Full file list (HF repo)</a></li>
+          </ul>
+          <p class="hint">If a model load error mentions a missing file, grab it from the full file list.</p>
+        </details>
+
+        <details class="download-block">
+          <summary>ViT-GPT2 image captioning (vision) — required files</summary>
+          <p class="hint">Save into <code>AutoBericht/experiments/models/Xenova/vit-gpt2-image-captioning/</code>.</p>
+          <ul class="download-list">
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/config.json" target="_blank" rel="noreferrer">config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/generation_config.json" target="_blank" rel="noreferrer">generation_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/preprocessor_config.json" target="_blank" rel="noreferrer">preprocessor_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/tokenizer.json" target="_blank" rel="noreferrer">tokenizer.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/tokenizer_config.json" target="_blank" rel="noreferrer">tokenizer_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/special_tokens_map.json" target="_blank" rel="noreferrer">special_tokens_map.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/merges.txt" target="_blank" rel="noreferrer">merges.txt</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/vocab.json" target="_blank" rel="noreferrer">vocab.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/quantize_config.json" target="_blank" rel="noreferrer">quantize_config.json</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/encoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/decoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/decoder_with_past_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_quantized.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/tree/main" target="_blank" rel="noreferrer">Full file list (HF repo)</a></li>
+          </ul>
+          <p class="hint">If a model load error mentions a missing file, grab it from the full file list.</p>
+        </details>
+      </section>
+
+      <section class="card" id="env-section">
+        <h2>Environment</h2>
+        <p class="hint">
+          Open via <strong>http://localhost</strong> to enable WebGPU and file access.
+        </p>
+        <div class="grid">
+          <label>
+            Transformers.js URL
+            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" />
+          </label>
+          <label>
+            Local model path (optional)
+            <input id="local-model-path" type="text" placeholder="/models/" />
+          </label>
+          <label class="inline">
+            <input id="allow-remote" type="checkbox" checked />
+            Allow remote models (HF Hub)
+          </label>
+          <label>
+            Device
+            <select id="device-select">
+              <option value="auto" selected>auto</option>
+              <option value="webgpu">webgpu</option>
+              <option value="wasm">wasm</option>
+            </select>
+          </label>
+        </div>
+        <div class="actions">
+          <button id="load-lib">Load library</button>
+          <button id="check-webgpu">Check WebGPU</button>
+        </div>
+        <div class="status" id="env-status">Library not loaded.</div>
+      </section>
+
+      <section class="card" id="asr-section">
+        <h2>Speech → Text (Whisper)</h2>
+        <div class="grid">
+          <label>
+            ASR model id
+            <input id="asr-model" type="text" spellcheck="false" placeholder="Model id for ASR" />
+          </label>
+          <label>
+            Audio file
+            <input id="asr-file" type="file" accept="audio/*" />
+          </label>
+          <label class="inline">
+            <input id="asr-timestamps" type="checkbox" />
+            Return word timestamps
+          </label>
+        </div>
+        <div class="actions">
+          <button id="run-asr">Transcribe</button>
+        </div>
+        <div class="status" id="asr-status">Awaiting input.</div>
+        <textarea id="asr-output" rows="8" spellcheck="false" placeholder="Transcript output..."></textarea>
+      </section>
+
+      <section class="card" id="vision-section">
+        <h2>Vision (Image → Text)</h2>
+        <div class="grid">
+          <label>
+            Vision task
+            <select id="vision-task">
+              <option value="image-to-text" selected>image-to-text</option>
+              <option value="image-classification">image-classification</option>
+            </select>
+          </label>
+          <label>
+            Vision model id
+            <input id="vision-model" type="text" spellcheck="false" placeholder="Model id for vision" />
+          </label>
+          <label>
+            Image file
+            <input id="vision-file" type="file" accept="image/*" />
+          </label>
+        </div>
+        <div class="actions">
+          <button id="run-vision">Analyze image</button>
+        </div>
+        <div class="status" id="vision-status">Awaiting input.</div>
+        <div class="vision-preview">
+          <img id="vision-preview" alt="" />
+          <pre id="vision-output"></pre>
+        </div>
+      </section>
+
+      <section class="card" id="log-section">
+        <h2>Log</h2>
+        <pre id="log"></pre>
+      </section>
+    </main>
+
+    <script type="module" src="ai-webgpu-spike.js"></script>
+  </body>
+</html>

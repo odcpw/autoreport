@@ -11,7 +11,7 @@ import xml.etree.ElementTree as ET
 
 OPUS_DOCX = Path("fromWork/extracted/2025-10-02 OPUS 4.1 recommendations.docx")
 SELBST_XLSX = Path("fromWork/extracted/Selbstbeurteilung Integrierte Sichereheit d.V14.xlsx")
-OUTPUT_DIR = Path("data/seed")
+OUTPUT_DIR = Path("AutoBericht/data/seed")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 NS_WORD = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}

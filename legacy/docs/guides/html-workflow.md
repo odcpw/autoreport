@@ -1,7 +1,7 @@
 # AutoBericht Web UI Workflow Guide (Legacy)
 
 > This guide documents the legacy three-tab UI. The current direction is the
-> minimal editor workflow in `docs/guides/redesign-workflow.md`.
+> minimal editor workflow in `AutoBericht/docs/workflow.md`.
 
 This guide covers the offline HTML/JavaScript interface in `AutoBericht/legacy/`.
 
@@ -17,12 +17,12 @@ The web UI adapts to the Excel/VBA `project.json` contract (VBA is canonical). P
 
 ## Opening the Application
 
-### Recommended (Windows): repo launcher
+### Recommended (Windows): launcher
 
 Use the repository launcher to run a local, offline-only server so ES modules work without browser flags:
 
-- `start-autobericht.cmd`
-- `start-autobericht.ps1`
+- `AutoBericht/start-autobericht.cmd`
+- `AutoBericht/start-autobericht.ps1`
 
 ### Alternative: Python dev server
 
@@ -87,7 +87,7 @@ The web UI writes overrides into both `overrides.*` (VBA import/export) and `wor
 ## Round-trip back to Excel
 
 1. In the web UI Export tab: download `project.json`.
-2. In Excel: run the JSON import macro (see `docs/guides/vba-workflow.md`).
+2. In Excel: run the JSON import macro (see `legacy/docs/guides/vba-workflow.md`).
 3. Verify:
    - Rows load with the expected selected levels and overrides
    - Photo tags and lists remain intact
@@ -100,7 +100,7 @@ The web UI writes overrides into both `overrides.*` (VBA import/export) and `wor
 
 ## Related documentation
 
-- `docs/guides/getting-started.md`
-- `docs/guides/vba-workflow.md`
-- `docs/architecture/data-model.md`
+- `legacy/docs/guides/getting-started.md`
+- `legacy/docs/guides/vba-workflow.md`
+- `legacy/docs/architecture/data-model.md`
 - `docs/reference/roundtrip-smoke-checklist.md`

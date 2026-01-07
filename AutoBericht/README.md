@@ -3,7 +3,7 @@
 This folder defaults to the minimal, folder-first editor in `mini/`. The previous
 three-tab MVP UI lives under `legacy/` for reference.
 
-> **Tip (recommended):** Use the repo launcher (`start-autobericht.cmd`). It starts
+> **Tip (recommended):** Use the launcher in this folder (`start-autobericht.cmd`). It starts
 > a local, offline-only server and opens the minimal editor without browser flags.
 
 ## Directory Layout

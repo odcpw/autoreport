@@ -124,7 +124,7 @@ This document explains how all AutoBericht components work together to create a 
 
 **Purpose**: Unified data format shared between VBA and web UI
 
-**Canonical contract**: `docs/architecture/data-model.md`. The Excel/VBA exporter/loader defines the canonical JSON shape; the web UI adapts to it. Current progress/mismatches live in `docs/STATUS.md`.
+**Canonical contract**: `legacy/docs/architecture/data-model.md`. The Excel/VBA exporter/loader defines the canonical JSON shape; the web UI adapts to it. Current progress/mismatches live in `docs/STATUS.md`.
 
 **Structure**:
 ```json

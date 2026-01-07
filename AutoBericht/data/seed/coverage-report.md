@@ -11,7 +11,7 @@ Generated: `2026-01-05T11:47:06+00:00`
 Scope: chapters 1-10 = in-scope, 11-14 = placeholders.
 Collapsed coverage merges tiroir sub-IDs (a/b/...) and 4th-level IDs to 3rd-level.
 Custom collapse: 9.5.2-9.5.7 -> 9.5.1, 9.9.2-9.9.9 -> 9.9.1.
-Placeholder export: `data/seed/placeholders.json`
+Placeholder export: `AutoBericht/data/seed/placeholders.json`
 
 ## Scope Summary (raw IDs)
 - Selbstbeurteilung in-scope: **509**

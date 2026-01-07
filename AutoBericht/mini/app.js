@@ -182,7 +182,6 @@
 
   const seedPathCandidates = (filename) => ([
     ["AutoBericht", "data", "seed", filename],
-    ["autobericht", "data", "seed", filename],
     ["data", "seed", filename],
   ]);
 
@@ -200,9 +199,6 @@
       return [];
     }
     const urls = [
-      `/AutoBericht/data/seed/${filename}`,
-      `/data/seed/${filename}`,
-      new URL(`data/seed/${filename}`, window.location.href).toString(),
       new URL(`../data/seed/${filename}`, window.location.href).toString(),
     ];
     return Array.from(new Set(urls));

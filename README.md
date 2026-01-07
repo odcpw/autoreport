@@ -50,7 +50,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Import customer self-assessment (Excel file)
 
 2. **Edit Content**
-   - Start the offline UI with `start-autobericht.cmd` (opens the minimal editor)
+   - Start the offline UI with `AutoBericht/start-autobericht.cmd` (opens the minimal editor)
    - Open the project folder and load `project_sidecar.json`
    - Edit findings and recommendations by chapter
    - Save the sidecar back to the project folder
@@ -60,7 +60,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Export PowerPoint presentations
    - Save project snapshot as JSON
 
-**See**: [Redesign Workflow](docs/guides/redesign-workflow.md)
+**See**: [Workflow](AutoBericht/docs/workflow.md)
 
 ### For Developers
 
@@ -89,9 +89,9 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 | Document | Description |
 |----------|-------------|
-| [System Architecture](docs/architecture/system-overview.md) | Current redesign architecture |
+| [System Architecture](AutoBericht/docs/system-overview.md) | Current redesign architecture |
 | [Design Spec](AutoBericht/docs/design-spec.md) | Interview-based requirements |
-| [Redesign Workflow](docs/guides/redesign-workflow.md) | Minimal editor workflow |
+| [Workflow](AutoBericht/docs/workflow.md) | Minimal editor workflow |
 | [VBA Modules Reference](legacy/macros/README.md) | VBA module documentation (legacy export layer) |
 
 Legacy documentation is archived under `legacy/docs/`.
@@ -103,14 +103,13 @@ autoreport/
 ├── .beads/                     # Beads task tracker (issues.jsonl)
 ├── AGENTS.md                   # Agent playbook for this repo
 ├── README.md                    # You are here
-├── start-autobericht.cmd        # Windows launcher for the web UI
-├── start-autobericht.ps1        # PowerShell launcher for the web UI
+├── AutoBericht/start-autobericht.cmd   # Windows launcher for the web UI
+├── AutoBericht/start-autobericht.ps1   # PowerShell launcher for the web UI
 ├── sync-autobericht.ps1         # Macro sync helper
 ├── docs/                        # Documentation
 │   ├── INDEX.md                # Documentation roadmap (current)
 │   ├── STATUS.md               # Current state vs target
-│   ├── architecture/           # Redesign architecture
-│   └── guides/                 # Redesign workflows
+│   └── (canonical docs live in AutoBericht/docs/)
 ├── legacy/                      # Legacy UI + docs archive
 │   ├── docs/                   # Legacy documentation
 │   └── macros/                 # Legacy VBA modules (.bas, .cls, .frm)
@@ -185,4 +184,4 @@ Internal use only. All rights reserved.
 
 ---
 
-**Next Steps**: Read the [Documentation Index](docs/INDEX.md) or jump to [Redesign Workflow](docs/guides/redesign-workflow.md)
+**Next Steps**: Read the [Documentation Index](docs/INDEX.md) or jump to [Workflow](AutoBericht/docs/workflow.md)

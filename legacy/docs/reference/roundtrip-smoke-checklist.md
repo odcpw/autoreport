@@ -9,7 +9,7 @@ Goal: verify the **VBA-exported unified `project.json`** round-trips through the
   - master findings Word file
   - customer self-assessment Excel file
   - 2–5 photos in a local folder
-- AutoBericht UI runnable via `start-autobericht.cmd` (recommended)
+- AutoBericht UI runnable via `AutoBericht/start-autobericht.cmd` (recommended)
 
 ## Steps
 
@@ -38,4 +38,3 @@ Goal: verify the **VBA-exported unified `project.json`** round-trips through the
 - AutoBericht accepts the VBA output directly (no conversion scripts).
 - AutoBericht writes the same unified contract back out.
 - Excel loader accepts the AutoBericht output and preserves edits.
-
