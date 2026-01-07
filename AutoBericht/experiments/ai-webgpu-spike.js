@@ -69,24 +69,28 @@ const DEFAULTS = {
   visionModel: "LiquidAI/LFM2.5-VL-1.6B-ONNX",
 };
 
+const ORT_VERSION = "1.18.0";
+
 function configureOrt() {
   if (!window.ort?.env?.wasm) return;
   const base = new URL("./vendor/", window.location.href).toString();
+  const cacheBust = `?v=${ORT_VERSION}`;
   window.ort.env.wasm.wasmPaths = {
-    "ort-wasm.wasm": `${base}ort-wasm.wasm`,
-    "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm`,
-    "ort-wasm-simd.jsep.wasm": `${base}ort-wasm-simd.jsep.wasm`,
-    "ort-wasm-threaded.wasm": `${base}ort-wasm-threaded.wasm`,
-    "ort-wasm-simd-threaded.wasm": `${base}ort-wasm-simd-threaded.wasm`,
-    "ort-wasm-simd-threaded.jsep.wasm": `${base}ort-wasm-simd-threaded.jsep.wasm`,
+    "ort-wasm.wasm": `${base}ort-wasm.wasm${cacheBust}`,
+    "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm${cacheBust}`,
+    "ort-wasm-simd.jsep.wasm": `${base}ort-wasm-simd.jsep.wasm${cacheBust}`,
+    "ort-wasm-threaded.wasm": `${base}ort-wasm-threaded.wasm${cacheBust}`,
+    "ort-wasm-simd-threaded.wasm": `${base}ort-wasm-simd-threaded.wasm${cacheBust}`,
+    "ort-wasm-simd-threaded.jsep.wasm": `${base}ort-wasm-simd-threaded.jsep.wasm${cacheBust}`,
   };
   window.ort.env.wasm.simd = true;
+  window.ort.env.wasm.proxy = false;
   const canThread = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated;
   window.ort.env.wasm.numThreads = canThread ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
   log(
     `ORT wasmPaths set. base=${base} threads=${window.ort.env.wasm.numThreads} crossOriginIsolated=${String(
       canThread
-    )}`
+    )} cacheBust=${cacheBust}`
   );
 }
 
@@ -805,14 +809,18 @@ runVisionBtn.addEventListener("click", () => {
   runVision();
 });
 
-loadVisionOnnxBtn.addEventListener("click", () => {
-  const modelId = visionModelEl.value.trim();
-  if (!modelId) {
-    setStatus(visionStatusEl, "Enter a vision model id first.");
-    return;
-  }
-  warmupOrtSessions(modelId);
-});
+if (loadVisionOnnxBtn) {
+  loadVisionOnnxBtn.addEventListener("click", () => {
+    const modelId = visionModelEl.value.trim();
+    if (!modelId) {
+      setStatus(visionStatusEl, "Enter a vision model id first.");
+      return;
+    }
+    warmupOrtSessions(modelId);
+  });
+} else {
+  log("Load ONNX sessions button missing in DOM.");
+}
 
 askVisionBtn.addEventListener("click", () => {
   const modelId = visionModelEl.value.trim();
