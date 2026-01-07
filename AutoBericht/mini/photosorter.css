@@ -188,6 +188,13 @@ button[disabled] {
   object-fit: contain;
 }
 
+.viewer__filename {
+  font-size: 0.75rem;
+  color: #6b7280;
+  padding: 0 4px;
+  min-height: 16px;
+}
+
 .photo-unsorted {
   position: absolute;
   right: 8px;

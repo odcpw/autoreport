@@ -18,6 +18,7 @@
   const statusCloseBtn = document.getElementById("status-close");
   const photoMetaEl = document.getElementById("photo-meta");
   const photoImageEl = document.getElementById("photo-image");
+  const photoFilenameEl = document.getElementById("photo-filename");
   const photoUnsortedBtn = document.getElementById("photo-unsorted");
   const filterToggleBtn = document.getElementById("filter-toggle");
   const prevBtn = document.getElementById("prev-photo");
@@ -515,6 +516,7 @@
     if (!current) {
       photoImageEl.removeAttribute("src");
       photoImageEl.alt = "No photo loaded";
+      if (photoFilenameEl) photoFilenameEl.textContent = "";
       notesEl.value = "";
       notesEl.disabled = true;
       if (photoUnsortedBtn) {
@@ -527,6 +529,9 @@
     }
     photoImageEl.src = current.url;
     photoImageEl.alt = current.path;
+    if (photoFilenameEl) {
+      photoFilenameEl.textContent = current.path.split("/").pop();
+    }
     notesEl.value = current.notes || "";
     notesEl.disabled = false;
     if (photoUnsortedBtn) {
