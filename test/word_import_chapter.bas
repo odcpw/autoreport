@@ -105,6 +105,10 @@ Public Sub ImportChapter1Table()
         End If
     Next row
 
+    On Error Resume Next
+    tbl.Columns(4).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(4).PreferredWidth = CentimetersToPoints(1.2)
+    On Error GoTo 0
     tbl.AutoFitBehavior wdAutoFitContent
 
     MsgBox "Chapter 1 table imported.", vbInformation
@@ -131,6 +135,12 @@ Private Function ResolveSidecarPath() As String
 End Function
 
 Private Function ReadAllText(ByVal path As String) As String
+    Dim text As String
+    text = ReadAllTextUtf8(path)
+    If Len(text) > 0 Then
+        ReadAllText = text
+        Exit Function
+    End If
     Dim f As Integer
     f = FreeFile
     On Error GoTo CleanFail
@@ -142,6 +152,21 @@ CleanExit:
 CleanFail:
     ReadAllText = ""
     Resume CleanExit
+End Function
+
+Private Function ReadAllTextUtf8(ByVal path As String) As String
+    On Error GoTo CleanFail
+    Dim stream As Object
+    Set stream = CreateObject("ADODB.Stream")
+    stream.Type = 2 ' text
+    stream.Charset = "utf-8"
+    stream.Open
+    stream.LoadFromFile path
+    ReadAllTextUtf8 = stream.ReadText(-1)
+    stream.Close
+    Exit Function
+CleanFail:
+    ReadAllTextUtf8 = ""
 End Function
 
 Private Function FileExists(ByVal path As String) As Boolean

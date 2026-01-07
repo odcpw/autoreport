@@ -45,6 +45,26 @@ Private Sub ConvertMarkdownWithUnlock(ByVal cc As ContentControl, ByVal rng As R
 End Sub
 
 Private Sub ConvertMarkdownRange(ByVal rng As Range)
+    If rng.Tables.Count > 0 Then
+        Dim cell As Cell
+        For Each cell In rng.Tables(1).Range.Cells
+            ConvertMarkdownCell cell
+        Next cell
+        Exit Sub
+    End If
+    ConvertMarkdownPlainRange rng
+End Sub
+
+Private Sub ConvertMarkdownCell(ByVal cell As Cell)
+    Dim cellRange As Range
+    Set cellRange = cell.Range
+    If cellRange.End > cellRange.Start Then
+        cellRange.End = cellRange.End - 1 ' remove end-of-cell marker
+    End If
+    ConvertMarkdownPlainRange cellRange
+End Sub
+
+Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
     Dim text As String
     text = rng.Text
     text = Replace(text, vbCrLf, vbLf)
