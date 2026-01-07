@@ -469,6 +469,7 @@
     if (!chapter) return "";
     if (typeof chapter.title === "string") return chapter.title;
     if (chapter.title && chapter.title.de) return chapter.title.de;
+    if (chapter.id === "4.8") return "Beobachtungen";
     return chapter.id || "";
   };
 
@@ -1005,7 +1006,10 @@
 
   const renderChapterList = () => {
     chapterListEl.innerHTML = "";
-    state.project.chapters.forEach((chapter) => {
+    const orderedChapters = [...state.project.chapters].sort((a, b) =>
+      compareIdSegments(a.id, b.id),
+    );
+    orderedChapters.forEach((chapter) => {
       const button = document.createElement("button");
       const buttonLabel = formatChapterLabel(chapter);
       button.textContent = buttonLabel;
@@ -1045,8 +1049,12 @@
   const createSectionRow = (row) => {
     const sectionRow = document.createElement("div");
     sectionRow.className = "section-row";
-    const pill = createPhotoPill(row.id);
-    if (pill) sectionRow.appendChild(pill);
+    const topLevel = String(row.id || "").split(".")[0];
+    const hideSectionPill = ["11", "12", "13", "14"].includes(topLevel);
+    if (!hideSectionPill) {
+      const pill = createPhotoPill(row.id);
+      if (pill) sectionRow.appendChild(pill);
+    }
     const label = document.createElement("span");
     label.textContent = row.title;
     sectionRow.appendChild(label);
