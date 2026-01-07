@@ -6,6 +6,10 @@ Option Explicit
 ' - **bold** and *italic* toggles within a line
 ' - Blank lines become paragraph breaks
 
+' === STYLE CONFIG (edit these to match your template) ===
+Private Const STYLE_BODY As String = "BodyText"
+Private Const STYLE_BULLET As String = "ListBullet"
+
 Public Sub ConvertMarkdownInSelection()
     Dim rng As Range
     Set rng = Selection.Range
@@ -96,10 +100,10 @@ Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal a
 
     If asBullet Then
         rng.ListFormat.ApplyBulletDefault
-        ApplyParagraphStyle rng, "ListBullet"
+        ApplyParagraphStyle rng, STYLE_BULLET
     Else
         rng.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
-        ApplyParagraphStyle rng, "BodyText"
+        ApplyParagraphStyle rng, STYLE_BODY
     End If
 
     AppendFormattedText rng, line

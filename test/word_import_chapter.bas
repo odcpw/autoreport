@@ -3,6 +3,10 @@ Option Explicit
 
 ' Requires JsonConverter.bas (VBA-JSON) in the Word project.
 
+' === STYLE CONFIG (edit these to match your template) ===
+Private Const STYLE_BODY As String = "BodyText"
+Private Const STYLE_SECTION As String = "BodyText"
+
 Public Sub ImportChapter1Table()
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
@@ -42,10 +46,10 @@ Public Sub ImportChapter1Table()
     Dim chapter As Object
     Set chapter = chapters.Item(1)
 
-    Dim cc As ContentControl
-    Set cc = FindContentControl("Chapter1")
-    If cc Is Nothing Then
-        MsgBox "Content control 'Chapter1' not found.", vbExclamation
+    Dim insertRng As Range
+    Set insertRng = ResolveInsertRange("Chapter1")
+    If insertRng Is Nothing Then
+        MsgBox "Content control or bookmark 'Chapter1' not found.", vbExclamation
         Exit Sub
     End If
 
@@ -66,13 +70,11 @@ Public Sub ImportChapter1Table()
         Exit Sub
     End If
 
-    Dim rng As Range
-    Set rng = cc.Range
-    rng.Text = ""
-    rng.Collapse wdCollapseStart
+    insertRng.Text = ""
+    insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
-    Set tbl = ActiveDocument.Tables.Add(rng, tableRowCount + 1, 4)
+    Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 1, 4)
     tbl.Borders.Enable = True
     tbl.Rows(1).Range.Font.Bold = True
     tbl.Cell(1, 1).Range.Text = "ID"
@@ -92,7 +94,7 @@ Public Sub ImportChapter1Table()
                 tbl.Cell(targetRow, 3).Range.Text = ""
                 tbl.Cell(targetRow, 4).Range.Text = ""
                 tbl.Rows(targetRow).Range.Font.Bold = True
-                tbl.Rows(targetRow).Range.Style = "BodyText"
+                tbl.Rows(targetRow).Range.Style = STYLE_SECTION
                 targetRow = targetRow + 1
             End If
         ElseIf IsIncludedRow(row) Then
@@ -100,7 +102,7 @@ Public Sub ImportChapter1Table()
             tbl.Cell(targetRow, 2).Range.Text = ResolveFinding(row)
             tbl.Cell(targetRow, 3).Range.Text = ResolveRecommendation(row)
             tbl.Cell(targetRow, 4).Range.Text = ""
-            tbl.Rows(targetRow).Range.Style = "BodyText"
+            tbl.Rows(targetRow).Range.Style = STYLE_BODY
             targetRow = targetRow + 1
         End If
     Next row
@@ -182,6 +184,47 @@ Private Function FindContentControl(ByVal title As String) As ContentControl
             Exit Function
         End If
     Next cc
+End Function
+
+Private Function FindBookmark(ByVal name As String) As Bookmark
+    On Error Resume Next
+    Set FindBookmark = ActiveDocument.Bookmarks(name)
+    On Error GoTo 0
+End Function
+
+Private Function ResolveInsertRange(ByVal anchorName As String) As Range
+    Dim cc As ContentControl
+    Set cc = FindContentControl(anchorName)
+    If Not cc Is Nothing Then
+        Set ResolveInsertRange = cc.Range
+        Exit Function
+    End If
+
+    Dim bm As Bookmark
+    Set bm = FindBookmark(anchorName)
+    If bm Is Nothing Then Exit Function
+
+    Dim anchorPara As Paragraph
+    Set anchorPara = bm.Range.Paragraphs(1)
+
+    If anchorPara.Next Is Nothing Then
+        anchorPara.Range.InsertParagraphAfter
+    End If
+
+    Dim blankPara As Paragraph
+    Set blankPara = anchorPara.Next
+    If Len(Trim$(Replace(blankPara.Range.Text, vbCr, ""))) > 0 Then
+        blankPara.Range.InsertParagraphBefore
+        Set blankPara = anchorPara.Next
+    End If
+
+    If blankPara.Next Is Nothing Then
+        blankPara.Range.InsertParagraphAfter
+    End If
+
+    Dim targetPara As Paragraph
+    Set targetPara = blankPara.Next
+    Set ResolveInsertRange = targetPara.Range
 End Function
 
 Private Function IsSectionRow(ByVal row As Object) As Boolean
