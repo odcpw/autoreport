@@ -3,6 +3,8 @@ const byId = (id) => document.getElementById(id);
 const transformersUrlEl = byId("transformers-url");
 const localModelPathEl = byId("local-model-path");
 const allowRemoteEl = byId("allow-remote");
+const disableWasmSimdEl = byId("disable-wasm-simd");
+const ortBundleEl = byId("ort-bundle");
 const ortVersionEl = byId("ort-version");
 const deviceSelectEl = byId("device-select");
 const loadLibBtn = byId("load-lib");
@@ -77,7 +79,7 @@ const DEFAULTS = {
 const WASM_MAGIC = ["00", "61", "73", "6d"];
 
 function getOrtConfig() {
-  const fallback = { version: "1.18.0", base: "./vendor/" };
+  const fallback = { version: "1.18.0", base: "./vendor/", bundle: "webgpu" };
   if (window.__ortConfig && window.__ortConfig.version && window.__ortConfig.base) {
     return window.__ortConfig;
   }
@@ -99,6 +101,7 @@ function configureOrt() {
   const { version, base: basePath } = getOrtConfig();
   const base = new URL(basePath, window.location.href).toString();
   const cacheBust = `?v=${version}`;
+  const disableSimd = disableWasmSimdEl?.checked ?? false;
   window.ort.env.wasm.wasmPaths = {
     "ort-wasm.wasm": `${base}ort-wasm.wasm${cacheBust}`,
     "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm${cacheBust}`,
@@ -107,14 +110,14 @@ function configureOrt() {
     "ort-wasm-simd-threaded.wasm": `${base}ort-wasm-simd-threaded.wasm${cacheBust}`,
     "ort-wasm-simd-threaded.jsep.wasm": `${base}ort-wasm-simd-threaded.jsep.wasm${cacheBust}`,
   };
-  window.ort.env.wasm.simd = true;
+  window.ort.env.wasm.simd = !disableSimd;
   window.ort.env.wasm.proxy = false;
   const canThread = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated;
   window.ort.env.wasm.numThreads = canThread ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
   log(
     `ORT wasmPaths set. base=${base} threads=${window.ort.env.wasm.numThreads} crossOriginIsolated=${String(
       canThread
-    )} cacheBust=${cacheBust}`
+    )} cacheBust=${cacheBust} simd=${String(window.ort.env.wasm.simd)}`
   );
 }
 
@@ -881,12 +884,16 @@ function applyDefaults() {
   if (ortVersionEl) {
     ortVersionEl.value = version;
   }
+  const { bundle } = getOrtConfig();
+  if (ortBundleEl) {
+    ortBundleEl.value = bundle || "webgpu";
+  }
 }
 
 async function autoStart() {
   applyDefaults();
-  const { version, base } = getOrtConfig();
-  log(`ORT config: version=${version} base=${base}`);
+  const { version, base, bundle } = getOrtConfig();
+  log(`ORT config: version=${version} base=${base} bundle=${bundle}`);
   ensureOrtLoaded().then(() => {
     if (window.ort?.env?.versions?.web) {
       log(`ORT loaded: ${window.ort.env.versions.web}`);
@@ -984,6 +991,12 @@ allowRemoteEl.addEventListener("change", () => {
   applyEnv();
 });
 
+if (disableWasmSimdEl) {
+  disableWasmSimdEl.addEventListener("change", () => {
+    configureOrt();
+  });
+}
+
 if (ortVersionEl) {
   ortVersionEl.addEventListener("change", () => {
     const next = ortVersionEl.value;
@@ -992,6 +1005,20 @@ if (ortVersionEl) {
       params.delete("ort");
     } else {
       params.set("ort", next);
+    }
+    const query = params.toString();
+    window.location.search = query ? `?${query}` : "";
+  });
+}
+
+if (ortBundleEl) {
+  ortBundleEl.addEventListener("change", () => {
+    const next = ortBundleEl.value;
+    const params = new URLSearchParams(window.location.search);
+    if (next === "webgpu") {
+      params.delete("ortbundle");
+    } else {
+      params.set("ortbundle", next);
     }
     const query = params.toString();
     window.location.search = query ? `?${query}` : "";

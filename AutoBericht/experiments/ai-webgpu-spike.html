@@ -171,6 +171,10 @@
             <input id="allow-remote" type="checkbox" />
             Allow remote models (HF Hub)
           </label>
+          <label class="inline">
+            <input id="disable-wasm-simd" type="checkbox" />
+            Disable WASM SIMD (debug)
+          </label>
           <label>
             ORT version
             <select id="ort-version">
@@ -178,6 +182,14 @@
               <option value="1.17.3">1.17.3 (fallback)</option>
             </select>
             <span class="hint">Reloads the page. 1.17.3 loads from <code>vendor/ort-1.17.3/</code>.</span>
+          </label>
+          <label>
+            ORT bundle
+            <select id="ort-bundle">
+              <option value="webgpu">webgpu</option>
+              <option value="wasm">wasm-only</option>
+            </select>
+            <span class="hint">Reloads the page.</span>
           </label>
           <label>
             Device
@@ -269,11 +281,13 @@
       (function () {
         const params = new URLSearchParams(window.location.search);
         const ortVersion = params.get("ort") || "1.18.0";
+        const ortBundle = params.get("ortbundle") || "webgpu";
         const base = ortVersion === "1.17.3" ? "./vendor/ort-1.17.3/" : "./vendor/";
-        window.__ortConfig = { version: ortVersion, base };
+        const scriptName = ortBundle === "wasm" ? "ort.min.js" : "ort.webgpu.min.js";
+        window.__ortConfig = { version: ortVersion, base, bundle: ortBundle };
         window.__ortLoadPromise = new Promise((resolve, reject) => {
           const script = document.createElement("script");
-          script.src = `${base}ort.webgpu.min.js?v=${ortVersion}`;
+          script.src = `${base}${scriptName}?v=${ortVersion}`;
           script.async = true;
           script.onload = () => resolve();
           script.onerror = () => reject(new Error("Failed to load ORT script."));
