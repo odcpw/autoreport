@@ -215,12 +215,29 @@ button.ghost {
   color: #1f2933;
 }
 
+.score-badge {
+  font-size: 0.75rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #e0f2e9;
+  color: #1f5136;
+}
+
 .comment-badge {
   font-size: 0.75rem;
   padding: 4px 10px;
   border-radius: 999px;
   background: #fde68a;
   color: #6b4b00;
+  cursor: help;
+}
+
+.evidence-badge {
+  font-size: 0.75rem;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #c7e0ff;
+  color: #1c3b6b;
   cursor: help;
 }
 

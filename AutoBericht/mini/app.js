@@ -380,6 +380,14 @@
     return String(value);
   };
 
+  const calculateScore = (row) => {
+    if (row?.type === "field_observation") return null;
+    const ws = row?.workstate || {};
+    if (ws.includeFinding === false) return 100;
+    const level = Number(ws.selectedLevel || 1);
+    return Math.max(0, Math.min(100, (level - 1) * 25));
+  };
+
   const sanitizeFilename = (value) => String(value || "")
     .trim()
     .replace(/[^a-zA-Z0-9._-]/g, "_");
@@ -780,6 +788,20 @@
     return comments;
   };
 
+  const getAnswerEvidence = (row) => {
+    const evidence = [];
+    const items = row.customer?.items || [];
+    items.forEach((item) => {
+      if (item.evidence) {
+        evidence.push(`${item.id}: ${item.evidence}`);
+      }
+    });
+    if (row.customer?.evidence && !evidence.length) {
+      evidence.push(row.customer.evidence);
+    }
+    return evidence;
+  };
+
   const escapeHtml = (value) => value
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -791,6 +813,7 @@
     let out = value;
     out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
+    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
     return out;
   };
 
@@ -878,7 +901,7 @@
     return badge;
   };
 
-  const createRowHeader = (row) => {
+  const createRowHeader = (row, score) => {
     const header = document.createElement("div");
     header.className = "row-header";
     const meta = document.createElement("div");
@@ -891,6 +914,12 @@
     const headerRight = document.createElement("div");
     headerRight.className = "row-header__right";
     headerRight.appendChild(createAnswerBadge(row));
+    if (score !== null && score !== undefined) {
+      const scoreBadge = document.createElement("span");
+      scoreBadge.className = "score-badge";
+      scoreBadge.textContent = `${score}%`;
+      headerRight.appendChild(scoreBadge);
+    }
     const comments = getAnswerComments(row);
     if (comments.length) {
       const commentBadge = document.createElement("span");
@@ -898,6 +927,14 @@
       commentBadge.textContent = "Comment";
       commentBadge.title = comments.join("\n");
       headerRight.appendChild(commentBadge);
+    }
+    const evidence = getAnswerEvidence(row);
+    if (evidence.length) {
+      const evidenceBadge = document.createElement("span");
+      evidenceBadge.className = "evidence-badge";
+      evidenceBadge.textContent = "Evidence";
+      evidenceBadge.title = evidence.join("\n");
+      headerRight.appendChild(evidenceBadge);
     }
     headerRight.appendChild(previewBtn);
     header.appendChild(meta);
@@ -1121,9 +1158,10 @@
     const ws = row.workstate;
     if (shouldFilterRow(row, ws)) return null;
 
+    const score = calculateScore(row);
     const card = document.createElement("div");
     card.className = "row-card";
-    const { header, previewBtn } = createRowHeader(row);
+    const { header, previewBtn } = createRowHeader(row, score);
     card.appendChild(header);
 
     const details = createSelfAssessmentDetails(row);
@@ -1332,6 +1370,16 @@
         const colYes = headerRowIndex >= 0 ? findCol("ja") : 3;
         const colNo = headerRowIndex >= 0 ? findCol("nein") : 4;
         const colComment = headerRowIndex >= 0 ? findCol("bemerk") : 5;
+        const pickCol = (...labels) => {
+          for (const label of labels) {
+            const idx = findCol(label);
+            if (idx >= 0) return idx;
+          }
+          return -1;
+        };
+        const colEvidence = headerRowIndex >= 0
+          ? pickCol("nachweis", "beleg", "evidence", "document")
+          : -1;
         const dataRows = headerRowIndex >= 0 ? rows.slice(headerRowIndex + 1) : rows;
         const answerMap = new Map();
 
@@ -1343,10 +1391,11 @@
           const yesVal = String(row[colYes] || "").trim().toLowerCase();
           const noVal = String(row[colNo] || "").trim().toLowerCase();
           const comment = String(row[colComment] || "").trim();
+          const evidence = colEvidence >= 0 ? String(row[colEvidence] || "").trim() : "";
           let answer = null;
           if (yesVal === "x" || yesVal === "ja") answer = 1;
           if (noVal === "x" || noVal === "nein") answer = 0;
-          answerMap.set(normalized, { answer, comment });
+          answerMap.set(normalized, { answer, comment, evidence });
         });
 
         const idMap = new Map();
@@ -1371,6 +1420,9 @@
           }
           if (payload.comment) {
             item.comment = payload.comment;
+          }
+          if (payload.evidence) {
+            item.evidence = payload.evidence;
           }
           applied += 1;
         });
