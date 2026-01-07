@@ -9,7 +9,13 @@ Option Explicit
 Public Sub ConvertMarkdownInSelection()
     Dim rng As Range
     Set rng = Selection.Range
-    ConvertMarkdownRange rng
+    Dim cc As ContentControl
+    If rng.ContentControls.Count > 0 Then
+        Set cc = rng.ContentControls(1)
+        ConvertMarkdownWithUnlock cc, rng
+    Else
+        ConvertMarkdownRange rng
+    End If
 End Sub
 
 Public Sub ConvertMarkdownInContentControl()
@@ -19,7 +25,23 @@ Public Sub ConvertMarkdownInContentControl()
         MsgBox "Content control 'Chapter1' not found.", vbExclamation
         Exit Sub
     End If
-    ConvertMarkdownRange cc.Range
+    ConvertMarkdownWithUnlock cc, cc.Range
+End Sub
+
+Private Sub ConvertMarkdownWithUnlock(ByVal cc As ContentControl, ByVal rng As Range)
+    Dim lockContents As Boolean
+    Dim lockControl As Boolean
+    lockContents = cc.LockContents
+    lockControl = cc.LockContentControl
+    On Error Resume Next
+    If lockContents Then cc.LockContents = False
+    If lockControl Then cc.LockContentControl = False
+    On Error GoTo 0
+    ConvertMarkdownRange rng
+    On Error Resume Next
+    If lockContents Then cc.LockContents = True
+    If lockControl Then cc.LockContentControl = True
+    On Error GoTo 0
 End Sub
 
 Private Sub ConvertMarkdownRange(ByVal rng As Range)
@@ -54,8 +76,10 @@ Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal a
 
     If asBullet Then
         rng.ListFormat.ApplyBulletDefault
+        ApplyParagraphStyle rng, "ListBullet"
     Else
         rng.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
+        ApplyParagraphStyle rng, "BodyText"
     End If
 
     AppendFormattedText rng, line
@@ -109,3 +133,9 @@ Private Function FindContentControl(ByVal title As String) As ContentControl
         End If
     Next cc
 End Function
+
+Private Sub ApplyParagraphStyle(ByVal rng As Range, ByVal styleName As String)
+    On Error Resume Next
+    rng.Paragraphs(1).Range.Style = styleName
+    On Error GoTo 0
+End Sub

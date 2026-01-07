@@ -56,8 +56,11 @@ Public Sub ImportChapter1Table()
         Exit Sub
     End If
 
+    Dim includedSections As Object
+    Set includedSections = BuildIncludedSections(rows)
+
     Dim tableRowCount As Long
-    tableRowCount = CountDataRows(rows)
+    tableRowCount = CountDataRows(rows, includedSections)
     If tableRowCount = 0 Then
         MsgBox "No data rows found in Chapter 1.", vbExclamation
         Exit Sub
@@ -69,12 +72,13 @@ Public Sub ImportChapter1Table()
     rng.Collapse wdCollapseStart
 
     Dim tbl As Table
-    Set tbl = ActiveDocument.Tables.Add(rng, tableRowCount + 1, 3)
+    Set tbl = ActiveDocument.Tables.Add(rng, tableRowCount + 1, 4)
     tbl.Borders.Enable = True
     tbl.Rows(1).Range.Font.Bold = True
     tbl.Cell(1, 1).Range.Text = "ID"
     tbl.Cell(1, 2).Range.Text = "Finding"
     tbl.Cell(1, 3).Range.Text = "Recommendation"
+    tbl.Cell(1, 4).Range.Text = "Priority"
 
     Dim row As Variant
     Dim targetRow As Long
@@ -82,11 +86,21 @@ Public Sub ImportChapter1Table()
 
     For Each row In rows
         If IsSectionRow(row) Then
-            ' skip section headers
-        Else
+            If ShouldIncludeSection(row, includedSections) Then
+                tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row)
+                tbl.Cell(targetRow, 2).Range.Text = ""
+                tbl.Cell(targetRow, 3).Range.Text = ""
+                tbl.Cell(targetRow, 4).Range.Text = ""
+                tbl.Rows(targetRow).Range.Font.Bold = True
+                tbl.Rows(targetRow).Range.Style = "BodyText"
+                targetRow = targetRow + 1
+            End If
+        ElseIf IsIncludedRow(row) Then
             tbl.Cell(targetRow, 1).Range.Text = SafeText(row, "id")
             tbl.Cell(targetRow, 2).Range.Text = ResolveFinding(row)
             tbl.Cell(targetRow, 3).Range.Text = ResolveRecommendation(row)
+            tbl.Cell(targetRow, 4).Range.Text = ""
+            tbl.Rows(targetRow).Range.Style = "BodyText"
             targetRow = targetRow + 1
         End If
     Next row
@@ -153,13 +167,75 @@ Private Function IsSectionRow(ByVal row As Object) As Boolean
 SafeExit:
 End Function
 
-Private Function CountDataRows(ByVal rows As Object) As Long
+Private Function CountDataRows(ByVal rows As Object, ByVal includedSections As Object) As Long
     Dim row As Variant
     Dim count As Long
     For Each row In rows
-        If Not IsSectionRow(row) Then count = count + 1
+        If IsSectionRow(row) Then
+            If ShouldIncludeSection(row, includedSections) Then count = count + 1
+        ElseIf IsIncludedRow(row) Then
+            count = count + 1
+        End If
     Next row
     CountDataRows = count
+End Function
+
+Private Function BuildIncludedSections(ByVal rows As Object) As Object
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    Dim row As Variant
+    For Each row In rows
+        If Not IsSectionRow(row) Then
+            If IsIncludedRow(row) Then
+                Dim sectionKey As String
+                sectionKey = ""
+                On Error Resume Next
+                If row.Exists("sectionId") Then sectionKey = CStr(row("sectionId"))
+                On Error GoTo 0
+                If Len(sectionKey) > 0 Then dict(sectionKey) = True
+            End If
+        End If
+    Next row
+    Set BuildIncludedSections = dict
+End Function
+
+Private Function ShouldIncludeSection(ByVal row As Object, ByVal includedSections As Object) As Boolean
+    Dim key As String
+    key = ""
+    On Error Resume Next
+    If row.Exists("id") Then key = CStr(row("id"))
+    On Error GoTo 0
+    If Len(key) = 0 Then Exit Function
+    If includedSections.Exists(key) Then ShouldIncludeSection = True
+End Function
+
+Private Function SafeSectionTitle(ByVal row As Object) As String
+    Dim title As String
+    title = ""
+    On Error Resume Next
+    If row.Exists("title") Then title = CStr(row("title"))
+    On Error GoTo 0
+    If Len(title) = 0 Then
+        SafeSectionTitle = SafeText(row, "id")
+    Else
+        SafeSectionTitle = title
+    End If
+End Function
+
+Private Function IsIncludedRow(ByVal row As Object) As Boolean
+    Dim ws As Object
+    Set ws = GetObject(row, "workstate")
+    If ws Is Nothing Then
+        IsIncludedRow = True
+        Exit Function
+    End If
+    On Error Resume Next
+    If ws.Exists("includeFinding") Then
+        IsIncludedRow = CBool(ws("includeFinding"))
+    Else
+        IsIncludedRow = True
+    End If
+    On Error GoTo 0
 End Function
 
 Private Function ResolveFinding(ByVal row As Object) As String
@@ -186,6 +262,12 @@ Private Function ResolveRecommendation(ByVal row As Object) As String
     Dim ws As Object
     Set ws = GetObject(row, "workstate")
     If Not ws Is Nothing Then
+        If ws.Exists("includeRecommendation") Then
+            If Not CBool(ws("includeRecommendation")) Then
+                ResolveRecommendation = ""
+                Exit Function
+            End If
+        End If
         If ws.Exists("selectedLevel") Then
             levelKey = CStr(ws("selectedLevel"))
         End If
