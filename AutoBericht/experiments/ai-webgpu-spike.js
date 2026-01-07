@@ -6,6 +6,7 @@ const allowRemoteEl = byId("allow-remote");
 const deviceSelectEl = byId("device-select");
 const loadLibBtn = byId("load-lib");
 const checkWebgpuBtn = byId("check-webgpu");
+const probeWasmBtn = byId("probe-wasm");
 const envStatusEl = byId("env-status");
 
 const asrModelEl = byId("asr-model");
@@ -70,6 +71,7 @@ const DEFAULTS = {
 };
 
 const ORT_VERSION = "1.18.0";
+const WASM_MAGIC = ["00", "61", "73", "6d"];
 
 function configureOrt() {
   if (!window.ort?.env?.wasm) return;
@@ -98,6 +100,44 @@ function log(message) {
   const timestamp = new Date().toISOString().replace("T", " ").replace("Z", "");
   logEl.textContent += `[${timestamp}] ${message}\n`;
   logEl.scrollTop = logEl.scrollHeight;
+}
+
+function toHex(bytes) {
+  return Array.from(bytes)
+    .map((byte) => byte.toString(16).padStart(2, "0"))
+    .join(" ");
+}
+
+async function probeWasmFile(label, url) {
+  const response = await fetch(url, { cache: "no-store" });
+  const contentLength = response.headers.get("content-length") || "unknown";
+  if (!response.ok) {
+    log(`WASM probe failed: ${label} status=${response.status}`);
+    return;
+  }
+  const buffer = await response.arrayBuffer();
+  const header = new Uint8Array(buffer.slice(0, 4));
+  const magic = toHex(header);
+  const okMagic = WASM_MAGIC.join(" ") === magic;
+  log(
+    `WASM probe: ${label} size=${buffer.byteLength} header=${magic} ok=${okMagic} content-length=${contentLength}`
+  );
+}
+
+async function probeWasmFiles() {
+  if (!window.ort?.env?.wasm?.wasmPaths) {
+    log("WASM probe skipped: ort.env.wasm.wasmPaths not set yet.");
+    return;
+  }
+  const paths = window.ort.env.wasm.wasmPaths;
+  if (typeof paths === "string") {
+    log(`WASM probe base path: ${paths}`);
+    return;
+  }
+  const entries = Object.entries(paths);
+  for (const [label, url] of entries) {
+    await probeWasmFile(label, url);
+  }
 }
 
 function setStatus(el, message) {
@@ -788,6 +828,8 @@ function applyDefaults() {
 
 async function autoStart() {
   applyDefaults();
+  log(`User agent: ${navigator.userAgent}`);
+  log(`Cross-origin isolated: ${String(crossOriginIsolated)}`);
   configureOrt();
   await checkWebGpu();
   await loadLibrary();
@@ -799,6 +841,10 @@ loadLibBtn.addEventListener("click", () => {
 
 checkWebgpuBtn.addEventListener("click", () => {
   checkWebGpu();
+});
+
+probeWasmBtn.addEventListener("click", () => {
+  probeWasmFiles();
 });
 
 runAsrBtn.addEventListener("click", () => {
