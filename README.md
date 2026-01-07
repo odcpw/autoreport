@@ -10,7 +10,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 - The minimal editor in `AutoBericht/mini/` is the current direction.
 - The legacy MVP UI now lives in `AutoBericht/legacy/` (reference only).
-- See `docs/architecture/redesign-spec-2026-01-04.md` for the interview-based spec.
+- See `AutoBericht/docs/design-spec.md` for the interview-based spec.
 
 ### System Components
 
@@ -79,7 +79,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Libraries bundled in `AutoBericht/libs/`
    - See [AutoBericht README](AutoBericht/README.md)
 
-**See**: [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md)
+**See**: [Design Spec](AutoBericht/docs/design-spec.md)
 
 ## Documentation
 
@@ -90,7 +90,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 | Document | Description |
 |----------|-------------|
 | [System Architecture](docs/architecture/system-overview.md) | Current redesign architecture |
-| [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md) | Interview-based requirements |
+| [Design Spec](AutoBericht/docs/design-spec.md) | Interview-based requirements |
 | [Redesign Workflow](docs/guides/redesign-workflow.md) | Minimal editor workflow |
 | [VBA Modules Reference](legacy/macros/README.md) | VBA module documentation (legacy export layer) |
 
@@ -161,9 +161,9 @@ Structured Sheets      project.json
 2. **Edit**: Web UI loads `project.json` or Excel file directly
 3. **Export**: Generate reports and update `project.json`
 
-**See**: [Redesign Spec](docs/architecture/redesign-spec-2026-01-04.md)
+**See**: [Design Spec](AutoBericht/docs/design-spec.md)
 
-**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `docs/architecture/redesign-spec-2026-01-04.md` and `docs/STATUS.md`). Legacy `project.json` docs are archived in `legacy/docs/architecture/data-model.md`.
+**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `AutoBericht/docs/design-spec.md` and `docs/STATUS.md`). Legacy `project.json` docs are archived in `legacy/docs/architecture/data-model.md`.
 
 ## Contributing
 

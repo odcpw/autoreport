@@ -77,5 +77,5 @@ project_sidecar.json (canonical state)
 
 ## Related
 
-- [Redesign Spec](redesign-spec-2026-01-04.md)
+- [Design Spec](design-spec.md)
 - [Redesign Workflow](../guides/redesign-workflow.md)

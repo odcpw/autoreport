@@ -1,7 +1,7 @@
 # AutoBericht System Architecture Overview (Legacy)
 
 > This overview reflects the pre-redesign architecture. For the 2026 redesign
-> direction, see `docs/architecture/redesign-spec-2026-01-04.md`.
+> direction, see `AutoBericht/docs/design-spec.md`.
 
 ## Purpose
 
