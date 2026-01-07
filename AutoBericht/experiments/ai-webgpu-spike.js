@@ -20,6 +20,7 @@ const visionModelEl = byId("vision-model");
 const visionQuestionEl = byId("vision-question");
 const visionFileEl = byId("vision-file");
 const runVisionBtn = byId("run-vision");
+const loadVisionOnnxBtn = byId("load-vision-onnx");
 const askVisionBtn = byId("ask-vision");
 const visionStatusEl = byId("vision-status");
 const visionPreviewEl = byId("vision-preview");
@@ -80,6 +81,11 @@ function configureOrt() {
   window.ort.env.wasm.simd = true;
   const canThread = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated;
   window.ort.env.wasm.numThreads = canThread ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
+  log(
+    `ORT wasmPaths set. base=${base} threads=${window.ort.env.wasm.numThreads} crossOriginIsolated=${String(
+      canThread
+    )}`
+  );
 }
 
 function log(message) {
@@ -220,6 +226,7 @@ async function runAsr() {
     asrOutputEl.value = typeof result === "string" ? result : JSON.stringify(result, null, 2);
     setStatus(asrStatusEl, "Transcription complete.");
   } catch (err) {
+    log(err?.stack || String(err));
     setStatus(asrStatusEl, `ASR failed: ${err.message}`);
   }
 }
@@ -266,6 +273,7 @@ async function runVision() {
     visionOutputEl.textContent = JSON.stringify(result, null, 2);
     setStatus(visionStatusEl, "Vision inference complete.");
   } catch (err) {
+    log(err?.stack || String(err));
     setStatus(visionStatusEl, `Vision failed: ${err.message}`);
   }
 }
@@ -539,16 +547,45 @@ function decodeTokens(tokenizer, ids) {
 
 async function loadOrtSession(modelPath, providers) {
   const cacheKey = `${modelPath}::${providers.join(",")}`;
-  if (state.ortSessions.has(cacheKey)) return state.ortSessions.get(cacheKey);
+  if (state.ortSessions.has(cacheKey)) {
+    log(`ORT session cache hit: ${modelPath}`);
+    return state.ortSessions.get(cacheKey);
+  }
   if (!window.ort) {
     throw new Error("onnxruntime-web not loaded (vendor/ort.webgpu.min.js missing).");
   }
   configureOrt();
+  log(`ORT create session: ${modelPath} providers=${providers.join(",")}`);
   const session = await window.ort.InferenceSession.create(modelPath, {
     executionProviders: providers,
   });
   state.ortSessions.set(cacheKey, session);
+  log(`ORT session ready: ${modelPath}`);
   return session;
+}
+
+async function warmupOrtSessions(modelId) {
+  const config = resolveOrtModelConfig(modelId);
+  if (!config) {
+    setStatus(visionStatusEl, `Unknown LiquidAI model config for ${modelId}`);
+    return;
+  }
+  if (!window.ort) {
+    setStatus(visionStatusEl, "onnxruntime-web not loaded (vendor/ort.webgpu.min.js missing).");
+    return;
+  }
+  const base = getLocalModelBase(modelId);
+  const providers = resolveOrtProvider();
+  try {
+    setStatus(visionStatusEl, `Loading ONNX sessions (${modelId}) ...`);
+    await loadOrtSession(`${base}${config.embedTokens}`, providers);
+    await loadOrtSession(`${base}${config.embedImages}`, providers);
+    await loadOrtSession(`${base}${config.decoder}`, providers);
+    setStatus(visionStatusEl, "ONNX sessions loaded.");
+  } catch (err) {
+    log(err?.stack || String(err));
+    setStatus(visionStatusEl, `ONNX load failed: ${err.message}`);
+  }
 }
 
 async function runOrtVision(modelId, file) {
@@ -598,6 +635,7 @@ async function runOrtVision(modelId, file) {
     visionOutputEl.textContent = JSON.stringify(summary, null, 2);
     setStatus(visionStatusEl, "ONNX embedding tests complete.");
   } catch (err) {
+    log(err?.stack || String(err));
     setStatus(visionStatusEl, `ONNX vision failed: ${err.message}`);
   }
 }
@@ -726,6 +764,7 @@ async function runOrtChat(modelId, file, question) {
     );
     setStatus(visionStatusEl, "LiquidAI chat complete.");
   } catch (err) {
+    log(err?.stack || String(err));
     setStatus(visionStatusEl, `LiquidAI chat failed: ${err.message}`);
   }
 }
@@ -764,6 +803,15 @@ runVisionBtn.addEventListener("click", () => {
   runVision();
 });
 
+loadVisionOnnxBtn.addEventListener("click", () => {
+  const modelId = visionModelEl.value.trim();
+  if (!modelId) {
+    setStatus(visionStatusEl, "Enter a vision model id first.");
+    return;
+  }
+  warmupOrtSessions(modelId);
+});
+
 askVisionBtn.addEventListener("click", () => {
   const modelId = visionModelEl.value.trim();
   const file = visionFileEl.files[0];
@@ -793,5 +841,11 @@ localModelPathEl.addEventListener("change", () => {
 });
 
 window.addEventListener("DOMContentLoaded", () => {
+  window.addEventListener("error", (event) => {
+    log(`Window error: ${event.message}`);
+  });
+  window.addEventListener("unhandledrejection", (event) => {
+    log(`Unhandled rejection: ${event.reason?.message || String(event.reason)}`);
+  });
   autoStart();
 });
