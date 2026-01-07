@@ -36,7 +36,7 @@ This index points to the **current** redesign documentation.
 
 | Document | What You'll Learn |
 |----------|-------------------|
-| [Redesign Workflow](guides/redesign-workflow.md) | Minimal editor workflow |
+| [Workflow](../AutoBericht/docs/workflow.md) | Minimal editor workflow |
 
 ## Documentation Structure
 

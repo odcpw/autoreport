@@ -182,7 +182,6 @@
 
   const seedPathCandidates = (filename) => ([
     ["AutoBericht", "data", "seed", filename],
-    ["data", "seed", filename],
   ]);
 
   const readSeedFromProject = async (rootHandle, filename) => {
