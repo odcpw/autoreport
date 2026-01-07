@@ -1165,6 +1165,28 @@
     return label;
   };
 
+  const createMarkdownHint = () => {
+    const hint = document.createElement("span");
+    hint.className = "hint";
+    const icon = document.createElement("span");
+    icon.className = "hint__icon";
+    icon.textContent = "?";
+    const tooltip = document.createElement("span");
+    tooltip.className = "hint__tooltip";
+    tooltip.innerHTML = [
+      "Markdown:",
+      "<strong>**bold**</strong>,",
+      "<em>*italic*</em>,",
+      '<span class="hint__link">[text](url)</span>',
+      "<br>- List item",
+      "<br>Blank line = new paragraph",
+      "<br>Line breaks kept",
+    ].join(" ");
+    hint.appendChild(icon);
+    hint.appendChild(tooltip);
+    return hint;
+  };
+
   const createFindingField = (row, ws) => {
     const findingField = document.createElement("div");
     findingField.className = "field";
@@ -1172,11 +1194,7 @@
     findingHeader.className = "field-header";
     const findingLabel = document.createElement("label");
     findingLabel.textContent = "Finding";
-    const findingHint = document.createElement("span");
-    findingHint.className = "hint";
-    findingHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
-    findingHint.textContent = "?";
-    findingLabel.appendChild(findingHint);
+    findingLabel.appendChild(createMarkdownHint());
 
     const findingToggle = createToggle("Override", ws.useFindingOverride, (checked) => {
       ws.useFindingOverride = checked;
@@ -1225,11 +1243,7 @@
     recHeader.className = "field-header";
     const recLabel = document.createElement("label");
     recLabel.textContent = "Recommendation";
-    const recHint = document.createElement("span");
-    recHint.className = "hint";
-    recHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
-    recHint.textContent = "?";
-    recLabel.appendChild(recHint);
+    recLabel.appendChild(createMarkdownHint());
 
     const levelGroup = document.createElement("div");
     levelGroup.className = "level-group";
