@@ -206,6 +206,16 @@ button.ghost {
   flex-shrink: 0;
 }
 
+.reorder-controls {
+  display: inline-flex;
+  gap: 4px;
+}
+
+.reorder-controls button {
+  padding: 4px 8px;
+  font-size: 0.7rem;
+}
+
 .self-details {
   margin-bottom: 12px;
   padding: 10px 12px;

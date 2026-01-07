@@ -186,7 +186,10 @@
     filters: {
       mode: "all",
     },
-    photoIndex: new Map(),
+    photoIndex: {
+      report: new Map(),
+      observations: new Map(),
+    },
     photoRoot: "",
     photoOverlay: {
       tag: "",
@@ -210,31 +213,50 @@
   };
 
   const buildPhotoIndex = () => {
-    const index = new Map();
+    const reportIndex = new Map();
+    const observationIndex = new Map();
     const photoDoc = sidecarDoc?.photos;
     const photos = photoDoc?.photos || {};
     state.photoRoot = photoDoc?.photoRoot || "";
     Object.entries(photos).forEach(([path, data]) => {
-      const tags = data?.tags?.report || [];
-      tags.forEach((tag) => {
+      const reportTags = data?.tags?.report || [];
+      reportTags.forEach((tag) => {
         const key = String(tag || "").trim();
         if (!key) return;
-        if (!index.has(key)) index.set(key, []);
-        index.get(key).push({
+        if (!reportIndex.has(key)) reportIndex.set(key, []);
+        reportIndex.get(key).push({
+          path,
+          notes: data?.notes || "",
+        });
+      });
+      const observationTags = data?.tags?.observations || [];
+      observationTags.forEach((tag) => {
+        const key = String(tag || "").trim();
+        if (!key) return;
+        if (!observationIndex.has(key)) observationIndex.set(key, []);
+        observationIndex.get(key).push({
           path,
           notes: data?.notes || "",
         });
       });
     });
-    index.forEach((items) => {
+    reportIndex.forEach((items) => {
       items.sort((a, b) => a.path.localeCompare(b.path, "de", { numeric: true }));
     });
-    state.photoIndex = index;
+    observationIndex.forEach((items) => {
+      items.sort((a, b) => a.path.localeCompare(b.path, "de", { numeric: true }));
+    });
+    state.photoIndex = {
+      report: reportIndex,
+      observations: observationIndex,
+    };
   };
 
-  const getPhotosForTag = (tag) => {
+  const getPhotosForTag = (tag, kind = "report") => {
     if (!tag) return [];
-    return state.photoIndex.get(tag) || [];
+    const index = state.photoIndex?.[kind];
+    if (!index) return [];
+    return index.get(tag) || [];
   };
 
   const resolvePhotoFile = async (path) => {
@@ -285,14 +307,15 @@
     loadOverlayImage(current.path);
   };
 
-  const openPhotoOverlay = (tag) => {
-    const items = getPhotosForTag(tag);
+  const openPhotoOverlay = (tag, kind = "report") => {
+    const items = getPhotosForTag(tag, kind);
     if (!items.length) return;
     state.photoOverlay = {
       tag,
       items,
       index: 0,
       url: "",
+      kind,
     };
     if (photoOverlayEl) {
       photoOverlayEl.classList.add("is-open");
@@ -314,6 +337,7 @@
       items: [],
       index: 0,
       url: "",
+      kind: "report",
     };
   };
 
@@ -443,6 +467,7 @@
       sidecarDoc = JSON.parse(text);
       const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
       state.project = ensureObservationChapter(reportProject);
+      syncObservationChapterRows(state.project, sidecarDoc);
       ensureProjectMeta();
       buildPhotoIndex();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
@@ -454,6 +479,7 @@
       try {
         state.project = await loadSeedsForProject();
         ensureObservationChapter(state.project);
+        syncObservationChapterRows(state.project, sidecarDoc);
         ensureProjectMeta();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         sidecarDoc = null;
@@ -465,6 +491,7 @@
       } catch (seedErr) {
         state.project = structuredClone(defaultProject);
         ensureObservationChapter(state.project);
+        syncObservationChapterRows(state.project, sidecarDoc);
         state.selectedChapterId = state.project.chapters[0].id;
         sidecarDoc = null;
         buildPhotoIndex();
@@ -719,6 +746,92 @@
     }
     project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
     return project;
+  };
+
+  const slugifyTag = (value) => String(value || "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/gi, "-")
+    .replace(/^-+|-+$/g, "") || "tag";
+
+  const getObservationTagsFromSidecar = (doc) => {
+    const options = doc?.photos?.photoTagOptions?.observations || [];
+    return options
+      .map((opt) => (typeof opt === "string" ? opt : opt.value || opt.label))
+      .map((val) => String(val || "").trim())
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+  };
+
+  const buildObservationRow = (tag) => ({
+    id: `4.8:${slugifyTag(tag)}`,
+    type: "field_observation",
+    tag,
+    titleOverride: tag,
+    master: {
+      finding: "Es wurden folgende unsichere Situationen beobachtet.",
+      levels: {
+        "1": "",
+        "2": "",
+        "3": "",
+        "4": "",
+      },
+    },
+    customer: {
+      answer: null,
+      remark: "",
+      items: [],
+    },
+    workstate: {
+      selectedLevel: 1,
+      includeFinding: true,
+      includeRecommendation: true,
+      done: false,
+      useFindingOverride: true,
+      findingOverride: "Es wurden folgende unsichere Situationen beobachtet.",
+      useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
+      levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+    },
+  });
+
+  const syncObservationChapterRows = (project, doc) => {
+    if (!project?.chapters) return;
+    const chapter = project.chapters.find((item) => item.id === "4.8");
+    if (!chapter) return;
+    const tags = getObservationTagsFromSidecar(doc);
+    if (!tags.length) return;
+
+    const existingRows = (chapter.rows || []).filter((row) => row.kind !== "section");
+    const byTag = new Map();
+    existingRows.forEach((row) => {
+      const tag = row.tag || row.titleOverride;
+      if (tag) {
+        row.tag = tag;
+        row.titleOverride = tag;
+        byTag.set(tag, row);
+      }
+    });
+
+    const nextRows = tags.map((tag) => {
+      const existing = byTag.get(tag);
+      if (existing) {
+        existing.titleOverride = tag;
+        return existing;
+      }
+      return buildObservationRow(tag);
+    });
+
+    if (!chapter.meta) chapter.meta = {};
+    if (!Array.isArray(chapter.meta.order)) {
+      chapter.meta.order = nextRows.map((row) => row.id);
+    } else {
+      const order = chapter.meta.order.filter((id) => nextRows.some((row) => row.id === id));
+      nextRows.forEach((row) => {
+        if (!order.includes(row.id)) order.push(row.id);
+      });
+      chapter.meta.order = order;
+    }
+
+    chapter.rows = nextRows;
   };
 
   const extractReportProject = (doc) => {
@@ -991,8 +1104,8 @@
     });
   };
 
-  const createPhotoPill = (tag) => {
-    const items = getPhotosForTag(tag);
+  const createPhotoPill = (tag, kind = "report") => {
+    const items = getPhotosForTag(tag, kind);
     if (!items.length) return null;
     const pill = document.createElement("button");
     pill.type = "button";
@@ -1000,7 +1113,7 @@
     pill.textContent = `Photos ${items.length}`;
     pill.title = `${items.length} photos tagged ${tag}`;
     pill.addEventListener("click", () => {
-      openPhotoOverlay(tag);
+      openPhotoOverlay(tag, kind);
     });
     return pill;
   };
@@ -1045,12 +1158,13 @@
     return badge;
   };
 
-  const createRowHeader = (row, score) => {
+  const createRowHeader = (row, score, options = {}) => {
     const header = document.createElement("div");
     header.className = "row-header";
     const meta = document.createElement("div");
     meta.className = "row-meta";
-    meta.textContent = `${row.id} ${row.titleOverride || ""}`.trim();
+    const displayId = options.displayId || row.id;
+    meta.textContent = `${displayId} ${row.titleOverride || ""}`.trim();
     const previewBtn = document.createElement("button");
     previewBtn.className = "preview-btn";
     previewBtn.type = "button";
@@ -1063,6 +1177,12 @@
       scoreBadge.className = "score-badge";
       scoreBadge.textContent = `${score}%`;
       headerRight.appendChild(scoreBadge);
+    }
+    if (options.photoPill) {
+      headerRight.appendChild(options.photoPill);
+    }
+    if (options.reorderControls) {
+      headerRight.appendChild(options.reorderControls);
     }
     const comments = getAnswerComments(row);
     if (comments.length) {
@@ -1103,6 +1223,53 @@
     });
     details.appendChild(list);
     return details;
+  };
+
+  const orderObservationRows = (chapter) => {
+    const rows = (chapter.rows || []).filter((row) => row.kind !== "section");
+    const order = chapter.meta?.order;
+    if (!order || !order.length) return rows;
+    const byId = new Map(rows.map((row) => [row.id, row]));
+    const ordered = [];
+    order.forEach((id) => {
+      const match = byId.get(id);
+      if (match) ordered.push(match);
+    });
+    rows.forEach((row) => {
+      if (!ordered.includes(row)) ordered.push(row);
+    });
+    return ordered;
+  };
+
+  const moveObservationRow = (chapter, rowId, delta) => {
+    if (!chapter.meta || !Array.isArray(chapter.meta.order)) return;
+    const order = [...chapter.meta.order];
+    const index = order.indexOf(rowId);
+    if (index === -1) return;
+    const next = index + delta;
+    if (next < 0 || next >= order.length) return;
+    [order[index], order[next]] = [order[next], order[index]];
+    chapter.meta.order = order;
+    scheduleAutosave();
+    renderRows();
+  };
+
+  const createReorderControls = (chapter, row) => {
+    const wrapper = document.createElement("div");
+    wrapper.className = "reorder-controls";
+    const up = document.createElement("button");
+    up.type = "button";
+    up.className = "ghost";
+    up.textContent = "▲";
+    up.addEventListener("click", () => moveObservationRow(chapter, row.id, -1));
+    const down = document.createElement("button");
+    down.type = "button";
+    down.className = "ghost";
+    down.textContent = "▼";
+    down.addEventListener("click", () => moveObservationRow(chapter, row.id, 1));
+    wrapper.appendChild(up);
+    wrapper.appendChild(down);
+    return wrapper;
   };
 
   const createToggle = (labelText, checked, onChange) => {
@@ -1311,7 +1478,7 @@
     return false;
   };
 
-  const createRowCard = (row) => {
+  const createRowCard = (row, options = {}) => {
     ensureWorkstate(row);
     const ws = row.workstate;
     if (shouldFilterRow(row, ws)) return null;
@@ -1319,7 +1486,14 @@
     const score = calculateScore(row);
     const card = document.createElement("div");
     card.className = "row-card";
-    const { header, previewBtn } = createRowHeader(row, score);
+    const isObservation = options.chapter?.id === "4.8";
+    const observationPill = isObservation && row.tag ? createPhotoPill(row.tag, "observations") : null;
+    const reorderControls = isObservation ? createReorderControls(options.chapter, row) : null;
+    const { header, previewBtn } = createRowHeader(row, score, {
+      displayId: options.displayId,
+      photoPill: observationPill,
+      reorderControls,
+    });
     card.appendChild(header);
 
     const details = createSelfAssessmentDetails(row);
@@ -1340,13 +1514,22 @@
     const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
     if (!chapter) return;
     renderChapterTitle(chapter);
+    let rows = chapter.rows || [];
+    let displayIds = new Map();
+    if (chapter.id === "4.8") {
+      rows = orderObservationRows(chapter);
+      rows.forEach((row, index) => {
+        displayIds.set(row.id, `4.8.${index + 1}`);
+      });
+    }
 
-    chapter.rows.forEach((row) => {
+    rows.forEach((row) => {
       if (row.kind === "section") {
         rowsEl.appendChild(createSectionRow(row));
         return;
       }
-      const card = createRowCard(row);
+      const displayId = displayIds.get(row.id);
+      const card = createRowCard(row, { chapter, displayId });
       if (card) rowsEl.appendChild(card);
     });
   };
