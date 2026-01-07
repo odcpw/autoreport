@@ -424,15 +424,23 @@
       }
       if (!tags.has(val)) tags.set(val, lbl || val);
     };
+    const shouldSkipSection = (sectionId) => {
+      const topLevel = String(sectionId || "").split(".")[0];
+      return ["11", "12", "13", "14"].includes(topLevel);
+    };
     project.chapters.forEach((chapter) => {
       addTag(chapter.id, chapter.title?.de || chapter.title || chapter.id);
       (chapter.rows || []).forEach((row) => {
         if (row.kind === "section") {
-          addTag(row.id, row.title || row.id);
+          if (!shouldSkipSection(row.id)) {
+            addTag(row.id, row.title || row.id);
+          }
           return;
         }
         if (row.sectionId) {
-          addTag(row.sectionId, row.sectionLabel || row.sectionId);
+          if (!shouldSkipSection(row.sectionId)) {
+            addTag(row.sectionId, row.sectionLabel || row.sectionId);
+          }
         }
       });
     });
