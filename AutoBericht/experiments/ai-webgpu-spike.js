@@ -8,6 +8,7 @@ const deviceSelectEl = byId("device-select");
 const loadLibBtn = byId("load-lib");
 const checkWebgpuBtn = byId("check-webgpu");
 const probeWasmBtn = byId("probe-wasm");
+const reportWebgpuBtn = byId("report-webgpu");
 const envStatusEl = byId("env-status");
 
 const asrModelEl = byId("asr-model");
@@ -23,6 +24,8 @@ const visionQuestionEl = byId("vision-question");
 const visionFileEl = byId("vision-file");
 const runVisionBtn = byId("run-vision");
 const loadVisionOnnxBtn = byId("load-vision-onnx");
+const loadVisionOnnxWasmBtn = byId("load-vision-onnx-wasm");
+const loadVisionOnnxWebgpuBtn = byId("load-vision-onnx-webgpu");
 const askVisionBtn = byId("ask-vision");
 const visionStatusEl = byId("vision-status");
 const visionPreviewEl = byId("vision-preview");
@@ -192,6 +195,26 @@ async function checkWebGpu() {
     setStatus(envStatusEl, "WebGPU adapter ready.");
   } catch (err) {
     setStatus(envStatusEl, `WebGPU check failed: ${err.message}`);
+  }
+}
+
+async function reportWebGpu() {
+  if (!("gpu" in navigator)) {
+    log("GPU report: navigator.gpu missing.");
+    return;
+  }
+  try {
+    const adapter = await navigator.gpu.requestAdapter();
+    if (!adapter) {
+      log("GPU report: adapter not available.");
+      return;
+    }
+    const features = adapter.features ? Array.from(adapter.features.values()) : [];
+    const limits = adapter.limits ? { ...adapter.limits } : {};
+    log(`GPU report: features=${features.join(", ") || "none"}`);
+    log(`GPU report: limits=${JSON.stringify(limits)}`);
+  } catch (err) {
+    log(`GPU report failed: ${err.message}`);
   }
 }
 
@@ -638,7 +661,7 @@ async function loadOrtSession(modelPath, providers) {
   return session;
 }
 
-async function warmupOrtSessions(modelId) {
+async function warmupOrtSessions(modelId, providersOverride) {
   await ensureOrtLoaded();
   const config = resolveOrtModelConfig(modelId);
   if (!config) {
@@ -650,7 +673,7 @@ async function warmupOrtSessions(modelId) {
     return;
   }
   const base = getLocalModelBase(modelId);
-  const providers = resolveOrtProvider();
+  const providers = providersOverride || resolveOrtProvider();
   try {
     setStatus(visionStatusEl, `Loading ONNX sessions (${modelId}) ...`);
     await loadOrtSession(`${base}${config.embedTokens}`, providers);
@@ -888,6 +911,12 @@ probeWasmBtn.addEventListener("click", () => {
   probeWasmFiles();
 });
 
+if (reportWebgpuBtn) {
+  reportWebgpuBtn.addEventListener("click", () => {
+    reportWebGpu();
+  });
+}
+
 runAsrBtn.addEventListener("click", () => {
   runAsr();
 });
@@ -907,6 +936,28 @@ if (loadVisionOnnxBtn) {
   });
 } else {
   log("Load ONNX sessions button missing in DOM.");
+}
+
+if (loadVisionOnnxWasmBtn) {
+  loadVisionOnnxWasmBtn.addEventListener("click", () => {
+    const modelId = visionModelEl.value.trim();
+    if (!modelId) {
+      setStatus(visionStatusEl, "Enter a vision model id first.");
+      return;
+    }
+    warmupOrtSessions(modelId, ORT_PROVIDERS.wasm);
+  });
+}
+
+if (loadVisionOnnxWebgpuBtn) {
+  loadVisionOnnxWebgpuBtn.addEventListener("click", () => {
+    const modelId = visionModelEl.value.trim();
+    if (!modelId) {
+      setStatus(visionStatusEl, "Enter a vision model id first.");
+      return;
+    }
+    warmupOrtSessions(modelId, ORT_PROVIDERS.webgpu);
+  });
 }
 
 askVisionBtn.addEventListener("click", () => {
