@@ -48,6 +48,7 @@
         rows: [
           {
             id: "1.1.1",
+            type: "standard",
             titleOverride: "Unternehmensleitbild",
             master: {
               finding: "Das Unternehmen verfuegt nicht ueber ein Leitbild.",
@@ -82,6 +83,7 @@
           },
           {
             id: "1.1.2",
+            type: "standard",
             titleOverride: "Strategie",
             master: {
               finding: "Es fehlt eine dokumentierte Sicherheitsstrategie.",
@@ -117,11 +119,12 @@
         ],
       },
       {
-        id: "4.6",
-        title: { de: "Feldbeobachtungen" },
+        id: "4.8",
+        title: { de: "Beobachtungen" },
         rows: [
           {
-            id: "4.6.1",
+            id: "4.8.1",
+            type: "field_observation",
             titleOverride: "Regale",
             master: {
               finding: "Regale sind nicht gegen Kippen gesichert.",
@@ -137,9 +140,9 @@
               remark: "",
               items: [
                 {
-                  id: "4.6.1",
+                  id: "4.8.1",
                   question: "Sind Regale gegen Kippen gesichert?",
-                  collapsedId: "4.6.1",
+                  collapsedId: "4.8.1",
                 },
               ],
             },
@@ -362,6 +365,14 @@
     return chapter.id || "";
   };
 
+  const formatChapterLabel = (chapter) => {
+    if (!chapter) return "";
+    const title = getChapterTitle(chapter);
+    const id = chapter.id || "";
+    if (title && id) return `${id} ${title}`.trim();
+    return title || id;
+  };
+
   const toText = (value) => {
     if (Array.isArray(value)) return value.join("\n");
     if (value == null) return "";
@@ -442,7 +453,11 @@
     (selbstData.items || []).forEach((item) => {
       const collapsedId = item.collapsedId || item.groupId || item.id;
       if (!collapsedId) return;
-      const chapterId = String(collapsedId).split(".")[0];
+      const rawId = String(collapsedId);
+      let chapterId = rawId.split(".")[0];
+      if (rawId === "4.8" || rawId.startsWith("4.8.")) {
+        chapterId = "4.8";
+      }
       const group = groups.get(collapsedId) || {
         id: collapsedId,
         chapterId,
@@ -461,7 +476,9 @@
       const chapterId = group.chapterId || "0";
       const chapter = chaptersById.get(chapterId) || {
         id: chapterId,
-        title: { de: group.chapterLabel || `Kapitel ${chapterId}` },
+        title: {
+          de: group.chapterLabel || (chapterId === "4.8" ? "Beobachtungen" : `Kapitel ${chapterId}`),
+        },
         rows: [],
       };
       const master = libraryMap.get(group.id) || null;
@@ -469,6 +486,7 @@
       const sectionId = String(group.id).split(".").slice(0, 2).join(".");
       chapter.rows.push({
         id: group.id,
+        type: chapterId === "4.8" ? "field_observation" : "standard",
         sectionId,
         sectionLabel,
         titleOverride: group.items[0]?.question || "",
@@ -515,6 +533,20 @@
       });
       chapter.rows = withSections;
     });
+
+    if (!chaptersById.has("4.8")) {
+      chapters.push({
+        id: "4.8",
+        title: { de: "Beobachtungen" },
+        rows: [],
+      });
+      chapters.sort((a, b) => {
+        const aNum = Number(a.id);
+        const bNum = Number(b.id);
+        if (Number.isNaN(aNum) || Number.isNaN(bNum)) return String(a.id).localeCompare(String(b.id));
+        return aNum - bNum;
+      });
+    }
 
     return {
       meta: {
@@ -820,8 +852,7 @@
     chapterListEl.innerHTML = "";
     state.project.chapters.forEach((chapter) => {
       const button = document.createElement("button");
-      const chapterLabel = getChapterTitle(chapter);
-      const buttonLabel = chapterLabel || chapter.id;
+      const buttonLabel = formatChapterLabel(chapter);
       button.textContent = buttonLabel;
       button.title = buttonLabel;
       button.className = chapter.id === state.selectedChapterId ? "active" : "";
@@ -838,7 +869,7 @@
     const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
     if (!chapter) return;
     const chapterTitle = getChapterTitle(chapter);
-    chapterTitleEl.textContent = chapterTitle || chapter.id;
+    chapterTitleEl.textContent = formatChapterLabel(chapter);
 
     chapter.rows.forEach((row) => {
       if (row.kind === "section") {

@@ -45,6 +45,8 @@ Public Sub ImportChapter1Table()
 
     Dim chapter As Object
     Set chapter = chapters.Item(1)
+    Dim chapterId As String
+    chapterId = SafeText(chapter, "id")
 
     Dim insertRng As Range
     Set insertRng = ResolveInsertRange("Chapter1")
@@ -62,6 +64,9 @@ Public Sub ImportChapter1Table()
 
     Dim includedSections As Object
     Set includedSections = BuildIncludedSections(rows)
+
+    Dim renumberMap As Object
+    Set renumberMap = BuildRenumberMap(rows, chapterId)
 
     Dim tableRowCount As Long
     tableRowCount = CountDataRows(rows, includedSections)
@@ -92,13 +97,13 @@ Public Sub ImportChapter1Table()
                 On Error Resume Next
                 tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 4)
                 On Error GoTo 0
-                tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row)
+                tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row, renumberMap)
                 tbl.Rows(targetRow).Range.Font.Bold = True
                 tbl.Rows(targetRow).Range.Style = STYLE_SECTION
                 targetRow = targetRow + 1
             End If
         ElseIf IsIncludedRow(row) Then
-            tbl.Cell(targetRow, 1).Range.Text = SafeText(row, "id")
+            tbl.Cell(targetRow, 1).Range.Text = ResolveDisplayId(row, renumberMap)
             tbl.Cell(targetRow, 2).Range.Text = ResolveFinding(row)
             tbl.Cell(targetRow, 3).Range.Text = ResolveRecommendation(row)
             tbl.Cell(targetRow, 4).Range.Text = ""
@@ -277,14 +282,23 @@ Private Function ShouldIncludeSection(ByVal row As Object, ByVal includedSection
     If includedSections.Exists(key) Then ShouldIncludeSection = True
 End Function
 
-Private Function SafeSectionTitle(ByVal row As Object) As String
+Private Function SafeSectionTitle(ByVal row As Object, ByVal renumberMap As Object) As String
     Dim title As String
     title = ""
     On Error Resume Next
     If row.Exists("title") Then title = CStr(row("title"))
     On Error GoTo 0
     If Len(title) = 0 Then
-        SafeSectionTitle = SafeText(row, "id")
+        title = SafeText(row, "id")
+    Else
+        title = title
+    End If
+    Dim sectionId As String
+    sectionId = ResolveSectionId(row)
+    Dim displayId As String
+    displayId = ResolveSectionDisplayId(sectionId, renumberMap)
+    If Len(displayId) > 0 Then
+        SafeSectionTitle = displayId & " " & title
     Else
         SafeSectionTitle = title
     End If
@@ -304,6 +318,104 @@ Private Function IsIncludedRow(ByVal row As Object) As Boolean
         IsIncludedRow = True
     End If
     On Error GoTo 0
+End Function
+
+Private Function BuildRenumberMap(ByVal rows As Object, ByVal chapterId As String) As Object
+    Dim map As Object
+    Set map = CreateObject("Scripting.Dictionary")
+    Dim sectionMap As Object
+    Set sectionMap = CreateObject("Scripting.Dictionary")
+    Dim sectionCounts As Object
+    Set sectionCounts = CreateObject("Scripting.Dictionary")
+    Dim itemCount As Long
+
+    Dim row As Variant
+    For Each row In rows
+        If IsSectionRow(row) Then
+            ' section rows handled via sectionMap
+        ElseIf IsIncludedRow(row) Then
+            Dim rowId As String
+            rowId = SafeText(row, "id")
+            If Len(rowId) = 0 Then GoTo ContinueLoop
+            If IsFieldObservationChapter(chapterId) Then
+                itemCount = itemCount + 1
+                map(rowId) = chapterId & "." & CStr(itemCount)
+            Else
+                Dim sectionKey As String
+                sectionKey = ResolveSectionId(row)
+                If Len(sectionKey) = 0 Then sectionKey = chapterId & ".1"
+                If Not sectionMap.Exists(sectionKey) Then
+                    sectionMap(sectionKey) = sectionMap.Count + 1
+                End If
+                Dim count As Long
+                If sectionCounts.Exists(sectionKey) Then
+                    count = CLng(sectionCounts(sectionKey)) + 1
+                Else
+                    count = 1
+                End If
+                sectionCounts(sectionKey) = count
+                map(rowId) = chapterId & "." & CStr(sectionMap(sectionKey)) & "." & CStr(count)
+            End If
+        End If
+ContinueLoop:
+    Next row
+
+    Set map("_sectionMap") = sectionMap
+    Set BuildRenumberMap = map
+End Function
+
+Private Function ResolveDisplayId(ByVal row As Object, ByVal renumberMap As Object) As String
+    Dim rowId As String
+    rowId = SafeText(row, "id")
+    If Len(rowId) = 0 Then Exit Function
+    On Error Resume Next
+    If Not renumberMap Is Nothing Then
+        If renumberMap.Exists(rowId) Then ResolveDisplayId = CStr(renumberMap(rowId))
+    End If
+    On Error GoTo 0
+    If Len(ResolveDisplayId) = 0 Then ResolveDisplayId = rowId
+End Function
+
+Private Function ResolveSectionId(ByVal row As Object) As String
+    On Error Resume Next
+    If row.Exists("sectionId") Then
+        ResolveSectionId = CStr(row("sectionId"))
+        Exit Function
+    End If
+    On Error GoTo 0
+    Dim rowId As String
+    rowId = SafeText(row, "id")
+    Dim parts() As String
+    parts = Split(rowId, ".")
+    If UBound(parts) >= 1 Then
+        ResolveSectionId = parts(0) & "." & parts(1)
+    End If
+End Function
+
+Private Function ResolveSectionDisplayId(ByVal sectionId As String, ByVal renumberMap As Object) As String
+    If Len(sectionId) = 0 Then Exit Function
+    On Error Resume Next
+    If Not renumberMap Is Nothing Then
+        Dim sectionMap As Object
+        If renumberMap.Exists("_sectionMap") Then
+            Set sectionMap = renumberMap("_sectionMap")
+            If Not sectionMap Is Nothing Then
+                If sectionMap.Exists(sectionId) Then
+                    Dim chapterPart As String
+                    chapterPart = Split(sectionId, ".")(0)
+                    ResolveSectionDisplayId = chapterPart & "." & CStr(sectionMap(sectionId))
+                End If
+            End If
+        End If
+    End If
+    On Error GoTo 0
+    If Len(ResolveSectionDisplayId) = 0 Then ResolveSectionDisplayId = sectionId
+End Function
+
+Private Function IsFieldObservationChapter(ByVal chapterId As String) As Boolean
+    If InStr(chapterId, ".") > 0 Then
+        IsFieldObservationChapter = True
+    End If
 End Function
 
 Private Function ResolveFinding(ByVal row As Object) As String

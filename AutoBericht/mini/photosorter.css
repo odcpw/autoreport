@@ -295,16 +295,28 @@ button[disabled] {
 
 .panel__controls {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 4px;
   margin-bottom: 4px;
 }
 
-.panel__controls input {
+.panel__controls input,
+.panel__controls select,
+.panel__controls button {
   border-radius: 6px;
   border: 1px solid #d7d0c7;
   padding: 4px 6px;
   font-size: 0.68rem;
+}
+
+.panel__controls button {
+  background: #f8f5ef;
+  cursor: pointer;
+}
+
+.panel__controls button:disabled {
+  opacity: 0.6;
+  cursor: default;
 }
 
 .panel__tags {

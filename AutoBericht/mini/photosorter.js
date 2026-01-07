@@ -599,6 +599,39 @@
       });
       controls.append(addInput);
     }
+    if (config.allowRemove) {
+      const removeSelect = document.createElement("select");
+      removeSelect.className = "panel__remove-select";
+      const placeholder = document.createElement("option");
+      placeholder.value = "";
+      placeholder.textContent = "Remove tag…";
+      removeSelect.appendChild(placeholder);
+      (state.tagOptions?.[group] || []).forEach((option) => {
+        const opt = document.createElement("option");
+        opt.value = option.value;
+        opt.textContent = option.label;
+        removeSelect.appendChild(opt);
+      });
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "panel__remove-btn";
+      removeBtn.textContent = "Remove";
+      removeBtn.disabled = true;
+      removeSelect.addEventListener("change", () => {
+        removeBtn.disabled = !removeSelect.value;
+      });
+      removeBtn.addEventListener("click", () => {
+        const value = removeSelect.value;
+        if (!value) return;
+        const label = removeSelect.options[removeSelect.selectedIndex]?.textContent || value;
+        const confirmed = window.confirm(`Remove "${label}" and clear it from all photos?`);
+        if (!confirmed) return;
+        removeTag(group, value);
+        removeSelect.value = "";
+        removeBtn.disabled = true;
+      });
+      controls.append(removeSelect, removeBtn);
+    }
 
     const current = getCurrentPhoto();
     const selected = new Set(current?.tags?.[group] || []);
@@ -663,6 +696,7 @@
       description: "Themen/Begriffe aus der Begehung.",
       filter: state.tagFilters.observations,
       allowAdd: true,
+      allowRemove: true,
     });
     renderTagPanel("training", {
       title: "Training",
@@ -712,6 +746,21 @@
       list.add(tag);
     }
     current.tags[group] = Array.from(list);
+    scheduleAutosave();
+    renderAll();
+  };
+
+  const removeTag = (group, tag) => {
+    if (!tag) return;
+    const options = state.tagOptions?.[group] || [];
+    state.tagOptions[group] = options.filter((opt) => opt.value !== tag);
+    state.photos.forEach((photo) => {
+      const list = new Set(photo.tags?.[group] || []);
+      if (list.has(tag)) {
+        list.delete(tag);
+        photo.tags[group] = Array.from(list);
+      }
+    });
     scheduleAutosave();
     renderAll();
   };
