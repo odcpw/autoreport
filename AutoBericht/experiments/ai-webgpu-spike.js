@@ -75,8 +75,10 @@ function configureOrt() {
   window.ort.env.wasm.wasmPaths = {
     "ort-wasm.wasm": `${base}ort-wasm.wasm`,
     "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm`,
+    "ort-wasm-simd.jsep.wasm": `${base}ort-wasm-simd.jsep.wasm`,
     "ort-wasm-threaded.wasm": `${base}ort-wasm-threaded.wasm`,
     "ort-wasm-simd-threaded.wasm": `${base}ort-wasm-simd-threaded.wasm`,
+    "ort-wasm-simd-threaded.jsep.wasm": `${base}ort-wasm-simd-threaded.jsep.wasm`,
   };
   window.ort.env.wasm.simd = true;
   const canThread = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated;
