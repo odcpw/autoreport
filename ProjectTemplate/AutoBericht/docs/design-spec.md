@@ -177,13 +177,12 @@ project_sidecar.json (canonical state)
 
 ```
 <Project>/
-  AutoBericht/              # app bundle + seeds + docs
   project_sidecar.json      # editor state (canonical)
   project_db.xlsx           # optional readable archive
-  Inputs/                   # customer inputs (self-assessment + docs)
-  Photos/                   # raw photos (root = unsorted)
-  Outputs/                  # Word/PPT/PDF outputs
-  Cache/                    # optional; materialized photo views (future)
+  self_assessment.xlsx      # customer input (static)
+  photos/                   # raw photos
+  out/                      # Word/PPT/PDF outputs
+  cache/                    # optional materialized photo views
 ```
 
 Access:
