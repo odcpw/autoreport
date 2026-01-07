@@ -79,34 +79,44 @@ Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
     lines = Split(text, vbLf)
 
     Dim i As Long
+    Dim writer As Range
+    Set writer = rng.Duplicate
+    writer.Collapse wdCollapseStart
     For i = LBound(lines) To UBound(lines)
         Dim line As String
         line = lines(i)
 
         If Len(Trim$(line)) = 0 Then
-            rng.InsertParagraphAfter
-            rng.Collapse wdCollapseEnd
+            writer.InsertParagraphAfter
+            writer.Collapse wdCollapseEnd
         ElseIf Left$(line, 2) = "- " Then
-            InsertMarkdownLine rng, Mid$(line, 3), True
+            InsertMarkdownLine writer, Mid$(line, 3), True
         Else
-            InsertMarkdownLine rng, line, False
+            InsertMarkdownLine writer, line, False
         End If
     Next i
 End Sub
 
 Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal asBullet As Boolean)
     rng.Collapse wdCollapseEnd
-    rng.ParagraphFormat.SpaceAfter = 0
-
-    If asBullet Then
-        rng.ListFormat.ApplyBulletDefault
-        ApplyParagraphStyle rng, STYLE_BULLET
-    Else
-        rng.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
-        ApplyParagraphStyle rng, STYLE_BODY
-    End If
+    Dim lineStart As Long
+    lineStart = rng.End
 
     AppendFormattedText rng, line
+
+    Dim lineRange As Range
+    Set lineRange = rng.Duplicate
+    lineRange.SetRange lineStart, rng.End
+    lineRange.ParagraphFormat.SpaceAfter = 0
+
+    If asBullet Then
+        lineRange.ListFormat.ApplyBulletDefault
+        ApplyParagraphStyle lineRange, STYLE_BULLET
+    Else
+        lineRange.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
+        ApplyParagraphStyle lineRange, STYLE_BODY
+    End If
+
     rng.InsertParagraphAfter
     rng.Collapse wdCollapseEnd
 End Sub

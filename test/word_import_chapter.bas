@@ -89,10 +89,10 @@ Public Sub ImportChapter1Table()
     For Each row In rows
         If IsSectionRow(row) Then
             If ShouldIncludeSection(row, includedSections) Then
+                On Error Resume Next
+                tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 4)
+                On Error GoTo 0
                 tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row)
-                tbl.Cell(targetRow, 2).Range.Text = ""
-                tbl.Cell(targetRow, 3).Range.Text = ""
-                tbl.Cell(targetRow, 4).Range.Text = ""
                 tbl.Rows(targetRow).Range.Font.Bold = True
                 tbl.Rows(targetRow).Range.Style = STYLE_SECTION
                 targetRow = targetRow + 1
