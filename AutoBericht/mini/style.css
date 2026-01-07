@@ -276,12 +276,13 @@ button.ghost {
 .row-body {
   display: grid;
   grid-template-columns: 1fr 2fr;
-  gap: 20px;
+  column-gap: 20px;
+  row-gap: 6px;
   margin-bottom: 8px;
 }
 
 .field {
-  margin-bottom: 12px;
+  display: contents;
   min-width: 0;
 }
 
@@ -304,9 +305,10 @@ button.ghost {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  margin-bottom: 8px;
+  margin-bottom: 0;
   flex-wrap: wrap;
   row-gap: 6px;
+  grid-row: 1;
 }
 
 .field-controls {
@@ -379,6 +381,7 @@ textarea {
   padding: 10px;
   font-family: "Segoe UI", system-ui, sans-serif;
   font-size: 0.95rem;
+  grid-row: 2;
 }
 
 textarea[disabled] {
@@ -604,6 +607,11 @@ textarea[disabled] {
   .row-body,
   .row-preview {
     grid-template-columns: 1fr;
+  }
+
+  .field-header,
+  textarea {
+    grid-row: auto;
   }
 }
 
