@@ -7,8 +7,14 @@ Option Explicit
 ' - Blank lines become paragraph breaks
 
 ' === STYLE CONFIG (edit these to match your template) ===
-Private Const STYLE_BODY As String = "BodyText"
-Private Const STYLE_BULLET As String = "ListBullet"
+' Use custom style names if possible (same names across DE/FR/IT templates).
+' Leave blank to use built-in styles via wdStyle* constants (language-safe).
+Private Const STYLE_BODY As String = ""
+Private Const STYLE_BULLET As String = ""
+' Optional character styles for markdown emphasis. Leave blank to use direct bold/italic.
+Private Const STYLE_BOLD As String = ""
+Private Const STYLE_ITALIC As String = ""
+Private Const STYLE_BOLDITALIC As String = ""
 
 Public Sub ConvertMarkdownInSelection()
     Dim rng As Range
@@ -69,6 +75,7 @@ Private Sub ConvertMarkdownCell(ByVal cell As Cell)
 End Sub
 
 Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
+    NormalizeRangeForCell rng
     Dim text As String
     text = rng.Text
     text = Replace(text, vbCrLf, vbLf)
@@ -87,38 +94,30 @@ Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
         line = lines(i)
 
         If Len(Trim$(line)) = 0 Then
-            writer.InsertParagraphAfter
-            writer.Collapse wdCollapseEnd
+            If i < UBound(lines) Then
+                writer.InsertParagraphAfter
+                writer.Collapse wdCollapseEnd
+            End If
         ElseIf Left$(line, 2) = "- " Then
-            InsertMarkdownLine writer, Mid$(line, 3), True
+            InsertMarkdownLine writer, Mid$(line, 3), True, i < UBound(lines)
         Else
-            InsertMarkdownLine writer, line, False
+            InsertMarkdownLine writer, line, False, i < UBound(lines)
         End If
     Next i
 End Sub
 
-Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal asBullet As Boolean)
+Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal asBullet As Boolean, ByVal appendBreak As Boolean)
     rng.Collapse wdCollapseEnd
     Dim lineStart As Long
     lineStart = rng.End
 
     AppendFormattedText rng, line
+    ApplyLineStyle rng, lineStart, asBullet
 
-    Dim lineRange As Range
-    Set lineRange = rng.Duplicate
-    lineRange.SetRange lineStart, rng.End
-    lineRange.ParagraphFormat.SpaceAfter = 0
-
-    If asBullet Then
-        lineRange.ListFormat.ApplyBulletDefault
-        ApplyParagraphStyle lineRange, STYLE_BULLET
-    Else
-        lineRange.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
-        ApplyParagraphStyle lineRange, STYLE_BODY
+    If appendBreak Then
+        rng.InsertParagraphAfter
+        rng.Collapse wdCollapseEnd
     End If
-
-    rng.InsertParagraphAfter
-    rng.Collapse wdCollapseEnd
 End Sub
 
 Private Sub AppendFormattedText(ByVal rng As Range, ByVal line As String)
@@ -153,8 +152,7 @@ Private Sub FlushBuffer(ByVal rng As Range, ByVal buffer As String, ByVal boldOn
     Set part = rng.Duplicate
     part.Collapse wdCollapseEnd
     part.Text = buffer
-    part.Font.Bold = IIf(boldOn, True, False)
-    part.Font.Italic = IIf(italicOn, True, False)
+    ApplyEmphasis part, boldOn, italicOn
     rng.SetRange part.End, part.End
 End Sub
 
@@ -168,8 +166,56 @@ Private Function FindContentControl(ByVal title As String) As ContentControl
     Next cc
 End Function
 
-Private Sub ApplyParagraphStyle(ByVal rng As Range, ByVal styleName As String)
+Private Sub ApplyParagraphStyle(ByVal rng As Range, ByVal styleName As String, ByVal fallback As Variant)
     On Error Resume Next
-    rng.Paragraphs(1).Range.Style = styleName
+    If Len(styleName) > 0 Then
+        rng.Paragraphs(1).Range.Style = styleName
+    Else
+        rng.Paragraphs(1).Range.Style = fallback
+    End If
+    If Err.Number <> 0 Then
+        rng.Paragraphs(1).Range.Style = fallback
+        Err.Clear
+    End If
     On Error GoTo 0
+End Sub
+
+Private Sub ApplyEmphasis(ByVal rng As Range, ByVal boldOn As Boolean, ByVal italicOn As Boolean)
+    On Error Resume Next
+    If boldOn And italicOn And Len(STYLE_BOLDITALIC) > 0 Then
+        rng.Style = STYLE_BOLDITALIC
+    ElseIf boldOn And Len(STYLE_BOLD) > 0 Then
+        rng.Style = STYLE_BOLD
+    ElseIf italicOn And Len(STYLE_ITALIC) > 0 Then
+        rng.Style = STYLE_ITALIC
+    Else
+        rng.Font.Bold = IIf(boldOn, True, False)
+        rng.Font.Italic = IIf(italicOn, True, False)
+    End If
+    On Error GoTo 0
+End Sub
+
+Private Sub ApplyLineStyle(ByVal rng As Range, ByVal lineStart As Long, ByVal asBullet As Boolean)
+    Dim lineRange As Range
+    Set lineRange = rng.Duplicate
+    lineRange.SetRange lineStart, rng.End
+    If lineRange.Paragraphs.Count = 0 Then Exit Sub
+    If asBullet Then
+        lineRange.ListFormat.ApplyBulletDefault
+        ApplyParagraphStyle lineRange, STYLE_BULLET, wdStyleListBullet
+    Else
+        lineRange.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
+        ApplyParagraphStyle lineRange, STYLE_BODY, wdStyleNormal
+    End If
+    lineRange.ParagraphFormat.SpaceAfter = 0
+End Sub
+
+Private Sub NormalizeRangeForCell(ByVal rng As Range)
+    If rng.End > rng.Start Then
+        Dim tailChar As String
+        tailChar = Right$(rng.Text, 1)
+        If AscW(tailChar) = 7 Then
+            rng.End = rng.End - 1
+        End If
+    End If
 End Sub
