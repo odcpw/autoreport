@@ -182,8 +182,7 @@ button.ghost {
   flex-shrink: 0;
 }
 
-.self-details,
-.child-details {
+.self-details {
   margin-bottom: 12px;
   padding: 10px 12px;
   border-radius: 12px;
@@ -191,8 +190,7 @@ button.ghost {
   border: 1px solid #ece2d6;
 }
 
-.self-details summary,
-.child-details summary {
+.self-details summary {
   cursor: pointer;
   font-weight: 600;
   color: #1f2933;
@@ -203,38 +201,6 @@ button.ghost {
   padding-left: 18px;
   color: #3a4651;
   font-size: 0.9rem;
-}
-
-.child-card {
-  margin-top: 10px;
-  padding: 10px;
-  border-radius: 10px;
-  background: #fff;
-  border: 1px solid #e7dccf;
-}
-
-.child-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.child-ids {
-  font-size: 0.8rem;
-  color: #6c7780;
-}
-
-.child-finding {
-  font-size: 0.9rem;
-  margin-bottom: 6px;
-}
-
-.child-rec {
-  font-size: 0.9rem;
-  color: #374151;
-  white-space: pre-wrap;
 }
 
 .row-meta {

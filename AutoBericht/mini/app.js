@@ -29,9 +29,11 @@
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
   };
-  const HANDLE_DB_NAME = "autobericht";
-  const HANDLE_STORE = "handles";
-  const HANDLE_KEY = "projectDir";
+  const {
+    saveHandle: saveFsHandle = async () => {},
+    loadHandle: loadFsHandle = async () => null,
+    requestHandlePermission: requestFsHandlePermission = async () => false,
+  } = window.AutoBerichtFsHandle || {};
 
   const defaultProject = {
     meta: {
@@ -256,64 +258,35 @@
     }
   };
 
-  const openHandleDb = () => new Promise((resolve, reject) => {
-    if (!window.indexedDB) {
-      resolve(null);
-      return;
-    }
-    const request = window.indexedDB.open(HANDLE_DB_NAME, 1);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(HANDLE_STORE)) {
-        db.createObjectStore(HANDLE_STORE);
-      }
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-
-  const saveHandle = async (handle) => {
+  const persistHandle = async (handle) => {
     try {
-      const db = await openHandleDb();
-      if (!db) return;
-      const tx = db.transaction(HANDLE_STORE, "readwrite");
-      tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+      await saveFsHandle(handle);
     } catch (err) {
       debug.logLine("warn", `Failed to persist folder handle: ${err.message || err}`);
     }
   };
 
-  const loadHandle = async () => {
+  const loadPersistedHandle = async () => {
     try {
-      const db = await openHandleDb();
-      if (!db) return null;
-      const tx = db.transaction(HANDLE_STORE, "readonly");
-      return await new Promise((resolve) => {
-        const req = tx.objectStore(HANDLE_STORE).get(HANDLE_KEY);
-        req.onsuccess = () => resolve(req.result || null);
-        req.onerror = () => resolve(null);
-      });
+      return await loadFsHandle();
     } catch (err) {
       return null;
     }
   };
 
-  const requestHandlePermission = async (handle) => {
+  const ensureHandlePermission = async (handle) => {
     try {
-      const opts = { mode: "readwrite" };
-      if ((await handle.queryPermission(opts)) === "granted") return true;
-      if ((await handle.requestPermission(opts)) === "granted") return true;
+      return await requestFsHandlePermission(handle);
     } catch (err) {
       return false;
     }
-    return false;
   };
 
   const restoreLastHandle = async () => {
     if (!window.showDirectoryPicker) return;
-    const handle = await loadHandle();
+    const handle = await loadPersistedHandle();
     if (!handle) return;
-    const ok = await requestHandlePermission(handle);
+    const ok = await ensureHandlePermission(handle);
     if (!ok) return;
     dirHandle = handle;
     enableActions();
@@ -365,12 +338,40 @@
     return chapter.id || "";
   };
 
+  const compareIdSegments = (a, b) => {
+    const aParts = String(a || "").split(".");
+    const bParts = String(b || "").split(".");
+    const maxLen = Math.max(aParts.length, bParts.length);
+    for (let i = 0; i < maxLen; i += 1) {
+      const aPart = aParts[i];
+      const bPart = bParts[i];
+      if (aPart == null) return -1;
+      if (bPart == null) return 1;
+      const aNum = Number(aPart);
+      const bNum = Number(bPart);
+      const aIsNum = !Number.isNaN(aNum);
+      const bIsNum = !Number.isNaN(bNum);
+      if (aIsNum && bIsNum) {
+        if (aNum !== bNum) return aNum - bNum;
+      } else {
+        const cmp = String(aPart).localeCompare(String(bPart), "de", { numeric: true });
+        if (cmp !== 0) return cmp;
+      }
+    }
+    return 0;
+  };
+
   const formatChapterLabel = (chapter) => {
     if (!chapter) return "";
     const title = getChapterTitle(chapter);
     const id = chapter.id || "";
-    if (title && id) return `${id} ${title}`.trim();
-    return title || id;
+    if (!title) return id;
+    if (!id) return title;
+    const normalized = title.trim();
+    if (normalized === id || normalized.startsWith(`${id} `) || normalized.startsWith(`${id}.`)) {
+      return normalized;
+    }
+    return `${id} ${title}`.trim();
   };
 
   const toText = (value) => {
@@ -510,14 +511,9 @@
       chaptersById.set(chapterId, chapter);
     });
 
-    const chapters = Array.from(chaptersById.values()).sort((a, b) => {
-      const aNum = Number(a.id);
-      const bNum = Number(b.id);
-      if (Number.isNaN(aNum) || Number.isNaN(bNum)) return String(a.id).localeCompare(String(b.id));
-      return aNum - bNum;
-    });
+    const chapters = Array.from(chaptersById.values()).sort((a, b) => compareIdSegments(a.id, b.id));
     chapters.forEach((chapter) => {
-      chapter.rows.sort((a, b) => String(a.id).localeCompare(String(b.id)));
+      chapter.rows.sort((a, b) => compareIdSegments(a.id, b.id));
       const withSections = [];
       let lastSection = "";
       chapter.rows.forEach((row) => {
@@ -540,12 +536,7 @@
         title: { de: "Beobachtungen" },
         rows: [],
       });
-      chapters.sort((a, b) => {
-        const aNum = Number(a.id);
-        const bNum = Number(b.id);
-        if (Number.isNaN(aNum) || Number.isNaN(bNum)) return String(a.id).localeCompare(String(b.id));
-        return aNum - bNum;
-      });
+      chapters.sort((a, b) => compareIdSegments(a.id, b.id));
     }
 
     return {
@@ -864,323 +855,303 @@
     });
   };
 
+  const createSectionRow = (row) => {
+    const sectionRow = document.createElement("div");
+    sectionRow.className = "section-row";
+    sectionRow.textContent = row.title;
+    return sectionRow;
+  };
+
+  const createAnswerBadge = (row) => {
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    const answerState = getAnswerState(row);
+    if (answerState === 1) {
+      badge.textContent = "Answer: Yes";
+    } else if (answerState === 0) {
+      badge.textContent = "Answer: No";
+    } else if (answerState === "mixed") {
+      badge.textContent = "Answer: Mixed";
+    } else {
+      badge.textContent = "Answer: —";
+    }
+    return badge;
+  };
+
+  const createRowHeader = (row) => {
+    const header = document.createElement("div");
+    header.className = "row-header";
+    const meta = document.createElement("div");
+    meta.className = "row-meta";
+    meta.textContent = `${row.id} ${row.titleOverride || ""}`.trim();
+    const previewBtn = document.createElement("button");
+    previewBtn.className = "preview-btn";
+    previewBtn.type = "button";
+    previewBtn.textContent = "Preview";
+    const headerRight = document.createElement("div");
+    headerRight.className = "row-header__right";
+    headerRight.appendChild(createAnswerBadge(row));
+    const comments = getAnswerComments(row);
+    if (comments.length) {
+      const commentBadge = document.createElement("span");
+      commentBadge.className = "comment-badge";
+      commentBadge.textContent = "Comment";
+      commentBadge.title = comments.join("\n");
+      headerRight.appendChild(commentBadge);
+    }
+    headerRight.appendChild(previewBtn);
+    header.appendChild(meta);
+    header.appendChild(headerRight);
+    return { header, previewBtn };
+  };
+
+  const createSelfAssessmentDetails = (row) => {
+    const selfItems = row.customer?.items || [];
+    if (selfItems.length <= 1) return null;
+    const details = document.createElement("details");
+    details.className = "self-details";
+    const summary = document.createElement("summary");
+    summary.textContent = `Selbstbeurteilung (${selfItems.length})`;
+    details.appendChild(summary);
+    const list = document.createElement("ul");
+    list.className = "self-list";
+    selfItems.forEach((item) => {
+      const li = document.createElement("li");
+      li.textContent = `${item.id} — ${item.question || ""}`.trim();
+      list.appendChild(li);
+    });
+    details.appendChild(list);
+    return details;
+  };
+
+  const createToggle = (labelText, checked, onChange) => {
+    const label = document.createElement("label");
+    label.className = "field-toggle";
+    const input = document.createElement("input");
+    input.type = "checkbox";
+    input.checked = checked;
+    input.addEventListener("change", () => onChange(input.checked));
+    label.appendChild(input);
+    label.appendChild(document.createTextNode(labelText));
+    return label;
+  };
+
+  const createFindingField = (row, ws) => {
+    const findingField = document.createElement("div");
+    findingField.className = "field";
+    const findingHeader = document.createElement("div");
+    findingHeader.className = "field-header";
+    const findingLabel = document.createElement("label");
+    findingLabel.textContent = "Finding";
+    const findingHint = document.createElement("span");
+    findingHint.className = "hint";
+    findingHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
+    findingHint.textContent = "?";
+    findingLabel.appendChild(findingHint);
+
+    const findingToggle = createToggle("Override", ws.useFindingOverride, (checked) => {
+      ws.useFindingOverride = checked;
+      if (ws.useFindingOverride && !ws.findingOverride) {
+        ws.findingOverride = toText(row.master?.finding);
+      }
+      scheduleAutosave();
+      renderRows();
+    });
+    const includeToggle = createToggle("Include", ws.includeFinding, (checked) => {
+      ws.includeFinding = checked;
+      scheduleAutosave();
+      renderRows();
+    });
+    const doneToggle = createToggle("Done", ws.done, (checked) => {
+      ws.done = checked;
+      scheduleAutosave();
+      renderRows();
+    });
+
+    const findingControls = document.createElement("div");
+    findingControls.className = "field-controls";
+    findingControls.appendChild(findingToggle);
+    findingControls.appendChild(includeToggle);
+    findingControls.appendChild(doneToggle);
+
+    const findingArea = document.createElement("textarea");
+    findingArea.value = getFindingText(row);
+    findingArea.disabled = !ws.useFindingOverride;
+    findingArea.addEventListener("input", () => {
+      ws.findingOverride = findingArea.value;
+      scheduleAutosave();
+    });
+
+    findingHeader.appendChild(findingLabel);
+    findingHeader.appendChild(findingControls);
+    findingField.appendChild(findingHeader);
+    findingField.appendChild(findingArea);
+    return findingField;
+  };
+
+  const createRecommendationField = (row, ws) => {
+    const recField = document.createElement("div");
+    recField.className = "field";
+    const recHeader = document.createElement("div");
+    recHeader.className = "field-header";
+    const recLabel = document.createElement("label");
+    recLabel.textContent = "Recommendation";
+    const recHint = document.createElement("span");
+    recHint.className = "hint";
+    recHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
+    recHint.textContent = "?";
+    recLabel.appendChild(recHint);
+
+    const levelGroup = document.createElement("div");
+    levelGroup.className = "level-group";
+    [1, 2, 3, 4].forEach((level) => {
+      const label = document.createElement("label");
+      label.className = "level-radio";
+      const input = document.createElement("input");
+      input.type = "radio";
+      input.name = `level-${row.id}`;
+      input.value = String(level);
+      input.checked = ws.selectedLevel === level;
+      input.addEventListener("change", () => {
+        ws.selectedLevel = level;
+        scheduleAutosave();
+        renderRows();
+      });
+      label.appendChild(input);
+      label.appendChild(document.createTextNode(String(level)));
+      levelGroup.appendChild(label);
+    });
+
+    const levelKey = String(ws.selectedLevel);
+    const overrideToggle = createToggle("Override", !!ws.useLevelOverride?.[levelKey], (checked) => {
+      ws.useLevelOverride[levelKey] = checked;
+      if (ws.useLevelOverride[levelKey] && !ws.levelOverrides[levelKey]) {
+        ws.levelOverrides[levelKey] = toText(row.master?.levels?.[levelKey]);
+      }
+      scheduleAutosave();
+      renderRows();
+    });
+
+    const recControls = document.createElement("div");
+    recControls.className = "field-controls";
+    recControls.appendChild(levelGroup);
+    recControls.appendChild(overrideToggle);
+
+    const libraryGroup = document.createElement("div");
+    libraryGroup.className = "library-group";
+    const libraryLabel = document.createElement("span");
+    libraryLabel.textContent = "Library";
+    libraryGroup.appendChild(libraryLabel);
+    const actionButtons = [
+      { key: "off", label: "Off" },
+      { key: "append", label: "Append" },
+      { key: "replace", label: "Replace" },
+    ];
+    actionButtons.forEach((option) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = option.label;
+      if ((ws.libraryActions?.[levelKey] || "off") === option.key) {
+        button.classList.add("is-active");
+      }
+      button.addEventListener("click", () => {
+        ws.libraryActions[levelKey] = option.key;
+        scheduleAutosave();
+        renderRows();
+      });
+      libraryGroup.appendChild(button);
+    });
+    recControls.appendChild(libraryGroup);
+
+    const recArea = document.createElement("textarea");
+    recArea.value = getRecommendationText(row, ws.selectedLevel);
+    recArea.disabled = !ws.useLevelOverride?.[levelKey];
+    recArea.addEventListener("input", () => {
+      ws.levelOverrides[levelKey] = recArea.value;
+      ws.libraryHashes[levelKey] = "";
+      scheduleAutosave();
+    });
+
+    recHeader.appendChild(recLabel);
+    recHeader.appendChild(recControls);
+    recField.appendChild(recHeader);
+    recField.appendChild(recArea);
+    return recField;
+  };
+
+  const createPreviewPanel = (row, ws, previewBtn) => {
+    const preview = document.createElement("div");
+    preview.className = "row-preview";
+    const previewFinding = document.createElement("div");
+    previewFinding.className = "row-preview__col";
+    const previewRec = document.createElement("div");
+    previewRec.className = "row-preview__col";
+    preview.appendChild(previewFinding);
+    preview.appendChild(previewRec);
+
+    const showPreview = () => {
+      previewFinding.innerHTML = markdownToHtml(getFindingText(row));
+      previewRec.innerHTML = markdownToHtml(getRecommendationText(row, ws.selectedLevel));
+      preview.classList.add("is-visible");
+    };
+    const hidePreview = () => {
+      preview.classList.remove("is-visible");
+    };
+    previewBtn.addEventListener("pointerdown", (event) => {
+      event.preventDefault();
+      showPreview();
+    });
+    previewBtn.addEventListener("pointerup", hidePreview);
+    previewBtn.addEventListener("pointerleave", hidePreview);
+    previewBtn.addEventListener("pointercancel", hidePreview);
+    return preview;
+  };
+
+  const shouldFilterRow = (row, ws) => {
+    const answerState = getAnswerState(row);
+    if (state.filters.mode === "hide-yes" && answerState === 1) return true;
+    if (state.filters.mode === "include-only" && !ws.includeFinding) return true;
+    if (state.filters.mode === "done-only" && !ws.done) return true;
+    if (state.filters.mode === "hide-done" && ws.done) return true;
+    return false;
+  };
+
+  const createRowCard = (row) => {
+    ensureWorkstate(row);
+    const ws = row.workstate;
+    if (shouldFilterRow(row, ws)) return null;
+
+    const card = document.createElement("div");
+    card.className = "row-card";
+    const { header, previewBtn } = createRowHeader(row);
+    card.appendChild(header);
+
+    const details = createSelfAssessmentDetails(row);
+    if (details) card.appendChild(details);
+
+    const rowBody = document.createElement("div");
+    rowBody.className = "row-body";
+    rowBody.appendChild(createFindingField(row, ws));
+    rowBody.appendChild(createRecommendationField(row, ws));
+    card.appendChild(rowBody);
+
+    card.appendChild(createPreviewPanel(row, ws, previewBtn));
+    return card;
+  };
+
   const renderRows = () => {
     rowsEl.innerHTML = "";
     const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
     if (!chapter) return;
-    const chapterTitle = getChapterTitle(chapter);
     chapterTitleEl.textContent = formatChapterLabel(chapter);
 
     chapter.rows.forEach((row) => {
       if (row.kind === "section") {
-        const sectionRow = document.createElement("div");
-        sectionRow.className = "section-row";
-        sectionRow.textContent = row.title;
-        rowsEl.appendChild(sectionRow);
+        rowsEl.appendChild(createSectionRow(row));
         return;
       }
-      ensureWorkstate(row);
-      const ws = row.workstate;
-
-      if (state.filters.mode === "hide-yes" && row.customer?.answer === 1) return;
-      if (state.filters.mode === "include-only" && !ws.includeFinding) return;
-      if (state.filters.mode === "done-only" && !ws.done) return;
-      if (state.filters.mode === "hide-done" && ws.done) return;
-
-      const card = document.createElement("div");
-      card.className = "row-card";
-
-      const header = document.createElement("div");
-      header.className = "row-header";
-      const meta = document.createElement("div");
-      meta.className = "row-meta";
-      meta.textContent = `${row.id} ${row.titleOverride || ""}`.trim();
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      const answerState = getAnswerState(row);
-      if (answerState === 1) {
-        badge.textContent = "Answer: Yes";
-      } else if (answerState === 0) {
-        badge.textContent = "Answer: No";
-      } else if (answerState === "mixed") {
-        badge.textContent = "Answer: Mixed";
-      } else {
-        badge.textContent = "Answer: —";
-      }
-      const previewBtn = document.createElement("button");
-      previewBtn.className = "preview-btn";
-      previewBtn.type = "button";
-      previewBtn.textContent = "Preview";
-      const headerRight = document.createElement("div");
-      headerRight.className = "row-header__right";
-      headerRight.appendChild(badge);
-      const comments = getAnswerComments(row);
-      if (comments.length) {
-        const commentBadge = document.createElement("span");
-        commentBadge.className = "comment-badge";
-        commentBadge.textContent = "Comment";
-        commentBadge.title = comments.join("\n");
-        headerRight.appendChild(commentBadge);
-      }
-      headerRight.appendChild(previewBtn);
-      header.appendChild(meta);
-      header.appendChild(headerRight);
-      card.appendChild(header);
-
-      const selfItems = row.customer?.items || [];
-      if (selfItems.length > 1) {
-        const details = document.createElement("details");
-        details.className = "self-details";
-        const summary = document.createElement("summary");
-        summary.textContent = `Selbstbeurteilung (${selfItems.length})`;
-        details.appendChild(summary);
-        const list = document.createElement("ul");
-        list.className = "self-list";
-        selfItems.forEach((item) => {
-          const li = document.createElement("li");
-          li.textContent = `${item.id} — ${item.question || ""}`.trim();
-          list.appendChild(li);
-        });
-        details.appendChild(list);
-        card.appendChild(details);
-      }
-
-      const includeLabel = document.createElement("label");
-      includeLabel.className = "field-toggle";
-      const includeCheckbox = document.createElement("input");
-      includeCheckbox.type = "checkbox";
-      includeCheckbox.checked = ws.includeFinding;
-      includeCheckbox.addEventListener("change", () => {
-        ws.includeFinding = includeCheckbox.checked;
-        scheduleAutosave();
-        renderRows();
-      });
-      includeLabel.appendChild(includeCheckbox);
-      includeLabel.appendChild(document.createTextNode("Include"));
-
-      const doneLabel = document.createElement("label");
-      doneLabel.className = "field-toggle";
-      const doneCheckbox = document.createElement("input");
-      doneCheckbox.type = "checkbox";
-      doneCheckbox.checked = ws.done;
-      doneCheckbox.addEventListener("change", () => {
-        ws.done = doneCheckbox.checked;
-        scheduleAutosave();
-        renderRows();
-      });
-      doneLabel.appendChild(doneCheckbox);
-      doneLabel.appendChild(document.createTextNode("Done"));
-
-      const rowBody = document.createElement("div");
-      rowBody.className = "row-body";
-
-      const findingField = document.createElement("div");
-      findingField.className = "field";
-      const findingHeader = document.createElement("div");
-      findingHeader.className = "field-header";
-      const findingLabel = document.createElement("label");
-      findingLabel.textContent = "Finding";
-      const findingHint = document.createElement("span");
-      findingHint.className = "hint";
-      findingHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
-      findingHint.textContent = "?";
-      const findingToggle = document.createElement("label");
-      findingToggle.className = "field-toggle";
-      const findingCheckbox = document.createElement("input");
-      findingCheckbox.type = "checkbox";
-      findingCheckbox.checked = ws.useFindingOverride;
-      findingCheckbox.addEventListener("change", () => {
-        ws.useFindingOverride = findingCheckbox.checked;
-        if (ws.useFindingOverride && !ws.findingOverride) {
-          ws.findingOverride = toText(row.master?.finding);
-        }
-        scheduleAutosave();
-        renderRows();
-      });
-      findingToggle.appendChild(findingCheckbox);
-      findingToggle.appendChild(document.createTextNode("Override"));
-
-      const findingArea = document.createElement("textarea");
-      findingArea.value = getFindingText(row);
-      findingArea.disabled = !ws.useFindingOverride;
-      findingArea.addEventListener("input", () => {
-        ws.findingOverride = findingArea.value;
-        scheduleAutosave();
-      });
-
-      findingLabel.appendChild(findingHint);
-      findingHeader.appendChild(findingLabel);
-      const findingControls = document.createElement("div");
-      findingControls.className = "field-controls";
-      findingControls.appendChild(findingToggle);
-      findingControls.appendChild(includeLabel);
-      findingControls.appendChild(doneLabel);
-      findingHeader.appendChild(findingControls);
-      findingField.appendChild(findingHeader);
-      findingField.appendChild(findingArea);
-      rowBody.appendChild(findingField);
-
-      const recField = document.createElement("div");
-      recField.className = "field";
-      const recHeader = document.createElement("div");
-      recHeader.className = "field-header";
-      const recLabel = document.createElement("label");
-      recLabel.textContent = "Recommendation";
-      const recHint = document.createElement("span");
-      recHint.className = "hint";
-      recHint.title = "Markdown: - List item, **bold**, *italic*. Blank lines = new paragraph. Line breaks kept.";
-      recHint.textContent = "?";
-
-      const levelGroup = document.createElement("div");
-      levelGroup.className = "level-group";
-      [1, 2, 3, 4].forEach((level) => {
-        const label = document.createElement("label");
-        label.className = "level-radio";
-        const input = document.createElement("input");
-        input.type = "radio";
-        input.name = `level-${row.id}`;
-        input.value = String(level);
-        input.checked = ws.selectedLevel === level;
-        input.addEventListener("change", () => {
-          ws.selectedLevel = level;
-          scheduleAutosave();
-          renderRows();
-        });
-        label.appendChild(input);
-        label.appendChild(document.createTextNode(String(level)));
-        levelGroup.appendChild(label);
-      });
-
-      const overrideLabel = document.createElement("label");
-      overrideLabel.className = "field-toggle";
-      const overrideCheckbox = document.createElement("input");
-      overrideCheckbox.type = "checkbox";
-      const levelKey = String(ws.selectedLevel);
-      overrideCheckbox.checked = !!ws.useLevelOverride?.[levelKey];
-      overrideCheckbox.addEventListener("change", () => {
-        ws.useLevelOverride[levelKey] = overrideCheckbox.checked;
-        if (ws.useLevelOverride[levelKey] && !ws.levelOverrides[levelKey]) {
-          ws.levelOverrides[levelKey] = toText(row.master?.levels?.[levelKey]);
-        }
-        scheduleAutosave();
-        renderRows();
-      });
-      overrideLabel.appendChild(overrideCheckbox);
-      overrideLabel.appendChild(document.createTextNode("Override"));
-
-      const recControls = document.createElement("div");
-      recControls.className = "field-controls";
-      recControls.appendChild(levelGroup);
-      recControls.appendChild(overrideLabel);
-
-      const libraryGroup = document.createElement("div");
-      libraryGroup.className = "library-group";
-      const libraryLabel = document.createElement("span");
-      libraryLabel.textContent = "Library";
-      libraryGroup.appendChild(libraryLabel);
-      const actionButtons = [
-        { key: "off", label: "Off" },
-        { key: "append", label: "Append" },
-        { key: "replace", label: "Replace" },
-      ];
-      actionButtons.forEach((option) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = option.label;
-        if ((ws.libraryActions?.[levelKey] || "off") === option.key) {
-          button.classList.add("is-active");
-        }
-        button.addEventListener("click", () => {
-          ws.libraryActions[levelKey] = option.key;
-          scheduleAutosave();
-          renderRows();
-        });
-        libraryGroup.appendChild(button);
-      });
-      recControls.appendChild(libraryGroup);
-
-      const recArea = document.createElement("textarea");
-      recArea.value = getRecommendationText(row, ws.selectedLevel);
-      recArea.disabled = !ws.useLevelOverride?.[levelKey];
-      recArea.addEventListener("input", () => {
-        ws.levelOverrides[levelKey] = recArea.value;
-        ws.libraryHashes[levelKey] = "";
-        scheduleAutosave();
-      });
-
-      recLabel.appendChild(recHint);
-      recHeader.appendChild(recLabel);
-      recHeader.appendChild(recControls);
-      recField.appendChild(recHeader);
-      recField.appendChild(recArea);
-      rowBody.appendChild(recField);
-      card.appendChild(rowBody);
-
-      const preview = document.createElement("div");
-      preview.className = "row-preview";
-      const previewFinding = document.createElement("div");
-      previewFinding.className = "row-preview__col";
-      const previewRec = document.createElement("div");
-      previewRec.className = "row-preview__col";
-      preview.appendChild(previewFinding);
-      preview.appendChild(previewRec);
-      card.appendChild(preview);
-
-      const showPreview = () => {
-        previewFinding.innerHTML = markdownToHtml(getFindingText(row));
-        previewRec.innerHTML = markdownToHtml(getRecommendationText(row, ws.selectedLevel));
-        preview.classList.add("is-visible");
-      };
-      const hidePreview = () => {
-        preview.classList.remove("is-visible");
-      };
-      previewBtn.addEventListener("pointerdown", (event) => {
-        event.preventDefault();
-        showPreview();
-      });
-      previewBtn.addEventListener("pointerup", hidePreview);
-      previewBtn.addEventListener("pointerleave", hidePreview);
-      previewBtn.addEventListener("pointercancel", hidePreview);
-
-      const children = row.master?.children || [];
-      if (children.length) {
-        const childDetails = document.createElement("details");
-        childDetails.className = "child-details";
-        const childSummary = document.createElement("summary");
-        childSummary.textContent = `Combined sub-blocks (${children.length})`;
-        childDetails.appendChild(childSummary);
-
-        children.forEach((child) => {
-          const childCard = document.createElement("div");
-          childCard.className = "child-card";
-          const childHeader = document.createElement("div");
-          childHeader.className = "child-header";
-          const childTitle = document.createElement("div");
-          childTitle.textContent = child.idRange || "Sub-block";
-          const childIds = document.createElement("div");
-          childIds.className = "child-ids";
-          childIds.textContent = child.ids?.length ? child.ids.join(", ") : "";
-          childHeader.appendChild(childTitle);
-          childHeader.appendChild(childIds);
-          childCard.appendChild(childHeader);
-
-          const childFinding = document.createElement("div");
-          childFinding.className = "child-finding";
-          childFinding.textContent = child.finding || "";
-          childCard.appendChild(childFinding);
-
-          const childRec = document.createElement("div");
-          childRec.className = "child-rec";
-          const childLevelText = toText(child.levels?.[levelKey]);
-          childRec.textContent = childLevelText || "";
-          childCard.appendChild(childRec);
-          childDetails.appendChild(childCard);
-        });
-
-        card.appendChild(childDetails);
-      }
-
-      rowsEl.appendChild(card);
+      const card = createRowCard(row);
+      if (card) rowsEl.appendChild(card);
     });
   };
 
@@ -1193,7 +1164,7 @@
     if (!ensureFsAccess()) return;
     try {
       dirHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
-      await saveHandle(dirHandle);
+      await persistHandle(dirHandle);
       enableActions();
       setStatus(`Selected folder: ${dirHandle.name}`);
       debug.logLine("info", `Selected folder: ${dirHandle.name}`);

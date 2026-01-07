@@ -19,7 +19,6 @@
   const photoMetaEl = document.getElementById("photo-meta");
   const photoImageEl = document.getElementById("photo-image");
   const photoUnsortedBtn = document.getElementById("photo-unsorted");
-  const thumbsEl = document.getElementById("thumbs");
   const filterToggleBtn = document.getElementById("filter-toggle");
   const prevBtn = document.getElementById("prev-photo");
   const nextBtn = document.getElementById("next-photo");
@@ -37,9 +36,11 @@
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
   };
-  const HANDLE_DB_NAME = "autobericht";
-  const HANDLE_STORE = "handles";
-  const HANDLE_KEY = "projectDir";
+  const {
+    saveHandle: saveFsHandle = async () => {},
+    loadHandle: loadFsHandle = async () => null,
+    requestHandlePermission: requestFsHandlePermission = async () => false,
+  } = window.AutoBerichtFsHandle || {};
 
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
@@ -255,64 +256,35 @@
     nextBtn.disabled = !hasVisiblePhotos;
   };
 
-  const openHandleDb = () => new Promise((resolve, reject) => {
-    if (!window.indexedDB) {
-      resolve(null);
-      return;
-    }
-    const request = window.indexedDB.open(HANDLE_DB_NAME, 1);
-    request.onupgradeneeded = () => {
-      const db = request.result;
-      if (!db.objectStoreNames.contains(HANDLE_STORE)) {
-        db.createObjectStore(HANDLE_STORE);
-      }
-    };
-    request.onsuccess = () => resolve(request.result);
-    request.onerror = () => reject(request.error);
-  });
-
-  const saveHandle = async (handle) => {
+  const persistHandle = async (handle) => {
     try {
-      const db = await openHandleDb();
-      if (!db) return;
-      const tx = db.transaction(HANDLE_STORE, "readwrite");
-      tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+      await saveFsHandle(handle);
     } catch (err) {
       debug.logLine("warn", `Failed to persist folder handle: ${err.message || err}`);
     }
   };
 
-  const loadHandle = async () => {
+  const loadPersistedHandle = async () => {
     try {
-      const db = await openHandleDb();
-      if (!db) return null;
-      const tx = db.transaction(HANDLE_STORE, "readonly");
-      return await new Promise((resolve) => {
-        const req = tx.objectStore(HANDLE_STORE).get(HANDLE_KEY);
-        req.onsuccess = () => resolve(req.result || null);
-        req.onerror = () => resolve(null);
-      });
+      return await loadFsHandle();
     } catch (err) {
       return null;
     }
   };
 
-  const requestHandlePermission = async (handle) => {
+  const ensureHandlePermission = async (handle) => {
     try {
-      const opts = { mode: "readwrite" };
-      if ((await handle.queryPermission(opts)) === "granted") return true;
-      if ((await handle.requestPermission(opts)) === "granted") return true;
+      return await requestFsHandlePermission(handle);
     } catch (err) {
       return false;
     }
-    return false;
   };
 
   const restoreLastHandle = async () => {
     if (!window.showDirectoryPicker) return;
-    const handle = await loadHandle();
+    const handle = await loadPersistedHandle();
     if (!handle) return;
-    const ok = await requestHandlePermission(handle);
+    const ok = await ensureHandlePermission(handle);
     if (!ok) return;
     state.projectHandle = handle;
     enableActions();
@@ -537,32 +509,6 @@
     updateMeta();
   };
 
-  const renderThumbs = () => {
-    thumbsEl.innerHTML = "";
-    const filtered = getFilteredPhotos();
-    if (!filtered.length) return;
-
-    filtered.forEach((photo, index) => {
-      const item = document.createElement("div");
-      item.className = "thumb";
-      if (index === state.currentIndex) {
-        item.classList.add("active");
-      }
-      const img = document.createElement("img");
-      img.src = photo.url;
-      img.alt = photo.path;
-      const label = document.createElement("span");
-      label.textContent = photo.path.split("/").slice(-1)[0];
-      item.appendChild(img);
-      item.appendChild(label);
-      item.addEventListener("click", () => {
-        state.currentIndex = index;
-        renderAll();
-      });
-      thumbsEl.appendChild(item);
-    });
-  };
-
   const splitChapterOptions = (options) => {
     const chapters = [];
     const rest = [];
@@ -699,7 +645,6 @@
     }
     filterToggleBtn.textContent = state.filterMode === "all" ? "Show Unsorted" : "Show All";
     renderViewer();
-    renderThumbs();
     renderPanels();
     enableActions();
   };
@@ -981,7 +926,7 @@
     if (!ensureFsAccess()) return;
     try {
       state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
-      await saveHandle(state.projectHandle);
+      await persistHandle(state.projectHandle);
       setStatus(`Project folder: ${state.projectHandle.name}`);
       await loadProjectSidecar();
       setStatus(`Project folder: ${state.projectHandle.name}`);
