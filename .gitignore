@@ -35,3 +35,7 @@ cache/
 *.bak
 *.swp
 legacy/artifacts/**
+
+# Large local model binaries (experiments)
+AutoBericht/experiments/models/**/onnx/*.onnx
+AutoBericht/experiments/models/**/onnx/*.onnx_data

@@ -93,6 +93,15 @@ main {
   text-decoration: underline;
 }
 
+.folder-structure {
+  background: #1f1b17;
+  color: #f6f0e9;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  overflow-x: auto;
+}
+
 .grid {
   display: grid;
   gap: 12px;
