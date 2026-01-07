@@ -71,9 +71,15 @@ const DEFAULTS = {
 function configureOrt() {
   if (!window.ort?.env?.wasm) return;
   const base = new URL("./vendor/", window.location.href).toString();
-  window.ort.env.wasm.wasmPaths = base;
+  window.ort.env.wasm.wasmPaths = {
+    "ort-wasm.wasm": `${base}ort-wasm.wasm`,
+    "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm`,
+    "ort-wasm-threaded.wasm": `${base}ort-wasm-threaded.wasm`,
+    "ort-wasm-simd-threaded.wasm": `${base}ort-wasm-simd-threaded.wasm`,
+  };
   window.ort.env.wasm.simd = true;
-  window.ort.env.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 1);
+  const canThread = typeof crossOriginIsolated !== "undefined" && crossOriginIsolated;
+  window.ort.env.wasm.numThreads = canThread ? Math.min(4, navigator.hardwareConcurrency || 1) : 1;
 }
 
 function log(message) {
