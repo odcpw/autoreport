@@ -172,6 +172,14 @@
             Allow remote models (HF Hub)
           </label>
           <label>
+            ORT version
+            <select id="ort-version">
+              <option value="1.18.0">1.18.0 (current)</option>
+              <option value="1.17.3">1.17.3 (fallback)</option>
+            </select>
+            <span class="hint">Reloads the page. 1.17.3 loads from <code>vendor/ort-1.17.3/</code>.</span>
+          </label>
+          <label>
             Device
             <select id="device-select">
               <option value="auto" selected>auto</option>
@@ -254,7 +262,22 @@
       </section>
     </main>
 
-    <script src="./vendor/ort.webgpu.min.js?v=1.18.0"></script>
+    <script>
+      (function () {
+        const params = new URLSearchParams(window.location.search);
+        const ortVersion = params.get("ort") || "1.18.0";
+        const base = ortVersion === "1.17.3" ? "./vendor/ort-1.17.3/" : "./vendor/";
+        window.__ortConfig = { version: ortVersion, base };
+        window.__ortLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${base}ort.webgpu.min.js?v=${ortVersion}`;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load ORT script."));
+          document.head.appendChild(script);
+        });
+      })();
+    </script>
     <script type="module" src="ai-webgpu-spike.js"></script>
   </body>
 </html>

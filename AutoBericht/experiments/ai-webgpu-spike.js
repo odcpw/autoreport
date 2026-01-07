@@ -3,6 +3,7 @@ const byId = (id) => document.getElementById(id);
 const transformersUrlEl = byId("transformers-url");
 const localModelPathEl = byId("local-model-path");
 const allowRemoteEl = byId("allow-remote");
+const ortVersionEl = byId("ort-version");
 const deviceSelectEl = byId("device-select");
 const loadLibBtn = byId("load-lib");
 const checkWebgpuBtn = byId("check-webgpu");
@@ -70,13 +71,31 @@ const DEFAULTS = {
   visionModel: "LiquidAI/LFM2.5-VL-1.6B-ONNX",
 };
 
-const ORT_VERSION = "1.18.0";
 const WASM_MAGIC = ["00", "61", "73", "6d"];
+
+function getOrtConfig() {
+  const fallback = { version: "1.18.0", base: "./vendor/" };
+  if (window.__ortConfig && window.__ortConfig.version && window.__ortConfig.base) {
+    return window.__ortConfig;
+  }
+  return fallback;
+}
+
+async function ensureOrtLoaded() {
+  if (window.__ortLoadPromise) {
+    try {
+      await window.__ortLoadPromise;
+    } catch (err) {
+      log(`ORT load failed: ${err.message}`);
+    }
+  }
+}
 
 function configureOrt() {
   if (!window.ort?.env?.wasm) return;
-  const base = new URL("./vendor/", window.location.href).toString();
-  const cacheBust = `?v=${ORT_VERSION}`;
+  const { version, base: basePath } = getOrtConfig();
+  const base = new URL(basePath, window.location.href).toString();
+  const cacheBust = `?v=${version}`;
   window.ort.env.wasm.wasmPaths = {
     "ort-wasm.wasm": `${base}ort-wasm.wasm${cacheBust}`,
     "ort-wasm-simd.wasm": `${base}ort-wasm-simd.wasm${cacheBust}`,
@@ -125,6 +144,7 @@ async function probeWasmFile(label, url) {
 }
 
 async function probeWasmFiles() {
+  await ensureOrtLoaded();
   if (!window.ort) {
     log("WASM probe skipped: onnxruntime-web not loaded.");
     return;
@@ -599,6 +619,7 @@ function decodeTokens(tokenizer, ids) {
 }
 
 async function loadOrtSession(modelPath, providers) {
+  await ensureOrtLoaded();
   const cacheKey = `${modelPath}::${providers.join(",")}`;
   if (state.ortSessions.has(cacheKey)) {
     log(`ORT session cache hit: ${modelPath}`);
@@ -618,6 +639,7 @@ async function loadOrtSession(modelPath, providers) {
 }
 
 async function warmupOrtSessions(modelId) {
+  await ensureOrtLoaded();
   const config = resolveOrtModelConfig(modelId);
   if (!config) {
     setStatus(visionStatusEl, `Unknown LiquidAI model config for ${modelId}`);
@@ -694,6 +716,7 @@ async function runOrtVision(modelId, file) {
 }
 
 async function runOrtChat(modelId, file, question) {
+  await ensureOrtLoaded();
   const config = resolveOrtModelConfig(modelId);
   if (!config) {
     setStatus(visionStatusEl, `Unknown LiquidAI model config for ${modelId}`);
@@ -831,10 +854,21 @@ function applyDefaults() {
   if ("gpu" in navigator) {
     deviceSelectEl.value = "webgpu";
   }
+  const { version } = getOrtConfig();
+  if (ortVersionEl) {
+    ortVersionEl.value = version;
+  }
 }
 
 async function autoStart() {
   applyDefaults();
+  const { version, base } = getOrtConfig();
+  log(`ORT config: version=${version} base=${base}`);
+  ensureOrtLoaded().then(() => {
+    if (window.ort?.env?.versions?.web) {
+      log(`ORT loaded: ${window.ort.env.versions.web}`);
+    }
+  });
   log(`User agent: ${navigator.userAgent}`);
   log(`Cross-origin isolated: ${String(crossOriginIsolated)}`);
   configureOrt();
@@ -898,6 +932,20 @@ downloadLogBtn.addEventListener("click", () => {
 allowRemoteEl.addEventListener("change", () => {
   applyEnv();
 });
+
+if (ortVersionEl) {
+  ortVersionEl.addEventListener("change", () => {
+    const next = ortVersionEl.value;
+    const params = new URLSearchParams(window.location.search);
+    if (next === "1.18.0") {
+      params.delete("ort");
+    } else {
+      params.set("ort", next);
+    }
+    const query = params.toString();
+    window.location.search = query ? `?${query}` : "";
+  });
+}
 
 localModelPathEl.addEventListener("change", () => {
   applyEnv();
