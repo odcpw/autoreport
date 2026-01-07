@@ -1,33 +1,19 @@
-# AutoBericht UI (Redesign)
+# AutoBericht (Project Bundle)
 
-This folder defaults to the minimal, folder-first editor in `mini/`. The previous
-three-tab MVP UI lives under `legacy/` for reference.
+This is the self-contained AutoBericht app bundle for a single project.
 
-> **Tip (recommended):** Use the repo launcher (`start-autobericht.cmd`). It starts
-> a local, offline-only server and opens the minimal editor without browser flags.
+## What’s Inside
+- `mini/` — AutoBericht + PhotoSorter UI
+- `data/seed/` — bundled seed data (questions, library)
+- `docs/` — project docs and spec
+- `libs/` — bundled JS libraries (offline)
+- `shared/` — debug logger
+- `start-autobericht.cmd` — Windows launcher (recommended)
 
-## Directory Layout
+## Start
+1) Double‑click `start-autobericht.cmd`.
+2) In the browser, click **Open Project Folder** and select the project root.
 
-- `index.html` — landing page linking to the new editor, experiments, and legacy UI.
-- `mini/` — minimal chapter editor (current direction).
-- `experiments/` — focused spikes (FS Access, SheetJS, etc.).
-- `shared/` — shared utilities (debug logger).
-- `legacy/` — legacy MVP UI (three-panel, import/export tabs).
-- `libs/` — bundled third-party libraries (offline only).
-
-## Getting Started (New)
-
-1. Launch the local server:
-   ```
-   start-autobericht.cmd
-   ```
-2. The server opens the minimal editor at `/mini/`.
-3. Use **Open Project Folder** and **Load sidecar**.
-4. Save with **Save sidecar**. Use **Save debug log** for troubleshooting.
-
-## Related Documentation
-
-- **Design Spec:** `docs/design-spec.md`
-- **System Overview:** `docs/system-overview.md`
-- **Workflow:** `docs/workflow.md`
-- **Legacy docs** live in `legacy/docs/`
+Notes
+- Do not rename the `AutoBericht` folder.
+- The app writes `project_sidecar.json` and `library_user_*.json` in the project root.

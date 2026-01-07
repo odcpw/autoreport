@@ -14,3 +14,4 @@ AutoBericht Project Template
 Notes
 - Do not rename the AutoBericht folder.
 - project_sidecar.json and library_user_*.json will be created in this root.
+- If we materialize photo views later, they will appear under Photos\_views\...
