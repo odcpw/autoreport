@@ -467,6 +467,7 @@
       sidecarDoc = JSON.parse(text);
       const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
       state.project = ensureObservationChapter(reportProject);
+      ensureManagementSummaryChapter(state.project);
       syncObservationChapterRows(state.project, sidecarDoc);
       ensureProjectMeta();
       buildPhotoIndex();
@@ -479,6 +480,7 @@
       try {
         state.project = await loadSeedsForProject();
         ensureObservationChapter(state.project);
+        ensureManagementSummaryChapter(state.project);
         syncObservationChapterRows(state.project, sidecarDoc);
         ensureProjectMeta();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
@@ -491,6 +493,7 @@
       } catch (seedErr) {
         state.project = structuredClone(defaultProject);
         ensureObservationChapter(state.project);
+        ensureManagementSummaryChapter(state.project);
         syncObservationChapterRows(state.project, sidecarDoc);
         state.selectedChapterId = state.project.chapters[0].id;
         sidecarDoc = null;
@@ -554,7 +557,7 @@
   };
 
   const calculateScore = (row) => {
-    if (row?.type === "field_observation") return null;
+    if (row?.type === "field_observation" || row?.type === "summary") return null;
     const ws = row?.workstate || {};
     if (ws.includeFinding === false) return 100;
     const level = Number(ws.selectedLevel || 1);
@@ -742,6 +745,48 @@
         id: "4.8",
         title: { de: "Beobachtungen" },
         rows: [],
+      });
+    }
+    project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
+    return project;
+  };
+
+  const ensureManagementSummaryChapter = (project) => {
+    if (!project?.chapters) return project;
+    const hasSummary = project.chapters.some((chapter) => chapter.id === "0");
+    if (!hasSummary) {
+      project.chapters.unshift({
+        id: "0",
+        title: { de: "Management Summary" },
+        rows: Array.from({ length: 8 }).map((_, index) => ({
+          id: `0.${index + 1}`,
+          type: "summary",
+          titleOverride: "",
+          master: {
+            finding: "",
+            levels: {
+              "1": "",
+              "2": "",
+              "3": "",
+              "4": "",
+            },
+          },
+          customer: {
+            answer: null,
+            remark: "",
+            items: [],
+          },
+          workstate: {
+            selectedLevel: 1,
+            includeFinding: true,
+            includeRecommendation: true,
+            done: false,
+            useFindingOverride: true,
+            findingOverride: "",
+            useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
+            levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+          },
+        })),
       });
     }
     project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
@@ -1207,6 +1252,7 @@
   };
 
   const createSelfAssessmentDetails = (row) => {
+    if (row.type === "summary") return null;
     const selfItems = row.customer?.items || [];
     if (selfItems.length <= 1) return null;
     const details = document.createElement("details");
