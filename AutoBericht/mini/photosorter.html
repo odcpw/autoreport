@@ -23,6 +23,7 @@
         <button id="pick-photos" disabled>Select Photo Folder</button>
         <button id="scan-photos" disabled>Scan Photos</button>
         <button id="save-sidecar" disabled>Save tags</button>
+        <button id="open-settings">Settings</button>
         <button id="save-log">Save debug log</button>
       </div>
     </header>
@@ -69,6 +70,27 @@
         </div>
       </aside>
     </main>
+
+    <div class="modal" id="settings-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="settings-close"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="modal__header">
+          <h2 id="settings-title">Settings</h2>
+          <button type="button" class="modal__close" id="settings-close-btn">×</button>
+        </div>
+        <div class="modal__body">
+          <section class="settings-section">
+            <h3>Beobachtung tags</h3>
+            <p>Manage observation tags. Removing a tag clears it from all photos.</p>
+            <div class="settings-tags__add">
+              <input id="obs-tag-input" type="text" placeholder="Add new observation tag" />
+              <button id="obs-tag-add" type="button">Add</button>
+            </div>
+            <div class="settings-tags__list" id="obs-tag-list"></div>
+          </section>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="../libs/sheetjs/xlsx.full.min.js"></script>

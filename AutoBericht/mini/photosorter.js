@@ -6,6 +6,13 @@
   const scanPhotosBtn = document.getElementById("scan-photos");
   const saveSidecarBtn = document.getElementById("save-sidecar");
   const saveLogBtn = document.getElementById("save-log");
+  const openSettingsBtn = document.getElementById("open-settings");
+  const settingsModal = document.getElementById("settings-modal");
+  const settingsCloseBtn = document.getElementById("settings-close-btn");
+  const settingsBackdrop = document.getElementById("settings-close");
+  const obsTagInput = document.getElementById("obs-tag-input");
+  const obsTagAddBtn = document.getElementById("obs-tag-add");
+  const obsTagList = document.getElementById("obs-tag-list");
   const statusEl = document.getElementById("status");
   const statusTextEl = document.getElementById("status-text");
   const statusCloseBtn = document.getElementById("status-close");
@@ -128,6 +135,19 @@
   const setStatus = (message) => {
     statusTextEl.textContent = message;
     debug.logLine("info", message);
+  };
+
+  const openSettings = () => {
+    if (!settingsModal) return;
+    settingsModal.classList.add("is-open");
+    settingsModal.setAttribute("aria-hidden", "false");
+    renderObservationTagList();
+  };
+
+  const closeSettings = () => {
+    if (!settingsModal) return;
+    settingsModal.classList.remove("is-open");
+    settingsModal.setAttribute("aria-hidden", "true");
   };
 
   const setDefaultPhotoHandle = async () => {
@@ -599,39 +619,6 @@
       });
       controls.append(addInput);
     }
-    if (config.allowRemove) {
-      const removeSelect = document.createElement("select");
-      removeSelect.className = "panel__remove-select";
-      const placeholder = document.createElement("option");
-      placeholder.value = "";
-      placeholder.textContent = "Remove tag…";
-      removeSelect.appendChild(placeholder);
-      (state.tagOptions?.[group] || []).forEach((option) => {
-        const opt = document.createElement("option");
-        opt.value = option.value;
-        opt.textContent = option.label;
-        removeSelect.appendChild(opt);
-      });
-      const removeBtn = document.createElement("button");
-      removeBtn.type = "button";
-      removeBtn.className = "panel__remove-btn";
-      removeBtn.textContent = "Remove";
-      removeBtn.disabled = true;
-      removeSelect.addEventListener("change", () => {
-        removeBtn.disabled = !removeSelect.value;
-      });
-      removeBtn.addEventListener("click", () => {
-        const value = removeSelect.value;
-        if (!value) return;
-        const label = removeSelect.options[removeSelect.selectedIndex]?.textContent || value;
-        const confirmed = window.confirm(`Remove "${label}" and clear it from all photos?`);
-        if (!confirmed) return;
-        removeTag(group, value);
-        removeSelect.value = "";
-        removeBtn.disabled = true;
-      });
-      controls.append(removeSelect, removeBtn);
-    }
 
     const current = getCurrentPhoto();
     const selected = new Set(current?.tags?.[group] || []);
@@ -696,7 +683,6 @@
       description: "Themen/Begriffe aus der Begehung.",
       filter: state.tagFilters.observations,
       allowAdd: true,
-      allowRemove: true,
     });
     renderTagPanel("training", {
       title: "Training",
@@ -750,20 +736,71 @@
     renderAll();
   };
 
-  const removeTag = (group, tag) => {
+  const removeObservationTag = (tag) => {
     if (!tag) return;
-    const options = state.tagOptions?.[group] || [];
-    state.tagOptions[group] = options.filter((opt) => opt.value !== tag);
+    const options = state.tagOptions?.observations || [];
+    state.tagOptions.observations = options.filter((opt) => opt.value !== tag);
     state.photos.forEach((photo) => {
-      const list = new Set(photo.tags?.[group] || []);
+      const list = new Set(photo.tags?.observations || []);
       if (list.has(tag)) {
         list.delete(tag);
-        photo.tags[group] = Array.from(list);
+        photo.tags.observations = Array.from(list);
       }
     });
     scheduleAutosave();
     renderAll();
+    renderObservationTagList();
   };
+
+  const renderObservationTagList = () => {
+    if (!obsTagList) return;
+    obsTagList.innerHTML = "";
+    const options = state.tagOptions?.observations || [];
+    const counts = new Map();
+    state.photos.forEach((photo) => {
+      (photo.tags?.observations || []).forEach((tag) => {
+        counts.set(tag, (counts.get(tag) || 0) + 1);
+      });
+    });
+
+    options.forEach((option) => {
+      const row = document.createElement("div");
+      row.className = "settings-tags__row";
+      const label = document.createElement("span");
+      label.textContent = option.label;
+      const count = document.createElement("span");
+      count.className = "settings-tags__count";
+      count.textContent = String(counts.get(option.value) || 0);
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.textContent = "Remove";
+      removeBtn.addEventListener("click", () => {
+        const confirmed = window.confirm(`Remove "${option.label}" and clear it from all photos?`);
+        if (!confirmed) return;
+        removeObservationTag(option.value);
+      });
+      row.append(label, count, removeBtn);
+      obsTagList.appendChild(row);
+    });
+  };
+
+  const addObservationTag = () => {
+    if (!obsTagInput) return;
+    const value = obsTagInput.value.trim();
+    if (!value) return;
+    const existing = state.tagOptions.observations || [];
+    if (!existing.some((option) => option.value === value)) {
+      state.tagOptions.observations = sortOptionsForGroup("observations", [
+        ...existing,
+        { value, label: value },
+      ]);
+      scheduleAutosave();
+      renderAll();
+      renderObservationTagList();
+    }
+    obsTagInput.value = "";
+  };
+
 
   const serializePhotos = () => {
     const output = {};
@@ -1075,6 +1112,26 @@
   saveSidecarBtn.addEventListener("click", async () => {
     await saveProjectSidecar();
   });
+
+  if (openSettingsBtn) {
+    openSettingsBtn.addEventListener("click", openSettings);
+  }
+  if (settingsCloseBtn) {
+    settingsCloseBtn.addEventListener("click", closeSettings);
+  }
+  if (settingsBackdrop) {
+    settingsBackdrop.addEventListener("click", closeSettings);
+  }
+  if (obsTagAddBtn) {
+    obsTagAddBtn.addEventListener("click", addObservationTag);
+  }
+  if (obsTagInput) {
+    obsTagInput.addEventListener("keydown", (event) => {
+      if (event.key !== "Enter") return;
+      event.preventDefault();
+      addObservationTag();
+    });
+  }
 
   filterToggleBtn.addEventListener("click", () => {
     state.filterMode = state.filterMode === "all" ? "unsorted" : "all";
