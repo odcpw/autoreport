@@ -24,7 +24,7 @@
   let dirHandle = null;
   let sidecarDoc = null;
   let autosaveTimer = null;
-  let autosaveInFlight = false;
+  let saveQueue = Promise.resolve();
   const debug = window.AutoReportDebug || {
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
@@ -450,6 +450,8 @@
         levels: mergedLevels,
       };
       if (entry.finding) merged.finding = entry.finding;
+      if (entry.lastUsed) merged.lastUsed = entry.lastUsed;
+      if (!merged.lastUsed && existing.lastUsed) merged.lastUsed = existing.lastUsed;
       map.set(entry.id, merged);
     });
     return map;
@@ -620,24 +622,27 @@
 
   const saveSidecar = async () => {
     if (!dirHandle) return;
-    if (autosaveInFlight) return;
-    autosaveInFlight = true;
-    let existing = sidecarDoc;
-    try {
-      const handle = await dirHandle.getFileHandle("project_sidecar.json");
-      const file = await handle.getFile();
-      const text = await file.text();
-      existing = JSON.parse(text);
-    } catch (err) {
-      existing = sidecarDoc;
-    }
-    const payload = mergeSidecar(existing, state.project);
-    const handle = await dirHandle.getFileHandle("project_sidecar.json", { create: true });
-    const writable = await handle.createWritable();
-    await writable.write(JSON.stringify(payload, null, 2));
-    await writable.close();
-    sidecarDoc = payload;
-    autosaveInFlight = false;
+    saveQueue = saveQueue.then(async () => {
+      let existing = sidecarDoc;
+      try {
+        const handle = await dirHandle.getFileHandle("project_sidecar.json");
+        const file = await handle.getFile();
+        const text = await file.text();
+        existing = JSON.parse(text);
+      } catch (err) {
+        existing = sidecarDoc;
+      }
+      const payload = mergeSidecar(existing, state.project);
+      const handle = await dirHandle.getFileHandle("project_sidecar.json", { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(JSON.stringify(payload, null, 2));
+      await writable.close();
+      sidecarDoc = payload;
+    }).catch((err) => {
+      setStatus(`Autosave failed: ${err.message}`);
+      debug.logLine("error", `Autosave failed: ${err.message || err}`);
+    });
+    return saveQueue;
   };
 
   const scheduleAutosave = () => {
@@ -701,6 +706,7 @@
     const libraryMap = buildLibraryMap(masterLibrary, userLibrary);
     const entriesMap = new Map(Array.from(libraryMap.entries()).map(([id, entry]) => [id, entry]));
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+    const lastUsedAt = new Date().toISOString();
     let applied = 0;
 
     state.project.chapters.forEach((chapter) => {
@@ -722,6 +728,7 @@
             const existing = toText(entry.levels[levelKey]).trim();
             entry.levels[levelKey] = existing ? `${existing}\n\n${text}` : text;
           }
+          entry.lastUsed = lastUsedAt;
           entriesMap.set(row.id, entry);
           ws.libraryHashes[levelKey] = currentHash;
           applied += 1;

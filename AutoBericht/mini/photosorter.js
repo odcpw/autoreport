@@ -119,7 +119,7 @@
   };
 
   let autosaveTimer = null;
-  let autosaveInFlight = false;
+  let saveQueue = Promise.resolve();
 
 
   const updateStatusVisibility = (isHidden) => {
@@ -409,6 +409,34 @@
       seen.add(key);
       return true;
     });
+  };
+
+  const buildReportTagOptionsFromProject = (project) => {
+    if (!project?.chapters) return null;
+    const tags = new Map();
+    const addTag = (value, label) => {
+      const val = String(value || "").trim();
+      if (!val || isUnsortedLabel(val)) return;
+      let lbl = String(label || val).trim();
+      if (lbl && !(lbl === val || lbl.startsWith(`${val} `) || lbl.startsWith(`${val}.`))) {
+        lbl = `${val} ${lbl}`;
+      }
+      if (!tags.has(val)) tags.set(val, lbl || val);
+    };
+    project.chapters.forEach((chapter) => {
+      addTag(chapter.id, chapter.title?.de || chapter.title || chapter.id);
+      (chapter.rows || []).forEach((row) => {
+        if (row.kind === "section") {
+          addTag(row.id, row.title || row.id);
+          return;
+        }
+        if (row.sectionId) {
+          addTag(row.sectionId, row.sectionLabel || row.sectionId);
+        }
+      });
+    });
+    const options = Array.from(tags.entries()).map(([value, label]) => ({ value, label }));
+    return sortOptionsForGroup("report", options);
   };
 
   const SEED_TAG_OPTIONS = window.PS_CATEGORY_LABELS_SEED
@@ -769,6 +797,11 @@
       const photoDoc = sidecar?.photos || sidecar;
       state.projectDoc = normalizePhotoDoc(photoDoc);
       state.tagOptions = ensureTagOptions(state.projectDoc.photoTagOptions);
+      const reportOptions = buildReportTagOptionsFromProject(sidecar?.report?.project);
+      if (reportOptions && reportOptions.length) {
+        state.tagOptions.report = reportOptions;
+        state.projectDoc.photoTagOptions.report = reportOptions;
+      }
       state.photoRootName = state.projectDoc.photoRoot || "";
       setStatus("Loaded project_sidecar.json");
       debug.logLine("info", "Loaded project_sidecar.json");
@@ -814,8 +847,6 @@
 
   const saveProjectSidecar = async () => {
     if (!state.projectHandle) return;
-    if (autosaveInFlight) return;
-    autosaveInFlight = true;
     const payload = normalizePhotoDoc(state.projectDoc);
     payload.photos = serializePhotos();
     payload.photoTagOptions = structuredClone(state.tagOptions);
@@ -823,7 +854,7 @@
     if (!payload.meta) payload.meta = {};
     payload.meta.updatedAt = new Date().toISOString();
 
-    try {
+    saveQueue = saveQueue.then(async () => {
       let existing = state.sidecarDoc;
       try {
         const existingHandle = await state.projectHandle.getFileHandle("project_sidecar.json");
@@ -845,12 +876,11 @@
       state.sidecarDoc = sidecar;
       setStatus("Saved photo tags to project_sidecar.json");
       debug.logLine("info", "Saved photo tags to project_sidecar.json");
-    } catch (err) {
+    }).catch((err) => {
       setStatus(`Save failed: ${err.message}`);
       debug.logLine("error", `Save failed: ${err.message}`);
-    } finally {
-      autosaveInFlight = false;
-    }
+    });
+    return saveQueue;
   };
 
   const scheduleAutosave = () => {
