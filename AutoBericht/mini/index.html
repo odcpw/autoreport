@@ -76,6 +76,23 @@
         </div>
       </div>
     </div>
+
+    <div class="photo-overlay" id="photo-overlay" aria-hidden="true">
+      <div class="photo-overlay__backdrop" id="photo-overlay-close"></div>
+      <div class="photo-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="photo-overlay-title">
+        <div class="photo-overlay__header">
+          <div class="photo-overlay__meta" id="photo-overlay-title"></div>
+          <button type="button" class="ghost" id="photo-overlay-close-btn">✕</button>
+        </div>
+        <div class="photo-overlay__body">
+          <button type="button" class="ghost" id="photo-overlay-prev">Prev (A)</button>
+          <div class="photo-overlay__image">
+            <img id="photo-overlay-image" alt="Selected photo preview" />
+          </div>
+          <button type="button" class="ghost" id="photo-overlay-next">Next (D)</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="../libs/sheetjs/xlsx.full.min.js"></script>

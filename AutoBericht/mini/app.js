@@ -18,6 +18,13 @@
   const chapterListEl = document.getElementById("chapter-list");
   const chapterTitleEl = document.getElementById("chapter-title");
   const rowsEl = document.getElementById("rows");
+  const photoOverlayEl = document.getElementById("photo-overlay");
+  const photoOverlayClose = document.getElementById("photo-overlay-close");
+  const photoOverlayCloseBtn = document.getElementById("photo-overlay-close-btn");
+  const photoOverlayPrevBtn = document.getElementById("photo-overlay-prev");
+  const photoOverlayNextBtn = document.getElementById("photo-overlay-next");
+  const photoOverlayTitle = document.getElementById("photo-overlay-title");
+  const photoOverlayImage = document.getElementById("photo-overlay-image");
 
   const filterModeEls = Array.from(document.querySelectorAll("input[name=\"filter-mode\"]"));
 
@@ -170,6 +177,14 @@
     filters: {
       mode: "all",
     },
+    photoIndex: new Map(),
+    photoRoot: "",
+    photoOverlay: {
+      tag: "",
+      items: [],
+      index: 0,
+      url: "",
+    },
   };
 
   const setStatus = (message) => {
@@ -183,6 +198,121 @@
       throw new Error(`Failed to fetch ${path}`);
     }
     return response.json();
+  };
+
+  const buildPhotoIndex = () => {
+    const index = new Map();
+    const photoDoc = sidecarDoc?.photos;
+    const photos = photoDoc?.photos || {};
+    state.photoRoot = photoDoc?.photoRoot || "";
+    Object.entries(photos).forEach(([path, data]) => {
+      const tags = data?.tags?.report || [];
+      tags.forEach((tag) => {
+        const key = String(tag || "").trim();
+        if (!key) return;
+        if (!index.has(key)) index.set(key, []);
+        index.get(key).push({
+          path,
+          notes: data?.notes || "",
+        });
+      });
+    });
+    index.forEach((items) => {
+      items.sort((a, b) => a.path.localeCompare(b.path, "de", { numeric: true }));
+    });
+    state.photoIndex = index;
+  };
+
+  const getPhotosForTag = (tag) => {
+    if (!tag) return [];
+    return state.photoIndex.get(tag) || [];
+  };
+
+  const resolvePhotoFile = async (path) => {
+    if (!dirHandle) throw new Error("Project folder not selected.");
+    const parts = String(path || "").split("/").filter(Boolean);
+    let current = dirHandle;
+    for (let i = 0; i < parts.length - 1; i += 1) {
+      current = await current.getDirectoryHandle(parts[i]);
+    }
+    const fileHandle = await current.getFileHandle(parts[parts.length - 1]);
+    return fileHandle.getFile();
+  };
+
+  const loadOverlayImage = async (path) => {
+    if (!photoOverlayImage) return;
+    if (state.photoOverlay.url) {
+      URL.revokeObjectURL(state.photoOverlay.url);
+      state.photoOverlay.url = "";
+    }
+    try {
+      const file = await resolvePhotoFile(path);
+      const url = URL.createObjectURL(file);
+      state.photoOverlay.url = url;
+      photoOverlayImage.src = url;
+      photoOverlayImage.alt = path;
+    } catch (err) {
+      photoOverlayImage.removeAttribute("src");
+      photoOverlayImage.alt = "Photo not available";
+      setStatus(`Photo not found: ${path}`);
+    }
+  };
+
+  const renderPhotoOverlay = () => {
+    if (!photoOverlayEl) return;
+    const { items, index, tag } = state.photoOverlay;
+    if (!items.length) return;
+    const current = items[index];
+    const filename = current.path.split("/").pop();
+    if (photoOverlayTitle) {
+      photoOverlayTitle.textContent = `${tag} • Image ${index + 1} of ${items.length} • ${filename}`;
+    }
+    if (photoOverlayPrevBtn) {
+      photoOverlayPrevBtn.disabled = items.length <= 1;
+    }
+    if (photoOverlayNextBtn) {
+      photoOverlayNextBtn.disabled = items.length <= 1;
+    }
+    loadOverlayImage(current.path);
+  };
+
+  const openPhotoOverlay = (tag) => {
+    const items = getPhotosForTag(tag);
+    if (!items.length) return;
+    state.photoOverlay = {
+      tag,
+      items,
+      index: 0,
+      url: "",
+    };
+    if (photoOverlayEl) {
+      photoOverlayEl.classList.add("is-open");
+      photoOverlayEl.setAttribute("aria-hidden", "false");
+    }
+    renderPhotoOverlay();
+  };
+
+  const closePhotoOverlay = () => {
+    if (photoOverlayEl) {
+      photoOverlayEl.classList.remove("is-open");
+      photoOverlayEl.setAttribute("aria-hidden", "true");
+    }
+    if (state.photoOverlay.url) {
+      URL.revokeObjectURL(state.photoOverlay.url);
+    }
+    state.photoOverlay = {
+      tag: "",
+      items: [],
+      index: 0,
+      url: "",
+    };
+  };
+
+  const stepPhotoOverlay = (delta) => {
+    const total = state.photoOverlay.items.length;
+    if (!total) return;
+    state.photoOverlay.index = (state.photoOverlay.index + delta + total) % total;
+    renderPhotoOverlay();
   };
 
   const seedPathCandidates = (filename) => ([
@@ -305,6 +435,7 @@
       const reportProject = extractReportProject(sidecarDoc) || structuredClone(defaultProject);
       state.project = reportProject;
       ensureProjectMeta();
+      buildPhotoIndex();
       state.selectedChapterId = state.project.chapters[0]?.id || "";
       render();
       setStatus("Loaded project_sidecar.json");
@@ -315,6 +446,8 @@
         state.project = await loadSeedsForProject();
         ensureProjectMeta();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
+        sidecarDoc = null;
+        buildPhotoIndex();
         render();
         setStatus("Sidecar not found; loaded seed data.");
         debug.logLine("warn", `Sidecar not found; loaded seeds (${err.message || err})`);
@@ -323,6 +456,7 @@
         state.project = structuredClone(defaultProject);
         state.selectedChapterId = state.project.chapters[0].id;
         sidecarDoc = null;
+        buildPhotoIndex();
         render();
         setStatus("Sidecar not found; loaded default template.");
         debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
@@ -885,10 +1019,37 @@
     });
   };
 
+  const createPhotoPill = (tag) => {
+    const items = getPhotosForTag(tag);
+    if (!items.length) return null;
+    const pill = document.createElement("button");
+    pill.type = "button";
+    pill.className = "photo-pill";
+    pill.textContent = `Photos ${items.length}`;
+    pill.title = `${items.length} photos tagged ${tag}`;
+    pill.addEventListener("click", () => {
+      openPhotoOverlay(tag);
+    });
+    return pill;
+  };
+
+  const renderChapterTitle = (chapter) => {
+    chapterTitleEl.innerHTML = "";
+    const title = document.createElement("span");
+    title.textContent = formatChapterLabel(chapter);
+    const pill = createPhotoPill(chapter.id);
+    if (pill) chapterTitleEl.appendChild(pill);
+    chapterTitleEl.appendChild(title);
+  };
+
   const createSectionRow = (row) => {
     const sectionRow = document.createElement("div");
     sectionRow.className = "section-row";
-    sectionRow.textContent = row.title;
+    const pill = createPhotoPill(row.id);
+    if (pill) sectionRow.appendChild(pill);
+    const label = document.createElement("span");
+    label.textContent = row.title;
+    sectionRow.appendChild(label);
     return sectionRow;
   };
 
@@ -1188,7 +1349,7 @@
     rowsEl.innerHTML = "";
     const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
     if (!chapter) return;
-    chapterTitleEl.textContent = formatChapterLabel(chapter);
+    renderChapterTitle(chapter);
 
     chapter.rows.forEach((row) => {
       if (row.kind === "section") {
@@ -1326,6 +1487,34 @@
       }
     });
   }
+
+  if (photoOverlayClose) {
+    photoOverlayClose.addEventListener("click", () => {
+      closePhotoOverlay();
+    });
+  }
+  if (photoOverlayCloseBtn) {
+    photoOverlayCloseBtn.addEventListener("click", () => {
+      closePhotoOverlay();
+    });
+  }
+  if (photoOverlayPrevBtn) {
+    photoOverlayPrevBtn.addEventListener("click", () => {
+      stepPhotoOverlay(-1);
+    });
+  }
+  if (photoOverlayNextBtn) {
+    photoOverlayNextBtn.addEventListener("click", () => {
+      stepPhotoOverlay(1);
+    });
+  }
+  document.addEventListener("keydown", (event) => {
+    if (!photoOverlayEl || !photoOverlayEl.classList.contains("is-open")) return;
+    if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
+    if (event.key === "Escape") closePhotoOverlay();
+    if (event.key === "a" || event.key === "A") stepPhotoOverlay(-1);
+    if (event.key === "d" || event.key === "D") stepPhotoOverlay(1);
+  });
 
   window.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "hidden") {
