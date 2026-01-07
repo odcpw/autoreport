@@ -37,6 +37,28 @@
         </div>
 
         <details class="download-block">
+          <summary>Whisper model sizes to compare (ASR)</summary>
+          <p class="hint">
+            Use the same file pattern as tiny, just in a different model folder.
+            Smaller models load faster but may be less accurate.
+          </p>
+          <ul class="download-list">
+            <li>
+              <strong>tiny.en</strong> (fastest, lowest quality)
+              — <a href="https://huggingface.co/Xenova/whisper-tiny.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
+            <li>
+              <strong>base.en</strong> (balanced)
+              — <a href="https://huggingface.co/Xenova/whisper-base.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
+            <li>
+              <strong>small.en</strong> (better quality, slower)
+              — <a href="https://huggingface.co/Xenova/whisper-small.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
+          </ul>
+        </details>
+
+        <details class="download-block">
           <summary>Whisper tiny.en (ASR) — required files</summary>
           <p class="hint">Save into <code>AutoBericht/experiments/models/Xenova/whisper-tiny.en/</code>.</p>
           <ul class="download-list">
@@ -60,24 +82,52 @@
         </details>
 
         <details class="download-block">
-          <summary>ViT-GPT2 image captioning (vision) — required files</summary>
-          <p class="hint">Save into <code>AutoBericht/experiments/models/Xenova/vit-gpt2-image-captioning/</code>.</p>
+          <summary>LiquidAI vision models to compare (local-only)</summary>
+          <p class="hint">
+            These are safetensors (PyTorch) checkpoints. They are not currently compatible with
+            Transformers.js WebGPU out of the box; consider this a download list for future
+            integration or non-browser runtimes.
+          </p>
           <ul class="download-list">
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/config.json" target="_blank" rel="noreferrer">config.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/generation_config.json" target="_blank" rel="noreferrer">generation_config.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/preprocessor_config.json" target="_blank" rel="noreferrer">preprocessor_config.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/tokenizer.json" target="_blank" rel="noreferrer">tokenizer.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/tokenizer_config.json" target="_blank" rel="noreferrer">tokenizer_config.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/special_tokens_map.json" target="_blank" rel="noreferrer">special_tokens_map.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/merges.txt" target="_blank" rel="noreferrer">merges.txt</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/vocab.json" target="_blank" rel="noreferrer">vocab.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/quantize_config.json" target="_blank" rel="noreferrer">quantize_config.json</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/encoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_quantized.onnx</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/decoder_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_quantized.onnx</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/resolve/main/onnx/decoder_with_past_model_quantized.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_quantized.onnx</a></li>
-            <li><a href="https://huggingface.co/Xenova/vit-gpt2-image-captioning/tree/main" target="_blank" rel="noreferrer">Full file list (HF repo)</a></li>
+            <li>
+              <strong>LFM2.5-VL-1.6B</strong> (newest, best quality)
+              — <a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
+            <li>
+              <strong>LFM2-VL-1.6B</strong> (previous gen, similar size)
+              — <a href="https://huggingface.co/LiquidAI/LFM2-VL-1.6B/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
+            <li>
+              <strong>LFM2-VL-450M</strong> (smaller, faster)
+              — <a href="https://huggingface.co/LiquidAI/LFM2-VL-450M/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+            </li>
           </ul>
-          <p class="hint">If a model load error mentions a missing file, grab it from the full file list.</p>
+        </details>
+
+        <details class="download-block">
+          <summary>LiquidAI LFM2.5‑VL‑1.6B — direct downloads</summary>
+          <p class="hint">Save into <code>AutoBericht/experiments/models/LiquidAI/LFM2.5-VL-1.6B/</code>.</p>
+          <ul class="download-list">
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/model.safetensors" target="_blank" rel="noreferrer">model.safetensors (3.19 GB)</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/config.json" target="_blank" rel="noreferrer">config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/generation_config.json" target="_blank" rel="noreferrer">generation_config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/processor_config.json" target="_blank" rel="noreferrer">processor_config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/tokenizer.json" target="_blank" rel="noreferrer">tokenizer.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/tokenizer_config.json" target="_blank" rel="noreferrer">tokenizer_config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/resolve/main/chat_template.jinja" target="_blank" rel="noreferrer">chat_template.jinja</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B/tree/main" target="_blank" rel="noreferrer">Full file list (HF repo)</a></li>
+          </ul>
+        </details>
+
+        <details class="download-block">
+          <summary>LiquidAI LFM2‑VL‑450M — direct downloads (smaller)</summary>
+          <p class="hint">Save into <code>AutoBericht/experiments/models/LiquidAI/LFM2-VL-450M/</code>.</p>
+          <ul class="download-list">
+            <li><a href="https://huggingface.co/LiquidAI/LFM2-VL-450M/resolve/main/model.safetensors" target="_blank" rel="noreferrer">model.safetensors (902 MB)</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2-VL-450M/resolve/main/config.json" target="_blank" rel="noreferrer">config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2-VL-450M/resolve/main/processor_config.json" target="_blank" rel="noreferrer">processor_config.json</a></li>
+            <li><a href="https://huggingface.co/LiquidAI/LFM2-VL-450M/tree/main" target="_blank" rel="noreferrer">Full file list (HF repo)</a></li>
+          </ul>
         </details>
       </section>
 
@@ -96,7 +146,7 @@
             <input id="local-model-path" type="text" placeholder="/models/" />
           </label>
           <label class="inline">
-            <input id="allow-remote" type="checkbox" checked />
+            <input id="allow-remote" type="checkbox" />
             Allow remote models (HF Hub)
           </label>
           <label>

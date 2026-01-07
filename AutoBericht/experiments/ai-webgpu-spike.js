@@ -242,4 +242,4 @@ transformersUrlEl.value = "./vendor/transformers.min.js";
 localModelPathEl.value = "/AutoBericht/experiments/models/";
 allowRemoteEl.checked = false;
 asrModelEl.value = "Xenova/whisper-tiny.en";
-visionModelEl.value = "Xenova/vit-gpt2-image-captioning";
+visionModelEl.value = "LiquidAI/LFM2.5-VL-1.6B";
