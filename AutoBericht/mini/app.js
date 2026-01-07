@@ -37,6 +37,15 @@
     saveLog: async () => ({ location: "none", filename: "" }),
   };
   const {
+    t = (key, fallback) => fallback || key,
+    setLocale = () => {},
+  } = window.AutoBerichtI18n || {};
+  const {
+    escapeHtml = (value) => value,
+    formatInlineMarkdown = (value) => value,
+    markdownToHtml = (value) => value,
+  } = window.AutoBerichtMarkdown || {};
+  const {
     saveHandle: saveFsHandle = async () => {},
     loadHandle: loadFsHandle = async () => null,
     requestHandlePermission: requestFsHandlePermission = async () => false,
@@ -769,6 +778,7 @@
   const ensureProjectMeta = () => {
     if (!state.project.meta) state.project.meta = {};
     if (!state.project.meta.locale) state.project.meta.locale = "de-CH";
+    setLocale(state.project.meta.locale);
   };
 
   const saveSidecar = async () => {
@@ -960,65 +970,7 @@
     return evidence;
   };
 
-  const escapeHtml = (value) => value
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/\"/g, "&quot;")
-    .replace(/'/g, "&#39;");
-
-  const formatInlineMarkdown = (value) => {
-    let out = value;
-    out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
-    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
-    return out;
-  };
-
-  const markdownToHtml = (text) => {
-    const lines = String(text || "").split(/\r?\n/);
-    const parts = [];
-    let inList = false;
-    let paragraphLines = [];
-
-    const flushParagraph = () => {
-      if (!paragraphLines.length) return;
-      const safe = paragraphLines.map((line) => escapeHtml(line)).map((line) => formatInlineMarkdown(line));
-      parts.push(`<p>${safe.join("<br>")}</p>`);
-      paragraphLines = [];
-    };
-
-    lines.forEach((line) => {
-      const trimmed = line.trim();
-      if (!trimmed) {
-        if (inList) {
-          parts.push("</ul>");
-          inList = false;
-        }
-        flushParagraph();
-        parts.push('<div class="md-spacer"></div>');
-        return;
-      }
-      if (trimmed.startsWith("- ")) {
-        flushParagraph();
-        if (!inList) {
-          parts.push("<ul>");
-          inList = true;
-        }
-        const item = escapeHtml(trimmed.slice(2));
-        parts.push(`<li>${formatInlineMarkdown(item)}</li>`);
-        return;
-      }
-      if (inList) {
-        parts.push("</ul>");
-        inList = false;
-      }
-      paragraphLines.push(line);
-    });
-    if (inList) parts.push("</ul>");
-    flushParagraph();
-    return parts.join("");
-  };
+  // Markdown utilities moved to shared/markdown.js
 
   const renderChapterList = () => {
     chapterListEl.innerHTML = "";
@@ -1174,13 +1126,13 @@
     const tooltip = document.createElement("span");
     tooltip.className = "hint__tooltip";
     tooltip.innerHTML = [
-      "Markdown:",
-      "<strong>**bold**</strong>,",
-      "<em>*italic*</em>,",
-      '<span class="hint__link">[text](url)</span>',
-      "<br>- List item",
-      "<br>Blank line = new paragraph",
-      "<br>Line breaks kept",
+      t("markdown_hint_title", "Markdown:"),
+      `<strong>${t("markdown_hint_bold", "**bold**")}</strong>,`,
+      `<em>${t("markdown_hint_italic", "*italic*")}</em>,`,
+      `<span class="hint__link">${t("markdown_hint_link", "[text](url)")}</span>`,
+      `<br>${t("markdown_hint_list", "- List item")}`,
+      `<br>${t("markdown_hint_paragraph", "Blank line = new paragraph")}`,
+      `<br>${t("markdown_hint_linebreak", "Line breaks kept")}`,
     ].join(" ");
     hint.appendChild(icon);
     hint.appendChild(tooltip);

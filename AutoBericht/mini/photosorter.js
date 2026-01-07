@@ -37,6 +37,7 @@
     logLine: () => {},
     saveLog: async () => ({ location: "none", filename: "" }),
   };
+  const { setLocale = () => {} } = window.AutoBerichtI18n || {};
   const {
     saveHandle: saveFsHandle = async () => {},
     loadHandle: loadFsHandle = async () => null,
@@ -809,6 +810,9 @@
       state.sidecarDoc = sidecar;
       const photoDoc = sidecar?.photos || sidecar;
       state.projectDoc = normalizePhotoDoc(photoDoc);
+      if (sidecar?.report?.project?.meta?.locale) {
+        setLocale(sidecar.report.project.meta.locale);
+      }
       state.tagOptions = ensureTagOptions(state.projectDoc.photoTagOptions);
       const reportOptions = buildReportTagOptionsFromProject(sidecar?.report?.project);
       if (reportOptions && reportOptions.length) {
