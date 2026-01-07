@@ -70,7 +70,8 @@ const DEFAULTS = {
 
 function configureOrt() {
   if (!window.ort?.env?.wasm) return;
-  window.ort.env.wasm.wasmPaths = "./vendor/";
+  const base = new URL("./vendor/", window.location.href).toString();
+  window.ort.env.wasm.wasmPaths = base;
   window.ort.env.wasm.simd = true;
   window.ort.env.wasm.numThreads = Math.min(4, navigator.hardwareConcurrency || 1);
 }
