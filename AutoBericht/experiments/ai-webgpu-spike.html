@@ -19,14 +19,14 @@
       <section class="card" id="download-section">
         <h2>Offline downloads (local-only)</h2>
         <p class="hint">
-          Download files once, save them under <code>AutoBericht/experiments/</code>,
-          then serve this folder via the local server. Model IDs stay the same, but
-          the files are loaded from <code>/AutoBericht/experiments/models/</code>.
+          Download files once, save them under <code>AutoBericht/AI/</code>,
+          then serve <code>AutoBericht/experiments/</code> via the local server. Model IDs stay the same, but
+          the files are loaded from <code>/AutoBericht/AI/models/</code>.
         </p>
 
         <div class="download-block">
           <h3>Transformers.js (ESM bundle)</h3>
-          <p class="hint">Save into <code>AutoBericht/experiments/vendor/transformers.min.js</code>.</p>
+          <p class="hint">Save into <code>AutoBericht/AI/vendor/transformers.min.js</code>.</p>
           <ul class="download-list">
             <li>
               <a href="https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.0" target="_blank" rel="noreferrer">
@@ -38,26 +38,31 @@
 
         <div class="download-block">
           <h3>onnxruntime-web (WebGPU bundle)</h3>
-          <p class="hint">Save into <code>AutoBericht/experiments/vendor/ort.webgpu.min.js</code>.</p>
+          <p class="hint">Save into <code>AutoBericht/AI/vendor/ort-1.23.2/ort.webgpu.min.js</code>.</p>
           <ul class="download-list">
             <li>
-              <a href="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.18.0/dist/ort.webgpu.min.js" target="_blank" rel="noreferrer">
-                Download onnxruntime-web@1.18.0 (ort.webgpu.min.js)
+              <a href="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.2/dist/ort.webgpu.min.js" target="_blank" rel="noreferrer">
+                Download onnxruntime-web@1.23.2 (ort.webgpu.min.js)
               </a>
             </li>
           </ul>
-          <p class="hint">WASM runtime files are included in the repo under <code>vendor/</code>.</p>
+          <p class="hint">WASM runtime files are included in the repo under <code>AI/vendor/ort-1.23.2/</code>.</p>
         </div>
 
         <div class="download-block">
           <h3>Local folder structure (pre-made)</h3>
-          <pre class="folder-structure">AutoBericht/experiments/
+          <pre class="folder-structure">AutoBericht/AI/
 ├── vendor/
-│   └── transformers.min.js
-│   └── ort.webgpu.min.js
+│   ├── transformers.min.js
+│   └── ort-1.23.2/
+│       ├── ort.webgpu.min.js
+│       └── ort-wasm-*.wasm
 └── models/
     ├── Xenova/
-    │   └── whisper-tiny.en/
+    │   ├── whisper-tiny/
+    │   │   ├── onnx/
+    │   │   └── *.json + tokenizer files
+    │   └── whisper-base/
     │       ├── onnx/
     │       └── *.json + tokenizer files
     └── LiquidAI/
@@ -68,54 +73,65 @@
         </div>
 
         <details class="download-block">
-          <summary>Whisper model sizes to compare (ASR)</summary>
+          <summary>Whisper model sizes to compare (ASR, multilingual)</summary>
           <p class="hint">
             Use the same file pattern as tiny, just in a different model folder.
             Smaller models load faster but may be less accurate.
           </p>
           <ul class="download-list">
             <li>
-              <strong>tiny.en</strong> (fastest, lowest quality)
-              — <a href="https://huggingface.co/Xenova/whisper-tiny.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+              <strong>tiny</strong> (fastest, lowest quality)
+              — <a href="https://huggingface.co/Xenova/whisper-tiny/tree/main" target="_blank" rel="noreferrer">HF repo</a>
             </li>
             <li>
-              <strong>base.en</strong> (balanced)
-              — <a href="https://huggingface.co/Xenova/whisper-base.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+              <strong>base</strong> (balanced)
+              — <a href="https://huggingface.co/Xenova/whisper-base/tree/main" target="_blank" rel="noreferrer">HF repo</a>
             </li>
             <li>
-              <strong>small.en</strong> (better quality, slower)
-              — <a href="https://huggingface.co/Xenova/whisper-small.en/tree/main" target="_blank" rel="noreferrer">HF repo</a>
+              <strong>small</strong> (better quality, slower)
+              — <a href="https://huggingface.co/Xenova/whisper-small/tree/main" target="_blank" rel="noreferrer">HF repo</a>
             </li>
           </ul>
         </details>
 
         <details class="download-block">
-          <summary>Whisper tiny.en (ASR, q4 WebGPU set) — large files only</summary>
+          <summary>Whisper tiny (ASR, fp16 WebGPU set) — large files only</summary>
           <p class="hint">
-            Small config/tokenizer files are already in the repo.
-            Download only these ONNX files into <code>AutoBericht/experiments/models/Xenova/whisper-tiny.en/onnx/</code>.
+            Small config/tokenizer files live alongside the ONNX files.
+            Download these ONNX files into <code>AutoBericht/AI/models/Xenova/whisper-tiny/onnx/</code>.
           </p>
           <ul class="download-list">
-            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/encoder_model_q4.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_q4.onnx</a></li>
-            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/decoder_model_q4.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_q4.onnx</a></li>
-            <li><a href="https://huggingface.co/Xenova/whisper-tiny.en/resolve/main/onnx/decoder_with_past_model_q4.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_q4.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny/resolve/main/onnx/encoder_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny/resolve/main/onnx/decoder_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny/resolve/main/onnx/decoder_with_past_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-tiny/resolve/main/onnx/decoder_model_merged_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_merged_fp16.onnx</a></li>
           </ul>
-          <p class="hint">These are the only large files needed for the q4 dtype in the spike page.</p>
+          <p class="hint">These are the only large files needed for the fp16 dtype in the spike page.</p>
+          <p class="hint">If your WebGPU adapter lacks <code>shader-f16</code>, use fp32 files instead: <code>encoder_model.onnx</code>, <code>decoder_model.onnx</code>, <code>decoder_with_past_model.onnx</code>, <code>decoder_model_merged.onnx</code>.</p>
+        </details>
+
+        <details class="download-block">
+          <summary>Whisper base (ASR, fp16 WebGPU set) — large files only</summary>
+          <p class="hint">
+            Download these ONNX files into <code>AutoBericht/AI/models/Xenova/whisper-base/onnx/</code>.
+          </p>
+          <ul class="download-list">
+            <li><a href="https://huggingface.co/Xenova/whisper-base/resolve/main/onnx/encoder_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/encoder_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-base/resolve/main/onnx/decoder_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-base/resolve/main/onnx/decoder_with_past_model_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_with_past_model_fp16.onnx</a></li>
+            <li><a href="https://huggingface.co/Xenova/whisper-base/resolve/main/onnx/decoder_model_merged_fp16.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_merged_fp16.onnx</a></li>
+          </ul>
         </details>
 
         <details class="download-block">
           <summary>LiquidAI vision models (WebGPU ONNX)</summary>
           <p class="hint">
-            Official WebGPU-ready ONNX export (LFM2.5‑VL‑1.6B) plus a smaller community ONNX export (450M).
+            Official WebGPU-ready ONNX export (LFM2.5‑VL‑1.6B).
           </p>
           <ul class="download-list">
             <li>
               <strong>LFM2.5‑VL‑1.6B‑ONNX</strong> (official, WebGPU notes included)
               — <a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B-ONNX" target="_blank" rel="noreferrer">HF repo</a>
-            </li>
-            <li>
-              <strong>LFM2‑VL‑450M‑ONNX</strong> (community, lighter)
-              — <a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX" target="_blank" rel="noreferrer">HF repo</a>
             </li>
           </ul>
         </details>
@@ -124,7 +140,7 @@
           <summary>LiquidAI LFM2.5‑VL‑1.6B‑ONNX — large files only</summary>
           <p class="hint">
             Small config/tokenizer files are already in the repo.
-            Download these ONNX files into <code>AutoBericht/experiments/models/LiquidAI/LFM2.5-VL-1.6B-ONNX/onnx/</code>.
+            Download these ONNX files into <code>AutoBericht/AI/models/LiquidAI/LFM2.5-VL-1.6B-ONNX/onnx/</code>.
           </p>
           <ul class="download-list">
             <li><a href="https://huggingface.co/LiquidAI/LFM2.5-VL-1.6B-ONNX/resolve/main/onnx/embed_tokens_fp16.onnx" target="_blank" rel="noreferrer">onnx/embed_tokens_fp16.onnx</a></li>
@@ -136,21 +152,6 @@
           </ul>
         </details>
 
-        <details class="download-block">
-          <summary>LiquidAI LFM2‑VL‑450M‑ONNX — large files only (community)</summary>
-          <p class="hint">
-            Small config/tokenizer files are already in the repo.
-            Download these ONNX files into <code>AutoBericht/experiments/models/LiquidAI/LFM2-VL-450M-ONNX/onnx/</code>.
-          </p>
-          <ul class="download-list">
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/vision_encoder.onnx" target="_blank" rel="noreferrer">onnx/vision_encoder.onnx</a></li>
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/vision_encoder.onnx_data" target="_blank" rel="noreferrer">onnx/vision_encoder.onnx_data</a></li>
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/embed_tokens.onnx" target="_blank" rel="noreferrer">onnx/embed_tokens.onnx</a></li>
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/embed_tokens.onnx_data" target="_blank" rel="noreferrer">onnx/embed_tokens.onnx_data</a></li>
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/decoder_model_merged.onnx" target="_blank" rel="noreferrer">onnx/decoder_model_merged.onnx</a></li>
-            <li><a href="https://huggingface.co/onnx-community/LFM2-VL-450M-ONNX/resolve/main/onnx/decoder_model_merged.onnx_data" target="_blank" rel="noreferrer">onnx/decoder_model_merged.onnx_data</a></li>
-          </ul>
-        </details>
       </section>
 
       <section class="card" id="env-section">
@@ -161,11 +162,11 @@
         <div class="grid">
           <label>
             Transformers.js URL
-            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" value="./vendor/transformers.min.js" />
+            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" value="../AI/vendor/transformers.min.js" />
           </label>
           <label>
             Local model path (optional)
-            <input id="local-model-path" type="text" placeholder="/models/" value="/AutoBericht/experiments/models/" />
+            <input id="local-model-path" type="text" placeholder="../AI/models/" value="../AI/models/" />
           </label>
           <label class="inline">
             <input id="allow-remote" type="checkbox" />
@@ -178,10 +179,9 @@
           <label>
             ORT version
             <select id="ort-version">
-              <option value="1.18.0">1.18.0 (current)</option>
-              <option value="1.17.3">1.17.3 (fallback)</option>
+              <option value="1.23.2">1.23.2 (Space)</option>
             </select>
-            <span class="hint">Reloads the page. 1.17.3 loads from <code>vendor/ort-1.17.3/</code>.</span>
+            <span class="hint">Reloads the page. 1.23.2 loads from <code>AI/vendor/ort-1.23.2/</code>.</span>
           </label>
           <label>
             ORT bundle
@@ -214,8 +214,8 @@
         <div class="grid">
           <label>
             ASR model id
-            <input id="asr-model" type="text" spellcheck="false" placeholder="Model id for ASR" value="Xenova/whisper-tiny.en" />
-            <span class="hint">Using q4 dtype (matches the download list).</span>
+            <input id="asr-model" type="text" spellcheck="false" placeholder="Model id for ASR" value="Xenova/whisper-tiny" />
+            <span class="hint">Prefers fp16 for WebGPU; falls back to fp32 if shader-f16 is unavailable.</span>
           </label>
           <label>
             Audio file
@@ -273,6 +273,9 @@
 
       <section class="card" id="log-section">
         <h2>Log</h2>
+        <div class="actions">
+          <button id="download-log">Download log</button>
+        </div>
         <pre id="log"></pre>
       </section>
     </main>
@@ -280,9 +283,11 @@
     <script>
       (function () {
         const params = new URLSearchParams(window.location.search);
-        const ortVersion = params.get("ort") || "1.18.0";
+        const ortVersion = params.get("ort") || "1.23.2";
         const ortBundle = params.get("ortbundle") || "webgpu";
-        const base = ortVersion === "1.17.3" ? "./vendor/ort-1.17.3/" : "./vendor/";
+        const base = ortVersion === "1.23.2"
+          ? "../AI/vendor/ort-1.23.2/"
+          : "../AI/vendor/ort-1.23.2/";
         const scriptName = ortBundle === "wasm" ? "ort.min.js" : "ort.webgpu.min.js";
         window.__ortConfig = { version: ortVersion, base, bundle: ortBundle };
         window.__ortLoadPromise = new Promise((resolve, reject) => {

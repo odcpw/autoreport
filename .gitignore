@@ -39,3 +39,6 @@ legacy/artifacts/**
 # Large local model binaries (experiments)
 AutoBericht/experiments/models/**/onnx/*.onnx
 AutoBericht/experiments/models/**/onnx/*.onnx_data
+
+# Large local model binaries (AI bundle)
+AutoBericht/AI/
