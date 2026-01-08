@@ -1231,19 +1231,11 @@
     }
     const comments = getAnswerComments(row);
     if (comments.length) {
-      const commentBadge = document.createElement("span");
-      commentBadge.className = "comment-badge";
-      commentBadge.textContent = "Comment";
-      commentBadge.title = comments.join("\n");
-      headerRight.appendChild(commentBadge);
+      headerRight.appendChild(createBadgeTooltip("Comment", comments.join("\n"), "comment-badge"));
     }
     const evidence = getAnswerEvidence(row);
     if (evidence.length) {
-      const evidenceBadge = document.createElement("span");
-      evidenceBadge.className = "evidence-badge";
-      evidenceBadge.textContent = "Evidence";
-      evidenceBadge.title = evidence.join("\n");
-      headerRight.appendChild(evidenceBadge);
+      headerRight.appendChild(createBadgeTooltip("Evidence", evidence.join("\n"), "evidence-badge"));
     }
     headerRight.appendChild(previewBtn);
     header.appendChild(meta);
@@ -1350,6 +1342,20 @@
     hint.appendChild(icon);
     hint.appendChild(tooltip);
     return hint;
+  };
+
+  const createBadgeTooltip = (label, tooltipText, className) => {
+    const wrapper = document.createElement("span");
+    wrapper.className = "badge-tooltip";
+    const badge = document.createElement("span");
+    badge.className = className;
+    badge.textContent = label;
+    const tooltip = document.createElement("span");
+    tooltip.className = "hint__tooltip";
+    tooltip.textContent = tooltipText;
+    wrapper.appendChild(badge);
+    wrapper.appendChild(tooltip);
+    return wrapper;
   };
 
   const createFindingField = (row, ws) => {

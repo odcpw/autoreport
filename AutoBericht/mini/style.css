@@ -367,6 +367,7 @@ button.ghost {
   line-height: 1.3;
   min-width: 210px;
   max-width: 260px;
+  white-space: pre-line;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.25);
   opacity: 0;
   pointer-events: none;
@@ -375,6 +376,16 @@ button.ghost {
 }
 
 .hint:hover .hint__tooltip {
+  opacity: 1;
+}
+
+.badge-tooltip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+}
+
+.badge-tooltip:hover .hint__tooltip {
   opacity: 1;
 }
 
