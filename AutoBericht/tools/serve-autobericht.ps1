@@ -25,7 +25,9 @@ function Get-ContentType([string]$path) {
     '.html' { return 'text/html; charset=utf-8' }
     '.css' { return 'text/css; charset=utf-8' }
     '.js' { return 'text/javascript; charset=utf-8' }
+    '.mjs' { return 'text/javascript; charset=utf-8' }
     '.json' { return 'application/json; charset=utf-8' }
+    '.wasm' { return 'application/wasm' }
     '.svg' { return 'image/svg+xml' }
     '.png' { return 'image/png' }
     '.jpg' { return 'image/jpeg' }
