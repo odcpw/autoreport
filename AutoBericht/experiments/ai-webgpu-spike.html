@@ -17,37 +17,11 @@
 
     <main>
       <section class="card" id="download-section">
-        <h2>Offline downloads (local-only)</h2>
+        <h2>Offline assets (local-only)</h2>
         <p class="hint">
-          Download files once, save them under <code>AutoBericht/AI/</code>,
-          then serve <code>AutoBericht/experiments/</code> via the local server. Model IDs stay the same, but
-          the files are loaded from <code>/AutoBericht/AI/models/</code>.
+          The spike is configured to load everything from <code>AutoBericht/AI/</code>. No external downloads or CDNs
+          are required when using the local bundle.
         </p>
-
-        <div class="download-block">
-          <h3>Transformers.js (ESM bundle)</h3>
-          <p class="hint">Save into <code>AutoBericht/AI/vendor/transformers.min.js</code>.</p>
-          <ul class="download-list">
-            <li>
-              <a href="https://cdn.jsdelivr.net/npm/@huggingface/transformers@3.8.0" target="_blank" rel="noreferrer">
-                Download @huggingface/transformers@3.8.0 (ESM entry)
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div class="download-block">
-          <h3>onnxruntime-web (WebGPU bundle)</h3>
-          <p class="hint">Save into <code>AutoBericht/AI/vendor/ort-1.23.2/ort.webgpu.min.js</code>.</p>
-          <ul class="download-list">
-            <li>
-              <a href="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.23.2/dist/ort.webgpu.min.js" target="_blank" rel="noreferrer">
-                Download onnxruntime-web@1.23.2 (ort.webgpu.min.js)
-              </a>
-            </li>
-          </ul>
-          <p class="hint">WASM runtime files are included in the repo under <code>AI/vendor/ort-1.23.2/</code>.</p>
-        </div>
 
         <div class="download-block">
           <h3>Local folder structure (pre-made)</h3>
@@ -161,8 +135,8 @@
         </p>
         <div class="grid">
           <label>
-            Transformers.js URL
-            <input id="transformers-url" type="text" spellcheck="false" placeholder="Paste a module URL (local or CDN)" value="../AI/vendor/transformers.min.js" />
+            Transformers.js URL (local)
+            <input id="transformers-url" type="text" spellcheck="false" placeholder="Local module path" value="../AI/vendor/transformers.min.js" />
           </label>
           <label>
             Local model path (optional)

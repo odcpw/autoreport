@@ -132,3 +132,41 @@ Date: 2026-01-07
 - WebGPU fp16 requires `shader-f16` to be exposed by the adapter and explicitly enabled at device creation.
 - Vulkan float16 support does not guarantee WebGPU `shader-f16` exposure in the browser.
 - If `shader-f16` remains unavailable, use fp32 or WASM for LiquidAI on this machine.
+
+## Security & privacy assessment (local-only setup)
+
+Date: 2026-01-08
+
+### Scope & assumptions
+- You run the spike from `AutoBericht/experiments/` and keep assets in `AutoBericht/AI/`.
+- `Allow remote models` stays unchecked (local-only).
+- `transformers.min.js` and `onnxruntime-web` files are loaded from the local `AI/vendor/` paths.
+- No additional analytics scripts or browser extensions are capturing page data.
+
+### What the code does (network-wise)
+- The spike fetches **local** assets by default:
+  - `../AI/vendor/transformers.min.js`
+  - `../AI/vendor/ort-1.23.2/*`
+  - `../AI/models/**` (configs + ONNX + `.onnx_data`)
+- There are **no hard-coded external endpoints** in the runtime JS. All `fetch()` calls are relative to the local model path and local template/config files (see `ai-webgpu-spike.js`).
+- With `Allow remote models` unchecked, the app does not contact external servers for model or runtime assets.
+
+### Positive security posture (local-only mode)
+- All model files, runtime files, and configs are served from disk under `AutoBericht/AI/`.
+- The inference stack runs entirely in the browser (WebGPU/WASM) and does not require any cloud service.
+- Log output in the spike shows only local file paths when loading models and assets.
+
+### Data flow (local-only configuration)
+- **Audio**: loaded from the file input, decoded in-browser, passed to the local Whisper model.
+- **Images**: loaded from file input, preprocessed locally, embedded + decoded locally by LiquidAI ONNX.
+- **Text prompts/responses**: all local in JS memory; not posted anywhere.
+- **Logs**: displayed on-page; no upload/telemetry implemented.
+
+### Can anyone “see” when you run a localhost server?
+- A server bound to **127.0.0.1/localhost** is only reachable on the same machine.
+- A server bound to **0.0.0.0** can be reached by other devices on your LAN (if they know the IP/port).
+- It is **not** visible to the public internet unless you explicitly set up port-forwarding or a tunnel.
+
+### Conclusion (this setup)
+- With local assets and `Allow remote models` disabled, **audio, images, prompts, and outputs remain on the machine**.
+- There is **no external communication** required to run Whisper or LiquidAI in this spike.
