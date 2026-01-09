@@ -522,6 +522,18 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
     inputNames,
     ["input_ids", "attention_mask", "position_ids"]
   );
+  const useNamesAreNumeric =
+    useNames.length > 0 && useNames.every((name) => typeof name === "string" && /^\d+$/.test(name));
+  if (numericOnly || useNamesAreNumeric) {
+    const ordered = [inputIdsTensor, attentionMaskTensor, positionIdsTensor];
+    useNames.forEach((name, index) => {
+      const tensor = ordered[index];
+      if (tensor) {
+        inputs[name] = tensor;
+      }
+    });
+    return inputs;
+  }
   let hasInputIds = false;
   let hasAttention = false;
   let hasPosition = false;
