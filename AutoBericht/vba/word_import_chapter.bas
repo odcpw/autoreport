@@ -114,6 +114,29 @@ Public Sub ImportChapter1Table()
         Exit Sub
     End If
 
+    ' Remove borders everywhere, then apply only the bottom border of row 1.
+    On Error Resume Next
+    tbl.Borders.Enable = False
+    With tbl.Rows(1).Borders(wdBorderBottom)
+        .LineStyle = wdLineStyleSingle
+        .LineWidth = wdLineWidth050pt
+    End With
+    On Error GoTo 0
+
+    ' Column widths before filling content (percent-based)
+    On Error Resume Next
+    tbl.AllowAutoFit = False
+    tbl.PreferredWidthType = wdPreferredWidthPercent
+    tbl.PreferredWidth = 100
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
+    On Error GoTo 0
+    tbl.AutoFitBehavior wdAutoFitFixed
+
     ' Header row 1: blank + checkmark (merge later)
     If tbl.Rows(1).Cells.Count < 3 Then
         MsgBox "Table header row 1 has fewer than 3 cells.", vbExclamation
@@ -187,29 +210,6 @@ Public Sub ImportChapter1Table()
         tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
         On Error GoTo 0
     Next idx
-
-    ' Column widths after merges (percent-based)
-    On Error Resume Next
-    tbl.AllowAutoFit = False
-    tbl.PreferredWidthType = wdPreferredWidthPercent
-    tbl.PreferredWidth = 100
-    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
-    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
-    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
-    On Error GoTo 0
-    tbl.AutoFitBehavior wdAutoFitFixed
-
-    ' Remove borders everywhere, then apply only the bottom border of row 1.
-    On Error Resume Next
-    tbl.Borders.Enable = False
-    With tbl.Rows(1).Borders(wdBorderBottom)
-        .LineStyle = wdLineStyleSingle
-        .LineWidth = wdLineWidth050pt
-    End With
-    On Error GoTo 0
 
     ' Keep header rows with the first data row to avoid page break after row 3.
     Dim h As Long
