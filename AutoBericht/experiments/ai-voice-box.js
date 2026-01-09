@@ -455,10 +455,10 @@ function resolveInputNames(inputMeta, inputNames, fallbackNames) {
   const keyNames = entries.map(([name]) => name);
   const namesFromSession = Array.isArray(inputNames) ? inputNames : [];
   const keyNamesNumeric =
-    keyNames.length > 0 && keyNames.every((name) => typeof name === "string" && /^\\d+$/.test(name));
+    keyNames.length > 0 && keyNames.every((name) => typeof name === "string" && /^\d+$/.test(name));
   const sessionNamesNumeric =
     namesFromSession.length > 0 &&
-    namesFromSession.every((name) => typeof name === "string" && /^\\d+$/.test(name));
+    namesFromSession.every((name) => typeof name === "string" && /^\d+$/.test(name));
   const numericOnly = keyNamesNumeric && (namesFromSession.length === 0 || sessionNamesNumeric);
   const useNames =
     namesFromSession.length > 0 && !sessionNamesNumeric
@@ -609,6 +609,14 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
     inputs.position_ids = positionIdsTensor;
   }
 
+  if (inputs.input_ids) {
+    for (const key of Object.keys(inputs)) {
+      if (/^\d+$/.test(key)) {
+        delete inputs[key];
+      }
+    }
+  }
+
   return inputs;
 }
 
@@ -721,6 +729,14 @@ function buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, pos
     const data = toOrtTypedArray(meta.type, total);
     fillDefaultValues(meta.type, data);
     inputs[name] = new window.ort.Tensor(meta.type || "float32", data, dims);
+  }
+
+  if (inputs.inputs_embeds) {
+    for (const key of Object.keys(inputs)) {
+      if (/^\d+$/.test(key)) {
+        delete inputs[key];
+      }
+    }
   }
 
   return inputs;
