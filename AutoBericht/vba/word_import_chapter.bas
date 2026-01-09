@@ -96,12 +96,11 @@ Public Sub ImportChapter1Table()
     End If
     LogDebug "ImportChapter1Table: table rows=" & tableRowCount
 
-    ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
     Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 3, 3)
-    LogDebug "ImportChapter1Table: table created"
+    LogDebug "ImportChapter1Table: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
     On Error Resume Next
     tbl.Style = STYLE_TABLE
     On Error GoTo 0
@@ -112,19 +111,31 @@ Public Sub ImportChapter1Table()
     End If
 
     ' Header row 1: blank + checkmark
+    Dim headerRow As Row
+    Set headerRow = tbl.Rows(1)
+    If headerRow.Cells.Count < 3 Then
+        MsgBox "Table header row has fewer than 3 cells.", vbExclamation
+        Exit Sub
+    End If
+    Dim checkCell As Cell
+    Set checkCell = headerRow.Cells(headerRow.Cells.Count)
+    checkCell.Range.Text = HEADER_CHECKMARK
+    checkCell.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
     On Error Resume Next
-    tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
+    headerRow.Cells(1).Merge headerRow.Cells(2)
     On Error GoTo 0
-    tbl.Cell(1, 1).Range.Text = ""
-    tbl.Cell(1, 3).Range.Text = HEADER_CHECKMARK
-    tbl.Cell(1, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+    headerRow.Cells(1).Range.Text = ""
 
     ' Header row 2: title
+    If tbl.Rows(2).Cells.Count < 3 Then
+        MsgBox "Table header row 2 has fewer than 3 cells.", vbExclamation
+        Exit Sub
+    End If
+    tbl.Cell(2, 1).Range.Text = "Systempunkte mit Verbesserungspotenzial"
+    tbl.Cell(2, 1).Range.Font.Bold = True
     On Error Resume Next
     tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
     On Error GoTo 0
-    tbl.Cell(2, 1).Range.Text = "Systempunkte mit Verbesserungspotenzial"
-    tbl.Cell(2, 1).Range.Font.Bold = True
 
     ' Header row 3: column labels
     tbl.Cell(3, 1).Range.Text = "Ist-Zustand"
@@ -256,7 +267,6 @@ Public Sub ImportChapter0Summary()
     End If
     LogDebug "ImportChapter0Summary: insert range " & insertRng.Start & "-" & insertRng.End
 
-    ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
 
     Dim writer As Range
@@ -441,16 +451,32 @@ Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal end
     Dim insertPara As Paragraph
     Set insertPara = startPara.Next
 
-    ' Ensure there is at least one blank line before the end bookmark.
+    ' Ensure there is a blank line before the end bookmark.
     Dim endPara As Paragraph
     Set endPara = bmEnd.Range.Paragraphs(1)
-    If endPara.Previous Is startPara Or endPara.Previous Is insertPara Then
+    If endPara.Previous Is Nothing Then
         endPara.Range.InsertParagraphBefore
+        Set endPara = bmEnd.Range.Paragraphs(1)
+    End If
+    If Len(Trim$(Replace(endPara.Previous.Range.Text, vbCr, ""))) > 0 Then
+        endPara.Range.InsertParagraphBefore
+        Set endPara = bmEnd.Range.Paragraphs(1)
     End If
 
-    Dim insertRng As Range
-    Set insertRng = ActiveDocument.Range(insertPara.Range.Start, bmEnd.Range.Start)
-    Set ResolveBookmarkInsertRange = insertRng
+    Dim blankPara As Paragraph
+    Set blankPara = endPara.Previous
+
+    On Error Resume Next
+    insertPara.Range.Text = ""
+    On Error GoTo 0
+
+    If Not insertPara.Next Is Nothing Then
+        Dim clearRange As Range
+        Set clearRange = ActiveDocument.Range(insertPara.Next.Range.Start, blankPara.Range.Start)
+        ClearRangeSafe clearRange
+    End If
+
+    Set ResolveBookmarkInsertRange = insertPara.Range
 End Function
 
 Private Sub LogDebug(ByVal message As String)
