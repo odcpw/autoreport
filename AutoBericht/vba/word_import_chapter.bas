@@ -166,9 +166,12 @@ Public Sub ImportChapter1Table()
         On Error GoTo 0
     Next i
 
-    On Error Resume Next
-    tbl.Columns(3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
-    On Error GoTo 0
+    Dim colCell As Cell
+    For Each colCell In tbl.Columns(3).Cells
+        On Error Resume Next
+        colCell.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+        On Error GoTo 0
+    Next colCell
 
     MsgBox "Chapter 1 table imported.", vbInformation
 End Sub
