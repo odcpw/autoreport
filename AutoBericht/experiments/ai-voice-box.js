@@ -453,14 +453,20 @@ function resolveInputNames(inputMeta, inputNames, fallbackNames) {
   const entries = inputMeta instanceof Map ? Array.from(inputMeta.entries()) : Object.entries(inputMeta || {});
   const keyNames = entries.map(([name]) => name);
   const namesFromSession = Array.isArray(inputNames) ? inputNames : [];
-  const numericOnly =
+  const keyNamesNumeric =
     keyNames.length > 0 && keyNames.every((name) => typeof name === "string" && /^\\d+$/.test(name));
+  const sessionNamesNumeric =
+    namesFromSession.length > 0 &&
+    namesFromSession.every((name) => typeof name === "string" && /^\\d+$/.test(name));
+  const numericOnly = keyNamesNumeric && (namesFromSession.length === 0 || sessionNamesNumeric);
   const useNames =
-    (!entries.length || numericOnly) && namesFromSession.length
+    namesFromSession.length > 0 && !sessionNamesNumeric
       ? namesFromSession
-      : numericOnly && fallbackNames?.length
-        ? fallbackNames
-        : keyNames;
+      : (!entries.length || numericOnly) && namesFromSession.length
+        ? namesFromSession
+        : numericOnly && fallbackNames?.length
+          ? fallbackNames
+          : keyNames;
   return { entries, keyNames, namesFromSession, numericOnly, useNames };
 }
 
@@ -794,6 +800,15 @@ async function runLiquidCleanup(text) {
   const decoderSession = await loadOrtSession(`${base}onnx/decoder_q4.onnx`, providers);
 
   const embedStart = performance.now();
+  const embedMetaNames =
+    embedSession.inputMetadata instanceof Map
+      ? Array.from(embedSession.inputMetadata.keys())
+      : Object.keys(embedSession.inputMetadata || {});
+  const embedInputNames = Array.isArray(embedSession.inputNames) ? embedSession.inputNames : [];
+  log(`Cleanup embed meta inputs: ${embedMetaNames.join(", ") || "(none)"}`);
+  if (embedInputNames.length) {
+    log(`Cleanup embed inputNames: ${embedInputNames.join(", ")}`);
+  }
   const tokenInputs = buildLiquidTokenInputs(
     embedSession.inputMetadata,
     embedSession.inputNames,
@@ -801,6 +816,7 @@ async function runLiquidCleanup(text) {
     attentionMask,
     positionIds
   );
+  log(`Cleanup embed feeds: ${Object.keys(tokenInputs).join(", ") || "(none)"}`);
   const tokenResult = await embedSession.run(tokenInputs);
   let currentEmbeds = Object.values(tokenResult)[0];
   logPerf("Cleanup token embedding", performance.now() - embedStart);
@@ -818,6 +834,18 @@ async function runLiquidCleanup(text) {
     const posTensor = new window.ort.Tensor("int64", posIds, [1, posIds.length]);
 
     const decoderInputs = buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, posTensor, cache);
+    if (step === 0) {
+      const decoderMetaNames =
+        decoderSession.inputMetadata instanceof Map
+          ? Array.from(decoderSession.inputMetadata.keys())
+          : Object.keys(decoderSession.inputMetadata || {});
+      const decoderInputNames = Array.isArray(decoderSession.inputNames) ? decoderSession.inputNames : [];
+      log(`Cleanup decoder meta inputs: ${decoderMetaNames.join(", ") || "(none)"}`);
+      if (decoderInputNames.length) {
+        log(`Cleanup decoder inputNames: ${decoderInputNames.join(", ")}`);
+      }
+      log(`Cleanup decoder feeds: ${Object.keys(decoderInputs).join(", ") || "(none)"}`);
+    }
     const result = await decoderSession.run(decoderInputs);
     updateLiquidCache(cache, result);
     const logitsTensor = resolveLogitsOutput(result);
