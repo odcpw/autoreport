@@ -58,7 +58,7 @@ Public Sub ImportChapter1Table()
     chapterId = SafeText(chapter, "id")
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkRange("Chapter1_start", "Chapter1_end")
+    Set insertRng = ResolveBookmarkInsertRange("Chapter1_start", "Chapter1_end")
     If insertRng Is Nothing Then
         Set insertRng = ResolveInsertRange("Chapter1")
     End If
@@ -96,6 +96,10 @@ Public Sub ImportChapter1Table()
     tbl.Style = STYLE_TABLE
     On Error GoTo 0
     tbl.Borders.Enable = True
+    If tbl.Columns.Count < 3 Then
+        MsgBox "Table creation failed (missing columns).", vbExclamation
+        Exit Sub
+    End If
 
     ' Header row 1: blank + checkmark
     On Error Resume Next
@@ -226,7 +230,7 @@ Public Sub ImportChapter0Summary()
     End If
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkRange("Chapter0_start", "Chapter0_end")
+    Set insertRng = ResolveBookmarkInsertRange("Chapter0_start", "Chapter0_end")
     If insertRng Is Nothing Then
         Set insertRng = ResolveInsertRange("Chapter0")
     End If
@@ -402,13 +406,32 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
     Set ResolveInsertRange = targetPara.Range
 End Function
 
-Private Function ResolveBookmarkRange(ByVal startName As String, ByVal endName As String) As Range
+Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String) As Range
     Dim bmStart As Bookmark
     Dim bmEnd As Bookmark
     Set bmStart = FindBookmark(startName)
     Set bmEnd = FindBookmark(endName)
     If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
-    Set ResolveBookmarkRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
+
+    Dim startPara As Paragraph
+    Set startPara = bmStart.Range.Paragraphs(1)
+    If startPara.Next Is Nothing Then
+        startPara.Range.InsertParagraphAfter
+    End If
+
+    Dim insertPara As Paragraph
+    Set insertPara = startPara.Next
+
+    ' Ensure there is at least one blank line before the end bookmark.
+    Dim endPara As Paragraph
+    Set endPara = bmEnd.Range.Paragraphs(1)
+    If endPara.Previous Is startPara Or endPara.Previous Is insertPara Then
+        endPara.Range.InsertParagraphBefore
+    End If
+
+    Dim insertRng As Range
+    Set insertRng = ActiveDocument.Range(insertPara.Range.Start, bmEnd.Range.Start)
+    Set ResolveBookmarkInsertRange = insertRng
 End Function
 
 Private Sub ClearRangeSafe(ByVal rng As Range)
