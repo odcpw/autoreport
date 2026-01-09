@@ -211,16 +211,28 @@ Public Sub ImportChapter1Table()
         On Error GoTo 0
     Next idx
 
+    ' Allow data rows to split across pages.
+    Dim r As Long
+    For r = 1 To tbl.Rows.Count
+        On Error Resume Next
+        With tbl.Rows(r)
+            .AllowBreakAcrossPages = True
+            .Range.ParagraphFormat.KeepTogether = False
+            .Range.ParagraphFormat.KeepWithNext = False
+            .Range.ParagraphFormat.PageBreakBefore = False
+        End With
+        On Error GoTo 0
+    Next r
+
     ' Keep header rows with the first data row to avoid page break after row 3.
     Dim h As Long
     For h = 1 To 3
         On Error Resume Next
-        With tbl.Rows(h).Range.ParagraphFormat
-            .KeepWithNext = True
-            .KeepTogether = True
-            .PageBreakBefore = False
+        With tbl.Rows(h)
+            .AllowBreakAcrossPages = False
+            .Range.ParagraphFormat.KeepWithNext = True
+            .Range.ParagraphFormat.KeepTogether = True
         End With
-        tbl.Rows(h).AllowBreakAcrossPages = False
         On Error GoTo 0
     Next h
 
