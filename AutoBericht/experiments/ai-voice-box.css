@@ -125,6 +125,10 @@ button:disabled {
   resize: vertical;
 }
 
+.field + .field {
+  margin-top: 16px;
+}
+
 .log {
   background: #0c0c0c;
   color: #d3f9d8;

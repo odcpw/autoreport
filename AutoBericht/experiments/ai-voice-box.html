@@ -37,6 +37,10 @@
           Transcript
           <textarea id="transcript" rows="10" placeholder="Transcription will appear here..."></textarea>
         </label>
+        <label class="field">
+          Cleaned output
+          <textarea id="cleaned" rows="10" placeholder="Cleaned text will appear here..."></textarea>
+        </label>
       </section>
 
       <section class="panel">
@@ -47,6 +51,22 @@
       </section>
     </main>
 
+    <script>
+      (function () {
+        const ortVersion = "1.23.2";
+        const base = "../AI/vendor/ort-1.23.2/";
+        const scriptName = "ort.webgpu.min.js";
+        window.__ortConfig = { version: ortVersion, base, bundle: "webgpu" };
+        window.__ortLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${base}${scriptName}?v=${ortVersion}`;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load ORT script."));
+          document.head.appendChild(script);
+        });
+      })();
+    </script>
     <script type="module" src="ai-voice-box.js"></script>
   </body>
 </html>
