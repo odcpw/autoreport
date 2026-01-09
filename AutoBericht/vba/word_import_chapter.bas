@@ -173,6 +173,121 @@ Public Sub ImportChapter1Table()
     MsgBox "Chapter 1 table imported.", vbInformation
 End Sub
 
+Public Sub ImportChapter0Summary()
+    Dim jsonPath As String
+    jsonPath = ResolveSidecarPath()
+    If Len(jsonPath) = 0 Then Exit Sub
+
+    Dim jsonText As String
+    jsonText = ReadAllText(jsonPath)
+    If Len(jsonText) = 0 Then
+        MsgBox "Sidecar JSON is empty.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim root As Object
+    Set root = JsonConverter.ParseJson(jsonText)
+
+    Dim report As Object
+    Set report = GetObject(root, "report")
+    If report Is Nothing Then
+        MsgBox "Missing report section in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim project As Object
+    Set project = GetObject(report, "project")
+    If project Is Nothing Then
+        MsgBox "Missing report.project in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim chapters As Object
+    Set chapters = GetObject(project, "chapters")
+    If chapters Is Nothing Or chapters.Count = 0 Then
+        MsgBox "No chapters found in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim chapter As Object
+    Set chapter = FindChapterById(chapters, "0")
+    If chapter Is Nothing Then
+        Set chapter = chapters.Item(1)
+    End If
+
+    Dim rows As Object
+    Set rows = GetObject(chapter, "rows")
+    If rows Is Nothing Then
+        MsgBox "No rows in Chapter 0.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim insertRng As Range
+    Set insertRng = ResolveBookmarkRange("Chapter0_start", "Chapter0_end")
+    If insertRng Is Nothing Then
+        Set insertRng = ResolveInsertRange("Chapter0")
+    End If
+    If insertRng Is Nothing Then
+        MsgBox "Bookmark range 'Chapter0_start'/'Chapter0_end' not found.", vbExclamation
+        Exit Sub
+    End If
+
+    insertRng.Text = ""
+    insertRng.Collapse wdCollapseStart
+
+    Dim writer As Range
+    Set writer = insertRng.Duplicate
+    writer.Collapse wdCollapseStart
+    Dim startPos As Long
+    startPos = writer.Start
+
+    Dim wrote As Boolean
+    Dim row As Variant
+    For Each row In rows
+        If Not IsSectionRow(row) Then
+            If IsIncludedRow(row) Then
+                Dim summaryText As String
+                summaryText = ResolveRecommendation(row)
+                If Len(Trim$(summaryText)) > 0 Then
+                    summaryText = Replace(summaryText, vbCrLf, " ")
+                    summaryText = Replace(summaryText, vbCr, " ")
+                    summaryText = Replace(summaryText, vbLf, " ")
+                    If wrote Then
+                        writer.InsertParagraphAfter
+                        writer.Collapse wdCollapseEnd
+                    End If
+                    Dim lineRange As Range
+                    Set lineRange = writer.Duplicate
+                    lineRange.Text = summaryText
+                    On Error Resume Next
+                    lineRange.Style = STYLE_BODY
+                    On Error GoTo 0
+                    writer.SetRange lineRange.End, lineRange.End
+                    wrote = True
+                End If
+            End If
+        End If
+    Next row
+
+    If Not wrote Then
+        MsgBox "No summary rows to import for Chapter 0.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim listRange As Range
+    Set listRange = ActiveDocument.Range(startPos, writer.End)
+    On Error Resume Next
+    listRange.ListFormat.ApplyListTemplateWithLevel _
+        ListTemplate:=ListGalleries(wdNumberGallery).ListTemplates(1), _
+        ContinuePreviousList:=False, _
+        ApplyTo:=wdListApplyToWholeList, _
+        DefaultListBehavior:=wdWord10ListBehavior
+    listRange.ListFormat.ListTemplate.ListLevels(1).NumberStyle = wdListNumberStyleUppercaseLetter
+    On Error GoTo 0
+
+    MsgBox "Chapter 0 summary imported.", vbInformation
+End Sub
+
 Private Function ResolveSidecarPath() As String
     Dim defaultPath As String
     If Len(ActiveDocument.Path) > 0 Then
@@ -291,6 +406,18 @@ Private Function ResolveBookmarkRange(ByVal startName As String, ByVal endName A
     Set bmEnd = FindBookmark(endName)
     If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
     Set ResolveBookmarkRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
+End Function
+
+Private Function FindChapterById(ByVal chapters As Object, ByVal chapterId As String) As Object
+    Dim chapter As Variant
+    For Each chapter In chapters
+        Dim cid As String
+        cid = SafeText(chapter, "id")
+        If cid = chapterId Then
+            Set FindChapterById = chapter
+            Exit Function
+        End If
+    Next chapter
 End Function
 
 Private Function IsSectionRow(ByVal row As Object) As Boolean
