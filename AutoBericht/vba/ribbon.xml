@@ -1,0 +1,12 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2009/07/customui">
+  <ribbon>
+    <tabs>
+      <tab id="tabAutoBericht" label="AutoBericht">
+        <group id="grpAutoBerichtMain" label="AutoBericht">
+          <button id="btnAutoBerichtImport" label="Import" size="large" onAction="AB_ImportReport" />
+          <button id="btnAutoBerichtMarkdown" label="Markdown" size="large" onAction="AB_ConvertMarkdown" />
+        </group>
+      </tab>
+    </tabs>
+  </ribbon>
+</customUI>
