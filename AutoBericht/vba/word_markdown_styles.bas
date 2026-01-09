@@ -11,6 +11,8 @@ Option Explicit
 ' Leave blank to use built-in styles via wdStyle* constants (language-safe).
 Private Const STYLE_BODY As String = "Normal"
 Private Const STYLE_BULLET As String = "List Paragraph"
+Private Const STYLE_SKIP_HEADING2 As String = "Heading 2"
+Private Const STYLE_SKIP_HEADING3 As String = "Heading 3"
 ' Optional character styles for markdown emphasis. Leave blank to use direct bold/italic.
 Private Const STYLE_BOLD As String = ""
 Private Const STYLE_ITALIC As String = ""
@@ -78,6 +80,12 @@ End Sub
 
 Private Sub ConvertMarkdownCell(ByVal cell As Cell)
     LogDebug "ConvertMarkdownCell"
+    On Error Resume Next
+    If cell.ColumnIndex <> 2 Then Exit Sub
+    Dim firstStyle As String
+    firstStyle = CStr(cell.Range.Paragraphs(1).Style)
+    If firstStyle = STYLE_SKIP_HEADING2 Or firstStyle = STYLE_SKIP_HEADING3 Then Exit Sub
+    On Error GoTo 0
     Dim cellRange As Range
     Set cellRange = cell.Range
     If cellRange.End > cellRange.Start Then
@@ -125,8 +133,8 @@ Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal a
     Dim lineStart As Long
     lineStart = rng.End
 
-    AppendFormattedText rng, line
     ApplyLineStyle rng, lineStart, asBullet
+    AppendFormattedText rng, line
 
     If appendBreak Then
         rng.InsertParagraphAfter

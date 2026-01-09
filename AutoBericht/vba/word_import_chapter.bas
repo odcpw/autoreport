@@ -190,12 +190,16 @@ Public Sub ImportChapter1Table()
 
     ' Column widths after merges
     On Error Resume Next
+    tbl.AllowAutoFit = False
     tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
     tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
     tbl.Columns(2).PreferredWidthType = wdPreferredWidthPoints
     tbl.Columns(2).PreferredWidth = CentimetersToPoints(COL2_WIDTH_CM)
     tbl.Columns(3).PreferredWidthType = wdPreferredWidthPoints
     tbl.Columns(3).PreferredWidth = CentimetersToPoints(COL3_WIDTH_CM)
+    tbl.Columns(1).Width = CentimetersToPoints(COL1_WIDTH_CM)
+    tbl.Columns(2).Width = CentimetersToPoints(COL2_WIDTH_CM)
+    tbl.Columns(3).Width = CentimetersToPoints(COL3_WIDTH_CM)
     On Error GoTo 0
     tbl.AutoFitBehavior wdAutoFitFixed
 
@@ -466,43 +470,17 @@ Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal end
 
     Dim startPara As Paragraph
     Set startPara = bmStart.Range.Paragraphs(1)
-    If startPara.Next Is Nothing Then
-        startPara.Range.InsertParagraphAfter
-    End If
-
-    Dim insertPara As Paragraph
-    Set insertPara = startPara.Next
-
-    ' Ensure there is a blank line before the end bookmark.
-    Dim endPara As Paragraph
-    Set endPara = bmEnd.Range.Paragraphs(1)
-    If endPara.Previous Is Nothing Then
-        endPara.Range.InsertParagraphBefore
-        Set endPara = bmEnd.Range.Paragraphs(1)
-    End If
-    If Len(Trim$(Replace(endPara.Previous.Range.Text, vbCr, ""))) > 0 Then
-        endPara.Range.InsertParagraphBefore
-        Set endPara = bmEnd.Range.Paragraphs(1)
-    End If
-
-    Dim blankPara As Paragraph
-    Set blankPara = endPara.Previous
+    Dim clearRange As Range
+    Set clearRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
+    ClearRangeSafe clearRange
 
     On Error Resume Next
-    insertPara.Range.Text = ""
+    bmEnd.Range.InsertParagraphBefore
     On Error GoTo 0
 
-    Dim clearStart As Long
-    Dim clearEnd As Long
-    clearStart = insertPara.Range.Start
-    clearEnd = blankPara.Range.Start
-    If clearStart < clearEnd Then
-        Dim clearRange As Range
-        Set clearRange = ActiveDocument.Range(clearStart, clearEnd)
-        ClearRangeSafe clearRange
-    End If
-
-    Set ResolveBookmarkInsertRange = insertPara.Range
+    Dim insertRng As Range
+    Set insertRng = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
+    Set ResolveBookmarkInsertRange = insertRng
 End Function
 
 Private Sub LogDebug(ByVal message As String)
