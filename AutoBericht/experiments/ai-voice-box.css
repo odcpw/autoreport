@@ -1,0 +1,136 @@
+:root {
+  color-scheme: light;
+  --bg: #f4f1ea;
+  --panel: #ffffff;
+  --text: #1f1d1a;
+  --muted: #6b645a;
+  --accent: #2f5d3c;
+  --accent-strong: #21452c;
+  --border: #d9d2c7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: "Work Sans", "IBM Plex Sans", "Segoe UI", sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 32px 20px 64px;
+}
+
+.header h1 {
+  margin: 0 0 8px;
+  font-size: 2rem;
+}
+
+.header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 20px;
+  margin-top: 20px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  align-items: flex-end;
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.9rem;
+  gap: 6px;
+}
+
+select,
+button,
+textarea {
+  font: inherit;
+}
+
+select {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: #fff;
+}
+
+button {
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: none;
+  cursor: pointer;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 600;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.status {
+  font-size: 0.9rem;
+  color: var(--muted);
+}
+
+.recording {
+  margin-top: 18px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.record {
+  font-size: 1.1rem;
+  padding: 14px 26px;
+  background: #a63a2b;
+}
+
+.record.is-recording {
+  background: #d94834;
+  box-shadow: 0 0 0 4px rgba(217, 72, 52, 0.25);
+}
+
+.hint {
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.field textarea {
+  width: 100%;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  padding: 12px 14px;
+  background: #fff;
+  resize: vertical;
+}
+
+.log {
+  background: #0c0c0c;
+  color: #d3f9d8;
+  padding: 12px;
+  border-radius: 8px;
+  min-height: 100px;
+  overflow: auto;
+  font-size: 0.8rem;
+}
