@@ -12,9 +12,9 @@ Private Const STYLE_LIST As String = "List Paragraph"
 Private Const DEBUG_ENABLED As Boolean = True
 
 ' === TABLE CONFIG (edit widths as needed) ===
-Private Const COL1_WIDTH_CM As Double = 6.5
-Private Const COL2_WIDTH_CM As Double = 9.5
-Private Const COL3_WIDTH_CM As Double = 1.3
+Private Const COL1_WIDTH_PCT As Long = 38
+Private Const COL2_WIDTH_PCT As Long = 55
+Private Const COL3_WIDTH_PCT As Long = 7
 Private Const HEADER_CHECKMARK As String = "✓"
 
 Public Sub ImportChapter1Table()
@@ -188,18 +188,17 @@ Public Sub ImportChapter1Table()
         On Error GoTo 0
     Next idx
 
-    ' Column widths after merges
+    ' Column widths after merges (percent-based)
     On Error Resume Next
     tbl.AllowAutoFit = False
-    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
-    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(2).PreferredWidth = CentimetersToPoints(COL2_WIDTH_CM)
-    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(3).PreferredWidth = CentimetersToPoints(COL3_WIDTH_CM)
-    tbl.Columns(1).Width = CentimetersToPoints(COL1_WIDTH_CM)
-    tbl.Columns(2).Width = CentimetersToPoints(COL2_WIDTH_CM)
-    tbl.Columns(3).Width = CentimetersToPoints(COL3_WIDTH_CM)
+    tbl.PreferredWidthType = wdPreferredWidthPercent
+    tbl.PreferredWidth = 100
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
     On Error GoTo 0
     tbl.AutoFitBehavior wdAutoFitFixed
 
