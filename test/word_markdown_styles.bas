@@ -9,8 +9,8 @@ Option Explicit
 ' === STYLE CONFIG (edit these to match your template) ===
 ' Use custom style names if possible (same names across DE/FR/IT templates).
 ' Leave blank to use built-in styles via wdStyle* constants (language-safe).
-Private Const STYLE_BODY As String = ""
-Private Const STYLE_BULLET As String = ""
+Private Const STYLE_BODY As String = "Normal"
+Private Const STYLE_BULLET As String = "List Paragraph"
 ' Optional character styles for markdown emphasis. Leave blank to use direct bold/italic.
 Private Const STYLE_BOLD As String = ""
 Private Const STYLE_ITALIC As String = ""
@@ -29,10 +29,17 @@ Public Sub ConvertMarkdownInSelection()
 End Sub
 
 Public Sub ConvertMarkdownInContentControl()
+    Dim rng As Range
+    Set rng = ResolveBookmarkRange("Chapter1_start", "Chapter1_end")
+    If Not rng Is Nothing Then
+        ConvertMarkdownRange rng
+        Exit Sub
+    End If
+
     Dim cc As ContentControl
     Set cc = FindContentControl("Chapter1")
     If cc Is Nothing Then
-        MsgBox "Content control 'Chapter1' not found.", vbExclamation
+        MsgBox "Content control or bookmark for Chapter1 not found.", vbExclamation
         Exit Sub
     End If
     ConvertMarkdownWithUnlock cc, cc.Range
@@ -164,6 +171,17 @@ Private Function FindContentControl(ByVal title As String) As ContentControl
             Exit Function
         End If
     Next cc
+End Function
+
+Private Function ResolveBookmarkRange(ByVal startName As String, ByVal endName As String) As Range
+    Dim bmStart As Bookmark
+    Dim bmEnd As Bookmark
+    On Error Resume Next
+    Set bmStart = ActiveDocument.Bookmarks(startName)
+    Set bmEnd = ActiveDocument.Bookmarks(endName)
+    On Error GoTo 0
+    If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
+    Set ResolveBookmarkRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
 End Function
 
 Private Sub ApplyParagraphStyle(ByVal rng As Range, ByVal styleName As String, ByVal fallback As Variant)

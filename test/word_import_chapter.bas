@@ -4,8 +4,17 @@ Option Explicit
 ' Requires JsonConverter.bas (VBA-JSON) in the Word project.
 
 ' === STYLE CONFIG (edit these to match your template) ===
-Private Const STYLE_BODY As String = "BodyText"
-Private Const STYLE_SECTION As String = "BodyText"
+Private Const STYLE_BODY As String = "Normal"
+Private Const STYLE_SECTION As String = "Heading 2"
+Private Const STYLE_FINDING As String = "Heading 3"
+Private Const STYLE_TABLE As String = "Grid Table Light"
+Private Const STYLE_LIST As String = "List Paragraph"
+
+' === TABLE CONFIG (edit widths as needed) ===
+Private Const COL1_WIDTH_CM As Double = 6.5
+Private Const COL2_WIDTH_CM As Double = 9.5
+Private Const COL3_WIDTH_CM As Double = 1.3
+Private Const HEADER_CHECKMARK As String = "✓"
 
 Public Sub ImportChapter1Table()
     Dim jsonPath As String
@@ -49,9 +58,12 @@ Public Sub ImportChapter1Table()
     chapterId = SafeText(chapter, "id")
 
     Dim insertRng As Range
-    Set insertRng = ResolveInsertRange("Chapter1")
+    Set insertRng = ResolveBookmarkRange("Chapter1_start", "Chapter1_end")
     If insertRng Is Nothing Then
-        MsgBox "Content control or bookmark 'Chapter1' not found.", vbExclamation
+        Set insertRng = ResolveInsertRange("Chapter1")
+    End If
+    If insertRng Is Nothing Then
+        MsgBox "Bookmark range 'Chapter1_start'/'Chapter1_end' not found.", vbExclamation
         Exit Sub
     End If
 
@@ -79,44 +91,84 @@ Public Sub ImportChapter1Table()
     insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
-    Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 1, 4)
+    Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 3, 3)
+    On Error Resume Next
+    tbl.Style = STYLE_TABLE
+    On Error GoTo 0
     tbl.Borders.Enable = True
-    tbl.Rows(1).Range.Font.Bold = True
-    tbl.Cell(1, 1).Range.Text = "ID"
-    tbl.Cell(1, 2).Range.Text = "Finding"
-    tbl.Cell(1, 3).Range.Text = "Recommendation"
-    tbl.Cell(1, 4).Range.Text = "Priority"
+
+    ' Header row 1: blank + checkmark
+    On Error Resume Next
+    tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
+    On Error GoTo 0
+    tbl.Cell(1, 1).Range.Text = ""
+    tbl.Cell(1, 3).Range.Text = HEADER_CHECKMARK
+    tbl.Cell(1, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+
+    ' Header row 2: title
+    On Error Resume Next
+    tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
+    On Error GoTo 0
+    tbl.Cell(2, 1).Range.Text = "Systempunkte mit Verbesserungspotenzial"
+    tbl.Cell(2, 1).Range.Font.Bold = True
+
+    ' Header row 3: column labels
+    tbl.Cell(3, 1).Range.Text = "Ist-Zustand"
+    tbl.Cell(3, 2).Range.Text = "Lösungsansätze"
+    tbl.Cell(3, 3).Range.Text = "Prio"
+    tbl.Rows(3).Range.Font.Bold = True
+    tbl.Cell(3, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
 
     Dim row As Variant
     Dim targetRow As Long
-    targetRow = 2
+    targetRow = 4
 
     For Each row In rows
         If IsSectionRow(row) Then
             If ShouldIncludeSection(row, includedSections) Then
                 On Error Resume Next
-                tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 4)
+                tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 2)
                 On Error GoTo 0
                 tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row, renumberMap)
-                tbl.Rows(targetRow).Range.Font.Bold = True
                 tbl.Rows(targetRow).Range.Style = STYLE_SECTION
                 targetRow = targetRow + 1
             End If
         ElseIf IsIncludedRow(row) Then
-            tbl.Cell(targetRow, 1).Range.Text = ResolveDisplayId(row, renumberMap)
-            tbl.Cell(targetRow, 2).Range.Text = ResolveFinding(row)
-            tbl.Cell(targetRow, 3).Range.Text = ResolveRecommendation(row)
-            tbl.Cell(targetRow, 4).Range.Text = ""
-            tbl.Rows(targetRow).Range.Style = STYLE_BODY
+            tbl.Cell(targetRow, 1).Range.Text = BuildFindingHeading(row, renumberMap)
+            tbl.Cell(targetRow, 1).Range.Style = STYLE_FINDING
+            tbl.Cell(targetRow, 2).Range.Text = ResolveRecommendation(row)
+            tbl.Cell(targetRow, 2).Range.Style = STYLE_BODY
+            tbl.Cell(targetRow, 3).Range.Text = ""
+            tbl.Cell(targetRow, 3).Range.Style = STYLE_BODY
+            tbl.Cell(targetRow, 3).Range.Font.Bold = True
+            tbl.Cell(targetRow, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
             targetRow = targetRow + 1
         End If
     Next row
 
     On Error Resume Next
-    tbl.Columns(4).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(4).PreferredWidth = CentimetersToPoints(1.2)
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(2).PreferredWidth = CentimetersToPoints(COL2_WIDTH_CM)
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(3).PreferredWidth = CentimetersToPoints(COL3_WIDTH_CM)
     On Error GoTo 0
-    tbl.AutoFitBehavior wdAutoFitContent
+    tbl.AutoFitBehavior wdAutoFitFixed
+
+    Dim i As Long
+    For i = 1 To tbl.Rows.Count
+        On Error Resume Next
+        With tbl.Cell(i, 3).Borders(wdBorderLeft)
+            .LineStyle = wdLineStyleSingle
+            .LineWidth = wdLineWidth050pt
+        End With
+        On Error GoTo 0
+    Next i
+
+    On Error Resume Next
+    tbl.Columns(3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+    On Error GoTo 0
 
     MsgBox "Chapter 1 table imported.", vbInformation
 End Sub
@@ -230,6 +282,15 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
     Dim targetPara As Paragraph
     Set targetPara = blankPara.Next
     Set ResolveInsertRange = targetPara.Range
+End Function
+
+Private Function ResolveBookmarkRange(ByVal startName As String, ByVal endName As String) As Range
+    Dim bmStart As Bookmark
+    Dim bmEnd As Bookmark
+    Set bmStart = FindBookmark(startName)
+    Set bmEnd = FindBookmark(endName)
+    If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
+    Set ResolveBookmarkRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
 End Function
 
 Private Function IsSectionRow(ByVal row As Object) As Boolean
@@ -415,6 +476,20 @@ End Function
 Private Function IsFieldObservationChapter(ByVal chapterId As String) As Boolean
     If InStr(chapterId, ".") > 0 Then
         IsFieldObservationChapter = True
+    End If
+End Function
+
+Private Function BuildFindingHeading(ByVal row As Object, ByVal renumberMap As Object) As String
+    Dim displayId As String
+    displayId = ResolveDisplayId(row, renumberMap)
+    Dim finding As String
+    finding = ResolveFinding(row)
+    If Len(displayId) > 0 And Len(finding) > 0 Then
+        BuildFindingHeading = displayId & " " & finding
+    ElseIf Len(finding) > 0 Then
+        BuildFindingHeading = finding
+    Else
+        BuildFindingHeading = displayId
     End If
 End Function
 
