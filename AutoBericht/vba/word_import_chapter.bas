@@ -87,7 +87,7 @@ Public Sub ImportChapter1Table()
         Exit Sub
     End If
 
-    insertRng.Text = ""
+    ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
@@ -235,7 +235,7 @@ Public Sub ImportChapter0Summary()
         Exit Sub
     End If
 
-    insertRng.Text = ""
+    ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
 
     Dim writer As Range
@@ -410,6 +410,18 @@ Private Function ResolveBookmarkRange(ByVal startName As String, ByVal endName A
     If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
     Set ResolveBookmarkRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
 End Function
+
+Private Sub ClearRangeSafe(ByVal rng As Range)
+    If rng Is Nothing Then Exit Sub
+    If rng.Start >= rng.End Then Exit Sub
+    On Error Resume Next
+    rng.Delete
+    If Err.Number <> 0 Then
+        Err.Clear
+        rng.Text = ""
+    End If
+    On Error GoTo 0
+End Sub
 
 Private Function FindChapterById(ByVal chapters As Object, ByVal chapterId As String) As Object
     Dim chapter As Variant
