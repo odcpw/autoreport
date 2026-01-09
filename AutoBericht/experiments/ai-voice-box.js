@@ -650,9 +650,31 @@ function buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, pos
     decoderSession.inputNames,
     ["inputs_embeds", "attention_mask", "position_ids"]
   );
+  const useNamesAreNumeric =
+    useNames.length > 0 && useNames.every((name) => typeof name === "string" && /^\d+$/.test(name));
+  const filteredUseNames = numericOnly
+    ? useNames
+    : useNames.filter((name) => !(typeof name === "string" && /^\d+$/.test(name)));
+  const effectiveNames = filteredUseNames.length ? filteredUseNames : useNames;
   const metaMap = new Map(entries.map(([name, meta]) => [name, meta]));
 
-  for (const name of useNames) {
+  if (numericOnly || useNamesAreNumeric) {
+    const ordered = [currentEmbeds, attnTensor, posTensor];
+    effectiveNames.forEach((name, index) => {
+      const tensor = ordered[index];
+      if (tensor) {
+        inputs[name] = tensor;
+      }
+    });
+    for (const [cacheName, cacheValue] of Object.entries(cache || {})) {
+      if (!inputs[cacheName]) {
+        inputs[cacheName] = cacheValue;
+      }
+    }
+    return inputs;
+  }
+
+  for (const name of effectiveNames) {
     const lower = name.toLowerCase();
     if (lower.includes("inputs_embeds")) {
       inputs[name] = currentEmbeds;
