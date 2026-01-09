@@ -171,23 +171,6 @@ Public Sub ImportChapter1Table()
         End If
     Next row
 
-    ' Merge header rows after content is filled
-    On Error Resume Next
-    tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
-    tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
-    On Error GoTo 0
-    tbl.Cell(2, 1).Range.Font.Bold = True
-
-    Dim idx As Variant
-    For Each idx In sectionRows
-        On Error Resume Next
-        tbl.Cell(CLng(idx), 1).Merge tbl.Cell(CLng(idx), 3)
-        On Error GoTo 0
-        On Error Resume Next
-        tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
-        On Error GoTo 0
-    Next idx
-
     On Error Resume Next
     tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
     tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
@@ -208,12 +191,22 @@ Public Sub ImportChapter1Table()
         On Error GoTo 0
     Next i
 
-    Dim colCell As Cell
-    For Each colCell In tbl.Columns(3).Cells
+    ' Merge header rows after widths/borders are set
+    On Error Resume Next
+    tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
+    tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
+    On Error GoTo 0
+    tbl.Cell(2, 1).Range.Font.Bold = True
+
+    Dim idx As Variant
+    For Each idx In sectionRows
         On Error Resume Next
-        colCell.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+        tbl.Cell(CLng(idx), 1).Merge tbl.Cell(CLng(idx), 3)
         On Error GoTo 0
-    Next colCell
+        On Error Resume Next
+        tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
+        On Error GoTo 0
+    Next idx
 
     MsgBox "Chapter 1 table imported.", vbInformation
     LogDebug "ImportChapter1Table: done"
