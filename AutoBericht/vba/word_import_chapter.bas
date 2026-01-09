@@ -199,15 +199,12 @@ Public Sub ImportChapter1Table()
     On Error GoTo 0
     tbl.AutoFitBehavior wdAutoFitFixed
 
-    ' Remove borders everywhere, then apply only to header block (rows 1-3).
+    ' Remove borders everywhere, then apply only the bottom border of row 1.
     On Error Resume Next
     tbl.Borders.Enable = False
-    Dim headerRange As Range
-    Set headerRange = tbl.Rows(1).Range
-    headerRange.End = tbl.Rows(3).Range.End
-    With headerRange.Borders
-        .InsideLineStyle = wdLineStyleSingle
-        .OutsideLineStyle = wdLineStyleSingle
+    With tbl.Rows(1).Borders(wdBorderBottom)
+        .LineStyle = wdLineStyleSingle
+        .LineWidth = wdLineWidth050pt
     End With
     On Error GoTo 0
 
