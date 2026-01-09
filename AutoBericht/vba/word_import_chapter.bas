@@ -60,13 +60,8 @@ Public Sub ImportChapter1Table()
     Dim chapter As Object
     Set chapter = FindChapterById(chapters, "1")
     If chapter Is Nothing Then
-        Set chapter = FindChapterById(chapters, "chapter1")
-    End If
-    If chapter Is Nothing Then
-        Set chapter = FindChapterById(chapters, "Chapter1")
-    End If
-    If chapter Is Nothing Then
-        Set chapter = chapters.Item(1)
+        MsgBox "Chapter id '1' not found in JSON.", vbExclamation
+        Exit Sub
     End If
     Dim chapterId As String
     chapterId = SafeText(chapter, "id")
@@ -479,9 +474,13 @@ Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal end
     insertPara.Range.Text = ""
     On Error GoTo 0
 
-    If Not insertPara.Next Is Nothing Then
+    Dim clearStart As Long
+    Dim clearEnd As Long
+    clearStart = insertPara.Range.Start
+    clearEnd = blankPara.Range.Start
+    If clearStart < clearEnd Then
         Dim clearRange As Range
-        Set clearRange = ActiveDocument.Range(insertPara.Next.Range.Start, blankPara.Range.Start)
+        Set clearRange = ActiveDocument.Range(clearStart, clearEnd)
         ClearRangeSafe clearRange
     End If
 
@@ -704,17 +703,7 @@ Private Function IsFieldObservationChapter(ByVal chapterId As String) As Boolean
 End Function
 
 Private Function BuildFindingHeading(ByVal row As Object, ByVal renumberMap As Object) As String
-    Dim displayId As String
-    displayId = ResolveDisplayId(row, renumberMap)
-    Dim finding As String
-    finding = ResolveFinding(row)
-    If Len(displayId) > 0 And Len(finding) > 0 Then
-        BuildFindingHeading = displayId & " " & finding
-    ElseIf Len(finding) > 0 Then
-        BuildFindingHeading = finding
-    Else
-        BuildFindingHeading = displayId
-    End If
+    BuildFindingHeading = ResolveFinding(row)
 End Function
 
 Private Function ResolveFinding(ByVal row As Object) As String
