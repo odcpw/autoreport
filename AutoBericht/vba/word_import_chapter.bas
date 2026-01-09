@@ -171,27 +171,7 @@ Public Sub ImportChapter1Table()
         End If
     Next row
 
-    On Error Resume Next
-    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
-    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(2).PreferredWidth = CentimetersToPoints(COL2_WIDTH_CM)
-    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPoints
-    tbl.Columns(3).PreferredWidth = CentimetersToPoints(COL3_WIDTH_CM)
-    On Error GoTo 0
-    tbl.AutoFitBehavior wdAutoFitFixed
-
-    Dim i As Long
-    For i = 1 To tbl.Rows.Count
-        On Error Resume Next
-        With tbl.Cell(i, 3).Borders(wdBorderLeft)
-            .LineStyle = wdLineStyleSingle
-            .LineWidth = wdLineWidth050pt
-        End With
-        On Error GoTo 0
-    Next i
-
-    ' Merge header rows after widths/borders are set
+    ' Merge header rows after content is filled
     On Error Resume Next
     tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
     tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
@@ -207,6 +187,42 @@ Public Sub ImportChapter1Table()
         tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
         On Error GoTo 0
     Next idx
+
+    ' Column widths after merges
+    On Error Resume Next
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(1).PreferredWidth = CentimetersToPoints(COL1_WIDTH_CM)
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(2).PreferredWidth = CentimetersToPoints(COL2_WIDTH_CM)
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPoints
+    tbl.Columns(3).PreferredWidth = CentimetersToPoints(COL3_WIDTH_CM)
+    On Error GoTo 0
+    tbl.AutoFitBehavior wdAutoFitFixed
+
+    ' Remove borders everywhere, then apply only to header block (rows 1-3).
+    On Error Resume Next
+    tbl.Borders.Enable = False
+    Dim headerRange As Range
+    Set headerRange = tbl.Rows(1).Range
+    headerRange.End = tbl.Rows(3).Range.End
+    With headerRange.Borders
+        .InsideLineStyle = wdLineStyleSingle
+        .OutsideLineStyle = wdLineStyleSingle
+    End With
+    On Error GoTo 0
+
+    ' Keep header rows with the first data row to avoid page break after row 3.
+    Dim h As Long
+    For h = 1 To 3
+        On Error Resume Next
+        With tbl.Rows(h).Range.ParagraphFormat
+            .KeepWithNext = True
+            .KeepTogether = True
+            .PageBreakBefore = False
+        End With
+        tbl.Rows(h).AllowBreakAcrossPages = False
+        On Error GoTo 0
+    Next h
 
     MsgBox "Chapter 1 table imported.", vbInformation
     LogDebug "ImportChapter1Table: done"
