@@ -529,6 +529,9 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
     inputNames,
     ["input_ids", "attention_mask", "position_ids"]
   );
+  const hasNonNumericNames =
+    namesFromSession.some((name) => typeof name === "string" && !/^\\d+$/.test(name)) ||
+    useNames.some((name) => typeof name === "string" && !/^\\d+$/.test(name));
   const allNames = Array.from(new Set([...useNames, ...namesFromSession]));
   const keyNames = entries.map(([name]) => name);
   for (const name of keyNames) {
@@ -567,6 +570,9 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
   let hasPosition = false;
 
   for (const [name, meta] of entries) {
+    if (hasNonNumericNames && typeof name === "string" && /^\\d+$/.test(name)) {
+      continue;
+    }
     if (numericOnly && namesFromSession.length) {
       continue;
     }
@@ -657,6 +663,9 @@ function buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, pos
     decoderSession.inputNames,
     ["inputs_embeds", "attention_mask", "position_ids"]
   );
+  const hasNonNumericNames =
+    namesFromSession.some((name) => typeof name === "string" && !/^\d+$/.test(name)) ||
+    useNames.some((name) => typeof name === "string" && !/^\d+$/.test(name));
   const useNamesAreNumeric =
     useNames.length > 0 && useNames.every((name) => typeof name === "string" && /^\d+$/.test(name));
   const filteredUseNames = numericOnly
@@ -682,6 +691,9 @@ function buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, pos
   }
 
   for (const name of effectiveNames) {
+    if (hasNonNumericNames && typeof name === "string" && /^\d+$/.test(name)) {
+      continue;
+    }
     const lower = name.toLowerCase();
     if (lower.includes("inputs_embeds")) {
       inputs[name] = currentEmbeds;
