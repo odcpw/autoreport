@@ -133,6 +133,14 @@ Date: 2026-01-07
 - Vulkan float16 support does not guarantee WebGPU `shader-f16` exposure in the browser.
 - If `shader-f16` remains unavailable, use fp32 or WASM for LiquidAI on this machine.
 
+### WebGPU load fix (ORT 1.23.2 asyncify)
+- Issue: `Failed to fetch dynamically imported module ... ort-wasm-simd-threaded.asyncify.mjs` and `initWasm()` failed.
+- Cause: local HTTP server did not serve `.mjs` and `.wasm` with proper MIME types.
+- Fix: updated `AutoBericht/tools/serve-autobericht.ps1` to return:
+  - `.mjs` → `text/javascript; charset=utf-8`
+  - `.wasm` → `application/wasm`
+- Result: WebGPU ONNX sessions load successfully after restarting the server.
+
 ## Security & privacy assessment (local-only setup)
 
 Date: 2026-01-08
