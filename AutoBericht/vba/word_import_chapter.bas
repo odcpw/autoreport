@@ -212,6 +212,7 @@ Public Sub ImportChapter1Table()
     LogDebug "ImportChapter1Table: done"
 End Sub
 
+
 Public Sub ImportChapter0Summary()
     LogDebug "ImportChapter0Summary: start"
     Dim jsonPath As String
