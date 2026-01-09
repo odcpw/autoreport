@@ -16,6 +16,7 @@ const DEFAULTS = {
 const CLEANUP_MODEL = "LiquidAI/LFM2.5-VL-1.6B-ONNX";
 const CLEANUP_MAX_NEW_TOKENS_CAP = 256;
 const CLEANUP_MIN_NEW_TOKENS = 64;
+const ASR_LANGUAGE = "auto";
 const LARGE_EXTERNAL_DATA_THRESHOLD = 256 * 1024 * 1024;
 const ORT_PROVIDERS = {
   webgpu: ["webgpu", "wasm"],
@@ -734,6 +735,9 @@ async function runAsrFromBlob(blob) {
     setStatus("Transcribing ...");
     const inferStart = performance.now();
     const options = { chunk_length_s: 30, stride_length_s: 5 };
+    if (ASR_LANGUAGE && ASR_LANGUAGE !== "auto") {
+      options.language = ASR_LANGUAGE;
+    }
     const result = await asr(audio, options);
     logPerf("ASR inference", performance.now() - inferStart);
     const text = typeof result === "string" ? result : result?.text || JSON.stringify(result, null, 2);
