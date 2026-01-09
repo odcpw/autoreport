@@ -617,6 +617,12 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
     }
   }
 
+  if (Array.isArray(inputNames) && inputNames.length) {
+    const hasNonNumericNames = inputNames.some((name) => typeof name === "string" && !/^\d+$/.test(name));
+    if (hasNonNumericNames) {
+      return Object.fromEntries(Object.entries(inputs).filter(([key]) => inputNames.includes(key)));
+    }
+  }
   return inputs;
 }
 
@@ -739,6 +745,16 @@ function buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, pos
     }
   }
 
+  if (Array.isArray(decoderSession.inputNames) && decoderSession.inputNames.length) {
+    const hasNonNumericNames = decoderSession.inputNames.some(
+      (name) => typeof name === "string" && !/^\d+$/.test(name)
+    );
+    if (hasNonNumericNames) {
+      return Object.fromEntries(
+        Object.entries(inputs).filter(([key]) => decoderSession.inputNames.includes(key))
+      );
+    }
+  }
   return inputs;
 }
 
