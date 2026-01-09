@@ -264,6 +264,40 @@ Seed and library resolution (fresh projects):
 - If no sidecar, load user library in project root (e.g., `library_user_XX.json`).
 - Load bundled seed data from `AutoBericht/data/seed/`.
 
+### 12a. Current Sidecar Schema (as implemented)
+
+```
+project_sidecar.json
+├─ meta
+├─ report
+│  └─ project
+│     ├─ meta { locale, author, createdAt, ... }
+│     └─ chapters[]
+│        ├─ id: "1", "4.8", "11", ...
+│        ├─ title: { de: "Leitbild, Sicherheitsziele ..." }
+│        └─ rows[]
+│           ├─ kind: "section" (for 1.1 / 1.2 headers)
+│           │  └─ id / title
+│           └─ item rows
+│              ├─ id: "1.1.1" (collapsed ID)
+│              ├─ sectionId / sectionLabel
+│              ├─ type: "standard" | "field_observation"
+│              ├─ master { finding, levels{1..4} }
+│              ├─ customer { answer, remark, items[] }
+│              └─ workstate { include/done/overrides/... }
+└─ photos
+   ├─ photoRoot
+   ├─ photoTagOptions { report, observations, training }
+   └─ photos{ path → { tags, notes } }
+```
+
+Notes:
+- **IDs carry the numbers**; text fields should be human text only.
+- **Display labels** are derived as `id + title` in the UI.
+- **Chapter 4.8** is a special `field_observation` chapter, with rows generated
+  from observation tags; recommendation levels may be hidden in UI but are kept
+  in the data shape for compatibility.
+
 ## 13. Risks and Mitigations
 
 - File System Access API blocked: provide import/export fallback.

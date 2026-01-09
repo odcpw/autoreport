@@ -114,32 +114,25 @@ Public Sub ImportChapter1Table()
         Exit Sub
     End If
 
-    ' Header row 1: blank + checkmark
-    Dim headerRow As Row
-    Set headerRow = tbl.Rows(1)
-    If headerRow.Cells.Count < 3 Then
-        MsgBox "Table header row has fewer than 3 cells.", vbExclamation
+    ' Header row 1: blank + checkmark (merge later)
+    If tbl.Rows(1).Cells.Count < 3 Then
+        MsgBox "Table header row 1 has fewer than 3 cells.", vbExclamation
         Exit Sub
     End If
-    Dim checkCell As Cell
-    Set checkCell = headerRow.Cells(headerRow.Cells.Count)
-    checkCell.Range.Text = HEADER_CHECKMARK
-    checkCell.Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
-    On Error Resume Next
-    headerRow.Cells(1).Merge headerRow.Cells(2)
-    On Error GoTo 0
-    headerRow.Cells(1).Range.Text = ""
+    tbl.Cell(1, 1).Range.Text = ""
+    tbl.Cell(1, 2).Range.Text = ""
+    tbl.Cell(1, 3).Range.Text = HEADER_CHECKMARK
+    tbl.Cell(1, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
 
-    ' Header row 2: title
+    ' Header row 2: title (merge later)
     If tbl.Rows(2).Cells.Count < 3 Then
         MsgBox "Table header row 2 has fewer than 3 cells.", vbExclamation
         Exit Sub
     End If
     tbl.Cell(2, 1).Range.Text = "Systempunkte mit Verbesserungspotenzial"
+    tbl.Cell(2, 2).Range.Text = ""
+    tbl.Cell(2, 3).Range.Text = ""
     tbl.Cell(2, 1).Range.Font.Bold = True
-    On Error Resume Next
-    tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
-    On Error GoTo 0
 
     ' Header row 3: column labels
     tbl.Cell(3, 1).Range.Text = "Ist-Zustand"
@@ -151,16 +144,17 @@ Public Sub ImportChapter1Table()
     Dim row As Variant
     Dim targetRow As Long
     targetRow = 4
+    Dim sectionRows As Collection
+    Set sectionRows = New Collection
 
     For Each row In rows
         If IsSectionRow(row) Then
             If ShouldIncludeSection(row, includedSections) Then
                 LogDebug "Section row: " & SafeSectionTitle(row, renumberMap)
-                On Error Resume Next
-                tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 2)
-                On Error GoTo 0
                 tbl.Cell(targetRow, 1).Range.Text = SafeSectionTitle(row, renumberMap)
-                tbl.Rows(targetRow).Range.Style = STYLE_SECTION
+                tbl.Cell(targetRow, 2).Range.Text = ""
+                tbl.Cell(targetRow, 3).Range.Text = ""
+                sectionRows.Add targetRow
                 targetRow = targetRow + 1
             End If
         ElseIf IsIncludedRow(row) Then
@@ -176,6 +170,23 @@ Public Sub ImportChapter1Table()
             targetRow = targetRow + 1
         End If
     Next row
+
+    ' Merge header rows after content is filled
+    On Error Resume Next
+    tbl.Cell(1, 1).Merge tbl.Cell(1, 2)
+    tbl.Cell(2, 1).Merge tbl.Cell(2, 2)
+    On Error GoTo 0
+    tbl.Cell(2, 1).Range.Font.Bold = True
+
+    Dim idx As Variant
+    For Each idx In sectionRows
+        On Error Resume Next
+        tbl.Cell(CLng(idx), 1).Merge tbl.Cell(CLng(idx), 3)
+        On Error GoTo 0
+        On Error Resume Next
+        tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
+        On Error GoTo 0
+    Next idx
 
     On Error Resume Next
     tbl.Columns(1).PreferredWidthType = wdPreferredWidthPoints
