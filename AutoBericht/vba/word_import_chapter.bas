@@ -58,7 +58,16 @@ Public Sub ImportChapter1Table()
     LogDebug "ImportChapter1Table: chapters=" & chapters.Count
 
     Dim chapter As Object
-    Set chapter = chapters.Item(1)
+    Set chapter = FindChapterById(chapters, "1")
+    If chapter Is Nothing Then
+        Set chapter = FindChapterById(chapters, "chapter1")
+    End If
+    If chapter Is Nothing Then
+        Set chapter = FindChapterById(chapters, "Chapter1")
+    End If
+    If chapter Is Nothing Then
+        Set chapter = chapters.Item(1)
+    End If
     Dim chapterId As String
     chapterId = SafeText(chapter, "id")
     LogDebug "ImportChapter1Table: chapterId=" & chapterId

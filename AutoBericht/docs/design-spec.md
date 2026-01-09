@@ -241,6 +241,7 @@ Phase A (browser)
 
 Phase B (Word macro)
 - Word template contains one content control per chapter (e.g., `Chapter1`).
+- Optional: embed a RibbonX tab (“AutoBericht”) in the template for macro buttons.
 - Macro reads sidecar/export JSON and injects chapter content into the controls.
 - Macro applies styles (Heading 1/2/3, body, tables), converts list markers to
   proper Word lists, inserts section breaks, and updates TOC/fields.
