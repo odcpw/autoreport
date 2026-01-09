@@ -574,17 +574,13 @@ Private Function SafeSectionTitle(ByVal row As Object, ByVal renumberMap As Obje
     On Error GoTo 0
     If Len(title) = 0 Then
         title = SafeText(row, "id")
-    Else
-        title = title
     End If
-    Dim sectionId As String
-    sectionId = ResolveSectionId(row)
-    Dim displayId As String
-    displayId = ResolveSectionDisplayId(sectionId, renumberMap)
-    If Len(displayId) > 0 Then
-        SafeSectionTitle = displayId & " " & title
-    Else
+    Dim cleaned As String
+    cleaned = StripLeadingNumber(title)
+    If Len(cleaned) = 0 Then
         SafeSectionTitle = title
+    Else
+        SafeSectionTitle = cleaned
     End If
 End Function
 
@@ -694,6 +690,26 @@ Private Function ResolveSectionDisplayId(ByVal sectionId As String, ByVal renumb
     End If
     On Error GoTo 0
     If Len(ResolveSectionDisplayId) = 0 Then ResolveSectionDisplayId = sectionId
+End Function
+
+Private Function StripLeadingNumber(ByVal value As String) As String
+    Dim trimmed As String
+    trimmed = LTrim$(value)
+    Dim i As Long
+    i = 1
+    Do While i <= Len(trimmed)
+        Dim ch As String
+        ch = Mid$(trimmed, i, 1)
+        If (ch >= "0" And ch <= "9") Or ch = "." Then
+            i = i + 1
+        ElseIf ch = " " Or ch = "-" Or ch = ":" Then
+            i = i + 1
+            Exit Do
+        Else
+            Exit Do
+        End If
+    Loop
+    StripLeadingNumber = LTrim$(Mid$(trimmed, i))
 End Function
 
 Private Function IsFieldObservationChapter(ByVal chapterId As String) As Boolean
