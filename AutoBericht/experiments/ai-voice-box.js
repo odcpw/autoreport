@@ -522,6 +522,18 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
     inputNames,
     ["input_ids", "attention_mask", "position_ids"]
   );
+  const allNames = Array.from(new Set([...useNames, ...namesFromSession]));
+  const keyNames = entries.map(([name]) => name);
+  for (const name of keyNames) {
+    if (!allNames.includes(name)) allNames.push(name);
+  }
+  const findName = (predicate) => {
+    const direct = allNames.find((name) => predicate(name.toLowerCase()));
+    return direct || null;
+  };
+  const explicitInputIdsName = findName((lower) => lower.includes("input") && lower.includes("id"));
+  const explicitAttentionName = findName((lower) => lower.includes("attention"));
+  const explicitPositionName = findName((lower) => lower.includes("position"));
   const useNamesAreNumeric =
     useNames.length > 0 && useNames.every((name) => typeof name === "string" && /^\d+$/.test(name));
   if (numericOnly || useNamesAreNumeric) {
@@ -532,6 +544,15 @@ function buildLiquidTokenInputs(inputMeta, inputNames, inputIds, attentionMask, 
         inputs[name] = tensor;
       }
     });
+    if (explicitInputIdsName && !inputs[explicitInputIdsName]) {
+      inputs[explicitInputIdsName] = inputIdsTensor;
+    }
+    if (explicitAttentionName && !inputs[explicitAttentionName]) {
+      inputs[explicitAttentionName] = attentionMaskTensor;
+    }
+    if (explicitPositionName && !inputs[explicitPositionName]) {
+      inputs[explicitPositionName] = positionIdsTensor;
+    }
     return inputs;
   }
   let hasInputIds = false;
