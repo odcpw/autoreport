@@ -15,8 +15,10 @@ Private Const STYLE_BULLET As String = "List Paragraph"
 Private Const STYLE_BOLD As String = ""
 Private Const STYLE_ITALIC As String = ""
 Private Const STYLE_BOLDITALIC As String = ""
+Private Const DEBUG_ENABLED As Boolean = True
 
 Public Sub ConvertMarkdownInSelection()
+    LogDebug "ConvertMarkdownInSelection: start"
     Dim rng As Range
     Set rng = Selection.Range
     Dim cc As ContentControl
@@ -29,6 +31,7 @@ Public Sub ConvertMarkdownInSelection()
 End Sub
 
 Public Sub ConvertMarkdownInContentControl()
+    LogDebug "ConvertMarkdownInContentControl: start"
     Dim rng As Range
     Set rng = ResolveBookmarkRange("Chapter1_start", "Chapter1_end")
     If Not rng Is Nothing Then
@@ -62,6 +65,7 @@ Private Sub ConvertMarkdownWithUnlock(ByVal cc As ContentControl, ByVal rng As R
 End Sub
 
 Private Sub ConvertMarkdownRange(ByVal rng As Range)
+    LogDebug "ConvertMarkdownRange: " & rng.Start & "-" & rng.End
     If rng.Tables.Count > 0 Then
         Dim cell As Cell
         For Each cell In rng.Tables(1).Range.Cells
@@ -73,6 +77,7 @@ Private Sub ConvertMarkdownRange(ByVal rng As Range)
 End Sub
 
 Private Sub ConvertMarkdownCell(ByVal cell As Cell)
+    LogDebug "ConvertMarkdownCell"
     Dim cellRange As Range
     Set cellRange = cell.Range
     If cellRange.End > cellRange.Start Then
@@ -82,6 +87,7 @@ Private Sub ConvertMarkdownCell(ByVal cell As Cell)
 End Sub
 
 Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
+    LogDebug "ConvertMarkdownPlainRange"
     NormalizeRangeForCell rng
     Dim text As String
     text = rng.Text
@@ -114,6 +120,7 @@ Private Sub ConvertMarkdownPlainRange(ByVal rng As Range)
 End Sub
 
 Private Sub InsertMarkdownLine(ByVal rng As Range, ByVal line As String, ByVal asBullet As Boolean, ByVal appendBreak As Boolean)
+    If asBullet Then LogDebug "InsertMarkdownLine: bullet"
     rng.Collapse wdCollapseEnd
     Dim lineStart As Long
     lineStart = rng.End
@@ -236,4 +243,9 @@ Private Sub NormalizeRangeForCell(ByVal rng As Range)
             rng.End = rng.End - 1
         End If
     End If
+End Sub
+
+Private Sub LogDebug(ByVal message As String)
+    If Not DEBUG_ENABLED Then Exit Sub
+    Debug.Print Format$(Now, "hh:nn:ss") & " | " & message
 End Sub

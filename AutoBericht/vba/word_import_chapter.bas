@@ -9,6 +9,7 @@ Private Const STYLE_SECTION As String = "Heading 2"
 Private Const STYLE_FINDING As String = "Heading 3"
 Private Const STYLE_TABLE As String = "Grid Table Light"
 Private Const STYLE_LIST As String = "List Paragraph"
+Private Const DEBUG_ENABLED As Boolean = True
 
 ' === TABLE CONFIG (edit widths as needed) ===
 Private Const COL1_WIDTH_CM As Double = 6.5
@@ -17,6 +18,7 @@ Private Const COL3_WIDTH_CM As Double = 1.3
 Private Const HEADER_CHECKMARK As String = "✓"
 
 Public Sub ImportChapter1Table()
+    LogDebug "ImportChapter1Table: start"
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
     If Len(jsonPath) = 0 Then Exit Sub
@@ -27,9 +29,11 @@ Public Sub ImportChapter1Table()
         MsgBox "Sidecar JSON is empty.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter1Table: loaded JSON (" & Len(jsonText) & " chars)"
 
     Dim root As Object
     Set root = JsonConverter.ParseJson(jsonText)
+    LogDebug "ImportChapter1Table: JSON parsed"
 
     Dim report As Object
     Set report = GetObject(root, "report")
@@ -51,11 +55,13 @@ Public Sub ImportChapter1Table()
         MsgBox "No chapters found in JSON.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter1Table: chapters=" & chapters.Count
 
     Dim chapter As Object
     Set chapter = chapters.Item(1)
     Dim chapterId As String
     chapterId = SafeText(chapter, "id")
+    LogDebug "ImportChapter1Table: chapterId=" & chapterId
 
     Dim insertRng As Range
     Set insertRng = ResolveBookmarkInsertRange("Chapter1_start", "Chapter1_end")
@@ -66,6 +72,7 @@ Public Sub ImportChapter1Table()
         MsgBox "Bookmark range 'Chapter1_start'/'Chapter1_end' not found.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter1Table: insert range " & insertRng.Start & "-" & insertRng.End
 
     Dim rows As Object
     Set rows = GetObject(chapter, "rows")
@@ -73,6 +80,7 @@ Public Sub ImportChapter1Table()
         MsgBox "No rows in Chapter 1.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter1Table: rows=" & rows.Count
 
     Dim includedSections As Object
     Set includedSections = BuildIncludedSections(rows)
@@ -86,12 +94,14 @@ Public Sub ImportChapter1Table()
         MsgBox "No data rows found in Chapter 1.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter1Table: table rows=" & tableRowCount
 
     ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
     Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 3, 3)
+    LogDebug "ImportChapter1Table: table created"
     On Error Resume Next
     tbl.Style = STYLE_TABLE
     On Error GoTo 0
@@ -130,6 +140,7 @@ Public Sub ImportChapter1Table()
     For Each row In rows
         If IsSectionRow(row) Then
             If ShouldIncludeSection(row, includedSections) Then
+                LogDebug "Section row: " & SafeSectionTitle(row, renumberMap)
                 On Error Resume Next
                 tbl.Cell(targetRow, 1).Merge tbl.Cell(targetRow, 2)
                 On Error GoTo 0
@@ -138,6 +149,7 @@ Public Sub ImportChapter1Table()
                 targetRow = targetRow + 1
             End If
         ElseIf IsIncludedRow(row) Then
+            LogDebug "Finding row: " & ResolveDisplayId(row, renumberMap)
             tbl.Cell(targetRow, 1).Range.Text = BuildFindingHeading(row, renumberMap)
             tbl.Cell(targetRow, 1).Range.Style = STYLE_FINDING
             tbl.Cell(targetRow, 2).Range.Text = ResolveRecommendation(row)
@@ -178,9 +190,11 @@ Public Sub ImportChapter1Table()
     Next colCell
 
     MsgBox "Chapter 1 table imported.", vbInformation
+    LogDebug "ImportChapter1Table: done"
 End Sub
 
 Public Sub ImportChapter0Summary()
+    LogDebug "ImportChapter0Summary: start"
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
     If Len(jsonPath) = 0 Then Exit Sub
@@ -194,6 +208,7 @@ Public Sub ImportChapter0Summary()
 
     Dim root As Object
     Set root = JsonConverter.ParseJson(jsonText)
+    LogDebug "ImportChapter0Summary: JSON parsed"
 
     Dim report As Object
     Set report = GetObject(root, "report")
@@ -221,6 +236,7 @@ Public Sub ImportChapter0Summary()
     If chapter Is Nothing Then
         Set chapter = chapters.Item(1)
     End If
+    LogDebug "ImportChapter0Summary: chapter selected"
 
     Dim rows As Object
     Set rows = GetObject(chapter, "rows")
@@ -238,6 +254,7 @@ Public Sub ImportChapter0Summary()
         MsgBox "Bookmark range 'Chapter0_start'/'Chapter0_end' not found.", vbExclamation
         Exit Sub
     End If
+    LogDebug "ImportChapter0Summary: insert range " & insertRng.Start & "-" & insertRng.End
 
     ClearRangeSafe insertRng
     insertRng.Collapse wdCollapseStart
@@ -256,6 +273,7 @@ Public Sub ImportChapter0Summary()
                 Dim summaryText As String
                 summaryText = ResolveRecommendation(row)
                 If Len(Trim$(summaryText)) > 0 Then
+                    LogDebug "Summary row: " & ResolveDisplayId(row, Nothing)
                     summaryText = Replace(summaryText, vbCrLf, " ")
                     summaryText = Replace(summaryText, vbCr, " ")
                     summaryText = Replace(summaryText, vbLf, " ")
@@ -293,6 +311,7 @@ Public Sub ImportChapter0Summary()
     On Error GoTo 0
 
     MsgBox "Chapter 0 summary imported.", vbInformation
+    LogDebug "ImportChapter0Summary: done"
 End Sub
 
 Private Function ResolveSidecarPath() As String
@@ -433,6 +452,11 @@ Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal end
     Set insertRng = ActiveDocument.Range(insertPara.Range.Start, bmEnd.Range.Start)
     Set ResolveBookmarkInsertRange = insertRng
 End Function
+
+Private Sub LogDebug(ByVal message As String)
+    If Not DEBUG_ENABLED Then Exit Sub
+    Debug.Print Format$(Now, "hh:nn:ss") & " | " & message
+End Sub
 
 Private Sub ClearRangeSafe(ByVal rng As Range)
     If rng Is Nothing Then Exit Sub
