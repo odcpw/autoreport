@@ -34,8 +34,16 @@ End Sub
 
 Public Sub AB_ExportPptTraining(control As Object)
     On Error GoTo Fail
-    ExportTrainingPpt
+    ExportTrainingPptD
     Exit Sub
 Fail:
     MsgBox "Training export failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_ExportPptTrainingF(control As Object)
+    On Error GoTo Fail
+    ExportTrainingPptF
+    Exit Sub
+Fail:
+    MsgBox "Training export (FR) failed: " & Err.Description, vbExclamation
 End Sub

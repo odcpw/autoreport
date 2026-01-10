@@ -259,14 +259,17 @@ Goal: generate two slide decks from the sidecar JSON.
 
 Inputs:
 - `project_sidecar.json` (report + photo tags)
-- PowerPoint template deck(s) in the **project folder**
+- PowerPoint template deck(s) in `<Project>/Templates/`
 
 Outputs:
-- Report presentation (`Report_*.pptx`) in the project folder
-- Training deck (`Training_*.pptx`) in the project folder
+- Report presentation (`YYYY-MM-DD_Report_*.pptx`) in the project folder
+- Training deck (`YYYY-MM-DD_Seminar_Slides_D/F.pptx`) in the project folder
 
 Template (current working file)
 - `test/AutoBericht_slides.pptx` (seed for the layouts below)
+- Expected in projects as:
+  - `<Project>/Templates/Training_D.pptx`
+  - `<Project>/Templates/Training_F.pptx`
 
 ### Layout naming (in the template)
 Report layouts:

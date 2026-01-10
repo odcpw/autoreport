@@ -10,6 +10,7 @@
         <group id="grpAutoBerichtPpt" label="PowerPoint">
           <button id="btnAutoBerichtPptReport" label="PPT Bericht" size="large" imageMso="SlideNew" onAction="AB_ExportPptReport" />
           <button id="btnAutoBerichtPptTraining" label="VG Seminar D" size="large" imageMso="Presentation" onAction="AB_ExportPptTraining" />
+          <button id="btnAutoBerichtPptTrainingF" label="VG Seminar F" size="large" imageMso="Presentation" onAction="AB_ExportPptTrainingF" />
         </group>
       </tab>
     </tabs>

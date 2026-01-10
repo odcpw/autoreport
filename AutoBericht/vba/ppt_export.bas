@@ -3,8 +3,10 @@ Option Explicit
 
 ' === PPT EXPORT CONFIG ===
 Private Const DEBUG_ENABLED As Boolean = True
-Private Const TRAINING_TEMPLATE_FILE As String = "Training.pptx"
-Private Const OUTPUT_TRAINING_PREFIX As String = "Training_"
+Private Const TEMPLATE_FOLDER As String = "Templates"
+Private Const TRAINING_TEMPLATE_D As String = "Training_D.pptx"
+Private Const TRAINING_TEMPLATE_F As String = "Training_F.pptx"
+Private Const OUTPUT_TRAINING_BASE As String = "Seminar_Slides"
 Private Const INCLUDE_SEMINAR_SLIDE As Boolean = True
 
 ' Layout names (match template)
@@ -12,8 +14,16 @@ Private Const LAYOUT_CHAPTER As String = "chapterorange"
 Private Const LAYOUT_SEMINAR As String = "seminar_d"
 Private Const LAYOUT_PICTURE As String = "picture"
 
-Public Sub ExportTrainingPpt()
-    LogDebug "ExportTrainingPpt: start"
+Public Sub ExportTrainingPptD()
+    ExportTrainingPptInternal "D", TRAINING_TEMPLATE_D
+End Sub
+
+Public Sub ExportTrainingPptF()
+    ExportTrainingPptInternal "F", TRAINING_TEMPLATE_F
+End Sub
+
+Private Sub ExportTrainingPptInternal(ByVal langSuffix As String, ByVal templateFile As String)
+    LogDebug "ExportTrainingPpt: start (" & langSuffix & ")"
     Dim sidecarPath As String
     sidecarPath = ResolveSidecarPathPpt()
     If Len(sidecarPath) = 0 Then Exit Sub
@@ -36,8 +46,10 @@ Public Sub ExportTrainingPpt()
 
     Dim projectFolder As String
     projectFolder = GetParentFolder(sidecarPath)
+    Dim templatesFolder As String
+    templatesFolder = projectFolder & "\\" & TEMPLATE_FOLDER
     Dim templatePath As String
-    templatePath = projectFolder & "\\" & TRAINING_TEMPLATE_FILE
+    templatePath = templatesFolder & "\\" & templateFile
     If Dir(templatePath) = "" Then
         MsgBox "Training template not found: " & templatePath, vbExclamation
         Exit Sub
@@ -81,7 +93,7 @@ Public Sub ExportTrainingPpt()
         End If
 
         Dim layoutName As String
-        layoutName = ResolveTrainingLayoutName(CStr(tag))
+        layoutName = ResolveTrainingLayoutName(CStr(tag), langSuffix)
         Dim layout As Object
         Set layout = FindLayoutByName(pres, layoutName)
         If layout Is Nothing Then
@@ -99,7 +111,7 @@ ContinueTag:
     Next tag
 
     Dim outPath As String
-    outPath = projectFolder & "\\" & OUTPUT_TRAINING_PREFIX & Format$(Now, "yyyymmdd_hhnn") & ".pptx"
+    outPath = projectFolder & "\\" & Format$(Date, "yyyy-mm-dd") & "_" & OUTPUT_TRAINING_BASE & "_" & langSuffix & ".pptx"
     pres.SaveAs outPath
     MsgBox "Training deck exported to: " & outPath, vbInformation
     LogDebug "ExportTrainingPpt: done"
@@ -155,16 +167,19 @@ Private Function BuildTrainingTagOrder(ByVal tagMap As Object) As Collection
     Set BuildTrainingTagOrder = order
 End Function
 
-Private Function ResolveTrainingLayoutName(ByVal tag As String) As String
+Private Function ResolveTrainingLayoutName(ByVal tag As String, ByVal langSuffix As String) As String
+    Dim suffix As String
+    suffix = LCase$(langSuffix)
+    If suffix <> "d" And suffix <> "f" Then suffix = "d"
     Select Case LCase$(tag)
-        Case "unterlassen": ResolveTrainingLayoutName = "unterlassen_d"
-        Case "dulden": ResolveTrainingLayoutName = "dulden_d"
-        Case "handeln": ResolveTrainingLayoutName = "handeln_d"
-        Case "vorbild": ResolveTrainingLayoutName = "vorbild_d"
-        Case "audit": ResolveTrainingLayoutName = "audit_d"
-        Case "risikobeurteilung": ResolveTrainingLayoutName = "risikobeurteilung_d"
-        Case "aviva": ResolveTrainingLayoutName = "aviva_d"
-        Case "verhindern": ResolveTrainingLayoutName = "verhindern_d"
+        Case "unterlassen": ResolveTrainingLayoutName = "unterlassen_" & suffix
+        Case "dulden": ResolveTrainingLayoutName = "dulden_" & suffix
+        Case "handeln": ResolveTrainingLayoutName = "handeln_" & suffix
+        Case "vorbild": ResolveTrainingLayoutName = "vorbild_" & suffix
+        Case "audit": ResolveTrainingLayoutName = "audit_" & suffix
+        Case "risikobeurteilung": ResolveTrainingLayoutName = "risikobeurteilung_" & suffix
+        Case "aviva": ResolveTrainingLayoutName = "aviva_" & suffix
+        Case "verhindern": ResolveTrainingLayoutName = "verhindern_" & suffix
         Case "iceberg", "pyramide", "stop", "sos": ResolveTrainingLayoutName = "picture"
         Case Else: ResolveTrainingLayoutName = "picture"
     End Select
