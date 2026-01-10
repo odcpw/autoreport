@@ -237,6 +237,44 @@ async function resolveAsrDtype() {
   return "fp16";
 }
 
+async function pickAvailableAsrDtype(modelId) {
+  const preferred = await resolveAsrDtype();
+  const tried = [preferred];
+  try {
+    await ensureAsrModelFiles(modelId, preferred);
+    return preferred;
+  } catch (err) {
+    if (preferred !== "fp16") {
+      tried.push("fp16");
+      try {
+        await ensureAsrModelFiles(modelId, "fp16");
+        log(`ASR fp32 missing; falling back to fp16.`);
+        return "fp16";
+      } catch (fp16Err) {
+        throw err;
+      }
+    }
+    throw err;
+  }
+}
+
+function logAudioStats(audio, sampleRate) {
+  if (!audio?.length) return;
+  let max = 0;
+  let sumSq = 0;
+  for (let i = 0; i < audio.length; i += 1) {
+    const v = Math.abs(audio[i]);
+    if (v > max) max = v;
+    sumSq += audio[i] * audio[i];
+  }
+  const rms = Math.sqrt(sumSq / audio.length);
+  const duration = audio.length / sampleRate;
+  log(`ASR audio stats: duration=${duration.toFixed(2)}s max=${max.toFixed(4)} rms=${rms.toFixed(4)}`);
+  if (max < 0.01) {
+    log("ASR warning: audio level is very low; mic may be muted or too quiet.");
+  }
+}
+
 function getLocalModelBase(modelId) {
   const root = DEFAULTS.localModelPath;
   return root.endsWith("/") ? `${root}${modelId}/` : `${root}/${modelId}/`;
@@ -767,24 +805,29 @@ async function runAsrFromBlob(blob) {
   const totalStart = performance.now();
   setStatus(`Loading ASR pipeline (${modelId}) ...`);
   try {
-    const dtype = await resolveAsrDtype();
-    await ensureAsrModelFiles(modelId, dtype);
+    const dtype = await pickAvailableAsrDtype(modelId);
     const loadStart = performance.now();
     const asr = await getPipeline("automatic-speech-recognition", modelId, { dtype });
     logPerf("ASR pipeline load", performance.now() - loadStart);
     setStatus("Decoding audio ...");
     const decodeStart = performance.now();
-    const { audio } = await decodeAudioBlob(blob);
+    const { audio, sampling_rate } = await decodeAudioBlob(blob);
     logPerf("ASR audio decode", performance.now() - decodeStart);
+    logAudioStats(audio, sampling_rate);
     setStatus("Transcribing ...");
     const inferStart = performance.now();
     const options = { chunk_length_s: 30, stride_length_s: 5 };
     if (ASR_LANGUAGE && ASR_LANGUAGE !== "auto") {
       options.language = ASR_LANGUAGE;
     }
+    options.task = "transcribe";
     const result = await asr(audio, options);
     logPerf("ASR inference", performance.now() - inferStart);
     const text = typeof result === "string" ? result : result?.text || JSON.stringify(result, null, 2);
+    const stripped = text.replace(/>+/g, "").trim();
+    if (!stripped) {
+      log("ASR warning: output looks empty or contains only special markers (e.g. >>>).");
+    }
     transcriptEl.value = text;
     logPerf("ASR total", performance.now() - totalStart);
     setStatus("Transcription complete. Cleaning up ...");
