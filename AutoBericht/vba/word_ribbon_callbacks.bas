@@ -19,3 +19,19 @@ Public Sub AB_ConvertMarkdown(control As Object)
 Fail:
     MsgBox "Markdown conversion failed: " & Err.Description, vbExclamation
 End Sub
+
+Public Sub AB_InsertLogo(control As Object)
+    On Error GoTo Fail
+    InsertLogoAtToken
+    Exit Sub
+Fail:
+    MsgBox "Logo insertion failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_ExportPptReport(control As Object)
+    MsgBox "PPT Bericht export not implemented yet.", vbInformation
+End Sub
+
+Public Sub AB_ExportPptTraining(control As Object)
+    MsgBox "VG Seminar D export not implemented yet.", vbInformation
+End Sub

@@ -253,6 +253,65 @@ Benefits
 - No unsafe browser flags and no Excel dependency for export.
 - Templates can be updated independently by corporate design.
 
+## 11b. PowerPoint Export (Draft)
+
+Goal: generate two slide decks from the sidecar JSON.
+
+Inputs:
+- `project_sidecar.json` (report + photo tags)
+- PowerPoint template deck(s) in the **project folder**
+
+Outputs:
+- Report presentation (`Report_*.pptx`) in the project folder
+- Training deck (`Training_*.pptx`) in the project folder
+
+Template (current working file)
+- `test/AutoBericht_slides.pptx` (seed for the layouts below)
+
+### Layout naming (in the template)
+Report layouts:
+- `chapterorange` (chapter divider)
+- `titleandtext`
+- `titleandpicture`
+- `textandpicture`
+- `4pictures`
+- `6pictures`
+- `8pictures`
+
+Training layouts (German `*_d`):
+- `seminar_d` (title slide)
+- `unterlassen_d`
+- `dulden_d`
+- `handeln_d`
+- `picture` (for Iceberg / Pyramide / STOP / SOS)
+- `verhindern_d`
+- `audit_d`
+- `risikobeurteilung_d`
+- `aviva_d`
+- `vorbild_d`
+
+### Placeholder expectations
+The macro will target standard placeholders by type:
+- `title` for slide title
+- `body` for text
+- `pic` for image slots (1/4/6/8)
+
+### Draft export logic
+1) Open template deck.
+2) For each chapter, insert a `chapterorange` divider slide.
+3) For each report section:
+   - choose layout based on photo count (1, 4, 6, 8; fallback to text).
+   - insert title and summary text on the left if a text placeholder exists.
+   - fill image placeholders in order.
+4) Training deck:
+   - map training tags to layouts (German tags first).
+   - add a `chapterorange` slide per training tag, then photo slides.
+
+### Training tag alignment
+Training tag names in the PhotoSorter seed must match the PPT layout mapping
+(e.g., `Unterlassen`, `Dulden`, `Handeln`, `Audit`, `Risikobeurteilung`, etc.).
+We will update the seed list once the layout names are finalized.
+
 ## 12. Maintainability
 
 - project_db.xlsx is the human-readable fallback.
