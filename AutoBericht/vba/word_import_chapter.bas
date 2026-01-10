@@ -13,6 +13,8 @@ Private Const DEBUG_ENABLED As Boolean = True
 Private Const USE_MARKER_TOKENS As Boolean = False
 Private Const CHAPTER0_MARKER As String = "CHAPTER0$$"
 Private Const CHAPTER1_MARKER As String = "CHAPTER1$$"
+Private Const LOGO_MARKER As String = "LOGO$$"
+Private Const LOGO_HEIGHT_CM As Double = 1#
 
 ' === TABLE CONFIG (edit widths as needed) ===
 Private Const COL1_WIDTH_PCT As Long = 38
@@ -231,6 +233,36 @@ Public Sub ImportChapter1Table()
     LogDebug "ImportChapter1Table: done"
     ResetTableBookmarks "Chapter1_start", "Chapter1_end", tbl
 End Sub
+
+Public Sub InsertLogoAtToken()
+    Dim logoPath As String
+    logoPath = PickLogoFile()
+    If Len(logoPath) = 0 Then Exit Sub
+
+    Dim markerRange As Range
+    Set markerRange = FindMarkerRange(LOGO_MARKER)
+    If markerRange Is Nothing Then
+        MsgBox "Logo token not found: " & LOGO_MARKER, vbExclamation
+        Exit Sub
+    End If
+
+    markerRange.Text = ""
+    Dim inline As InlineShape
+    Set inline = markerRange.InlineShapes.AddPicture(FileName:=logoPath, LinkToFile:=False, SaveWithDocument:=True)
+    inline.LockAspectRatio = True
+    inline.Height = CentimetersToPoints(LOGO_HEIGHT_CM)
+End Sub
+
+Private Function PickLogoFile() As String
+    Dim fd As FileDialog
+    Set fd = Application.FileDialog(msoFileDialogFilePicker)
+    fd.Title = "Select logo image"
+    fd.Filters.Clear
+    fd.Filters.Add "Images", "*.png;*.jpg;*.jpeg;*.bmp;*.gif"
+    fd.AllowMultiSelect = False
+    If fd.Show <> -1 Then Exit Function
+    PickLogoFile = fd.SelectedItems(1)
+End Function
 
 
 Public Sub ImportChapter0Summary()
