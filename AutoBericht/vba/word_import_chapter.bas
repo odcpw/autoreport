@@ -10,6 +10,9 @@ Private Const STYLE_FINDING As String = "Heading 3"
 Private Const STYLE_TABLE As String = "Grid Table Light"
 Private Const STYLE_LIST As String = "List Paragraph"
 Private Const DEBUG_ENABLED As Boolean = True
+Private Const USE_MARKER_TOKENS As Boolean = False
+Private Const CHAPTER0_MARKER As String = "CHAPTER0$$"
+Private Const CHAPTER1_MARKER As String = "CHAPTER1$$"
 
 ' === TABLE CONFIG (edit widths as needed) ===
 Private Const COL1_WIDTH_PCT As Long = 38
@@ -68,7 +71,7 @@ Public Sub ImportChapter1Table()
     LogDebug "ImportChapter1Table: chapterId=" & chapterId
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkInsertRange("Chapter1_start", "Chapter1_end")
+    Set insertRng = ResolveBookmarkInsertRange("Chapter1_start", "Chapter1_end", CHAPTER1_MARKER)
     If insertRng Is Nothing Then
         Set insertRng = ResolveInsertRange("Chapter1")
     End If
@@ -282,7 +285,7 @@ Public Sub ImportChapter0Summary()
     End If
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkInsertRange("Chapter0_start", "Chapter0_end")
+    Set insertRng = ResolveBookmarkInsertRange("Chapter0_start", "Chapter0_end", CHAPTER0_MARKER)
     If insertRng Is Nothing Then
         Set insertRng = ResolveInsertRange("Chapter0")
     End If
@@ -460,7 +463,17 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
     Set ResolveInsertRange = targetPara.Range
 End Function
 
-Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String) As Range
+Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String, ByVal markerText As String) As Range
+    If USE_MARKER_TOKENS And Len(markerText) > 0 Then
+        Dim markerRange As Range
+        Set markerRange = FindMarkerRange(markerText)
+        If Not markerRange Is Nothing Then
+            markerRange.Text = ""
+            Set ResolveBookmarkInsertRange = markerRange
+            Exit Function
+        End If
+    End If
+
     Dim bmStart As Bookmark
     Dim bmEnd As Bookmark
     Set bmStart = FindBookmark(startName)
@@ -469,17 +482,44 @@ Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal end
 
     Dim startPara As Paragraph
     Set startPara = bmStart.Range.Paragraphs(1)
+
     Dim clearRange As Range
     Set clearRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
     ClearRangeSafe clearRange
 
-    On Error Resume Next
-    bmEnd.Range.InsertParagraphBefore
-    On Error GoTo 0
+    Dim insertRange As Range
+    Set insertRange = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
+    insertRange.InsertAfter vbCr & vbCr & vbCr
 
-    Dim insertRng As Range
-    Set insertRng = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
-    Set ResolveBookmarkInsertRange = insertRng
+    Dim firstBlank As Paragraph
+    Set firstBlank = startPara.Next
+    If firstBlank Is Nothing Then
+        Set ResolveBookmarkInsertRange = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
+        Exit Function
+    End If
+
+    Dim middleBlank As Paragraph
+    Set middleBlank = firstBlank.Next
+    If middleBlank Is Nothing Then
+        Set ResolveBookmarkInsertRange = firstBlank.Range
+        Exit Function
+    End If
+
+    Set ResolveBookmarkInsertRange = middleBlank.Range
+End Function
+
+Private Function FindMarkerRange(ByVal markerText As String) As Range
+    Dim rng As Range
+    Set rng = ActiveDocument.Content
+    With rng.Find
+        .Text = markerText
+        .Forward = True
+        .Wrap = wdFindStop
+        .MatchWildcards = False
+        If .Execute Then
+            Set FindMarkerRange = rng
+        End If
+    End With
 End Function
 
 Private Sub LogDebug(ByVal message As String)
