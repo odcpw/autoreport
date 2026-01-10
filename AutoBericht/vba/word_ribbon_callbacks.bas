@@ -33,5 +33,9 @@ Public Sub AB_ExportPptReport(control As Object)
 End Sub
 
 Public Sub AB_ExportPptTraining(control As Object)
-    MsgBox "VG Seminar D export not implemented yet.", vbInformation
+    On Error GoTo Fail
+    ExportTrainingPpt
+    Exit Sub
+Fail:
+    MsgBox "Training export failed: " & Err.Description, vbExclamation
 End Sub

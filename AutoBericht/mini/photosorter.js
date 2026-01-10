@@ -98,7 +98,20 @@
       "Verkehrswege",
       "Werkstatt / Ordnung",
     ],
-    training: ["Vorbildliches Verhalten", "Risikoanalyse", "Audit", "Kommunikation"],
+    training: [
+      "Unterlassen",
+      "Dulden",
+      "Handeln",
+      "Vorbild",
+      "Iceberg",
+      "Pyramide",
+      "STOP",
+      "SOS",
+      "Verhindern",
+      "Audit",
+      "Risikobeurteilung",
+      "AVIVA",
+    ],
   };
 
   const DEMO_PHOTO_URLS = [
