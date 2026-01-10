@@ -1,0 +1,1937 @@
+[
+  {
+    "title": "Abnahmecheckliste für Arbeitsmittel (nur Download möglich)",
+    "url": "www.suva.ch/66084-2.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Zusammenarbeit mit Fremdfirmen – Koordinationsbereiche",
+    "url": "www.suva.ch/66092-1.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Verkehrswege für Personen",
+    "url": "www.suva.ch/67001.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Tischkreissäge",
+    "url": "www.suva.ch/67002.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Baukreissäge",
+    "url": "www.suva.ch/67003.d",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Kehlmaschine",
+    "url": "www.suva.ch/67004.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Verkehrswege für Fahrzeuge",
+    "url": "www.suva.ch/67005.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Grünschnitzelsilo",
+    "url": "www.suva.ch/67006.d",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Holzspänesilo",
+    "url": "www.suva.ch/67007.d",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Bodenöffnungen",
+    "url": "www.suva.ch/67008.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lärm am Arbeitsplatz",
+    "url": "www.suva.ch/67009.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stress",
+    "url": "www.suva.ch/67010.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Böden",
+    "url": "www.suva.ch/67012.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Umgang mit Lösemitteln",
+    "url": "www.suva.ch/67013.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rolltischkreissäge",
+    "url": "www.suva.ch/67014.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Handhobelmaschine",
+    "url": "www.suva.ch/67015.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Handkreissäge",
+    "url": "www.suva.ch/67016.d",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Anschlagmittel",
+    "url": "www.suva.ch/67017.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Kleinarbeiten auf Dächern",
+    "url": "www.suva.ch/67018.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Einführung neuer Mitarbeiterinnen und Mitarbeiter",
+    "url": "www.suva.ch/67019.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Gehörschutzmittel. Anwendung und Wartung",
+    "url": "www.suva.ch/67020.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Gegengewichtstapler",
+    "url": "www.suva.ch/67021.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stetigförderer für Stückgut",
+    "url": "www.suva.ch/67022.d",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Allein arbeitende Personen",
+    "url": "www.suva.ch/67023.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stetigförderer für Paletten",
+    "url": "www.suva.ch/67024.d",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Lagern von Holz- und Kunststoffplatten",
+    "url": "www.suva.ch/67025.d",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Transport von Holz- und Kunststoffplatten",
+    "url": "www.suva.ch/67026.d",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Kehlwerkzeuge (Fräswerkzeuge)",
+    "url": "www.suva.ch/67027.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Tragbare Leitern und Tritte",
+    "url": "www.suva.ch/67028.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Zementekzem",
+    "url": "www.suva.ch/67030.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Gefahren im Winter",
+    "url": "www.suva.ch/67031.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lagerregale und Schubladenschränke",
+    "url": "www.suva.ch/67032.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero"
+    ]
+  },
+  {
+    "title": "Arbeiten mit der Kettensäge (Motorsäge)",
+    "url": "www.suva.ch/67033.d",
+    "industries": [
+      "forst",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Hautschutz bei der Arbeit",
+    "url": "www.suva.ch/67035.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Tisch- und Ständerbohrmaschinen",
+    "url": "www.suva.ch/67036.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Tisch- und Ständerschleifmaschinen",
+    "url": "www.suva.ch/67037.d",
+    "industries": [
+      "buero",
+      "forst"
+    ]
+  },
+  {
+    "title": "Fassadengerüste",
+    "url": "www.suva.ch/67038.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Kleinmaschinen für den Bau Installationsgewerbe Bau- und Übrige Titel                                                       (Link, Publikations-Nr.)",
+    "url": "www.suva.ch/67039.d",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Partikelfilter für Dieselmotoren im Untertagebau",
+    "url": "www.suva.ch/67040.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Mitgängergeführte Maschinen",
+    "url": "www.suva.ch/67041.d",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Einstieg in Sand- und Kiessilos",
+    "url": "www.suva.ch/67042.d",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Förderbänder für Schüttgut",
+    "url": "www.suva.ch/67043.d",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Sicheres Verhalten (nur Download möglich)",
+    "url": "www.suva.ch/67044.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Reinigung und Unterhalt von Gebäuden",
+    "url": "www.suva.ch/67045.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Deichselstapler",
+    "url": "www.suva.ch/67046.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Handoberfräse",
+    "url": "www.suva.ch/67047.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Schattenfugenfräse, Nutfräsmaschine",
+    "url": "www.suva.ch/67048.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Einkauf von Mobiliar und Zubehör für die Bildschirmarbeit",
+    "url": "www.suva.ch/67050.d",
+    "industries": [
+      "metall"
+    ]
+  },
+  {
+    "title": "Beleuchtung an Arbeitsplätzen",
+    "url": "www.suva.ch/67051.d",
+    "industries": [
+      "metall"
+    ]
+  },
+  {
+    "title": "Konventionelle Drehmaschinen",
+    "url": "www.suva.ch/67053.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Druckluft",
+    "url": "www.suva.ch/67054.d",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Ortsfeste Leitern",
+    "url": "www.suva.ch/67055.d",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Schmierstoffe",
+    "url": "www.suva.ch/67056.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Bandsäge",
+    "url": "www.suva.ch/67057.d",
+    "industries": [
+      "forst",
+      "holz"
+    ]
+  },
+  {
+    "title": "Abrichthobelmaschine",
+    "url": "www.suva.ch/67058.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Arbeiten mit dem Freischneider",
+    "url": "www.suva.ch/67059.d",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Keilspaltmaschine für das Spalten von Brennholz",
+    "url": "www.suva.ch/67060.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Notfallplanung für nicht ortsfeste Arbeitsplätze",
+    "url": "www.suva.ch/67061.d",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Notfallplanung für ortsfeste Arbeitsplätze",
+    "url": "www.suva.ch/67062.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Reaktionsharze",
+    "url": "www.suva.ch/67063.d",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Hubarbeitsbühnen Teil 1: Planung des Einsatzes",
+    "url": "www.suva.ch/67064-1.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Hubarbeitsbühnen Teil 2: Kontrolle am Einsatzort",
+    "url": "www.suva.ch/67064-2.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Laderampen",
+    "url": "www.suva.ch/67065.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Anpassrampen und Ladebuchten",
+    "url": "www.suva.ch/67066.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Hebebühnen für Laderampen",
+    "url": "www.suva.ch/67067.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Gasflaschen",
+    "url": "www.suva.ch/67068.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Wippkreissäge für das Einscheiden von Brennholz",
+    "url": "www.suva.ch/67069.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Vibrationen am Arbeitsplatz",
+    "url": "www.suva.ch/67070.d",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lagern von leichtbrennbaren Flüssigkeiten",
+    "url": "www.suva.ch/67071.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Türen und Tore",
+    "url": "www.suva.ch/67072.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Regalbediengeräte",
+    "url": "www.suva.ch/67073.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Unerwarteter Anlauf von Maschinen und Anlagen",
+    "url": "www.suva.ch/67075.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Arbeitspodeste, Wartungstreppen und -bühnen",
+    "url": "www.suva.ch/67076.d",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Gesundheitsgefährdende Stäube",
+    "url": "www.suva.ch/67077.d",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Handwerkzeuge",
+    "url": "www.suva.ch/67078.d",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Laser auf Baustellen",
+    "url": "www.suva.ch/67079.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Elektrizität auf Baustellen",
+    "url": "www.suva.ch/67081.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Wandöffnungen",
+    "url": "www.suva.ch/67082.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Statische Elektrizität. Explosionsrisiken beim Umgang mit brennbaren Flüssigkeiten",
+    "url": "www.suva.ch/67083.d",
+    "industries": []
+  },
+  {
+    "title": "Säuren und Laugen",
+    "url": "www.suva.ch/67084.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Vielblatt-Kreissäge mit Walzenvorschub",
+    "url": "www.suva.ch/67085.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Vielblatt-Kreissäge mit Plattenband",
+    "url": "www.suva.ch/67086.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Besäumkreissäge mit über Tisch rücklaufendem Sägeblatt",
+    "url": "www.suva.ch/67087.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Besäumkreissäge mit unter Tisch rücklaufendem Sägeblatt",
+    "url": "www.suva.ch/67088.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Persönliche Schutzausrüstungen (PSA)",
+    "url": "www.suva.ch/67091.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Elektrohandwerkzeuge",
+    "url": "www.suva.ch/67092.d",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Fahrzeuge beladen von Hand",
+    "url": "www.suva.ch/67093.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Fahrzeuge beladen mit Hebegeräten",
+    "url": "www.suva.ch/67094.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Holzelementbau",
+    "url": "www.suva.ch/67095.d",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Schraubenspaltmaschine für das Spalten von Brennholz Installationsgewerbe Bau- und Übrige Titel                                                               (Link, Publikations-Nr.)",
+    "url": "www.suva.ch/67096.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Automatische Pressen (nur Download möglich)",
+    "url": "www.suva.ch/67097.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Exzenterpressen mit manueller Beschickung",
+    "url": "www.suva.ch/67098.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Hydraulische Pressen mit manueller Beschickung",
+    "url": "www.suva.ch/67099.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Pendelkreissäge",
+    "url": "www.suva.ch/67100.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Radialkreissäge",
+    "url": "www.suva.ch/67101.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Hebebühnen für Fahrzeuge",
+    "url": "www.suva.ch/67102.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Schweissen, Schneiden, Löten und Wärmen (Flammenverfahren)",
+    "url": "www.suva.ch/67103.d",
+    "industries": [
+      "buero",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Schweissen und Schneiden (Lichtbogenverfahren)",
+    "url": "www.suva.ch/67104.d",
+    "industries": [
+      "buero",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Metallkreissäge",
+    "url": "www.suva.ch/67105.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Metallbandsäge",
+    "url": "www.suva.ch/67106.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Tafelschere",
+    "url": "www.suva.ch/67107.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Abkantpresse",
+    "url": "www.suva.ch/67108.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Rundbiegemaschine",
+    "url": "www.suva.ch/67110.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Transport und Lagerung von Blechen",
+    "url": "www.suva.ch/67111.d",
+    "industries": [
+      "transport",
+      "buero"
+    ]
+  },
+  {
+    "title": "Transport und Lagerung von Eisenstangen und Formstahl (Profile)",
+    "url": "www.suva.ch/67112.d",
+    "industries": [
+      "transport",
+      "buero"
+    ]
+  },
+  {
+    "title": "Mechanische Gefährdungen an Maschinen",
+    "url": "www.suva.ch/67113.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Untertisch-Kappsäge",
+    "url": "www.suva.ch/67114.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Kreissäge zum Schneiden von stehenden Platten",
+    "url": "www.suva.ch/67115.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Krane auf Baustellen",
+    "url": "www.suva.ch/67116.d",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Hautschutz in der Nahrungsmittelindustrie, in Grossküchen und im Catering",
+    "url": "www.suva.ch/67117.d",
+    "industries": []
+  },
+  {
+    "title": "Rücken von Holz mit Seilwinde und Fahrzeug",
+    "url": "www.suva.ch/67118.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Bleibatterien",
+    "url": "www.suva.ch/67119.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lüftung bei Untertagarbeiten",
+    "url": "www.suva.ch/67120.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Musikhören am Arbeitsplatz",
+    "url": "www.suva.ch/67121.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Seilbahn- und Skiliftbetriebe",
+    "url": "www.suva.ch/67122.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Übergabestellen für den Warentransport mit Staplern und Kranen",
+    "url": "www.suva.ch/67123.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Arbeitsvorbereitung (AVOR)",
+    "url": "www.suva.ch/67124.d",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Kapp- und Gehrungskreissäge",
+    "url": "www.suva.ch/67125.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Innerbetrieblicher Bahnverkehr",
+    "url": "www.suva.ch/67126.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Big bags – Flexible Grosspackmittel (FIBC)",
+    "url": "www.suva.ch/67128.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lagern und Transportieren von Steinplatten",
+    "url": "www.suva.ch/67129.d",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Spritzgiessmaschinen (Fertigungsinseln)",
+    "url": "www.suva.ch/67130.d",
+    "industries": [
+      "buero",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rasenmäher (Sichel-, Mulch-, Spindelmäher)",
+    "url": "www.suva.ch/67131.d",
+    "industries": [
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Explosionsrisiken (Explosionsschutzdokument für KMU)",
+    "url": "www.suva.ch/67132.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Zapfenschneid- und Schlitzmaschine",
+    "url": "www.suva.ch/67133.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Forstliche Aus- und Weiterbildung (nur Download möglich)",
+    "url": "www.suva.ch/67134.d",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Arbeiten im Freien bei Sonne und Hitze",
+    "url": "www.suva.ch/67135.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Transport im Untertagbau",
+    "url": "www.suva.ch/67136.d",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "CNC-Maschine zum Bohren, Drehen und Fräsen (Bearbeitungscenter)",
+    "url": "www.suva.ch/67139.d",
+    "industries": []
+  },
+  {
+    "title": "Nagel- und Klammerpistolen",
+    "url": "www.suva.ch/67141.d",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lagern und Stapeln",
+    "url": "www.suva.ch/67142.d",
+    "industries": [
+      "transport",
+      "metall",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "STOPP dem Manipulieren von Schutzeinrichtungen",
+    "url": "www.suva.ch/67146.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Gräben und Baugruben",
+    "url": "www.suva.ch/67148.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Umgang mit Mikroorganismen",
+    "url": "www.suva.ch/67149.d",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rollgerüste",
+    "url": "www.suva.ch/67150.d",
+    "industries": [
+      "buero",
+      "bau"
+    ]
+  },
+  {
+    "title": "Rückbau- und Abbrucharbeiten",
+    "url": "www.suva.ch/67151.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Bauarbeiten am, im oder über Wasser",
+    "url": "www.suva.ch/67153.d",
+    "industries": [
+      "forst",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Gebirgsbaustellen",
+    "url": "www.suva.ch/67154.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Buschholzhacker",
+    "url": "www.suva.ch/67155.d",
+    "industries": [
+      "forst",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Baumkronen pflegen und zurückschneiden",
+    "url": "www.suva.ch/67156.d",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Fluchtwege Installationsgewerbe Bau- und Übrige Titel                                                               (Link, Publikations-Nr.)",
+    "url": "www.suva.ch/67157.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Hebezeuge",
+    "url": "www.suva.ch/67158.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Krane in Industrie und Gewerbe (z. B. Brückenkrane, Portalkrane)",
+    "url": "www.suva.ch/67159.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rammen, Bohren und Schlitzen im Spezialtiefbau",
+    "url": "www.suva.ch/67160.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Kleinbohrungen und Spritzbeton im Spezialtiefbau",
+    "url": "www.suva.ch/67161.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Rohrvortriebsarbeiten im Spezialtiefbau",
+    "url": "www.suva.ch/67162.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Seiten- und Vierwegstapler",
+    "url": "www.suva.ch/67164.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz"
+    ]
+  },
+  {
+    "title": "Korrosionsschutz-Arbeiten an Objekten im Freien",
+    "url": "www.suva.ch/67165.d",
+    "industries": [
+      "buero",
+      "bau"
+    ]
+  },
+  {
+    "title": "Vereinbarung über die Gewährleistung der Sicherheit Korrosionsschutzarbeiten an Objekten im Freien",
+    "url": "www.suva.ch/67165-1.d",
+    "industries": []
+  },
+  {
+    "title": "Zimmerei-Abbundmaschine",
+    "url": "www.suva.ch/67166.d",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Furnier- und Feinschnittkreissäge",
+    "url": "www.suva.ch/67167.d",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Furnierpresse",
+    "url": "www.suva.ch/67168.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Bandbohr- und Einpressmaschine",
+    "url": "www.suva.ch/67169.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "CNC-Holzbearbeitungsmaschinen",
+    "url": "www.suva.ch/67170.d",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Technische Lärmschutzmassnahmen",
+    "url": "www.suva.ch/67171.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sicherheit im Aussendienst, Teil 1: Unterwegs",
+    "url": "www.suva.ch/67172.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sicherheit im Aussendienst, Teil 2: Beim Kunden (Montage- und Serviceabeiten)",
+    "url": "www.suva.ch/67173.d",
+    "industries": []
+  },
+  {
+    "title": "Beladen und Entladen von Containern und Mulden",
+    "url": "www.suva.ch/67174.d",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Instandhaltung von Containern und Mulden (nur Download möglich)",
+    "url": "www.suva.ch/67175.d",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Pistenfahrzeuge",
+    "url": "www.suva.ch/67176.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Pneumatische und elektrische Pressen",
+    "url": "www.suva.ch/67177.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Stopp den Stolper- und Sturzunfällen im Büro (Verwaltungen, Dienstleistungsunternehmen)",
+    "url": "www.suva.ch/67178.d",
+    "industries": []
+  },
+  {
+    "title": "Stopp den Stolper- und Sturzunfällen an ortsfesten Arbeitsplätzen in Industrie und Gewerbe",
+    "url": "www.suva.ch/67179.d",
+    "industries": []
+  },
+  {
+    "title": "Stopp den Stolper- und Sturzunfällen auf Baustellen",
+    "url": "www.suva.ch/67180.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Kühlräume (Raum grösser als 10 m3 und Temperatur unter null Grad)",
+    "url": "www.suva.ch/67181.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "UV-emittierende Anlagen",
+    "url": "www.suva.ch/67182.d",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Handschutz in der Metallbranche",
+    "url": "www.suva.ch/67183.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Augenschutz in Industrie und Gewerbe",
+    "url": "www.suva.ch/67184.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Handlauf: Stopp den Sturzunfällen auf Treppen",
+    "url": "www.suva.ch/67185.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Quarzstaub in Kies- und Schotterwerken",
+    "url": "www.suva.ch/67186.d",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Arbeiten auf Seilbahn-Anlagen",
+    "url": "www.suva.ch/67187.d",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Instandhaltungsarbeiten an Eisenbahnfahrzeugen",
+    "url": "www.suva.ch/67188.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Stopp den Stolper- und Sturzunfällen beim Reinigen von Gebäuden",
+    "url": "www.suva.ch/67189.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sichere Lehrzeit",
+    "url": "www.suva.ch/67190.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Förderpumpen und Verteilmasten für Beton",
+    "url": "www.suva.ch/67191.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Instandhaltung von Maschinen und Anlagen",
+    "url": "www.suva.ch/67192.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Beschneiungsanlagen",
+    "url": "www.suva.ch/67193.d",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lagerung und Transport von Flachglas im Betrieb",
+    "url": "www.suva.ch/67194.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Baugüteraufzüge mit Personenbeförderung",
+    "url": "www.suva.ch/67196.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Schmalganglager",
+    "url": "www.suva.ch/67197.d",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Lastaufnahmemittel",
+    "url": "www.suva.ch/67198.d",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Clever mit Lasten umgehen",
+    "url": "www.suva.ch/67199.d",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Helikoptereinsatz bei Forstarbeiten",
+    "url": "www.suva.ch/67200.d",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Galvanotechnik",
+    "url": "www.suva.ch/67201.d",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Spritzbeton für Tiefbau- und Untertagarbeiten",
+    "url": "www.suva.ch/67202.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Bodenbeläge verlegen und behandeln",
+    "url": "www.suva.ch/67203.d",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Gesundheitsgefährdende Chemikalien im Betrieb",
+    "url": "www.suva.ch/67204.d",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Checkliste für Kranführer von Turmdrehkranen",
+    "url": "www.suva.ch/88179.d",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Checkliste für Kranführer von Fahrzeugkranen",
+    "url": "www.suva.ch/88180.d",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für die Waldarbeit",
+    "url": "www.suva.ch/84034.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Acht lebenswichtige Regeln für den Hochbau",
+    "url": "www.suva.ch/84035.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für Maler und Gipser",
+    "url": "www.suva.ch/84036.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Acht lebenswichtige Regeln für die Instandhaltung von Maschinen und Anlagen",
+    "url": "www.suva.ch/84040.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für das Arbeiten auf Dächern und an Fassaden",
+    "url": "www.suva.ch/84041.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "5+5 lebenswichtige Regeln im Umgang mit Elektrizität",
+    "url": "www.suva.ch/84042.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Acht lebenswichtige Regeln für das Arbeiten mit Anseilschutz",
+    "url": "www.suva.ch/84044.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Acht lebenswichtige Regeln für das Arbeiten an Seilbahn- und Skiliftanlagen",
+    "url": "www.suva.ch/84045.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für den Holzbau",
+    "url": "www.suva.ch/84046.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für die Stahlbaumontage",
+    "url": "www.suva.ch/84048.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für den Betonelementbau",
+    "url": "www.suva.ch/84049.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für das Helikopter-Bodenpersonal",
+    "url": "www.suva.ch/84050.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für den Verkehrsweg- und Tiefbau",
+    "url": "www.suva.ch/84051.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für Gewerbe und Industrie",
+    "url": "www.suva.ch/84054.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Sieben lebenswichtige Regeln für den Strassentransport",
+    "url": "www.suva.ch/84056.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für die Aufzugbranche",
+    "url": "www.suva.ch/84058.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Sieben lebenswichtige Regeln für den Metallbau",
+    "url": "www.suva.ch/84061.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Sechs lebenswichtige Regeln für das Arbeiten auf Hochspannungsfreileitungen",
+    "url": "www.suva.ch/84064.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Sieben lebenswichtige Regeln für das Arbeiten auf Regelleitungen",
+    "url": "www.suva.ch/84066.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Neun lebenswichtige Regeln für das Arbeiten mit Staplern",
+    "url": "www.suva.ch/84067.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für die Eisenbahnbranche",
+    "url": "www.suva.ch/84071.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für Gebäudetechniker",
+    "url": "www.suva.ch/84073.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für Untertagarbeiten",
+    "url": "www.suva.ch/84074.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Zehn lebenswichtige Regeln für das Anschlagen von Lasten",
+    "url": "www.suva.ch/84077.d",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Falsch-richtig: Situationen auf der Baustelle",
+    "url": "www.suva.ch/11043.m",
+    "section": "Geeignete Publikationen für den Einbezug der Arbeitnehmerinnen und Arbeitnehmer",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Fahrzeuggewerbe",
+    "url": "www.suva.ch/6203.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Bürobetriebe",
+    "url": "www.suva.ch/6205.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Bäckerei-, Konditorei- und Confiseriegewerbe",
+    "url": "www.suva.ch/6207.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Gastgewerbe, Hotels, Verpflegungsbereich von Spitälern und Heimen",
+    "url": "www.suva.ch/6209.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Betriebe der Textilpflege",
+    "url": "www.suva.ch/6232.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Detailhandel",
+    "url": "www.suva.ch/6236.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Gesundheitswesen",
+    "url": "www.suva.ch/6290.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Hilfe und Pflege zu Hause (Spitex)",
+    "url": "www.suva.ch/6291.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Unfall kein Zufall! Betriebe der Fleischwirtschaft",
+    "url": "www.suva.ch/6293.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Office, Service",
+    "url": "www.suva.ch/6801.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Küche",
+    "url": "www.suva.ch/6802.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Messer in Küchen",
+    "url": "www.suva.ch/6803.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Etage, Zimmer",
+    "url": "www.suva.ch/6804.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Lingerie",
+    "url": "www.suva.ch/6805.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Arbeitsgruben",
+    "url": "www.suva.ch/6806.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Instandhaltung von raumlufttechnischen Anlagen (RLT-Anlagen)",
+    "url": "www.suva.ch/6807.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Coiffeurgeschäfte, Nailstudios",
+    "url": "www.suva.ch/6808.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Messer in der Fleischwirtschaft",
+    "url": "www.suva.ch/6809.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Fleischwirtschaft. Viehannahme und Schlachten",
+    "url": "www.suva.ch/6810.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Fleischwirtschaft. Zerlegen von Produkten",
+    "url": "www.suva.ch/6811.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  },
+  {
+    "title": "Checkliste: Fleischwirtschaft. Verkauf und Catering",
+    "url": "www.suva.ch/6812.d",
+    "section": "Publikationen der EKAS",
+    "industries": []
+  }
+]

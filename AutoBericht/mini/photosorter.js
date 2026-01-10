@@ -3,10 +3,15 @@
   const loadSidecarBtn = document.getElementById("load-sidecar");
   const loadCategoriesBtn = document.getElementById("load-categories");
   const pickPhotosBtn = document.getElementById("pick-photos");
-  const scanPhotosBtn = document.getElementById("scan-photos");
+  const rescanPhotosBtn = document.getElementById("rescan-photos-run");
   const saveSidecarBtn = document.getElementById("save-sidecar");
   const saveLogBtn = document.getElementById("save-log");
   const openSettingsBtn = document.getElementById("open-settings");
+  const importModal = document.getElementById("import-modal");
+  const importCloseBtn = document.getElementById("import-close-btn");
+  const importBackdrop = document.getElementById("import-close");
+  const importActionBtn = document.getElementById("import-photos-run");
+  const exportActionBtn = document.getElementById("export-photos-run");
   const settingsModal = document.getElementById("settings-modal");
   const settingsCloseBtn = document.getElementById("settings-close-btn");
   const settingsBackdrop = document.getElementById("settings-close");
@@ -43,7 +48,10 @@
     loadHandle: loadFsHandle = async () => null,
     requestHandlePermission: requestFsHandlePermission = async () => false,
   } = window.AutoBerichtFsHandle || {};
-  const { importRawPhotos: importRawPhotosFromModule } = window.AutoBerichtPhotoImport || {};
+  const {
+    importRawPhotos: importRawPhotosFromModule,
+    exportTaggedPhotos: exportTaggedPhotosFromModule,
+  } = window.AutoBerichtPhotoImport || {};
 
   const urlParams = new URLSearchParams(window.location.search);
   const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
@@ -62,7 +70,20 @@
   const panelTabButtons = Array.from(document.querySelectorAll("[data-panel-tab]"));
   const layoutToggleButtons = Array.from(document.querySelectorAll("[data-layout]"));
 
-  const IMAGE_EXTENSIONS = new Set([".jpg", ".jpeg", ".png", ".gif", ".bmp", ".webp", ".tif", ".tiff"]);
+  const IMAGE_EXTENSIONS = new Set([
+    ".jpg",
+    ".jpeg",
+    ".png",
+    ".gif",
+    ".bmp",
+    ".webp",
+    ".tif",
+    ".tiff",
+    ".jfif",
+    ".avif",
+    ".heic",
+    ".heif",
+  ]);
   const RESIZE_MAX = 1200;
   const RESIZE_QUALITY = 0.85;
   const DEFAULT_TAGS = {
@@ -170,6 +191,19 @@
     settingsModal.setAttribute("aria-hidden", "true");
   };
 
+  const openImportModal = () => {
+    if (!importModal) return;
+    importModal.classList.add("is-open");
+    importModal.setAttribute("aria-hidden", "false");
+    updateImportActions();
+  };
+
+  const closeImportModal = () => {
+    if (!importModal) return;
+    importModal.classList.remove("is-open");
+    importModal.setAttribute("aria-hidden", "true");
+  };
+
   const getNestedDirectory = async (rootHandle, parts, options = {}) => {
     let current = rootHandle;
     for (const part of parts) {
@@ -212,10 +246,10 @@
     }
     if (!rootName) {
       const candidates = [
-        ["Photos", "Resized"],
         ["Photos", "resized"],
-        ["photos", "Resized"],
         ["photos", "resized"],
+        ["Photos", "Resized"],
+        ["photos", "Resized"],
         ["Photos"],
         ["photos"],
       ];
@@ -279,7 +313,9 @@
   const ensureFsAccess = () => {
     if (!window.showDirectoryPicker) {
       setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
-      pickProjectBtn.disabled = true;
+      if (pickProjectBtn) {
+        pickProjectBtn.disabled = true;
+      }
       return false;
     }
     return true;
@@ -289,16 +325,35 @@
     const hasProject = !!state.projectHandle;
     const hasPhotoFolder = !!state.photoHandle;
     const hasVisiblePhotos = getFilteredPhotos().length > 0;
-    loadSidecarBtn.disabled = !hasProject;
+    if (loadSidecarBtn) {
+      loadSidecarBtn.disabled = !hasProject;
+    }
     if (loadCategoriesBtn) {
       loadCategoriesBtn.disabled = !hasProject && !demoMode;
     }
-    pickPhotosBtn.disabled = !hasProject;
-    scanPhotosBtn.disabled = !hasPhotoFolder;
-    saveSidecarBtn.disabled = !hasProject;
-    filterToggleBtn.disabled = state.photos.length === 0;
-    prevBtn.disabled = !hasVisiblePhotos;
-    nextBtn.disabled = !hasVisiblePhotos;
+    if (pickPhotosBtn) {
+      pickPhotosBtn.disabled = !hasProject;
+    }
+    if (saveSidecarBtn) {
+      saveSidecarBtn.disabled = !hasProject;
+    }
+    if (filterToggleBtn) {
+      filterToggleBtn.disabled = state.photos.length === 0;
+    }
+    if (prevBtn) {
+      prevBtn.disabled = !hasVisiblePhotos;
+    }
+    if (nextBtn) {
+      nextBtn.disabled = !hasVisiblePhotos;
+    }
+    updateImportActions();
+  };
+
+  const updateImportActions = () => {
+    const hasProject = !!state.projectHandle;
+    if (importActionBtn) importActionBtn.disabled = !hasProject;
+    if (rescanPhotosBtn) rescanPhotosBtn.disabled = !hasProject;
+    if (exportActionBtn) exportActionBtn.disabled = !hasProject;
   };
 
   const persistHandle = async (handle) => {
@@ -566,11 +621,15 @@
   const renderViewer = () => {
     const current = getCurrentPhoto();
     if (!current) {
-      photoImageEl.removeAttribute("src");
-      photoImageEl.alt = "No photo loaded";
+      if (photoImageEl) {
+        photoImageEl.removeAttribute("src");
+        photoImageEl.alt = "No photo loaded";
+      }
       if (photoFilenameEl) photoFilenameEl.textContent = "";
-      notesEl.value = "";
-      notesEl.disabled = true;
+      if (notesEl) {
+        notesEl.value = "";
+        notesEl.disabled = true;
+      }
       if (photoUnsortedBtn) {
         photoUnsortedBtn.classList.remove("active");
         photoUnsortedBtn.disabled = true;
@@ -579,13 +638,17 @@
       enableActions();
       return;
     }
-    photoImageEl.src = current.url;
-    photoImageEl.alt = current.path;
+    if (photoImageEl) {
+      photoImageEl.src = current.url;
+      photoImageEl.alt = current.path;
+    }
     if (photoFilenameEl) {
       photoFilenameEl.textContent = current.path.split("/").pop();
     }
-    notesEl.value = current.notes || "";
-    notesEl.disabled = false;
+    if (notesEl) {
+      notesEl.value = current.notes || "";
+      notesEl.disabled = false;
+    }
     if (photoUnsortedBtn) {
       const isUnsorted = isPhotoUnsorted(current);
       photoUnsortedBtn.classList.toggle("active", isUnsorted);
@@ -723,7 +786,7 @@
     });
   };
 
-  const renderAll = () => {
+  const renderAllNow = () => {
     const filtered = getFilteredPhotos();
     if (state.currentIndex >= filtered.length) {
       state.currentIndex = Math.max(0, filtered.length - 1);
@@ -732,6 +795,19 @@
     renderViewer();
     renderPanels();
     enableActions();
+  };
+
+  let renderTimer = null;
+  const scheduleRenderAll = () => {
+    if (renderTimer) clearTimeout(renderTimer);
+    renderTimer = setTimeout(() => {
+      renderTimer = null;
+      renderAllNow();
+    }, 32);
+  };
+
+  const renderAll = () => {
+    scheduleRenderAll();
   };
 
   const setGroupUnsorted = (group) => {
@@ -1128,40 +1204,95 @@
     renderAll();
   };
 
-  pickPhotosBtn.addEventListener("click", async () => {
-    try {
+  pickPhotosBtn.addEventListener("click", () => {
+    openImportModal();
+  });
+
+  if (importActionBtn) {
+    importActionBtn.addEventListener("click", async () => {
+      try {
+        if (!state.projectHandle) {
+          setStatus("Open project folder first.");
+          return;
+        }
+        if (!importRawPhotosFromModule) {
+          setStatus("Photo import module not available.");
+          return;
+        }
+        const result = await importRawPhotosFromModule({
+          projectHandle: state.projectHandle,
+          getNestedDirectory,
+          isImageFile,
+          setStatus,
+          resizeMax: RESIZE_MAX,
+          resizeQuality: RESIZE_QUALITY,
+        });
+        if (!result?.resizedHandle) return;
+        state.photoHandle = result.resizedHandle;
+        state.photoRootName = result.photoRootName || "";
+        if (state.projectDoc) {
+          state.projectDoc.photoRoot = state.photoRootName;
+        }
+        await saveProjectSidecar();
+        await scanPhotos();
+      } catch (err) {
+        setStatus(`Import failed: ${err.message}`);
+      }
+    });
+  }
+
+  if (exportActionBtn) {
+    exportActionBtn.addEventListener("click", async () => {
+      try {
+        if (!state.projectHandle) {
+          setStatus("Open project folder first.");
+          return;
+        }
+        if (!exportTaggedPhotosFromModule) {
+          setStatus("Photo export module not available.");
+          return;
+        }
+        if (!state.photoHandle) {
+          await setDefaultPhotoHandle();
+        }
+        if (!state.photoHandle) {
+          setStatus("No photo folder found. Import or scan photos first.");
+          return;
+        }
+        if (!state.photos.length) {
+          await scanPhotos();
+        }
+        const result = await exportTaggedPhotosFromModule({
+          projectHandle: state.projectHandle,
+          getNestedDirectory,
+          setStatus,
+          photos: state.photos,
+        });
+        if (result?.count) {
+          setStatus(`Exported ${result.count} photos to ${result.exportRootName}`);
+        }
+      } catch (err) {
+        setStatus(`Export failed: ${err.message}`);
+      }
+    });
+  }
+
+  if (rescanPhotosBtn) {
+    rescanPhotosBtn.addEventListener("click", async () => {
       if (!state.projectHandle) {
         setStatus("Open project folder first.");
         return;
       }
-      if (!importRawPhotosFromModule) {
-        setStatus("Photo import module not available.");
+      if (!state.photoHandle) {
+        await setDefaultPhotoHandle();
+      }
+      if (!state.photoHandle) {
+        setStatus("No photo folder found. Import photos first.");
         return;
       }
-      const result = await importRawPhotosFromModule({
-        projectHandle: state.projectHandle,
-        getNestedDirectory,
-        isImageFile,
-        setStatus,
-        resizeMax: RESIZE_MAX,
-        resizeQuality: RESIZE_QUALITY,
-      });
-      if (!result?.resizedHandle) return;
-      state.photoHandle = result.resizedHandle;
-      state.photoRootName = result.photoRootName || "";
-      if (state.projectDoc) {
-        state.projectDoc.photoRoot = state.photoRootName;
-      }
-      await saveProjectSidecar();
       await scanPhotos();
-    } catch (err) {
-      setStatus(`Import failed: ${err.message}`);
-    }
-  });
-
-  scanPhotosBtn.addEventListener("click", async () => {
-    await scanPhotos();
-  });
+    });
+  }
 
   saveSidecarBtn.addEventListener("click", async () => {
     await saveProjectSidecar();
@@ -1175,6 +1306,12 @@
   }
   if (settingsBackdrop) {
     settingsBackdrop.addEventListener("click", closeSettings);
+  }
+  if (importCloseBtn) {
+    importCloseBtn.addEventListener("click", closeImportModal);
+  }
+  if (importBackdrop) {
+    importBackdrop.addEventListener("click", closeImportModal);
   }
   if (obsTagAddBtn) {
     obsTagAddBtn.addEventListener("click", addObservationTag);

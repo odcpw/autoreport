@@ -1,0 +1,1911 @@
+[
+  {
+    "title": "Lista di controllo per le attrezzature di lavoro",
+    "url": "www.suva.ch/66084-2.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Collaborazione con aziende terze – Settori di coordinamento",
+    "url": "www.suva.ch/66092-1.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Vie di circolazione pedonale",
+    "url": "www.suva.ch/67001.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Seghe circolari da banco",
+    "url": "www.suva.ch/67002.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Seghe circolari di cantiere",
+    "url": "www.suva.ch/67003.i",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Sagomatrice (toupie)",
+    "url": "www.suva.ch/67004.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Vie di circolazione per i veicoli",
+    "url": "www.suva.ch/67005.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sili per legna verde sminuzzata",
+    "url": "www.suva.ch/67006.i",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Sili per trucioli di legno",
+    "url": "www.suva.ch/67007.i",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Aperture nel pavimento",
+    "url": "www.suva.ch/67008.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rumore sul posto di lavoro",
+    "url": "www.suva.ch/67009.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stress",
+    "url": "www.suva.ch/67010.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Pavimenti",
+    "url": "www.suva.ch/67012.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Manipolazione di solventi",
+    "url": "www.suva.ch/67013.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare con tavola a rulli per legna da ardere",
+    "url": "www.suva.ch/67014.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Pialla portatile",
+    "url": "www.suva.ch/67015.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Sega circolare portatile",
+    "url": "www.suva.ch/67016.i",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Accessori di imbracatura",
+    "url": "www.suva.ch/67017.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Piccoli lavori sui tetti",
+    "url": "www.suva.ch/67018.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Formazione dei nuovi collaboratori",
+    "url": "www.suva.ch/67019.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Protettori auricolari (uso e manutenzione)",
+    "url": "www.suva.ch/67020.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Carrelli elevatori con forche a sbalzo",
+    "url": "www.suva.ch/67021.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Impianti di trasporto continuo per colli isolati",
+    "url": "www.suva.ch/67022.i",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Persone tenute a lavorare da sole",
+    "url": "www.suva.ch/67023.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Impianti di trasporto continuo per palette",
+    "url": "www.suva.ch/67024.i",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Deposito pannelli di legno e di plastica",
+    "url": "www.suva.ch/67025.i",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Trasporto di pannelli di legno e di plastica",
+    "url": "www.suva.ch/67026.i",
+    "industries": [
+      "transport",
+      "holz"
+    ]
+  },
+  {
+    "title": "Frese",
+    "url": "www.suva.ch/67027.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Scale portatili e sgabelli a gradini",
+    "url": "www.suva.ch/67028.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Eczema da cemento",
+    "url": "www.suva.ch/67030.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Pericoli invernali",
+    "url": "www.suva.ch/67031.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Scaffalature e armadi a cassettiera",
+    "url": "www.suva.ch/67032.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero"
+    ]
+  },
+  {
+    "title": "Lavorare con la motosega",
+    "url": "www.suva.ch/67033.i",
+    "industries": [
+      "forst",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Protezione della pelle sul posto di lavoro",
+    "url": "www.suva.ch/67035.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Trapani da banco e trapani a colonna",
+    "url": "www.suva.ch/67036.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Smerigliatrici da banco",
+    "url": "www.suva.ch/67037.i",
+    "industries": [
+      "buero",
+      "forst"
+    ]
+  },
+  {
+    "title": "Ponteggi di facciata",
+    "url": "www.suva.ch/67038.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Piccole macchine edili",
+    "url": "www.suva.ch/67039.i",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Filtri antiparticolato per motori diesel impiegati nei lavori in sotterraneo",
+    "url": "www.suva.ch/67040.i",
+    "industries": []
+  },
+  {
+    "title": "Macchine con operatore a terra Individuazione dei pericoli e pianificazione delle misure con le liste di controllo    3 Edilizia, installatori Altro Titolo                                                                 (link con codice)",
+    "url": "www.suva.ch/67041.i",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Accesso nei sili di sabbia e ghiaia",
+    "url": "www.suva.ch/67042.i",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Nastri trasportatori per merci alla rinfusa",
+    "url": "www.suva.ch/67043.i",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Comportamento sicuro",
+    "url": "www.suva.ch/67044.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Pulizia e manutenzione di edifici",
+    "url": "www.suva.ch/67045.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Carrelli elevatori a timone",
+    "url": "www.suva.ch/67046.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Fresatrice verticale portatile",
+    "url": "www.suva.ch/67047.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Fresatrice per incastri e scanalature",
+    "url": "www.suva.ch/67048.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Acquisto di arredi e accessori per il lavoro al videoterminale",
+    "url": "www.suva.ch/67050.i",
+    "industries": [
+      "metall"
+    ]
+  },
+  {
+    "title": "Illuminazione nei luoghi di lavoro",
+    "url": "www.suva.ch/67051.i",
+    "industries": [
+      "metall"
+    ]
+  },
+  {
+    "title": "Torni convenzionali",
+    "url": "www.suva.ch/67053.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Aria compressa",
+    "url": "www.suva.ch/67054.i",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Scale fisse a pioli",
+    "url": "www.suva.ch/67055.i",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lubrificanti",
+    "url": "www.suva.ch/67056.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Sega a nastro",
+    "url": "www.suva.ch/67057.i",
+    "industries": [
+      "forst",
+      "holz"
+    ]
+  },
+  {
+    "title": "Piallatrice a filo",
+    "url": "www.suva.ch/67058.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Uso del decespugliatore",
+    "url": "www.suva.ch/67059.i",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Macchine spaccalegna a cuneo per spaccare la legna da ardere",
+    "url": "www.suva.ch/67060.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Piano di emergenza per posti di lavoro mobili",
+    "url": "www.suva.ch/67061.i",
+    "industries": [
+      "forst",
+      "bau"
+    ]
+  },
+  {
+    "title": "Piano di emergenza per posti di lavoro fissi",
+    "url": "www.suva.ch/67062.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Resine reattive",
+    "url": "www.suva.ch/67063.i",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Piattaforme di lavoro elevabili – Parte 1: pianificazione dei lavori",
+    "url": "www.suva.ch/67064-1.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Piattaforme di lavoro elevabili – Parte 2: verifica sul posto",
+    "url": "www.suva.ch/67064-2.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Rampe di carico",
+    "url": "www.suva.ch/67065.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Rampe di raccordo e punti di carico",
+    "url": "www.suva.ch/67066.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Piattaforme di sollevamento per rampe di carico",
+    "url": "www.suva.ch/67067.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Bombole di gas",
+    "url": "www.suva.ch/67068.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare senza banco per legna da ardere",
+    "url": "www.suva.ch/67069.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Vibrazioni sul posto di lavoro",
+    "url": "www.suva.ch/67070.i",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stoccaggio di liquidi facilmente infiammabili",
+    "url": "www.suva.ch/67071.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Porte, cancelli e portoni",
+    "url": "www.suva.ch/67072.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Trasloelevatori",
+    "url": "www.suva.ch/67073.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Avviamento inatteso di macchine e impianti",
+    "url": "www.suva.ch/67075.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Scale e piattaforme per la manutenzione",
+    "url": "www.suva.ch/67076.i",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Polveri nocive",
+    "url": "www.suva.ch/67077.i",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Attrezzi a mano",
+    "url": "www.suva.ch/67078.i",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Laser sul cantiere",
+    "url": "www.suva.ch/67079.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Elettricità sui cantieri",
+    "url": "www.suva.ch/67081.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Aperture nelle pareti",
+    "url": "www.suva.ch/67082.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Elettricità statica. Rischi di esplosione dovuti alla manipolazione di liquidi infiammabili",
+    "url": "www.suva.ch/67083.i",
+    "industries": []
+  },
+  {
+    "title": "Acidi e liscive",
+    "url": "www.suva.ch/67084.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare a refilare con ritorno della lama al di sopra della tavola",
+    "url": "www.suva.ch/67087.i",
+    "industries": []
+  },
+  {
+    "title": "Sega circolare a refilare con ritorno della lama al di sotto della tavola",
+    "url": "www.suva.ch/67088.i",
+    "industries": []
+  },
+  {
+    "title": "Dispositivi di protezione individuale (DPI)",
+    "url": "www.suva.ch/67091.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Utensili elettrici portatili",
+    "url": "www.suva.ch/67092.i",
+    "industries": [
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Carico e scarico manuale di veicoli",
+    "url": "www.suva.ch/67093.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Carico e scarico di veicoli con apparecchi di sollevamento",
+    "url": "www.suva.ch/67094.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Elementi prefabbricati in legno",
+    "url": "www.suva.ch/67095.i",
+    "industries": [
+      "transport",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Macchine spaccalegna a vite Edilizia, installatori Legno Altro Titolo                                                                           (link con codice)",
+    "url": "www.suva.ch/67096.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Presse automatiche",
+    "url": "www.suva.ch/67097.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Presse eccentriche ad alimentazione manuale",
+    "url": "www.suva.ch/67098.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Presse idrauliche",
+    "url": "www.suva.ch/67099.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Sega circolare a pendolo",
+    "url": "www.suva.ch/67100.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Sega circolare radiale",
+    "url": "www.suva.ch/67101.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Sollevatori per veicoli",
+    "url": "www.suva.ch/67102.i",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Saldatura, taglio, brasatura e riscaldo: procedimento a fiamma",
+    "url": "www.suva.ch/67103.i",
+    "industries": [
+      "buero",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Saldatura e taglio (procedimenti ad arco)",
+    "url": "www.suva.ch/67104.i",
+    "industries": [
+      "buero",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare per metalli",
+    "url": "www.suva.ch/67105.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Sega a nastro per metalli",
+    "url": "www.suva.ch/67106.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Cesoia a ghigliottina",
+    "url": "www.suva.ch/67107.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Pressa piegatrice",
+    "url": "www.suva.ch/67108.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Calandra",
+    "url": "www.suva.ch/67110.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Trasporto e stoccaggio di lamiere",
+    "url": "www.suva.ch/67111.i",
+    "industries": [
+      "transport",
+      "buero"
+    ]
+  },
+  {
+    "title": "Trasporto e stoccaggio di barre e profilati",
+    "url": "www.suva.ch/67112.i",
+    "industries": [
+      "transport",
+      "buero"
+    ]
+  },
+  {
+    "title": "Pericoli di natura meccanica",
+    "url": "www.suva.ch/67113.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare a pendolo con asse d’articolazione inferiore",
+    "url": "www.suva.ch/67114.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Sezionatrici verticali per pannelli",
+    "url": "www.suva.ch/67115.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Gru di cantiere",
+    "url": "www.suva.ch/67116.i",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "La protezione della pelle nell’industria alimentare e nei servizi di ristorazione collettiva e catering",
+    "url": "www.suva.ch/67117.i",
+    "industries": []
+  },
+  {
+    "title": "Esbosco con trattore forestale munito di argano",
+    "url": "www.suva.ch/67118.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Batterie di accumulatori al piombo",
+    "url": "www.suva.ch/67119.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "La ventilazione nei lavori in sotterraneo",
+    "url": "www.suva.ch/67120.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Ascoltare musica sul posto di lavoro",
+    "url": "www.suva.ch/67121.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Funivie e sciovie",
+    "url": "www.suva.ch/67122.i",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Punti di carico e scarico per il trasporto di merci con gru e carrelli elevatori",
+    "url": "www.suva.ch/67123.i",
+    "industries": []
+  },
+  {
+    "title": "Preparazione dei lavori",
+    "url": "www.suva.ch/67124.i",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sega circolare per tagli obliqui",
+    "url": "www.suva.ch/67125.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Trasporto interno aziendale su rotaia",
+    "url": "www.suva.ch/67126.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Big bag. Contenitori flessibili (FIBC)",
+    "url": "www.suva.ch/67128.i",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Trasporto e stoccaggio di lastre di pietra",
+    "url": "www.suva.ch/67129.i",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Presse per stampaggio a iniezione (isole di produzione)",
+    "url": "www.suva.ch/67130.i",
+    "industries": [
+      "buero",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Falciatrici (tosaerba rotativi, falciatrici con barra tosatrice, tosaerba a cilindri)",
+    "url": "www.suva.ch/67131.i",
+    "industries": []
+  },
+  {
+    "title": "Rischi di esplosione (documento sulla protezione contro le esplosioni per le PMI)",
+    "url": "www.suva.ch/67132.i",
+    "industries": []
+  },
+  {
+    "title": "Tenonatrice",
+    "url": "www.suva.ch/67133.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Formazione forestale",
+    "url": "www.suva.ch/67134.i",
+    "industries": [
+      "forst"
+    ]
+  },
+  {
+    "title": "Lavorare all’aperto in condizioni di canicola",
+    "url": "www.suva.ch/67135.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Trasporti nei cantieri sotterranei",
+    "url": "www.suva.ch/67136.i",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Macchine CNC per foratura, tornitura, fresatura (centri di lavorazione)",
+    "url": "www.suva.ch/67139.i",
+    "industries": [
+      "buero",
+      "holz"
+    ]
+  },
+  {
+    "title": "Chiodatrici",
+    "url": "www.suva.ch/67141.i",
+    "industries": [
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Stoccaggio di merci accatastate",
+    "url": "www.suva.ch/67142.i",
+    "industries": [
+      "transport",
+      "metall",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "STOP alla manipolazione dei dispositivi di protezione",
+    "url": "www.suva.ch/67146.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lavori di scavo",
+    "url": "www.suva.ch/67148.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Utilizzazione di microrganismi",
+    "url": "www.suva.ch/67149.i",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Ponteggi mobili su ruote",
+    "url": "www.suva.ch/67150.i",
+    "industries": [
+      "buero",
+      "bau"
+    ]
+  },
+  {
+    "title": "Demolizione tradizionale e selettiva",
+    "url": "www.suva.ch/67151.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Lavori di costruzione vicino, dentro e sopra l’acqua",
+    "url": "www.suva.ch/67153.i",
+    "industries": [
+      "forst",
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Cantieri di montagna",
+    "url": "www.suva.ch/67154.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Cippatrici",
+    "url": "www.suva.ch/67155.i",
+    "industries": [
+      "forst",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Cura e potatura delle chiome degli alberi Individuazione dei pericoli e pianificazione delle misure con le liste di controllo    5 Edilizia, installatori Altro Titolo                                                                    (link con codice)",
+    "url": "www.suva.ch/67156.i",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Vie di fuga",
+    "url": "www.suva.ch/67157.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Apparecchi di sollevamento",
+    "url": "www.suva.ch/67158.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Gru nei settori industria e artigianato",
+    "url": "www.suva.ch/67159.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Opere speciali di genio civile: pali battuti e trivellati, diaframmi",
+    "url": "www.suva.ch/67160.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Opere speciali di genio civile: microperforazioni",
+    "url": "www.suva.ch/67161.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Opere speciali di genio civile: lavori con tecnica spingitubo",
+    "url": "www.suva.ch/67162.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Carrelli a presa laterale e carrelli quadridirezionali",
+    "url": "www.suva.ch/67164.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz"
+    ]
+  },
+  {
+    "title": "Trattamenti anticorrosivi su oggetti all’aperto",
+    "url": "www.suva.ch/67165.i",
+    "industries": [
+      "buero",
+      "bau"
+    ]
+  },
+  {
+    "title": "Convenzione per garantire la sicurezza e la tutela della salute dei la- all’aperto",
+    "url": "www.suva.ch/67165-1.i",
+    "industries": []
+  },
+  {
+    "title": "Centro di taglio automatico per carpenterie",
+    "url": "www.suva.ch/67166.i",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Taglierina per impiallacciatura",
+    "url": "www.suva.ch/67167.i",
+    "industries": [
+      "holz",
+      "bau"
+    ]
+  },
+  {
+    "title": "Pressa a piastre per impiallacciatura",
+    "url": "www.suva.ch/67168.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Macchina forainseritrice",
+    "url": "www.suva.ch/67169.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Macchine CNC utilizzate nella lavorazione del legno",
+    "url": "www.suva.ch/67170.i",
+    "industries": [
+      "holz"
+    ]
+  },
+  {
+    "title": "Misure tecniche di protezione contro il rumore",
+    "url": "www.suva.ch/67171.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sicurezza nel servizio esterno – Parte 1: trasferte",
+    "url": "www.suva.ch/67172.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Sicurezza nel servizio esterno – Parte 2: il cliente",
+    "url": "www.suva.ch/67173.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Carico e scarico di container e cassoni",
+    "url": "www.suva.ch/67174.i",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Manutenzione di container e cassoni",
+    "url": "www.suva.ch/67175.i",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Veicoli battipista",
+    "url": "www.suva.ch/67176.i",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Presse pneumatiche ed elettriche",
+    "url": "www.suva.ch/67177.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Basta con le cadute negli uffici (amministrazione e servizi)",
+    "url": "www.suva.ch/67178.i",
+    "industries": [
+      "metall"
+    ]
+  },
+  {
+    "title": "Basta con le cadute nei luoghi di lavoro fissi nell’industria e nell’artigianato",
+    "url": "www.suva.ch/67179.i",
+    "industries": []
+  },
+  {
+    "title": "Basta con le cadute sui cantieri",
+    "url": "www.suva.ch/67180.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Celle frigorifere (volume superiore a 10 m 3 e temperatura d’esercizio inferiore a zero gradi)",
+    "url": "www.suva.ch/67181.i",
+    "industries": []
+  },
+  {
+    "title": "Impianti a raggi UV",
+    "url": "www.suva.ch/67182.i",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Protezione delle mani nel settore metalmeccanico",
+    "url": "www.suva.ch/67183.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Protezione degli occhi: industria e artigianato",
+    "url": "www.suva.ch/67184.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Uso del corrimano: stop alle cadute sulle scale!",
+    "url": "www.suva.ch/67185.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Polveri di quarzo nelle imprese di lavorazione di inerti",
+    "url": "www.suva.ch/67186.i",
+    "industries": [
+      "transport",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lavori sugli impianti a fune",
+    "url": "www.suva.ch/67187.i",
+    "industries": [
+      "transport",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lavori di manutenzione su veicoli ferroviari",
+    "url": "www.suva.ch/67188.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Stop agli infortuni da caduta in piano durante le pulizie degli edifici",
+    "url": "www.suva.ch/67189.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "holz",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Tirocinio in sicurezza",
+    "url": "www.suva.ch/67190.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Pompe di spinta e bracci di distribuzione per calcestruzzo",
+    "url": "www.suva.ch/67191.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Manutenzione di macchine e impianti",
+    "url": "www.suva.ch/67192.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Impianti di innevamento artificiale",
+    "url": "www.suva.ch/67193.i",
+    "industries": [
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Trasporto e stoccaggio di lastre di vetro in azienda",
+    "url": "www.suva.ch/67194.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Montacarichi da cantiere per materiali e persone",
+    "url": "www.suva.ch/67196.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Magazzino a corsie strette",
+    "url": "www.suva.ch/67197.i",
+    "industries": [
+      "transport"
+    ]
+  },
+  {
+    "title": "Accessori di sollevamento",
+    "url": "www.suva.ch/67198.i",
+    "industries": [
+      "transport",
+      "buero",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Movimentazione intelligente di carichi",
+    "url": "www.suva.ch/67199.i",
+    "industries": [
+      "transport",
+      "metall",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Trasporto con elicottero nei lavori forestali",
+    "url": "www.suva.ch/67200.i",
+    "industries": [
+      "forst",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Galvanotecnica",
+    "url": "www.suva.ch/67201.i",
+    "industries": [
+      "buero"
+    ]
+  },
+  {
+    "title": "Calcestruzzo spruzzato per il genio civile e i lavori in sotterraneo",
+    "url": "www.suva.ch/67202.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Posa e trattamento di rivestimenti per pavimenti",
+    "url": "www.suva.ch/67203.i",
+    "industries": [
+      "bau"
+    ]
+  },
+  {
+    "title": "Prodotti chimici nocivi in azienda",
+    "url": "www.suva.ch/67204.i",
+    "industries": [
+      "transport",
+      "buero",
+      "forst",
+      "holz",
+      "bau",
+      "uebrige"
+    ]
+  },
+  {
+    "title": "Lista di controllo per i gruisti di gru a torre",
+    "url": "www.suva.ch/88179.i",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Lista di controllo per manovratori di autogrù",
+    "url": "www.suva.ch/88180.i",
+    "industries": [
+      "transport",
+      "bau"
+    ]
+  },
+  {
+    "title": "Dieci regole vitali per i lavori forestali",
+    "url": "www.suva.ch/84034.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Otto regole vitali per chi lavora nell’edilizia",
+    "url": "www.suva.ch/84035.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per pittori e gessatori",
+    "url": "www.suva.ch/84036.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Otto regole vitali per i manutentori di macchine e impianti",
+    "url": "www.suva.ch/84040.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per chi lavora su tetti e facciate",
+    "url": "www.suva.ch/84041.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "5+5 regole vitali per chi lavora con l’elettricità",
+    "url": "www.suva.ch/84042.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Otto regole vitali per chi lavora con i DPI anticaduta",
+    "url": "www.suva.ch/84044.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Otto regole vitali per i lavori su funivie e sciovie",
+    "url": "www.suva.ch/84045.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per i costruttori in legno",
+    "url": "www.suva.ch/84046.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per il montaggio di costruzioni in acciaio",
+    "url": "www.suva.ch/84048.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per il montaggio di elementi in calcestruzzo",
+    "url": "www.suva.ch/84049.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per il personale di terra in caso di trasporto con elicottero",
+    "url": "www.suva.ch/84050.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per chi lavora sulle vie di traffico e nel genio civile",
+    "url": "www.suva.ch/84051.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per chi lavora nell’industria e nell’artigianato",
+    "url": "www.suva.ch/84054.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Sette regole vitali per gli autotrasportatori",
+    "url": "www.suva.ch/84056.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per gli installatori di ascensori",
+    "url": "www.suva.ch/84058.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Sette regole vitali per il settore delle metalcostruzioni",
+    "url": "www.suva.ch/84061.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Sei regole vitali per chi lavora sulle linee aeree ad alta tensione",
+    "url": "www.suva.ch/84064.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Sette regole vitali per chi lavora sulle linee elettriche ordinarie",
+    "url": "www.suva.ch/84066.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Nove regole vitali per l’utilizzo di carrelli elevatori",
+    "url": "www.suva.ch/84067.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per chi lavora nelle ferrovie",
+    "url": "www.suva.ch/84071.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per i tecnici della costruzione",
+    "url": "www.suva.ch/84073.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per i lavori in sotterraneo",
+    "url": "www.suva.ch/84074.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Dieci regole vitali per l’imbracatura di carichi",
+    "url": "www.suva.ch/84077.i",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Sbagliato-giusto: situazioni sui cantieri",
+    "url": "www.suva.ch/11043.m",
+    "section": "Pubblicazioni indicate per coinvolgere direttamente i lavoratori",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute nel settore dei veicoli",
+    "url": "www.suva.ch/6203.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute negli uffici",
+    "url": "www.suva.ch/6205.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute nel settore panetteria-confetteria",
+    "url": "www.suva.ch/6207.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute",
+    "url": "www.suva.ch/6209.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute nella manutenzione dei tessili",
+    "url": "www.suva.ch/6232.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza e tutela della salute nel commercio al dettaglio",
+    "url": "www.suva.ch/6236.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute in ambito sanitario",
+    "url": "www.suva.ch/6290.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute nell’assistenza",
+    "url": "www.suva.ch/6291.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Non c’è infortunio senza causa! Sicurezza sul lavoro e tutela della salute nelle imprese dell’economia della carne",
+    "url": "www.suva.ch/6293.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Office, servizio",
+    "url": "www.suva.ch/6801.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Cucina",
+    "url": "www.suva.ch/6802.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Coltelli in cucina",
+    "url": "www.suva.ch/6803.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Lavoro ai piani",
+    "url": "www.suva.ch/6804.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Lavanderia",
+    "url": "www.suva.ch/6805.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Fosse d’ispezione e manutenzione",
+    "url": "www.suva.ch/6806.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Manutenzione degli impianti di condizionamento dell’aria",
+    "url": "www.suva.ch/6807.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Parrucchieri, nail studio",
+    "url": "www.suva.ch/6808.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Economia della carne - Coltelli",
+    "url": "www.suva.ch/6809.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Economia della carne - Accettazione degli animali e macellazione",
+    "url": "www.suva.ch/6810.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Economia della carne - Sezionamento e produzione",
+    "url": "www.suva.ch/6811.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  },
+  {
+    "title": "Lista di controllo: Economia della carne - Vendita e catering Individuazione dei pericoli e pianificazione delle misure con le liste di controllo    7",
+    "url": "www.suva.ch/6812.i",
+    "section": "Pubblicazioni CFSL",
+    "industries": []
+  }
+]

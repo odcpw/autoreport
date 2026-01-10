@@ -4,14 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AutoBericht Minimal Chapter Editor</title>
+  <link rel="stylesheet" href="shared/ui.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="app">
     <header class="app-header">
       <div class="app-switcher">
-        <a class="app-switcher__item" href="./photosorter.html">PhotoSorter</a>
         <a class="app-switcher__item is-active" href="./index.html">AutoBericht</a>
+        <a class="app-switcher__item" href="./photosorter.html">PhotoSorter</a>
       </div>
       <div class="actions">
         <button id="open-settings" class="ghost" title="Settings">⚙</button>
@@ -45,34 +46,37 @@
       </main>
     </div>
 
-    <div class="settings-modal" id="settings-modal" aria-hidden="true">
-      <div class="settings-panel">
-        <div class="settings-header">
-          <h3>Settings</h3>
-          <button id="close-settings" class="ghost" aria-label="Close settings">✕</button>
+    <div class="modal" id="settings-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="settings-close"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="settings-title">
+        <div class="modal__header">
+          <h3 id="settings-title">Settings</h3>
+          <button id="close-settings" type="button" class="modal__close" aria-label="Close settings">×</button>
         </div>
-        <div class="settings-body">
-          <label>
-            Author
-            <input id="settings-author" type="text" placeholder="Name" />
-          </label>
-          <label>
-            Initials
-            <input id="settings-initials" type="text" placeholder="MM" />
-          </label>
-          <label>
-            Language
-            <select id="settings-locale">
-              <option value="de-CH">DE</option>
-              <option value="fr-CH">FR</option>
-              <option value="it-CH">IT</option>
-            </select>
-          </label>
-          <div class="settings-hint" id="settings-library-hint"></div>
-        </div>
-        <div class="settings-actions">
-          <button id="generate-library">Generate / Update Library</button>
-          <button id="save-settings" class="ghost">Save settings</button>
+        <div class="modal__body">
+          <div class="settings-body">
+            <label>
+            Author name
+              <input id="settings-author" type="text" placeholder="Name" />
+            </label>
+            <label>
+            Author initials
+              <input id="settings-initials" type="text" placeholder="MM" />
+            </label>
+            <label>
+            Report language
+              <select id="settings-locale">
+                <option value="de-CH">DE</option>
+                <option value="fr-CH">FR</option>
+                <option value="it-CH">IT</option>
+              </select>
+            </label>
+            <div class="settings-hint" id="settings-library-hint"></div>
+          </div>
+          <div class="modal__actions">
+            <button id="generate-library" type="button">Generate / Update Library</button>
+            <button id="save-settings" type="button" class="ghost">Save settings</button>
+          </div>
         </div>
       </div>
     </div>
@@ -93,6 +97,21 @@
         </div>
       </div>
     </div>
+
+    <div class="checklist-overlay" id="checklist-overlay" aria-hidden="true">
+      <div class="checklist-overlay__backdrop" id="checklist-overlay-close"></div>
+      <div class="checklist-overlay__panel" role="dialog" aria-modal="true" aria-labelledby="checklist-overlay-title">
+        <div class="checklist-overlay__header">
+          <div class="checklist-overlay__meta" id="checklist-overlay-title"></div>
+          <button type="button" class="ghost" id="checklist-overlay-close-btn">✕</button>
+        </div>
+        <div class="checklist-overlay__body">
+          <div class="checklist-overlay__hint" id="checklist-overlay-hint"></div>
+          <div class="checklist-overlay__filters" id="checklist-filters"></div>
+          <div class="checklist-overlay__list" id="checklist-list"></div>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="../libs/sheetjs/xlsx.full.min.js"></script>
@@ -100,6 +119,14 @@
   <script src="shared/i18n.js"></script>
   <script src="shared/markdown.js"></script>
   <script src="shared/fs-handle.js"></script>
+  <script src="shared/state.js"></script>
+  <script src="shared/normalize.js"></script>
+  <script src="shared/seeds.js"></script>
+  <script src="shared/io-sidecar.js"></script>
+  <script src="shared/import-self.js"></script>
+  <script src="shared/render.js"></script>
+  <script src="shared/elements.js"></script>
+  <script src="shared/bind-events.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

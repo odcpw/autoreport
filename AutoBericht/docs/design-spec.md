@@ -207,6 +207,37 @@ Tags are many-to-many. No primary tag requirement.
 Observation tags can be added by the user and removed via Settings.
 Removing a tag clears it from all photos (no orphan tags).
 
+### Photo import/export (PhotoSorter)
+
+Goal: a simple raw -> resized pipeline plus an explicit export that materializes
+folders for sharing or import into Office/PPT workflows.
+
+Import rules (PhotoSorter "Import Photos" modal):
+- Source: `Photos/raw/<pmCode>/` where `<pmCode>` is a 3-letter PM code (lowercase).
+- Accept: all image files.
+- Timestamp: prefer EXIF `DateTimeOriginal`; fallback to file creation time if
+  available; otherwise use the file timestamp exposed by the browser
+  (`lastModified`).
+- Filename format: `YYYY-MM-DD-HH-MM-<pmCode>-0001.jpg` (4-digit sequence).
+  Sequence increments per (timestamp, pmCode) to avoid collisions.
+- Resize: longest side = 1200px, JPEG quality ~0.85.
+- Destination: `Photos/resized/` (lowercase) acts as the unsorted reservoir.
+- Raw files are never deleted or moved.
+
+Export rules (PhotoSorter "Export" action in the same modal):
+- Source: the current photo root (typically `Photos/resized/`).
+- Destination: `Photos/export/` with subfolders:
+  - `unsorted/` for photos with no tags in any group.
+  - `<group>/<tag>/` where `<group>` is `report`, `observations`, or `training`.
+- Photos with multiple tags are copied into each group/tag folder (duplicates OK).
+- Tag folder names are sanitized for filesystem safety (no slashes, reserved
+  characters).
+- Existing files are not overwritten; append a numeric suffix if needed.
+
+UI:
+- The top "Import Photos" button opens a modal overlay with only Import and
+  Export actions plus status/progress text.
+
 ## 10. Editor UX (Draft)
 
 - One chapter per page.
@@ -393,6 +424,25 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 - PhotoSorter only reads images and writes tags/notes into `project_sidecar.json`.
 - No files are moved, deleted, or rewritten by the browser.
 - Export to Word/PPT/PDF is performed locally via Office/VBA (no cloud services).
+
+### Frontend module layout
+- `AutoBericht/mini/app.js` is the thin orchestrator (wiring only).
+- Shared modules live in `AutoBericht/mini/shared/`:
+  - `state.js` (default project model + helpers)
+  - `normalize.js` (workstate/meta normalization + observation helpers)
+  - `seeds.js` (seed + library loading/building)
+  - `io-sidecar.js` (sidecar save/load + library generation)
+  - `import-self.js` (Excel self-assessment import)
+  - `render.js` (UI rendering + overlays)
+  - `elements.js` (DOM element lookup)
+  - `bind-events.js` (event wiring)
+- This keeps the surface area small and makes future localization/feature work safer.
+
+### Checklist data source
+- Checklist lists are JSON files in `AutoBericht/data/checklists/`:
+  - `checklists_de.json`, `checklists_fr.json`, `checklists_it.json`
+- Loaded at runtime by the editor from `http://` or `https://` context.
+- No JS fallback; checklist overlay requires HTTP hosting.
 
 ### Security assumptions
 - Endpoint security and disk encryption are managed by IT policy.
