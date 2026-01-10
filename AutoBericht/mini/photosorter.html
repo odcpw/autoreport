@@ -4,14 +4,15 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>AutoBericht Photo Sorter</title>
+  <link rel="stylesheet" href="shared/ui.css" />
   <link rel="stylesheet" href="photosorter.css" />
 </head>
 <body>
   <div class="app">
     <header class="app-header">
       <div class="app-switcher">
-        <a class="app-switcher__item is-active" href="./photosorter.html">PhotoSorter</a>
         <a class="app-switcher__item" href="./index.html">AutoBericht</a>
+        <a class="app-switcher__item is-active" href="./photosorter.html">PhotoSorter</a>
       </div>
       <div class="actions">
         <div class="layout-toggle" role="group" aria-label="Layout">
@@ -21,7 +22,6 @@
         <button id="pick-project">Open Project Folder</button>
         <button id="load-sidecar" disabled>Reload sidecar</button>
         <button id="pick-photos" disabled>Import Photos</button>
-        <button id="scan-photos" disabled>Scan Photos</button>
         <button id="save-sidecar" disabled>Save tags</button>
         <button id="open-settings">Edit tags</button>
         <button id="save-log">Save debug log</button>
@@ -71,6 +71,26 @@
       </aside>
     </main>
 
+    <div class="modal" id="import-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="import-close"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="import-title">
+        <div class="modal__header">
+          <h2 id="import-title">Photo Import / Export</h2>
+          <button type="button" class="modal__close" id="import-close-btn">×</button>
+        </div>
+        <div class="modal__body">
+          <p class="import-note">Import: Imports all images from <strong>Photos/raw/&lt;pm&gt;</strong>, renames by capture time, resizes, and saves into <strong>Photos/resized</strong>.</p>
+          <p class="import-note">Rescan: Reloads photos from the current folder without re-importing.</p>
+          <p class="import-note">Export: Copies photos into <strong>Photos/export</strong> grouped by tag (with <strong>unsorted</strong> for untagged images).</p>
+          <div class="modal__actions">
+            <button id="import-photos-run" type="button">Import photos</button>
+            <button id="rescan-photos-run" type="button" class="ghost">Rescan photos</button>
+            <button id="export-photos-run" type="button" class="ghost">Export tagged folders</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="settings-modal" aria-hidden="true">
       <div class="modal__backdrop" id="settings-close"></div>
       <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="settings-title">
@@ -80,10 +100,10 @@
         </div>
         <div class="modal__body">
           <section class="settings-section">
-            <h3>Beobachtung tags</h3>
+            <h3>Observation tags</h3>
             <p>Manage observation tags. Removing a tag clears it from all photos.</p>
             <div class="settings-tags__add">
-              <input id="obs-tag-input" type="text" placeholder="Add new observation tag" />
+              <input id="obs-tag-input" type="text" placeholder="Add observation tag" />
               <button id="obs-tag-add" type="button">Add</button>
             </div>
             <div class="settings-tags__list" id="obs-tag-list"></div>
@@ -93,12 +113,18 @@
     </div>
   </div>
 
-  <script src="../libs/sheetjs/xlsx.full.min.js"></script>
   <script src="../shared/debug-log.js"></script>
   <script src="shared/i18n.js"></script>
   <script src="shared/fs-handle.js"></script>
   <script src="shared/photo-import.js"></script>
   <script src="pscategorylabels.seed.js"></script>
+  <script src="photosorter/state.js"></script>
+  <script src="photosorter/elements.js"></script>
+  <script src="photosorter/tags.js"></script>
+  <script src="photosorter/photos.js"></script>
+  <script src="photosorter/io-sidecar.js"></script>
+  <script src="photosorter/render.js"></script>
+  <script src="photosorter/bind-events.js"></script>
   <script src="photosorter.js"></script>
 </body>
 </html>

@@ -437,6 +437,7 @@ Design goal: keep all customer data local, with explicit user consent for any fi
   - `elements.js` (DOM element lookup)
   - `bind-events.js` (event wiring)
 - This keeps the surface area small and makes future localization/feature work safer.
+- PhotoSorter mirrors this layout with modules in `AutoBericht/mini/photosorter/` and a thin `AutoBericht/mini/photosorter.js` orchestrator.
 
 ### Checklist data source
 - Checklist lists are JSON files in `AutoBericht/data/checklists/`:
