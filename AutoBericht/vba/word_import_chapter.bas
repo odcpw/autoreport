@@ -229,6 +229,7 @@ Public Sub ImportChapter1Table()
 
     MsgBox "Chapter 1 table imported.", vbInformation
     LogDebug "ImportChapter1Table: done"
+    ResetTableBookmarks "Chapter1_start", "Chapter1_end", tbl
 End Sub
 
 
@@ -521,6 +522,21 @@ Private Function FindMarkerRange(ByVal markerText As String) As Range
         End If
     End With
 End Function
+
+Private Sub ResetTableBookmarks(ByVal startName As String, ByVal endName As String, ByVal tbl As Table)
+    On Error Resume Next
+    If ActiveDocument.Bookmarks.Exists(startName) Then ActiveDocument.Bookmarks(startName).Delete
+    If ActiveDocument.Bookmarks.Exists(endName) Then ActiveDocument.Bookmarks(endName).Delete
+    Dim startRng As Range
+    Dim endRng As Range
+    Set startRng = tbl.Range.Duplicate
+    startRng.End = startRng.Start
+    Set endRng = tbl.Range.Duplicate
+    endRng.Start = endRng.End
+    ActiveDocument.Bookmarks.Add startName, startRng
+    ActiveDocument.Bookmarks.Add endName, endRng
+    On Error GoTo 0
+End Sub
 
 Private Sub LogDebug(ByVal message As String)
     If Not DEBUG_ENABLED Then Exit Sub
