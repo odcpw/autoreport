@@ -259,44 +259,60 @@
         "label": "14 Erweiterung für ISO 45001 (Fakultativ)"
       }
     ],
-    "training": [
-      {
-        "value": "Audit",
-        "label": "Audit"
-      },
-      {
-        "value": "Gefährdungsermittlung",
-        "label": "Gefährdungsermittlung"
-      },
-      {
-        "value": "Handeln, Dulden, Unterlassen",
-        "label": "Handeln, Dulden, Unterlassen"
-      },
-      {
-        "value": "Kommunikation",
-        "label": "Kommunikation"
-      },
-      {
-        "value": "Massnahmen TOP",
-        "label": "Massnahmen TOP"
-      },
-      {
-        "value": "Notfallorganisation",
-        "label": "Notfallorganisation"
-      },
-      {
-        "value": "StGB Art. 230",
-        "label": "StGB Art. 230"
-      },
-      {
-        "value": "Eisberg",
-        "label": "Eisberg"
-      },
-      {
-        "value": "Vorbild",
-        "label": "Vorbild"
-      }
-    ],
+  "training": [
+    {
+      "value": "Unterlassen",
+      "label": "Unterlassen"
+    },
+    {
+      "value": "Dulden",
+      "label": "Dulden"
+    },
+    {
+      "value": "Handeln",
+      "label": "Handeln"
+    },
+    {
+      "value": "Vorbild",
+      "label": "Vorbild"
+    },
+    {
+      "value": "Iceberg",
+      "label": "Iceberg"
+    },
+    {
+      "value": "Pyramide",
+      "label": "Pyramide"
+    },
+    {
+      "value": "STOP",
+      "label": "STOP"
+    },
+    {
+      "value": "SOS",
+      "label": "SOS"
+    },
+    {
+      "value": "Verhindern",
+      "label": "Verhindern"
+    },
+    {
+      "value": "Audit",
+      "label": "Audit"
+    },
+    {
+      "value": "Risikobeurteilung",
+      "label": "Risikobeurteilung"
+    },
+    {
+      "value": "AVIVA",
+      "label": "AVIVA"
+    },
+    {
+      "value": "StGB Art. 230",
+      "label": "StGB Art. 230"
+    }
+  ],
     "observations": [
       {
         "value": "Stapler",

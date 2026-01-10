@@ -180,7 +180,7 @@ Private Function ResolveTrainingLayoutName(ByVal tag As String, ByVal langSuffix
         Case "risikobeurteilung": ResolveTrainingLayoutName = "risikobeurteilung_" & suffix
         Case "aviva": ResolveTrainingLayoutName = "aviva_" & suffix
         Case "verhindern": ResolveTrainingLayoutName = "verhindern_" & suffix
-        Case "iceberg", "pyramide", "stop", "sos": ResolveTrainingLayoutName = "picture"
+        Case "iceberg", "pyramide", "stop", "sos", "stgb art. 230": ResolveTrainingLayoutName = "picture"
         Case Else: ResolveTrainingLayoutName = "picture"
     End Select
 End Function

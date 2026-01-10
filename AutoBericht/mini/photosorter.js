@@ -111,6 +111,7 @@
       "Audit",
       "Risikobeurteilung",
       "AVIVA",
+      "StGB Art. 230",
     ],
   };
 

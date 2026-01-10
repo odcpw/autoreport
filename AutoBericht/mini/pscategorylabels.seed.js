@@ -261,40 +261,56 @@ window.PS_CATEGORY_LABELS_SEED = {
   ],
   "training": [
     {
-      "value": "Audit",
-      "label": "Audit"
+      "value": "Unterlassen",
+      "label": "Unterlassen"
     },
     {
-      "value": "Gefährdungsermittlung",
-      "label": "Gefährdungsermittlung"
+      "value": "Dulden",
+      "label": "Dulden"
     },
     {
-      "value": "Handeln, Dulden, Unterlassen",
-      "label": "Handeln, Dulden, Unterlassen"
-    },
-    {
-      "value": "Kommunikation",
-      "label": "Kommunikation"
-    },
-    {
-      "value": "Massnahmen TOP",
-      "label": "Massnahmen TOP"
-    },
-    {
-      "value": "Notfallorganisation",
-      "label": "Notfallorganisation"
-    },
-    {
-      "value": "StGB Art. 230",
-      "label": "StGB Art. 230"
-    },
-    {
-      "value": "Eisberg",
-      "label": "Eisberg"
+      "value": "Handeln",
+      "label": "Handeln"
     },
     {
       "value": "Vorbild",
       "label": "Vorbild"
+    },
+    {
+      "value": "Iceberg",
+      "label": "Iceberg"
+    },
+    {
+      "value": "Pyramide",
+      "label": "Pyramide"
+    },
+    {
+      "value": "STOP",
+      "label": "STOP"
+    },
+    {
+      "value": "SOS",
+      "label": "SOS"
+    },
+    {
+      "value": "Verhindern",
+      "label": "Verhindern"
+    },
+    {
+      "value": "Audit",
+      "label": "Audit"
+    },
+    {
+      "value": "Risikobeurteilung",
+      "label": "Risikobeurteilung"
+    },
+    {
+      "value": "AVIVA",
+      "label": "AVIVA"
+    },
+    {
+      "value": "StGB Art. 230",
+      "label": "StGB Art. 230"
     }
   ],
   "observations": [
