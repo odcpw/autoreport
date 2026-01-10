@@ -25,6 +25,13 @@
   const photoOverlayNextBtn = document.getElementById("photo-overlay-next");
   const photoOverlayTitle = document.getElementById("photo-overlay-title");
   const photoOverlayImage = document.getElementById("photo-overlay-image");
+  const checklistOverlayEl = document.getElementById("checklist-overlay");
+  const checklistOverlayClose = document.getElementById("checklist-overlay-close");
+  const checklistOverlayCloseBtn = document.getElementById("checklist-overlay-close-btn");
+  const checklistOverlayTitle = document.getElementById("checklist-overlay-title");
+  const checklistOverlayHint = document.getElementById("checklist-overlay-hint");
+  const checklistFiltersEl = document.getElementById("checklist-filters");
+  const checklistListEl = document.getElementById("checklist-list");
 
   const filterModeEls = Array.from(document.querySelectorAll("input[name=\"filter-mode\"]"));
 
@@ -197,6 +204,13 @@
       index: 0,
       url: "",
     },
+    checklistOverlay: {
+      items: [],
+      locale: "de",
+      requested: "",
+      fallback: false,
+      industryFilter: "",
+    },
   };
 
   const setStatus = (message) => {
@@ -346,6 +360,271 @@
     if (!total) return;
     state.photoOverlay.index = (state.photoOverlay.index + delta + total) % total;
     renderPhotoOverlay();
+  };
+
+  const getChecklistSource = () => {
+    const resolver = window.AutoBerichtChecklists?.resolve;
+    const locale = state.project?.meta?.locale || "de-CH";
+    if (!resolver) {
+      return {
+        items: [],
+        locale: "de",
+        requested: locale,
+        fallback: true,
+      };
+    }
+    return resolver(locale);
+  };
+
+  const formatChecklistLocaleLabel = (source) => {
+    const resolved = String(source.locale || "de").toUpperCase();
+    if (!source.fallback || !source.requested) return resolved;
+    const requested = String(source.requested).split("-")[0].toUpperCase();
+    if (requested && requested !== resolved) return `${requested} → ${resolved}`;
+    return resolved;
+  };
+
+  const normalizeChecklistUrl = (url) => {
+    const value = String(url || "").trim();
+    if (!value) return "";
+    if (/^https?:\/\//i.test(value)) return value;
+    return `https://${value}`;
+  };
+
+  const getChecklistIndustries = () => ([
+    {
+      key: "transport",
+      label: t("checklist_industry_transport", "Transport und Lagerung"),
+      short: t("checklist_industry_transport_short", "Tr/Lg"),
+    },
+    {
+      key: "metall",
+      label: t("checklist_industry_metall", "Metall"),
+      short: t("checklist_industry_metall_short", "Met"),
+    },
+    {
+      key: "buero",
+      label: t("checklist_industry_buero", "Büro"),
+      short: t("checklist_industry_buero_short", "Bü"),
+    },
+    {
+      key: "forst",
+      label: t("checklist_industry_forst", "Forst"),
+      short: t("checklist_industry_forst_short", "For"),
+    },
+    {
+      key: "holz",
+      label: t("checklist_industry_holz", "Holz"),
+      short: t("checklist_industry_holz_short", "Holz"),
+    },
+    {
+      key: "bau",
+      label: t("checklist_industry_bau", "Bau- und Installationsgewerbe"),
+      short: t("checklist_industry_bau_short", "Bau"),
+    },
+    {
+      key: "uebrige",
+      label: t("checklist_industry_uebrige", "Übrige"),
+      short: t("checklist_industry_uebrige_short", "Übr"),
+    },
+  ]);
+
+  const formatChecklistMarkdown = (item) => {
+    const prefix = t("checklist_see_also", "Siehe auch");
+    const title = String(item.title || "").trim();
+    const rawUrl = String(item.url || "").trim();
+    const linkTarget = normalizeChecklistUrl(rawUrl);
+    const link = rawUrl && linkTarget ? `[${rawUrl}](${linkTarget})` : "";
+    if (title && link) return `${prefix}: ${title} ${link}`;
+    if (title) return `${prefix}: ${title}`;
+    if (link) return `${prefix}: ${link}`;
+    return "";
+  };
+
+  const copyToClipboard = async (value) => {
+    if (!value) return false;
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(value);
+        return true;
+      } catch (err) {
+        // fallback below
+      }
+    }
+    const textarea = document.createElement("textarea");
+    textarea.value = value;
+    textarea.setAttribute("readonly", "");
+    textarea.style.position = "fixed";
+    textarea.style.opacity = "0";
+    textarea.style.left = "-9999px";
+    textarea.style.top = "0";
+    document.body.appendChild(textarea);
+    textarea.focus();
+    textarea.select();
+    let ok = false;
+    try {
+      ok = document.execCommand("copy");
+    } catch (err) {
+      ok = false;
+    }
+    document.body.removeChild(textarea);
+    return ok;
+  };
+
+  const copyChecklistItem = async (item, button) => {
+    const text = formatChecklistMarkdown(item);
+    const ok = await copyToClipboard(text);
+    if (ok) {
+      setStatus(`Copied: ${item.title}`);
+      if (button) {
+        button.classList.add("is-copied");
+        window.setTimeout(() => {
+          button.classList.remove("is-copied");
+        }, 1200);
+      }
+    } else {
+      setStatus("Copy failed.");
+    }
+  };
+
+  const renderChecklistOverlay = () => {
+    if (!checklistOverlayEl || !checklistListEl) return;
+    const source = getChecklistSource();
+    const industries = getChecklistIndustries();
+    state.checklistOverlay = { ...state.checklistOverlay, ...source };
+    const activeFilter = state.checklistOverlay.industryFilter || "";
+    const items = Array.isArray(source.items) ? source.items : [];
+    const filteredItems = activeFilter
+      ? items.filter((item) => item.industries?.includes(activeFilter))
+      : items;
+
+    if (checklistOverlayTitle) {
+      const baseTitle = t("checklist_overlay_title", "Suva-Checklisten");
+      const localeLabel = formatChecklistLocaleLabel(source);
+      checklistOverlayTitle.textContent = `${baseTitle} (${localeLabel})`;
+    }
+    if (checklistOverlayHint) {
+      let hint = t("checklist_overlay_hint", "Click ⧉ to copy “Siehe auch: … [link]”.");
+      if (source.fallback) {
+        hint = `${hint} ${t("checklist_overlay_fallback", "German list shown.")}`;
+      }
+      checklistOverlayHint.textContent = hint;
+    }
+    if (checklistFiltersEl) {
+      checklistFiltersEl.innerHTML = "";
+      const allBtn = document.createElement("button");
+      allBtn.type = "button";
+      allBtn.className = "checklist-filter";
+      allBtn.textContent = t("checklist_filter_all", "All");
+      if (!activeFilter) allBtn.classList.add("is-active");
+      allBtn.addEventListener("click", () => {
+        state.checklistOverlay.industryFilter = "";
+        renderChecklistOverlay();
+      });
+      checklistFiltersEl.appendChild(allBtn);
+      industries.forEach((industry) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "checklist-filter";
+        btn.textContent = industry.label;
+        btn.title = industry.label;
+        if (activeFilter === industry.key) btn.classList.add("is-active");
+        btn.addEventListener("click", () => {
+          state.checklistOverlay.industryFilter = activeFilter === industry.key ? "" : industry.key;
+          renderChecklistOverlay();
+        });
+        checklistFiltersEl.appendChild(btn);
+      });
+    }
+
+    checklistListEl.innerHTML = "";
+    const fragment = document.createDocumentFragment();
+
+    const header = document.createElement("div");
+    header.className = "checklist-row checklist-row--header";
+    const headerIndustries = document.createElement("div");
+    headerIndustries.className = "checklist-row__industries";
+    industries.forEach((industry) => {
+      const cell = document.createElement("div");
+      cell.className = "checklist-industry-header";
+      cell.textContent = industry.short;
+      cell.title = industry.label;
+      headerIndustries.appendChild(cell);
+    });
+    const headerTitle = document.createElement("div");
+    headerTitle.className = "checklist-row__title";
+    headerTitle.textContent = t("checklist_header_title", "Titel");
+    const headerLink = document.createElement("div");
+    headerLink.className = "checklist-row__link";
+    headerLink.textContent = t("checklist_header_link", "Link");
+    const headerCopy = document.createElement("div");
+    headerCopy.className = "checklist-row__copy";
+    headerCopy.textContent = t("checklist_header_copy", "Copy");
+    header.appendChild(headerIndustries);
+    header.appendChild(headerTitle);
+    header.appendChild(headerLink);
+    header.appendChild(headerCopy);
+    fragment.appendChild(header);
+
+    filteredItems.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "checklist-row";
+      const itemIndustries = new Set(item.industries || []);
+      const industriesEl = document.createElement("div");
+      industriesEl.className = "checklist-row__industries";
+      industries.forEach((industry) => {
+        const cell = document.createElement("div");
+        cell.className = "checklist-industry-cell";
+        if (itemIndustries.has(industry.key)) {
+          cell.classList.add("is-on");
+          cell.textContent = "×";
+        }
+        industriesEl.appendChild(cell);
+      });
+
+      const title = document.createElement("div");
+      title.className = "checklist-row__title";
+      title.textContent = item.title;
+      const link = document.createElement("a");
+      link.className = "checklist-row__link";
+      const rawUrl = String(item.url || "").trim();
+      link.textContent = rawUrl;
+      link.href = normalizeChecklistUrl(rawUrl);
+      link.target = "_blank";
+      link.rel = "noopener";
+      const copyBtn = document.createElement("button");
+      copyBtn.type = "button";
+      copyBtn.className = "checklist-copy";
+      copyBtn.textContent = "⧉";
+      const copyLabel = t("checklist_copy_title", "Copy checklist link");
+      copyBtn.title = copyLabel;
+      copyBtn.setAttribute("aria-label", copyLabel);
+      copyBtn.addEventListener("click", () => {
+        copyChecklistItem(item, copyBtn);
+      });
+
+      row.appendChild(industriesEl);
+      row.appendChild(title);
+      row.appendChild(link);
+      row.appendChild(copyBtn);
+      fragment.appendChild(row);
+    });
+    checklistListEl.appendChild(fragment);
+    checklistListEl.scrollTop = 0;
+  };
+
+  const openChecklistOverlay = () => {
+    if (!checklistOverlayEl) return;
+    state.checklistOverlay.industryFilter = "";
+    renderChecklistOverlay();
+    checklistOverlayEl.classList.add("is-open");
+    checklistOverlayEl.setAttribute("aria-hidden", "false");
+  };
+
+  const closeChecklistOverlay = () => {
+    if (!checklistOverlayEl) return;
+    checklistOverlayEl.classList.remove("is-open");
+    checklistOverlayEl.setAttribute("aria-hidden", "true");
   };
 
   const seedPathCandidates = (filename) => ([
@@ -1170,6 +1449,19 @@
     const pill = createPhotoPill(chapter.id);
     if (pill) chapterTitleEl.appendChild(pill);
     chapterTitleEl.appendChild(title);
+    if (chapter.id === "4.8") {
+      const checklistBtn = document.createElement("button");
+      checklistBtn.type = "button";
+      checklistBtn.className = "ghost checklist-btn chapter-action";
+      checklistBtn.textContent = "☑";
+      const label = t("checklist_button_title", "Suva-Checklisten");
+      checklistBtn.title = label;
+      checklistBtn.setAttribute("aria-label", label);
+      checklistBtn.addEventListener("click", () => {
+        openChecklistOverlay();
+      });
+      chapterTitleEl.appendChild(checklistBtn);
+    }
   };
 
   const createSectionRow = (row) => {
@@ -1733,12 +2025,26 @@
       stepPhotoOverlay(1);
     });
   }
+  if (checklistOverlayClose) {
+    checklistOverlayClose.addEventListener("click", () => {
+      closeChecklistOverlay();
+    });
+  }
+  if (checklistOverlayCloseBtn) {
+    checklistOverlayCloseBtn.addEventListener("click", () => {
+      closeChecklistOverlay();
+    });
+  }
   document.addEventListener("keydown", (event) => {
     if (!photoOverlayEl || !photoOverlayEl.classList.contains("is-open")) return;
     if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
     if (event.key === "Escape") closePhotoOverlay();
     if (event.key === "a" || event.key === "A") stepPhotoOverlay(-1);
     if (event.key === "d" || event.key === "D") stepPhotoOverlay(1);
+  });
+  document.addEventListener("keydown", (event) => {
+    if (!checklistOverlayEl || !checklistOverlayEl.classList.contains("is-open")) return;
+    if (event.key === "Escape") closeChecklistOverlay();
   });
 
   window.addEventListener("visibilitychange", () => {
