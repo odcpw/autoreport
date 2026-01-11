@@ -950,8 +950,6 @@
       const hidePreview = () => {
         preview.classList.remove("is-visible");
       };
-      previewBtn.addEventListener("mouseenter", showPreview);
-      previewBtn.addEventListener("mouseleave", hidePreview);
       previewBtn.addEventListener("click", (event) => {
         event.preventDefault();
         if (preview.classList.contains("is-visible")) {
