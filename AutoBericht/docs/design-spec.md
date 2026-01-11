@@ -188,7 +188,8 @@ project_sidecar.json (canonical state)
   Inputs/                   # customer inputs (self-assessment + docs)
   Photos/                   # raw photos (root = unsorted)
   Outputs/                  # Word/PPT/PDF outputs
-  Photos/_views/            # optional; materialized photo views (future)
+  Photos/export/            # materialized tag folders (current export)
+  Photos/_views/            # optional; future variant for disk browsing
 ```
 
 Access:
@@ -198,10 +199,8 @@ Access:
 ## 9. Photo Workflow
 
 Default: virtual tags stored in sidecar JSON, with fast filtering UI.
-Optional: materialize folders under `Photos/_views/` for disk-based browsing.
-- Photos/_views/by_topic/
-- Photos/_views/by_chapter/
-- Photos/_views/by_training/
+Optional: materialize folders via export into `Photos/export/`.
+Future: `Photos/_views/` for disk-based browsing (not implemented).
 
 Tags are many-to-many. No primary tag requirement.
 Observation tags can be added by the user and removed via Settings.
