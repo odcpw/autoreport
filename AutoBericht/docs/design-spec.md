@@ -418,6 +418,9 @@ Notes:
 - **Chapter 4.8** is a special `field_observation` chapter, with rows generated
   from observation tags; recommendation levels may be hidden in UI but are kept
   in the data shape for compatibility.
+- **Chapter 2 renumbering:** during seed build, the 4‑level IDs in chapter 2 are
+  shifted up so the report stays at 3 levels. The original self‑assessment ID is
+  preserved as `originalId` for import mapping.
 
 ## 13. Risks and Mitigations
 

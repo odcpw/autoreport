@@ -494,229 +494,64 @@
         "sectionLabel": "1.5. Elaboration et contrôle des objectifs, stratégie"
       },
       {
-        "id": "2.1.1",
+        "id": "2.1.1a",
         "groupId": "2.1.1",
         "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Type d'organisation",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.1.1.a",
-        "groupId": "2.1.1.1",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
         "question": "Quel type d’organisation structurelle existe dans votre entreprise:\nOrganisation hiérarchique?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.1.a"
       },
       {
-        "id": "2.1.1.2.b",
-        "groupId": "2.1.1.2",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Organisation d’état-major de ligne?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.1.2.c",
-        "groupId": "2.1.1.2",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Organisation fonctionnelle?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.1.2.d",
-        "groupId": "2.1.1.2",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Organisation matricielle?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.1.2.e",
-        "groupId": "2.1.1.2",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Organisation de projets?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.1.2.f",
-        "groupId": "2.1.1.2",
-        "collapsedId": "2.1.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Autre forme? Si oui, laquelle?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2",
+        "id": "2.1.2b",
         "groupId": "2.1.2",
         "collapsedId": "2.1.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Tâches, compétences, responsabilités",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Organisation d’état-major de ligne?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.2.b"
       },
       {
-        "id": "2.1.2.1",
-        "groupId": "2.1.2.1",
+        "id": "2.1.2c",
+        "groupId": "2.1.2",
         "collapsedId": "2.1.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Les compétences et les responsabilités concernant la sécurité et la santé des collaborateurs sont-elles définies par écrit?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Organisation fonctionnelle?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.2.c"
       },
       {
-        "id": "2.1.2.2.a",
-        "groupId": "2.1.2.2",
+        "id": "2.1.2d",
+        "groupId": "2.1.2",
         "collapsedId": "2.1.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Votre entreprise dispose-t-elle de documents d'organisation tels que: Descriptions des postes de travail?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Organisation matricielle?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.2.d"
       },
       {
-        "id": "2.1.2.2.b",
-        "groupId": "2.1.2.2",
+        "id": "2.1.2e",
+        "groupId": "2.1.2",
         "collapsedId": "2.1.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Cahiers des charges?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Organisation de projets?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.2.e"
       },
       {
-        "id": "2.1.2.2.c",
-        "groupId": "2.1.2.2",
+        "id": "2.1.2f",
+        "groupId": "2.1.2",
         "collapsedId": "2.1.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Diagrammes fonctionnels",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.2.d",
-        "groupId": "2.1.2.2",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Règlements?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.2.e",
-        "groupId": "2.1.2.2",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats de travail individuels?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.2.f",
-        "groupId": "2.1.2.2",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats de travail collectifs?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.2.g",
-        "groupId": "2.1.2.2",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats d'entreprise?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.2.h",
-        "groupId": "2.1.2.2",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Autres documents d'organisation? Si oui, lesquels?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.a",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les tâches, compétences, responsabilités (obligations et droits) concernant la sécurité et la santé font-elles partie des documents suivants: \nDescriptions des postes?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.b",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Cahiers des charges?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.c",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Diagrammes fonctionnels",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.d",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Règlements?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.e",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats de travail individuels?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.f",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats de travail collectifs?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.g",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Contrats d'entreprise?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.2.3.h",
-        "groupId": "2.1.2.3",
-        "collapsedId": "2.1.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Autres documents d'organisation? Si oui, lesquels?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Autre forme? Si oui, laquelle?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.1.2.f"
       },
       {
         "id": "2.1.3",
@@ -724,134 +559,299 @@
         "collapsedId": "2.1.3",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Planification et organisation du travail",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Les compétences et les responsabilités concernant la sécurité et la santé des collaborateurs sont-elles définies par écrit?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.1"
       },
       {
-        "id": "2.1.3.1.a",
-        "groupId": "2.1.3.1",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "La planification, le calcul, l'organisation et la préparation des ordres de travail sont-ils effectués par :\nLes supérieurs hiérarchiques?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.1.b",
-        "groupId": "2.1.3.1",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Des teams de projet?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.1.c",
-        "groupId": "2.1.3.1",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "D’une unité organisationnelle spéciale (AVOR / Préparation du travail)?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.1.d",
-        "groupId": "2.1.3.1",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Autres organes/personnes? Si oui,  quels organes/personnes?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.2",
-        "groupId": "2.1.3.2",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Des aspects de la sécurité au travail et de la protection de la santé sont-ils pris en considération au cours des phases de la planification, de l'organisation et de la préparation du travail?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.3",
-        "groupId": "2.1.3.3",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Existe-t-il une séparation stricte entre la planification, l'organisation, la préparation et l'exécution des travaux?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.4",
-        "groupId": "2.1.3.4",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Le niveau opérationnel est impliqué dans la préparation au travail?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.5",
-        "groupId": "2.1.3.5",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Le travail à exécuter est-il expliqué et discuté?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.6",
-        "groupId": "2.1.3.6",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "La sécurité et la protection de la santé sont-elles intégrées dans le travail à exécuter?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.7",
-        "groupId": "2.1.3.7",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les ordres de travail sont-ils donnés et documentés sous forme écrite ?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.3.8",
-        "groupId": "2.1.3.8",
-        "collapsedId": "2.1.3",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les instructions de travail écrites font-elles référence à des mesures de sécurité et de protection de la santé?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
-      },
-      {
-        "id": "2.1.4",
+        "id": "2.1.4a",
         "groupId": "2.1.4",
         "collapsedId": "2.1.4",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Règlement d'entreprise",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "question": "Votre entreprise dispose-t-elle de documents d'organisation tels que: Descriptions des postes de travail?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.a"
       },
       {
-        "id": "2.1.4.1",
-        "groupId": "2.1.4.1",
+        "id": "2.1.4b",
+        "groupId": "2.1.4",
         "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Cahiers des charges?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.b"
+      },
+      {
+        "id": "2.1.4c",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Diagrammes fonctionnels",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.c"
+      },
+      {
+        "id": "2.1.4d",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Règlements?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.d"
+      },
+      {
+        "id": "2.1.4e",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats de travail individuels?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.e"
+      },
+      {
+        "id": "2.1.4f",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats de travail collectifs?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.f"
+      },
+      {
+        "id": "2.1.4g",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats d'entreprise?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.g"
+      },
+      {
+        "id": "2.1.4h",
+        "groupId": "2.1.4",
+        "collapsedId": "2.1.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Autres documents d'organisation? Si oui, lesquels?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.2.h"
+      },
+      {
+        "id": "2.1.5a",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les tâches, compétences, responsabilités (obligations et droits) concernant la sécurité et la santé font-elles partie des documents suivants: \nDescriptions des postes?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.a"
+      },
+      {
+        "id": "2.1.5b",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Cahiers des charges?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.b"
+      },
+      {
+        "id": "2.1.5c",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Diagrammes fonctionnels",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.c"
+      },
+      {
+        "id": "2.1.5d",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Règlements?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.d"
+      },
+      {
+        "id": "2.1.5e",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats de travail individuels?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.e"
+      },
+      {
+        "id": "2.1.5f",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats de travail collectifs?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.f"
+      },
+      {
+        "id": "2.1.5g",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Contrats d'entreprise?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.g"
+      },
+      {
+        "id": "2.1.5h",
+        "groupId": "2.1.5",
+        "collapsedId": "2.1.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Autres documents d'organisation? Si oui, lesquels?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.2.3.h"
+      },
+      {
+        "id": "2.1.6a",
+        "groupId": "2.1.6",
+        "collapsedId": "2.1.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "La planification, le calcul, l'organisation et la préparation des ordres de travail sont-ils effectués par :\nLes supérieurs hiérarchiques?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.1.a"
+      },
+      {
+        "id": "2.1.6b",
+        "groupId": "2.1.6",
+        "collapsedId": "2.1.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Des teams de projet?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.1.b"
+      },
+      {
+        "id": "2.1.6c",
+        "groupId": "2.1.6",
+        "collapsedId": "2.1.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "D’une unité organisationnelle spéciale (AVOR / Préparation du travail)?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.1.c"
+      },
+      {
+        "id": "2.1.6d",
+        "groupId": "2.1.6",
+        "collapsedId": "2.1.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Autres organes/personnes? Si oui,  quels organes/personnes?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.1.d"
+      },
+      {
+        "id": "2.1.7",
+        "groupId": "2.1.7",
+        "collapsedId": "2.1.7",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Des aspects de la sécurité au travail et de la protection de la santé sont-ils pris en considération au cours des phases de la planification, de l'organisation et de la préparation du travail?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.2"
+      },
+      {
+        "id": "2.1.8",
+        "groupId": "2.1.8",
+        "collapsedId": "2.1.8",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Existe-t-il une séparation stricte entre la planification, l'organisation, la préparation et l'exécution des travaux?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.3"
+      },
+      {
+        "id": "2.1.9",
+        "groupId": "2.1.9",
+        "collapsedId": "2.1.9",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Le niveau opérationnel est impliqué dans la préparation au travail?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.4"
+      },
+      {
+        "id": "2.1.10",
+        "groupId": "2.1.10",
+        "collapsedId": "2.1.10",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Le travail à exécuter est-il expliqué et discuté?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.5"
+      },
+      {
+        "id": "2.1.11",
+        "groupId": "2.1.11",
+        "collapsedId": "2.1.11",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "La sécurité et la protection de la santé sont-elles intégrées dans le travail à exécuter?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.6"
+      },
+      {
+        "id": "2.1.12",
+        "groupId": "2.1.12",
+        "collapsedId": "2.1.12",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les ordres de travail sont-ils donnés et documentés sous forme écrite ?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.7"
+      },
+      {
+        "id": "2.1.13",
+        "groupId": "2.1.13",
+        "collapsedId": "2.1.13",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les instructions de travail écrites font-elles référence à des mesures de sécurité et de protection de la santé?",
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.3.8"
+      },
+      {
+        "id": "2.1.14",
+        "groupId": "2.1.14",
+        "collapsedId": "2.1.14",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Votre entreprise dispose-t-elle d'un règlement d'entreprise obligatoire conformément à la loi sur le travail?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.4.1"
       },
       {
-        "id": "2.1.4.2",
-        "groupId": "2.1.4.2",
-        "collapsedId": "2.1.4",
+        "id": "2.1.15",
+        "groupId": "2.1.15",
+        "collapsedId": "2.1.15",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Votre entreprise dispose-t-elle d'un règlement d'entreprise volontaire?\nSi oui, quel est le contenu du texte concernant la sécurité et la promotion de la santé des collaborateurs?",
-        "sectionLabel": "2.1. Organisation de l'entreprise"
+        "sectionLabel": "2.1. Organisation de l'entreprise",
+        "originalId": "2.1.4.2"
       },
       {
         "id": "2.2.1",
@@ -859,107 +859,9 @@
         "collapsedId": "2.2.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Structure de l'organisation",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.1",
-        "groupId": "2.2.1.1",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
         "question": "Un membre de la direction est-il chargé de la sécurité au travail et de la protection de la santé?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.2",
-        "groupId": "2.2.1.2",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Disposez-vous dans votre entreprise d'une organisation de sécurité directement subordonnée à la direction?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.3",
-        "groupId": "2.2.1.3",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Cette organisation de sécurité figure-t-elle dans un organigramme?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.4.a",
-        "groupId": "2.2.1.4",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Votre entreprise fait-elle appel à des experts externes tels que:\ndes médecins du travail?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.4.b",
-        "groupId": "2.2.1.4",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "des hygiénistes du travail?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.4.c",
-        "groupId": "2.2.1.4",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "des ingénieurs de la sécurité?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.4.d",
-        "groupId": "2.2.1.4",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "des experts en sécurité?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.4.e",
-        "groupId": "2.2.1.4",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "d'autres spécialistes? Si oui, lesquels?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.5",
-        "groupId": "2.2.1.5",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les tâches, obligations et droits des divers organes contribuant à l'organisation de la sécurité sont-ils établis par écrit?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.6",
-        "groupId": "2.2.1.6",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Le préposé à la sécurité est-il responsable des rapports sur la sécurité et la protection de la santé à la direction?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.1.7",
-        "groupId": "2.2.1.7",
-        "collapsedId": "2.2.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "L'organisation de la sécurité est-elle activement soutenue par les supérieurs hiérarchiques?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.1"
       },
       {
         "id": "2.2.2",
@@ -967,35 +869,9 @@
         "collapsedId": "2.2.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Concept de sécurité",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.2.1",
-        "groupId": "2.2.2.1",
-        "collapsedId": "2.2.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Disposez-vous dans votre entreprise d'un concept de sécurité?\nSi oui, depuis quand ce concept de sécurité est-il en vigueur?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.2.2",
-        "groupId": "2.2.2.2",
-        "collapsedId": "2.2.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Le champ d'application du concept de sécurité est-il défini et documenté?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
-      },
-      {
-        "id": "2.2.2.3",
-        "groupId": "2.2.2.3",
-        "collapsedId": "2.2.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "La structure des documents concernant le concept de sécurité est-elle définie et le lien avec les documents applicables est-il mis en évidence?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "question": "Disposez-vous dans votre entreprise d'une organisation de sécurité directement subordonnée à la direction?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.2"
       },
       {
         "id": "2.2.3",
@@ -1003,35 +879,149 @@
         "collapsedId": "2.2.3",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Formation en matière de sécurité",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "question": "Cette organisation de sécurité figure-t-elle dans un organigramme?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.3"
       },
       {
-        "id": "2.2.3.1",
-        "groupId": "2.2.3.1",
-        "collapsedId": "2.2.3",
+        "id": "2.2.4a",
+        "groupId": "2.2.4",
+        "collapsedId": "2.2.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Votre entreprise fait-elle appel à des experts externes tels que:\ndes médecins du travail?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.4.a"
+      },
+      {
+        "id": "2.2.4b",
+        "groupId": "2.2.4",
+        "collapsedId": "2.2.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "des hygiénistes du travail?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.4.b"
+      },
+      {
+        "id": "2.2.4c",
+        "groupId": "2.2.4",
+        "collapsedId": "2.2.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "des ingénieurs de la sécurité?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.4.c"
+      },
+      {
+        "id": "2.2.4d",
+        "groupId": "2.2.4",
+        "collapsedId": "2.2.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "des experts en sécurité?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.4.d"
+      },
+      {
+        "id": "2.2.4e",
+        "groupId": "2.2.4",
+        "collapsedId": "2.2.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "d'autres spécialistes? Si oui, lesquels?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.4.e"
+      },
+      {
+        "id": "2.2.5",
+        "groupId": "2.2.5",
+        "collapsedId": "2.2.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les tâches, obligations et droits des divers organes contribuant à l'organisation de la sécurité sont-ils établis par écrit?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.5"
+      },
+      {
+        "id": "2.2.6",
+        "groupId": "2.2.6",
+        "collapsedId": "2.2.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Le préposé à la sécurité est-il responsable des rapports sur la sécurité et la protection de la santé à la direction?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.6"
+      },
+      {
+        "id": "2.2.7",
+        "groupId": "2.2.7",
+        "collapsedId": "2.2.7",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "L'organisation de la sécurité est-elle activement soutenue par les supérieurs hiérarchiques?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.1.7"
+      },
+      {
+        "id": "2.2.8",
+        "groupId": "2.2.8",
+        "collapsedId": "2.2.8",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Disposez-vous dans votre entreprise d'un concept de sécurité?\nSi oui, depuis quand ce concept de sécurité est-il en vigueur?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.2.1"
+      },
+      {
+        "id": "2.2.9",
+        "groupId": "2.2.9",
+        "collapsedId": "2.2.9",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Le champ d'application du concept de sécurité est-il défini et documenté?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.2.2"
+      },
+      {
+        "id": "2.2.10",
+        "groupId": "2.2.10",
+        "collapsedId": "2.2.10",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "La structure des documents concernant le concept de sécurité est-elle définie et le lien avec les documents applicables est-il mis en évidence?",
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.2.3"
+      },
+      {
+        "id": "2.2.11",
+        "groupId": "2.2.11",
+        "collapsedId": "2.2.11",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Certains collaborateurs de votre entreprise ont-ils suivi une formation d'assistant de sécurité, de chargé de sécurité ou d'ingénieur de sécurité?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.3.1"
       },
       {
-        "id": "2.2.3.2",
-        "groupId": "2.2.3.2",
-        "collapsedId": "2.2.3",
+        "id": "2.2.12",
+        "groupId": "2.2.12",
+        "collapsedId": "2.2.12",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Les collaborateurs de votre entreprise ont-ils participé à des cours Suva dans le domaine de la sécurité et de la protection de la santé?\nSi oui, auxquels?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.3.2"
       },
       {
-        "id": "2.2.3.3",
-        "groupId": "2.2.3.3",
-        "collapsedId": "2.2.3",
+        "id": "2.2.13",
+        "groupId": "2.2.13",
+        "collapsedId": "2.2.13",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Les collaborateurs de votre entreprise ont-ils participé à d'autres cours sur la sécurité? Si oui, auxquels?",
-        "sectionLabel": "2.2. Organisation de la sécurité"
+        "sectionLabel": "2.2. Organisation de la sécurité",
+        "originalId": "2.2.3.3"
       },
       {
         "id": "2.3.1",
@@ -1039,44 +1029,9 @@
         "collapsedId": "2.3.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Bases légales",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.1.1",
-        "groupId": "2.3.1.1",
-        "collapsedId": "2.3.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
         "question": "Votre entreprise dispose-t-elle des bases légales en matière de sécurité au travail et de protection de la santé?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.1.2",
-        "groupId": "2.3.1.2",
-        "collapsedId": "2.3.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les collaborateurs de l’entreprise connaissent-ils vos tâches, obligations et droits découlant des bases légales?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.1.3",
-        "groupId": "2.3.1.3",
-        "collapsedId": "2.3.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les dispositions légales sont-elles respectées en substance par votre entreprise?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.1.4",
-        "groupId": "2.3.1.4",
-        "collapsedId": "2.3.1",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les documents contenant les bases légales sont-ils constamment actualisés et rendus accessibles selon une procédure établie?\nSi oui, quelle personne ou quel service est-il chargé de la mise à jour?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.1.1"
       },
       {
         "id": "2.3.2",
@@ -1084,53 +1039,9 @@
         "collapsedId": "2.3.2",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Directives et normes",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.2.1",
-        "groupId": "2.3.2.1",
-        "collapsedId": "2.3.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Votre entreprise dispose-t-elle des directives et des normes en matière de sécurité et de santé?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.2.2",
-        "groupId": "2.3.2.2",
-        "collapsedId": "2.3.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les personnes concernées disposent-elles des directives et des normes relatives à la sécurité et à la santé ou y ont-elles toujours accès?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.2.3",
-        "groupId": "2.3.2.3",
-        "collapsedId": "2.3.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les personnes concernées connaissent-elles leurs tâches, leurs obligations et leurs droits découlant des directives et des normes ?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.2.4",
-        "groupId": "2.3.2.4",
-        "collapsedId": "2.3.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les directives et les normes sont-elles respectées par l’entreprise par analogie?",
-        "sectionLabel": "2.3. Bases déterminantes"
-      },
-      {
-        "id": "2.3.2.5",
-        "groupId": "2.3.2.5",
-        "collapsedId": "2.3.2",
-        "chapter": 2,
-        "chapterLabel": "2 Organisation",
-        "question": "Les documents contenant les directives et les normes sont-ils constamment actualisés et rendus accessibles selon une procédure établie? \nSi oui, quelle personne ou quel service est-il chargé de la mise à jour?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "question": "Les collaborateurs de l’entreprise connaissent-ils vos tâches, obligations et droits découlant des bases légales?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.1.2"
       },
       {
         "id": "2.3.3",
@@ -1138,44 +1049,109 @@
         "collapsedId": "2.3.3",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
-        "question": "Documentation sur la sécurité et la santé",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "question": "Les dispositions légales sont-elles respectées en substance par votre entreprise?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.1.3"
       },
       {
-        "id": "2.3.3.1",
-        "groupId": "2.3.3.1",
-        "collapsedId": "2.3.3",
+        "id": "2.3.4",
+        "groupId": "2.3.4",
+        "collapsedId": "2.3.4",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les documents contenant les bases légales sont-ils constamment actualisés et rendus accessibles selon une procédure établie?\nSi oui, quelle personne ou quel service est-il chargé de la mise à jour?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.1.4"
+      },
+      {
+        "id": "2.3.5",
+        "groupId": "2.3.5",
+        "collapsedId": "2.3.5",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Votre entreprise dispose-t-elle des directives et des normes en matière de sécurité et de santé?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.2.1"
+      },
+      {
+        "id": "2.3.6",
+        "groupId": "2.3.6",
+        "collapsedId": "2.3.6",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les personnes concernées disposent-elles des directives et des normes relatives à la sécurité et à la santé ou y ont-elles toujours accès?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.2.2"
+      },
+      {
+        "id": "2.3.7",
+        "groupId": "2.3.7",
+        "collapsedId": "2.3.7",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les personnes concernées connaissent-elles leurs tâches, leurs obligations et leurs droits découlant des directives et des normes ?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.2.3"
+      },
+      {
+        "id": "2.3.8",
+        "groupId": "2.3.8",
+        "collapsedId": "2.3.8",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les directives et les normes sont-elles respectées par l’entreprise par analogie?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.2.4"
+      },
+      {
+        "id": "2.3.9",
+        "groupId": "2.3.9",
+        "collapsedId": "2.3.9",
+        "chapter": 2,
+        "chapterLabel": "2 Organisation",
+        "question": "Les documents contenant les directives et les normes sont-ils constamment actualisés et rendus accessibles selon une procédure établie? \nSi oui, quelle personne ou quel service est-il chargé de la mise à jour?",
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.2.5"
+      },
+      {
+        "id": "2.3.10",
+        "groupId": "2.3.10",
+        "collapsedId": "2.3.10",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Votre entreprise dispose-t-elle d'un recueil centralisé de documents sur la sécurité et la protection de la santé?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.3.1"
       },
       {
-        "id": "2.3.3.2",
-        "groupId": "2.3.3.2",
-        "collapsedId": "2.3.3",
+        "id": "2.3.11",
+        "groupId": "2.3.11",
+        "collapsedId": "2.3.11",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Les documents importants sont-ils mis à la disposition de certains collaborateurs à titre d'exemplaires personnels?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.3.2"
       },
       {
-        "id": "2.3.3.3",
-        "groupId": "2.3.3.3",
-        "collapsedId": "2.3.3",
+        "id": "2.3.12",
+        "groupId": "2.3.12",
+        "collapsedId": "2.3.12",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Les documents sur la sécurité et la protection de la santé sont-ils facilement accessibles pour l'ensemble des employés\n(bibliothèque ou dispositif similaire)?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.3.3"
       },
       {
-        "id": "2.3.3.4",
-        "groupId": "2.3.3.4",
-        "collapsedId": "2.3.3",
+        "id": "2.3.13",
+        "groupId": "2.3.13",
+        "collapsedId": "2.3.13",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "La documentation sur la sécurité et la santé est-elle constamment actualisée et rendue accessible selon une procédure établie? Si oui, quelle personne ou quel service est-il chargé de la mise à jour?",
-        "sectionLabel": "2.3. Bases déterminantes"
+        "sectionLabel": "2.3. Bases déterminantes",
+        "originalId": "2.3.3.4"
       },
       {
         "id": "3.1.1",
@@ -5425,18 +5401,6 @@
       },
       {
         "id": "2.1.1",
-        "groupId": "2.1.1",
-        "finding": "Type d'organisation",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.1.1.1",
         "groupId": "2.1.1.1",
         "finding": "Aucune forme d’organisation structurelle n’est clairement définie (ligne, ligne-état-major, fonctionnelle, matricielle, par projet, etc.).",
         "levels": {
@@ -5448,19 +5412,7 @@
         "children": []
       },
       {
-        "id": "2.1.2",
-        "groupId": "2.1.2",
-        "finding": "Tâches, compétences, responsabilité",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.1.2.1",
+        "id": "2.1.3",
         "groupId": "2.1.2.1",
         "finding": "Les responsabilités en matière de sécurité au travail et de protection de la santé ne sont pas fixées par écrit.",
         "levels": {
@@ -5472,7 +5424,7 @@
         "children": []
       },
       {
-        "id": "2.1.2.2",
+        "id": "2.1.4",
         "groupId": "2.1.2.2",
         "finding": "L’entreprise ne dispose d’aucun document d’organisation (descriptions de poste, cahiers des charges, diagrammes de fonctions, règlements, contrats de travail, etc.).",
         "levels": {
@@ -5484,7 +5436,7 @@
         "children": []
       },
       {
-        "id": "2.1.2.3",
+        "id": "2.1.5",
         "groupId": "2.1.2.3",
         "finding": "Les tâches, compétences et responsabilités relatives à la sécurité et à la santé ne figurent dans aucun document d’organisation.",
         "levels": {
@@ -5496,19 +5448,7 @@
         "children": []
       },
       {
-        "id": "2.1.3",
-        "groupId": "2.1.3",
-        "finding": "Planification et organisation du travail",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.1.3.1",
+        "id": "2.1.6",
         "groupId": "2.1.3.1",
         "finding": "Aucun service ou aucune personne désigné(e) n’assure la planification, le chiffrage, l’organisation et la préparation des ordres de travail.",
         "levels": {
@@ -5520,7 +5460,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.2",
+        "id": "2.1.7",
         "groupId": "2.1.3.2",
         "finding": "La sécurité au travail et la protection de la santé ne sont pas prises en compte lors de la planification et de la préparation.",
         "levels": {
@@ -5532,7 +5472,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.3",
+        "id": "2.1.8",
         "groupId": "2.1.3.3",
         "finding": "La planification/préparation est strictement séparée de l’exécution.",
         "levels": {
@@ -5544,7 +5484,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.4",
+        "id": "2.1.9",
         "groupId": "2.1.3.4",
         "finding": "Les équipes d’exécution ne sont pas associées à la préparation du travail.",
         "levels": {
@@ -5556,7 +5496,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.5",
+        "id": "2.1.10",
         "groupId": "2.1.3.5",
         "finding": "Les ordres de travail ne sont pas expliqués ni discutés.",
         "levels": {
@@ -5568,7 +5508,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.6",
+        "id": "2.1.11",
         "groupId": "2.1.3.6",
         "finding": "La sécurité et la protection de la santé ne font pas partie des ordres de travail.",
         "levels": {
@@ -5580,7 +5520,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.7",
+        "id": "2.1.12",
         "groupId": "2.1.3.7",
         "finding": "Les ordres de travail ne sont pas donnés ni consignés par écrit.",
         "levels": {
@@ -5592,7 +5532,7 @@
         "children": []
       },
       {
-        "id": "2.1.3.8",
+        "id": "2.1.13",
         "groupId": "2.1.3.8",
         "finding": "Les instructions de travail écrites ne mentionnent pas les mesures de sécurité et de protection de la santé.",
         "levels": {
@@ -5604,19 +5544,7 @@
         "children": []
       },
       {
-        "id": "2.1.4",
-        "groupId": "2.1.4",
-        "finding": "Règlement d’entreprise",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.1.4.1",
+        "id": "2.1.14",
         "groupId": "2.1.4.1",
         "finding": "L’entreprise ne dispose d’aucun règlement d’entreprise obligatoire au sens de la loi sur le travail (lorsque requis).",
         "levels": {
@@ -5628,7 +5556,7 @@
         "children": []
       },
       {
-        "id": "2.1.4.2",
+        "id": "2.1.15",
         "groupId": "2.1.4.2",
         "finding": "L’entreprise ne dispose d’aucun règlement d’entreprise volontaire incluant des règles sur la sécurité et la promotion de la santé.",
         "levels": {
@@ -5641,18 +5569,6 @@
       },
       {
         "id": "2.2.1",
-        "groupId": "2.2.1",
-        "finding": "Structure de l'organisation",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.2.1.1",
         "groupId": "2.2.1.1",
         "finding": "Aucun membre de la direction n’est responsable de la sécurité au travail et de la protection de la santé.",
         "levels": {
@@ -5664,7 +5580,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.2",
+        "id": "2.2.2",
         "groupId": "2.2.1.2",
         "finding": "Aucune organisation de sécurité rattachée directement à la direction n’est en place.",
         "levels": {
@@ -5676,7 +5592,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.3",
+        "id": "2.2.3",
         "groupId": "2.2.1.3",
         "finding": "L’organisation de sécurité n’est pas représentée dans l’organigramme.",
         "levels": {
@@ -5688,7 +5604,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.4",
+        "id": "2.2.4",
         "groupId": "2.2.1.4",
         "finding": "Aucun spécialiste externe n’est sollicité (médecin du travail, hygiéniste du travail, ingénieur sécurité, spécialiste sécurité, etc.).",
         "levels": {
@@ -5700,7 +5616,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.5",
+        "id": "2.2.5",
         "groupId": "2.2.1.5",
         "finding": "Les tâches, obligations et droits des organes de l’organisation de sécurité ne sont pas définis par écrit.",
         "levels": {
@@ -5712,7 +5628,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.6",
+        "id": "2.2.6",
         "groupId": "2.2.1.6",
         "finding": "Le/La responsable sécurité n’est pas chargé(e) de rendre compte à la direction sur la sécurité et la protection de la santé.",
         "levels": {
@@ -5724,7 +5640,7 @@
         "children": []
       },
       {
-        "id": "2.2.1.7",
+        "id": "2.2.7",
         "groupId": "2.2.1.7",
         "finding": "La ligne hiérarchique ne soutient pas activement l’organisation de sécurité.",
         "levels": {
@@ -5736,19 +5652,7 @@
         "children": []
       },
       {
-        "id": "2.2.2",
-        "groupId": "2.2.2",
-        "finding": "Concept de sécurité",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.2.2.1",
+        "id": "2.2.8",
         "groupId": "2.2.2.1",
         "finding": "L’entreprise ne dispose d’aucun concept de sécurité.",
         "levels": {
@@ -5760,7 +5664,7 @@
         "children": []
       },
       {
-        "id": "2.2.2.2",
+        "id": "2.2.9",
         "groupId": "2.2.2.2",
         "finding": "Le champ d’application du concept de sécurité n’est pas défini ni documenté.",
         "levels": {
@@ -5772,7 +5676,7 @@
         "children": []
       },
       {
-        "id": "2.2.2.3",
+        "id": "2.2.10",
         "groupId": "2.2.2.3",
         "finding": "La structure documentaire du concept de sécurité n’est pas définie et les liens vers les documents associés ne sont pas précisés.",
         "levels": {
@@ -5784,19 +5688,7 @@
         "children": []
       },
       {
-        "id": "2.2.3",
-        "groupId": "2.2.3",
-        "finding": "Formation en matière de sécurité",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.2.3.1",
+        "id": "2.2.11",
         "groupId": "2.2.3.1",
         "finding": "Aucun collaborateur n’a suivi une formation d’assistant sécurité, de spécialiste sécurité ou d’ingénieur sécurité.",
         "levels": {
@@ -5808,7 +5700,7 @@
         "children": []
       },
       {
-        "id": "2.2.3.2",
+        "id": "2.2.12",
         "groupId": "2.2.3.2",
         "finding": "Aucun collaborateur n’a suivi de formation Suva sur la sécurité et la protection de la santé.",
         "levels": {
@@ -5820,7 +5712,7 @@
         "children": []
       },
       {
-        "id": "2.2.3.3",
+        "id": "2.2.13",
         "groupId": "2.2.3.3",
         "finding": "Aucun collaborateur n’a suivi d’autres formations en sécurité.",
         "levels": {
@@ -5833,18 +5725,6 @@
       },
       {
         "id": "2.3.1",
-        "groupId": "2.3.1",
-        "finding": "Bases légales",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.3.1.1",
         "groupId": "2.3.1.1",
         "finding": "Les bases légales relatives à la sécurité au travail et à la protection de la santé ne sont pas disponibles dans l’entreprise.",
         "levels": {
@@ -5856,7 +5736,7 @@
         "children": []
       },
       {
-        "id": "2.3.1.2",
+        "id": "2.3.2",
         "groupId": "2.3.1.2",
         "finding": "Le personnel ne connaît pas ses tâches, obligations et droits issus des bases légales.",
         "levels": {
@@ -5868,7 +5748,7 @@
         "children": []
       },
       {
-        "id": "2.3.1.3",
+        "id": "2.3.3",
         "groupId": "2.3.1.3",
         "finding": "Les exigences légales ne sont pas respectées de manière adéquate.",
         "levels": {
@@ -5880,7 +5760,7 @@
         "children": []
       },
       {
-        "id": "2.3.1.4",
+        "id": "2.3.4",
         "groupId": "2.3.1.4",
         "finding": "La mise à jour permanente et la disponibilité des documents de bases légales ne sont pas garanties par une procédure définie.",
         "levels": {
@@ -5892,19 +5772,7 @@
         "children": []
       },
       {
-        "id": "2.3.2",
-        "groupId": "2.3.2",
-        "finding": "Directives et normes",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.3.2.1",
+        "id": "2.3.5",
         "groupId": "2.3.2.1",
         "finding": "Les directives et normes pertinentes pour la sécurité et la santé ne sont pas disponibles dans l’entreprise.",
         "levels": {
@@ -5916,7 +5784,7 @@
         "children": []
       },
       {
-        "id": "2.3.2.2",
+        "id": "2.3.6",
         "groupId": "2.3.2.2",
         "finding": "Les personnes concernées ne disposent pas des directives et normes pertinentes et n’y ont pas accès.",
         "levels": {
@@ -5928,7 +5796,7 @@
         "children": []
       },
       {
-        "id": "2.3.2.3",
+        "id": "2.3.7",
         "groupId": "2.3.2.3",
         "finding": "Les personnes concernées ne connaissent pas leurs tâches, obligations et droits issus des directives et normes.",
         "levels": {
@@ -5940,7 +5808,7 @@
         "children": []
       },
       {
-        "id": "2.3.2.4",
+        "id": "2.3.8",
         "groupId": "2.3.2.4",
         "finding": "Les directives et normes ne sont pas appliquées de manière adéquate.",
         "levels": {
@@ -5952,7 +5820,7 @@
         "children": []
       },
       {
-        "id": "2.3.2.5",
+        "id": "2.3.9",
         "groupId": "2.3.2.5",
         "finding": "La mise à jour et la disponibilité des documents de directives et normes ne sont pas assurées.",
         "levels": {
@@ -5964,19 +5832,7 @@
         "children": []
       },
       {
-        "id": "2.3.3",
-        "groupId": "2.3.3",
-        "finding": "Documentation sur la sécurité et la santé",
-        "levels": {
-          "1": [],
-          "2": [],
-          "3": [],
-          "4": []
-        },
-        "children": []
-      },
-      {
-        "id": "2.3.3.1",
+        "id": "2.3.10",
         "groupId": "2.3.3.1",
         "finding": "L’entreprise ne dispose d’aucune collection centrale de documents sur la sécurité et la santé.",
         "levels": {
@@ -5988,7 +5844,7 @@
         "children": []
       },
       {
-        "id": "2.3.3.2",
+        "id": "2.3.11",
         "groupId": "2.3.3.2",
         "finding": "Les documents importants ne sont pas remis en exemplaires personnels aux collaborateurs concernés.",
         "levels": {
@@ -6000,7 +5856,7 @@
         "children": []
       },
       {
-        "id": "2.3.3.3",
+        "id": "2.3.12",
         "groupId": "2.3.3.3",
         "finding": "La documentation sur la sécurité et la santé n’est pas facilement accessible à l’ensemble du personnel.",
         "levels": {
@@ -6012,7 +5868,7 @@
         "children": []
       },
       {
-        "id": "2.3.3.4",
+        "id": "2.3.13",
         "groupId": "2.3.3.4",
         "finding": "La mise à jour et la disponibilité de la documentation ne sont pas garanties.",
         "levels": {

@@ -78,6 +78,8 @@
           row.customer.items.forEach((item) => {
             const key = String(item.id || "").trim().toLowerCase();
             if (key) idMap.set(key, item);
+            const original = String(item.originalId || "").trim().toLowerCase();
+            if (original) idMap.set(original, item);
           });
         });
       });
