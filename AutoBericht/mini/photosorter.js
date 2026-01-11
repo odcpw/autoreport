@@ -139,7 +139,7 @@
   actions.enableActions = bindApi.enableActions || (() => {});
 
   const init = async () => {
-    state.tagOptions = tagsApi.DEFAULT_TAG_OPTIONS;
+    state.tagOptions = tagsApi.EMPTY_TAG_OPTIONS;
     const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
     renderApi.updateStatusVisibility?.(statusHidden);
     renderApi.applyLayoutMode?.();

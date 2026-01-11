@@ -71,88 +71,44 @@
     return null;
   };
 
-  const normalizeLibraryEntries = (libraryData) => {
-    if (!libraryData) return [];
-    if (Array.isArray(libraryData.library?.entries)) return libraryData.library.entries;
-    if (Array.isArray(libraryData.entries)) return libraryData.entries;
-    if (libraryData.entries && typeof libraryData.entries === "object") {
-      return Object.entries(libraryData.entries).map(([id, levels]) => ({ id, levels }));
-    }
-    return [];
-  };
-
   const normalizeTagGroups = (tags) => {
     if (!tags || typeof tags !== "object") {
       return { report: [], observations: [], training: [] };
     }
     return {
-      report: tags.report || tags.bericht || [],
-      observations: tags.observations || tags.topic || [],
-      training: tags.training || tags.seminar || [],
+      report: tags.report || [],
+      observations: tags.observations || [],
+      training: tags.training || [],
     };
   };
 
-  const buildLibraryMap = (masterData, userData) => {
-    const masterEntries = normalizeLibraryEntries(masterData);
-    const userEntries = normalizeLibraryEntries(userData);
-    const map = new Map(masterEntries.map((entry) => [entry.id, entry]));
-    userEntries.forEach((entry) => {
-      const existing = map.get(entry.id) || { id: entry.id, levels: {}, finding: "" };
-      const mergedLevels = { ...(existing.levels || {}) };
-      Object.entries(entry.levels || {}).forEach(([key, value]) => {
-        const text = stateHelpers.toText(value).trim();
-        if (text) mergedLevels[key] = text;
-      });
-      const merged = {
-        ...existing,
-        levels: mergedLevels,
-      };
-      if (entry.finding) merged.finding = entry.finding;
-      if (entry.lastUsed) merged.lastUsed = entry.lastUsed;
-      if (!merged.lastUsed && existing.lastUsed) merged.lastUsed = existing.lastUsed;
-      map.set(entry.id, merged);
-    });
-    return map;
+  const validateKnowledgeBase = (knowledgeBase) => {
+    if (!knowledgeBase || typeof knowledgeBase !== "object") {
+      throw new Error("Knowledge base missing or invalid.");
+    }
+    if (!knowledgeBase.schemaVersion) {
+      throw new Error("Knowledge base missing schemaVersion.");
+    }
+    if (!knowledgeBase.structure || !Array.isArray(knowledgeBase.structure.items)) {
+      throw new Error("Knowledge base structure is missing items.");
+    }
+    if (!knowledgeBase.library || !Array.isArray(knowledgeBase.library.entries)) {
+      throw new Error("Knowledge base library entries missing.");
+    }
+    if (!knowledgeBase.tags || typeof knowledgeBase.tags !== "object") {
+      throw new Error("Knowledge base tags missing.");
+    }
+    return knowledgeBase;
   };
 
-  const normalizeKnowledgeBase = (knowledge, fallback) => {
-    const base = fallback && typeof fallback === "object"
-      ? structuredClone(fallback)
-      : {
-        schemaVersion: "1.0",
-        meta: { locale: "de-CH", updatedAt: new Date().toISOString(), source: "generated" },
-        structure: { items: [] },
-        library: { entries: [] },
-        tags: { report: [], observations: [], training: [] },
-      };
-
-    if (!knowledge || typeof knowledge !== "object") return base;
-
-    const looksNew = knowledge.schemaVersion && knowledge.structure && knowledge.library;
-    if (looksNew) {
-      const normalized = structuredClone(knowledge);
-      normalized.schemaVersion = normalized.schemaVersion || "1.0";
-      normalized.meta = normalized.meta || {};
-      normalized.structure = normalized.structure || { items: [] };
-      normalized.structure.items = normalized.structure.items || [];
-      normalized.library = normalized.library || { entries: [] };
-      normalized.library.entries = normalized.library.entries || [];
-      normalized.tags = normalizeTagGroups(normalized.tags);
-      return normalized;
-    }
-
-    const legacyEntries = normalizeLibraryEntries(knowledge);
-    const merged = structuredClone(base);
-    if (legacyEntries.length) {
-      const mergedMap = buildLibraryMap(base, { entries: legacyEntries });
-      merged.library.entries = Array.from(mergedMap.values());
-    }
-    if (knowledge.meta) merged.meta = { ...merged.meta, ...knowledge.meta };
-    return merged;
+  const buildLibraryMap = (knowledgeBase) => {
+    const entries = knowledgeBase?.library?.entries || [];
+    return new Map(entries.map((entry) => [entry.id, entry]));
   };
 
   const buildProjectFromKnowledgeBase = (knowledgeBase) => {
-    const libraryMap = buildLibraryMap(knowledgeBase, null);
+    validateKnowledgeBase(knowledgeBase);
+    const libraryMap = buildLibraryMap(knowledgeBase);
     const groups = new Map();
 
     (knowledgeBase?.structure?.items || []).forEach((item) => {
@@ -258,17 +214,17 @@
   const loadSeedsForProject = async ({ dirHandle, getLibraryFileName, locale }) => {
     const resolvedLocale = locale || stateHelpers.defaultProject?.meta?.locale || "de-CH";
     const seedFilename = getKnowledgeBaseFilename(resolvedLocale);
-    let seedKnowledge = null;
-    let userKnowledge = null;
+    let knowledgeBase = null;
     if (dirHandle) {
-      seedKnowledge = await readSeedFromProject(dirHandle, seedFilename);
-      userKnowledge = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
+      knowledgeBase = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
+      if (!knowledgeBase) {
+        knowledgeBase = await readSeedFromProject(dirHandle, seedFilename);
+      }
     }
-    if (!seedKnowledge) {
-      seedKnowledge = await readSeedFromHttp(seedFilename);
+    if (!knowledgeBase) {
+      knowledgeBase = await readSeedFromHttp(seedFilename);
     }
-    if (!seedKnowledge) throw new Error("Knowledge base seed not found.");
-    const knowledgeBase = normalizeKnowledgeBase(userKnowledge, seedKnowledge);
+    if (!knowledgeBase) throw new Error("Knowledge base seed not found.");
     const project = buildProjectFromKnowledgeBase(knowledgeBase);
     return normalizeHelpers.ensureObservationChapter(project);
   };
@@ -283,10 +239,9 @@
     readJsonFromHttp,
     readSeedFromProject,
     readSeedFromHttp,
-    normalizeLibraryEntries,
     normalizeTagGroups,
+    validateKnowledgeBase,
     buildLibraryMap,
-    normalizeKnowledgeBase,
     buildProjectFromKnowledgeBase,
     loadSeedsForProject,
   };

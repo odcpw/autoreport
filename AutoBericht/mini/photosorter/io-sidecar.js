@@ -9,7 +9,7 @@
         createdAt: new Date().toISOString(),
       },
       photos: {},
-      photoTagOptions: structuredClone(tagsApi.DEFAULT_TAG_OPTIONS),
+      photoTagOptions: structuredClone(tagsApi.EMPTY_TAG_OPTIONS),
       photoRoot: "",
     });
 
@@ -17,7 +17,7 @@
       const base = doc && typeof doc === "object" ? structuredClone(doc) : {};
       if (!base.meta) base.meta = { projectId: "", createdAt: new Date().toISOString() };
       if (!base.photos) base.photos = {};
-      if (!base.photoTagOptions) base.photoTagOptions = structuredClone(tagsApi.DEFAULT_TAG_OPTIONS);
+      if (!base.photoTagOptions) base.photoTagOptions = structuredClone(tagsApi.EMPTY_TAG_OPTIONS);
       if (!base.photoRoot) base.photoRoot = "";
       return base;
     };
@@ -60,13 +60,23 @@
       return null;
     };
 
+    const isValidKnowledgeBase = (data) => {
+      if (!data || typeof data !== "object") return false;
+      if (!data.schemaVersion) return false;
+      if (!data.tags || typeof data.tags !== "object") return false;
+      return true;
+    };
+
     const readKnowledgeBase = async () => {
       if (!state.projectHandle) return null;
       try {
         const libraryHandle = await findLibraryFileHandle();
         if (libraryHandle) {
           const file = await libraryHandle.getFile();
-          return JSON.parse(await file.text());
+          const parsed = JSON.parse(await file.text());
+          if (isValidKnowledgeBase(parsed)) return parsed;
+          debug.logLine("error", "User library is missing knowledge base schema.");
+          return null;
         }
       } catch (err) {
         // Ignore and try seed.
@@ -78,7 +88,8 @@
       ];
       for (const filename of seedCandidates) {
         try {
-          return await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
+          const parsed = await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
+          if (isValidKnowledgeBase(parsed)) return parsed;
         } catch (err) {
           // try next
         }
@@ -192,8 +203,9 @@
       } catch (err) {
         state.sidecarDoc = null;
         state.projectDoc = createEmptyProjectDoc();
-        state.tagOptions = tagsApi.DEFAULT_TAG_OPTIONS;
+        state.tagOptions = tagsApi.EMPTY_TAG_OPTIONS;
         const knowledgeBase = await readKnowledgeBase();
+        let statusMessage = "Sidecar not found; starting fresh.";
         if (knowledgeBase) {
           const nextOptions = tagsApi.ensureTagOptions(knowledgeBase.tags || {});
           const reportOptions = tagsApi.buildReportTagOptionsFromStructure
@@ -204,9 +216,12 @@
           }
           state.tagOptions = nextOptions;
           state.projectDoc.photoTagOptions = structuredClone(nextOptions);
+        } else {
+          statusMessage = "Sidecar not found and knowledge base missing.";
+          debug.logLine("error", "Knowledge base not found. Tags unavailable.");
         }
         state.photoRootName = "";
-        setStatus("Sidecar not found; starting fresh.");
+        setStatus(statusMessage);
         debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
       }
       await setDefaultPhotoHandle();

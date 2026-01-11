@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sicherheit f.V15.xlsx",
+    "importedAt": "2026-01-07T19:21:17+00:00",
+    "notes": "Placeholder chapters 11-14 derived from Selbstbeurteilung (raw IDs).",
+    "locale": "fr"
+  },
+  "chapters": {
+    "11": [
+      {
+        "id": "11.13.a",
+        "collapsedId": "11.13",
+        "question": "Les chefs sont-ils soutenus dans leur effort de gestion et d'intégration des personnes accidentées ou malades:\nPar le service du personnel (RH)?"
+      },
+      {
+        "id": "11.13.b",
+        "collapsedId": "11.13",
+        "question": "Par d'autres services? Si oui, lesquels?"
+      },
+      {
+        "id": "11.2.a",
+        "collapsedId": "11.2",
+        "question": "Les données relatives aux accidentés et malades, ainsi qu'à leurs jours d'absence, sont-elles:\nConsignées?"
+      },
+      {
+        "id": "11.2.b",
+        "collapsedId": "11.2",
+        "question": "Analysées?"
+      },
+      {
+        "id": "11.2.c",
+        "collapsedId": "11.2",
+        "question": "Exploitées pour en tirer des mesures?"
+      },
+      {
+        "id": "11.2.d",
+        "collapsedId": "11.2",
+        "question": "Communiquées ?"
+      },
+      {
+        "id": "11.7.a",
+        "collapsedId": "11.7",
+        "question": "Les entretiens de retour au travail sont-ils menés:\nPar les chefs?"
+      },
+      {
+        "id": "11.7.b",
+        "collapsedId": "11.7",
+        "question": "Après chaque absence non planifiée de longue durée?"
+      },
+      {
+        "id": "11.7.c",
+        "collapsedId": "11.7",
+        "question": "Après chaque absence non planifiée?"
+      }
+    ],
+    "12": [
+      {
+        "id": "12.11.a",
+        "collapsedId": "12.11",
+        "question": "Des projets ou des mesures visant à promouvoir la sécurité dans les loisirs sont-ils déjà en cours? Si oui, sur quels thèmes sont-ils focalisés?"
+      },
+      {
+        "id": "12.11.b",
+        "collapsedId": "12.11",
+        "question": "Trébucher et chuter?"
+      },
+      {
+        "id": "12.11.c",
+        "collapsedId": "12.11",
+        "question": "Sports de balle?"
+      },
+      {
+        "id": "12.11.d",
+        "collapsedId": "12.11",
+        "question": "Sports d'hiver?"
+      },
+      {
+        "id": "12.11.e",
+        "collapsedId": "12.11",
+        "question": "Maison et jardin?"
+      },
+      {
+        "id": "12.11.f",
+        "collapsedId": "12.11",
+        "question": "Autres thèmes?"
+      },
+      {
+        "id": "12.6.a",
+        "collapsedId": "12.6",
+        "question": "Les accidents lors des loisirs sont-ils:\nEnregistrés?"
+      },
+      {
+        "id": "12.6.b",
+        "collapsedId": "12.6",
+        "question": "Analysés?"
+      },
+      {
+        "id": "12.6.c",
+        "collapsedId": "12.6",
+        "question": "Exploités?"
+      },
+      {
+        "id": "12.6.d",
+        "collapsedId": "12.6",
+        "question": "Communiqués?"
+      }
+    ],
+    "13": [
+      {
+        "id": "13.2.a",
+        "collapsedId": "13.2",
+        "question": "Y a-t-il un concept avec:\nDes buts?"
+      },
+      {
+        "id": "13.2.b",
+        "collapsedId": "13.2",
+        "question": "Une approche et un agenda?"
+      },
+      {
+        "id": "13.2.c",
+        "collapsedId": "13.2",
+        "question": "Une communication adaptée à des groupes cibles?"
+      },
+      {
+        "id": "13.2.d",
+        "collapsedId": "13.2",
+        "question": "Un cadre budgétaire pour des projets de GSE?"
+      },
+      {
+        "id": "13.6.a",
+        "collapsedId": "13.6",
+        "question": "Les collaborateurs sont-ils incités à se former sur certains thèmes par des cours, ateliers ou offres de sensibilisation tels que:\nBouger suffisamment, faire du sport?"
+      },
+      {
+        "id": "13.6.b",
+        "collapsedId": "13.6",
+        "question": "Nutrition / gestion du poids?"
+      },
+      {
+        "id": "13.6.c",
+        "collapsedId": "13.6",
+        "question": "Strategies contre le stress und le burnout (gestion du stress, méthodes de relaxation, moments de détente, gestion du temps, gestion du changement) ?"
+      },
+      {
+        "id": "13.6.d",
+        "collapsedId": "13.6",
+        "question": "Gestion de contraintes organisationnelles particulières, telles que le travail en équipe ou le travail de nuit?"
+      },
+      {
+        "id": "13.6.e",
+        "collapsedId": "13.6",
+        "question": "Equilibre travail/loisir (Work-Life Balance)?"
+      },
+      {
+        "id": "13.6.f",
+        "collapsedId": "13.6",
+        "question": "Sommeil et repos?"
+      },
+      {
+        "id": "13.6.g",
+        "collapsedId": "13.6",
+        "question": "Prévention des dépendances?"
+      },
+      {
+        "id": "13.7.a",
+        "collapsedId": "13.7",
+        "question": "La formation sur les thèmes suivants sont-ils encouragés:\nformation en management (influence du management sur la GSE, culture de la reconnaissance du travail accompli, cohésion d'équipe, cas de conflits, cas de dépendance, etc.) ?"
+      },
+      {
+        "id": "13.7.b",
+        "collapsedId": "13.7",
+        "question": "L'entreprise dispose-t-elle de locaux dédiés la GSE, tels que des pièces de repos, espaces de détente, douches, etc.?"
+      },
+      {
+        "id": "13.7.c",
+        "collapsedId": "13.7",
+        "question": "Les places de travail sont-elles conçues selon les principes ergonomiques?"
+      },
+      {
+        "id": "13.7.d",
+        "collapsedId": "13.7",
+        "question": "Les collaborateurs sont-ils instruits sur des thèmes tels que \"porter juste\" ou \"se tenir correctement\" ?"
+      },
+      {
+        "id": "13.7.e",
+        "collapsedId": "13.7",
+        "question": "Les nouveaux collaborateurs/trices sont-ils sensibilisés à GSE, par ex. grâce un parrainage?"
+      },
+      {
+        "id": "13.7.f",
+        "collapsedId": "13.7",
+        "question": "Les collaborateurs bénéficient-ils de formation continue orientée compétences sociales, développement personnel, etc.?"
+      },
+      {
+        "id": "13.7.g",
+        "collapsedId": "13.7",
+        "question": "La bonne ambiance et une atmosphère de travail agréable en entreprise sont-elles favorisées par le soin dévoué à une bonne gestion des séances, au lancement de projets interdisciplinaires ou à des événements sociaux tels que des apéros ou jubilées?"
+      },
+      {
+        "id": "13.7.h",
+        "collapsedId": "13.7",
+        "question": "L'entreprise favorise-t-elle la collaboration et la communication au travers des différents niveaux hiérarchiques de l'organigramme?"
+      },
+      {
+        "id": "13.7.i",
+        "collapsedId": "13.7",
+        "question": "L'entreprise propose-t-elle le job sharing?"
+      },
+      {
+        "id": "13.7.j",
+        "collapsedId": "13.7",
+        "question": "L'entreprise propose-t-elle un service de médiation neutre visant à traiter les cas de conflits et les collaborateurs en difficultés personnelles?"
+      }
+    ],
+    "14": [
+      {
+        "id": "14.1.1",
+        "collapsedId": "14.1.1",
+        "question": "Les parties intéressées qui, en plus de leur collaborateurs , sont concernées par leur système de gestion de la sécurité et de la santé sont-elles identifiées?  (p. ex. autorités, fournisseurs, organisations de travailleurs, visiteurs, grand public, clients, médias, organisations non gouvernementales (ONG)"
+      },
+      {
+        "id": "14.1.2",
+        "collapsedId": "14.1.2",
+        "question": "Les besoins et attentes (exigences) pertinents des travailleurs et des autres parties intéressées ont-ils été définis? (p. ex. tableau avec les travailleurs et les parties intéressées concernées en rapport avec le système S&ST avec une analyse des exigences et des attentes, opportunités et risques ainsi qu’objectifs/mesures)"
+      },
+      {
+        "id": "14.1.3",
+        "collapsedId": "14.1.3",
+        "question": "Est-ce que les besoins et attentes pertinents sont évalués et suveillé?"
+      },
+      {
+        "id": "14.2.1",
+        "collapsedId": "14.2.1",
+        "question": "Les informations documentées sont-elles conservées afin de garantir que le processus se déroule comme prévu? (p.ex. enregistrements issus des processus, preuves des modifications, rapports, journaux, etc)"
+      },
+      {
+        "id": "14.3.1",
+        "collapsedId": "14.3.1",
+        "question": "Est-ce que pour l'organisation une procédure d'identification des risques et des opportunités est établie? (p.ex. par une analyse des risques, l'établissement d'une matrice des risques, une analyse SWOT avec plan d'action)"
+      },
+      {
+        "id": "14.3.2",
+        "collapsedId": "14.3.2",
+        "question": "Est-ce que les risques et opportunités SST considérés sont des informations documentées et sont maintenues et conservées en conséquence?"
+      },
+      {
+        "id": "14.4.1",
+        "collapsedId": "14.4.1",
+        "question": "Les informations sur les modifications des obligations légales et autres exigences sont-elles présentées de manière à ce que leur divulgation puisse être documentée de manière appropriée et être ainsi vérifiée sans aucun doute?"
+      },
+      {
+        "id": "14.5.1",
+        "collapsedId": "14.5.1",
+        "question": "Les informations documentées requises pour le SM-SST sont-elles disponibles? (y compris des informations documentées sur\n- Le domaine d'application\n- La politique et les objectifs en matière de SST\n- Les bases légales et autre prescription\n- Les compétences\n- Les risques et les opportunités SST\n- Les informations crées pour le fonctionnement de l'organisation\n- Les preuves des résultats obtenus?"
+      },
+      {
+        "id": "14.5.2",
+        "collapsedId": "14.5.2",
+        "question": "Lors de la création et de l'actualisation des informations documentées, est-ce qu'une identification et description raisonable est assurée? (p.ex. titre, date, auteur, numéro de référence, version actuelle)"
+      },
+      {
+        "id": "14.5.3",
+        "collapsedId": "14.5.3",
+        "question": "Un processus est-il défini pour la gestion des informations documentées? (création, classement, clasification, autorisation, distribution, application, révision, retrait, dépôt, élimination)"
+      },
+      {
+        "id": "14.6.1",
+        "collapsedId": "14.6.1",
+        "question": "Est-ce que l'organisation garantit que les fonctions et processus externalisés qui affectent le SM-SST sont contrôlés?"
+      },
+      {
+        "id": "14.7.1",
+        "collapsedId": "14.7.1",
+        "question": "Est-ce que les processus de surveillance, de mesure, d'analyse et d'évaluation des performances SST sont établits, mis en oeuvre et maintenus?"
+      },
+      {
+        "id": "14.7.2",
+        "collapsedId": "14.7.2",
+        "question": "Les processus nécessaires pour l'évaluation du respect des obligations légales et des autres exigences sont-ils définis, mis en œuvre et maintenus?"
+      },
+      {
+        "id": "14.7.3",
+        "collapsedId": "14.7.3",
+        "question": "Les auditeurs sont-ils formés pour effectuer des audits de système?"
+      },
+      {
+        "id": "14.7.4",
+        "collapsedId": "14.7.4",
+        "question": "Les audits internes ont-ils établis que les exigences d'ISO 45001 sont remplies?"
+      }
+    ]
+  }
+}

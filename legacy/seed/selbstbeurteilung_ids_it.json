@@ -1,0 +1,5086 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx",
+    "importedAt": "2026-01-07T19:21:21+00:00",
+    "sheet": "Autovalutazione",
+    "locale": "it"
+  },
+  "items": [
+    {
+      "id": "1.1.1",
+      "groupId": "1.1.1",
+      "collapsedId": "1.1.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "L'azienda ha una propria carta dei valori?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.2",
+      "groupId": "1.1.2",
+      "collapsedId": "1.1.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "La sicurezza e la salute dei lavoratori fanno parte dei valori dell'azienda?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.3",
+      "groupId": "1.1.3",
+      "collapsedId": "1.1.3",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "I dipendenti sono informati sull'importanza dei valori aziendali e sulle loro conseguenze nella vita di tutti i giorni?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.4",
+      "groupId": "1.1.4",
+      "collapsedId": "1.1.4",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Quanto avviene in azienda è in linea con la carta dei valori?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.5",
+      "groupId": "1.1.5",
+      "collapsedId": "1.1.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Il comportamento dei superiori si ispira a determinati principi o direttive? Se sì, quali?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.6",
+      "groupId": "1.1.6",
+      "collapsedId": "1.1.6",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "La sicurezza e la tutela della salute sono menzionati tra i principi direttivi?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.7",
+      "groupId": "1.1.7",
+      "collapsedId": "1.1.7",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "L'azienda ha firmato la Charta della sicurezza della Suva?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.8.a",
+      "groupId": "1.1.8",
+      "collapsedId": "1.1.8",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Nell’azienda uno dei seguenti sistemi di gestione / certificazioni è in funzione?\nISO 9001, ISO 14001, ISO 45001, OHSAS18001\nSe sì, quale?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.1.8.b",
+      "groupId": "1.1.8",
+      "collapsedId": "1.1.8",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Vengono introdotti altri sistemi di gestione / certificazioni? Se sì, quali?",
+      "sectionLabel": "1.1. Carta dei valori, principi direttivi"
+    },
+    {
+      "id": "1.2.1",
+      "groupId": "1.2.1",
+      "collapsedId": "1.2.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "La sicurezza e la tutela della salute sono principi vissuti dalla direzione e vengono promossi con decisioni, regolamenti e direttive?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.2",
+      "groupId": "1.2.2",
+      "collapsedId": "1.2.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Nella vostra azienda, la sicurezza sul lavoro ha la stessa importanza della qualità e della produttività?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.3",
+      "groupId": "1.2.3",
+      "collapsedId": "1.2.3",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "La direzione, durante le ispezioni in azienda, affronta le situazioni  e i comportamenti pericolosi?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.4",
+      "groupId": "1.2.4",
+      "collapsedId": "1.2.4",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Per la sicurezza sul lavoro e la tutela della salute l'azienda ha conferito un centro costi?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.a",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "La direzione si impegna e appoggia le seguenti attività:\nValutazioni dei rischi?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.b",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Audit, controlli?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.c",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Indagine d'infortunio?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.d",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Formazioni sul posto di lavoro?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.e",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Applicazione delle misure di sicurezza?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.f",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Campagne per la sicurezza sul lavoro?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.g",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Campagne per la sicurezza nel tempo libero?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.h",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Gestione delle assenze?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.2.5.i",
+      "groupId": "1.2.5",
+      "collapsedId": "1.2.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Altre? Se sì, quale?",
+      "sectionLabel": "1.2. Impegno della direzione"
+    },
+    {
+      "id": "1.3.1.a",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "I superiori con il loro comportamento promuovono la sicurezza e la tutela della salute:\nApplicano per primi le norme di sicurezza (ad esempio usare i DPI)?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.1.b",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Impongono il rispetto delle norme di sicurezza?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.1.c",
+      "groupId": "1.3.1",
+      "collapsedId": "1.3.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Altri comportamenti e incentivi? Se sì, quali?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.a",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Cosa fanno i superiori per promuovere la sicurezza e la tutela della salute sul lavoro? I superiori esercitano il proprio compito mediante:\nValutazioni dei rischi?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.b",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Audit, controlli?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.c",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Indagine d'infortunio?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.d",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Formazioni sul posto di lavoro?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.e",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Campagne per la sicurezza sul lavoro?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.f",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Campagne per la sicurezza nel tempo libero?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.g",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Gestione delle assenze?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.2.h",
+      "groupId": "1.3.2",
+      "collapsedId": "1.3.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Altre? Se sì, quale?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.3.3",
+      "groupId": "1.3.3",
+      "collapsedId": "1.3.3",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "I superiori conoscono diritti e doveri stabiliti per legge in materia di sicurezza e tutela della salute?",
+      "sectionLabel": "1.3. Impegno dei superiori"
+    },
+    {
+      "id": "1.4.1.a",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Sono stati fissati obiettivi quantitativi per limitare la frequenza* degli eventi avversi e delle assenze:\n*Frequenza: Numero di eventi rispetto all'orario di lavoro produttivo o numero di eventi rispetto al numero degli occupati a tempo pieno in un determinato periodo.\ninfortuni/malattie professionali?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.1.b",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Infortuni non professionalki (INP)?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.1.c",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Malattie?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.1.d",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Danni materiali?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.1.e",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Disturbi?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.1.f",
+      "groupId": "1.4.1",
+      "collapsedId": "1.4.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Altri eventi? Se sì, quali eventi?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.2.a",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Esistono obiettivi misurabili in termini di limitazione dei tempi di inattività causati dai seguenti eventi:\ninfortuni/malattie professionali",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.2.b",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "INP?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.2.c",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Malattie?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.2.d",
+      "groupId": "1.4.2",
+      "collapsedId": "1.4.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Altri eventi? Se sì, quali eventi?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.3",
+      "groupId": "1.4.3",
+      "collapsedId": "1.4.3",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Gli obiettivi per la sicurezza e la tutela della salute si riferiscono a tutta l'azienda?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.4",
+      "groupId": "1.4.4",
+      "collapsedId": "1.4.4",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Gli obiettivi per la sicurezza e la tutela della salute si riferiscono a singole unità organizzative?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.4.5",
+      "groupId": "1.4.5",
+      "collapsedId": "1.4.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Avete la possibilità di confrontare i dati della vostra azienda con quelli di altre aziende simili? Se sì, quali?",
+      "sectionLabel": "1.4. Obiettivi di sicurezza"
+    },
+    {
+      "id": "1.5.1",
+      "groupId": "1.5.1",
+      "collapsedId": "1.5.1",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Esiste un processo ben definito per formulare gli obiettivi di sicurezza?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.2",
+      "groupId": "1.5.2",
+      "collapsedId": "1.5.2",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Gli obiettivi prevedono anche l'obbligo del miglioramento continuo del sistema di sicurezza?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.3",
+      "groupId": "1.5.3",
+      "collapsedId": "1.5.3",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "I quadri o i loro sostituti partecipano alla formulazione degli obiettivi di sicurezza?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.4",
+      "groupId": "1.5.4",
+      "collapsedId": "1.5.4",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Il mancato rispetto degli obiettivi viene riconosciuto tempestivamente con un esame attento degli eventi ossia  con una procedura di controlling per tutta l'azienda?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.5",
+      "groupId": "1.5.5",
+      "collapsedId": "1.5.5",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "per singole unità organizzative? (ad es. divisioni, settori)",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.6",
+      "groupId": "1.5.6",
+      "collapsedId": "1.5.6",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "In caso di mancato raggiungimento degli obiettivi si traggono le giuste conseguenze e si applicano le necessarie misure correttive? Se sì, quali conseguenze?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "1.5.7",
+      "groupId": "1.5.7",
+      "collapsedId": "1.5.7",
+      "chapter": 1,
+      "chapterLabel": "1 Principi, obiettivi e strategie",
+      "question": "Avete una strategia per raggiungere gli obiettivi di sicurezza prefissi? (ad es. misure a medio termine, futuri trend, requisiti e aspettative di parti interessate) Se sì, quale?",
+      "sectionLabel": "1.5. Formulazione degli obiettivi, controlling e strategia"
+    },
+    {
+      "id": "2.1.1",
+      "groupId": "2.1.1",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Organisationsform",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.1.a",
+      "groupId": "2.1.1.1",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Che tipo di organizzazione presenta la vostra azienda:\nStruttura in base alla linea?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.2.b",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Struttura linea-staff?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.2.c",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Struttura funzionale?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.2.d",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Struttura a matrice?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.2.e",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Struttura per progetto?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.1.2.f",
+      "groupId": "2.1.1.2",
+      "collapsedId": "2.1.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Altro? Specificare",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2",
+      "groupId": "2.1.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Compiti, competenze, responsabilità",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.1",
+      "groupId": "2.1.2.1",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Sono state messe per iscritto le competenze e le responsabilità in materia di sicurezza e tutela della salute?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.a",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'azienda dispone dei seguenti documenti organizzativi come;\nDescrizioni dei posti di lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.b",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Mansionari?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.c",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Diagrammi delle funzioni?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.d",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Regolamenti?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.e",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti individuali di lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.f",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti collettivi?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.g",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti d'opera?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.2.h",
+      "groupId": "2.1.2.2",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Altro? Specificare",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.a",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I compiti, le competenze e le responsabilità (diritti e doveri) in materia di sicurezza e salute sono parte integrante dei seguenti documenti?\nDescrizioni dei posti di lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.b",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Mansionari?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.c",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Diagrammi delle funzioni?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.d",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Regolamenti?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.e",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti individuali di lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.f",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti collettivi?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.g",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Contratti d'opera?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.2.3.h",
+      "groupId": "2.1.2.3",
+      "collapsedId": "2.1.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Altri documenti organizzativi?Specificare",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3",
+      "groupId": "2.1.3",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Pianificazione e organizzazione del lavoro",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.1.a",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Chi svolge la pianificazione, il calcolo, l'organizzazione delle mansioni? Indicare tra i soggetti sotto indicati: \nsuperiori di linea?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.1.b",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "team di progetto?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.1.c",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "unità organizzativa creata ad hoc (preparazione dei lavori)",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.1.d",
+      "groupId": "2.1.3.1",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Altri organi / persone? Se sì, quali organi / persone?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.2",
+      "groupId": "2.1.3.2",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Nella fase di pianificazione, organizzazione, preparazione si tiene conto degli aspetti di sicurezza e tutela della salute?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.3",
+      "groupId": "2.1.3.3",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Esiste una separazione netta tra la pianificazione, organizzazione e preparazione dei lavori e la loro esecuzione?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.4",
+      "groupId": "2.1.3.4",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Il livello di esecuzione è coinvolto nella fase di preparazione del lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.5",
+      "groupId": "2.1.3.5",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Gli incarichi di lavoro vengono spiegati e discussi?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.6",
+      "groupId": "2.1.3.6",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La sicurezza e la tutela della salute sono parte integrante degli incarichi?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.7",
+      "groupId": "2.1.3.7",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Gli incarichi vengono assegnati per iscritto e documentati?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.3.8",
+      "groupId": "2.1.3.8",
+      "collapsedId": "2.1.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Le direttive di lavoro in forma scritta riportano indicazioni sulle misure di sicurezza e di tutela della salute?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.4",
+      "groupId": "2.1.4",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Regolamento aziendale",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.4.1",
+      "groupId": "2.1.4.1",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La vostra azienda ha un regolamento obbligatorio ai sensi della Legge sul lavoro?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.1.4.2",
+      "groupId": "2.1.4.2",
+      "collapsedId": "2.1.4",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La vostra azienda ha un regolamento facoltativo? In caso affermativo: Cosa recita il testo relativamente alla sicurezza e alla promozione della salute dei lavoratori?",
+      "sectionLabel": "2.1. Organizzazione aziendale"
+    },
+    {
+      "id": "2.2.1",
+      "groupId": "2.2.1",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Struttura organizzativa",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.1",
+      "groupId": "2.2.1.1",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Un membro della direzione è responsabile della sicurezza sul lavoro e della tutela della salute?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.2",
+      "groupId": "2.2.1.2",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La vostra azienda ha un'organizzazione della sicurezza che fa capo direttamente alla direzione?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.3",
+      "groupId": "2.2.1.3",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'organizzazione della sicurezza è rappresentata nel diagramma aziendale?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.4.a",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'azienda si rivolge ad esperti esterni:\nMedici del lavoro?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.4.b",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Igienisti del lavoro?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.4.c",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Ingegneri di sicurezza?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.4.d",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Esperti nell'ambito della sicurezza?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.4.e",
+      "groupId": "2.2.1.4",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Altri esperti? Se sì, quali?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.5",
+      "groupId": "2.2.1.5",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I compiti, i doveri e i diritti dei singoli componenti l'organizzazione della sicurezza vengono messi per iscritto?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.6",
+      "groupId": "2.2.1.6",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'addetto alla sicurezza è responsabile della rapportistica in materia di sicurezza e tutela della salute indirizzata alla direzione?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.1.7",
+      "groupId": "2.2.1.7",
+      "collapsedId": "2.2.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I responsabili di linea sostengono concretamente l'organizzazione della sicurezza?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.2",
+      "groupId": "2.2.2",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Piano di sicurezza",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.2.1",
+      "groupId": "2.2.2.1",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La vostra azienda ha un piano di sicurezza?\nSe sì, da quando è in vigore il piano di sicurezza?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.2.2",
+      "groupId": "2.2.2.2",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Il campo di applicazione del piano di sicurezza è stabilito chiaramente e documentato?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.2.3",
+      "groupId": "2.2.2.3",
+      "collapsedId": "2.2.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La struttura dei documenti per il piano di sicurezza è stata stabilita ed è chiaro come accedere ai documenti allegati?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.3",
+      "groupId": "2.2.3",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Formazione in materia di sicurezza",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.3.1",
+      "groupId": "2.2.3.1",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Dipendenti della vostra azienda hanno acquisito una determinata formazione per diventare assistenti alla sicurezza, esperti nell'ambito della sicurezza o ingegneri di sicurezza?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.3.2",
+      "groupId": "2.2.3.2",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Dipendenti della vostra azienda hanno frequentato i corsi Suva in materia di sicurezza e salute? Se sì, quali?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.2.3.3",
+      "groupId": "2.2.3.3",
+      "collapsedId": "2.2.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Dipendenti della vostra azienda hanno seguito dei corsi sulla sicurezza organizzati da altri enti? Se sì, quale formazione?",
+      "sectionLabel": "2.2. Organizzazione della sicurezza"
+    },
+    {
+      "id": "2.3.1",
+      "groupId": "2.3.1",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Basi giuridiche",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.1.1",
+      "groupId": "2.3.1.1",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Sono presenti le basi giuridiche in materia di sicurezza sul lavoro e tutela della salute?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.1.2",
+      "groupId": "2.3.1.2",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I dipendenti dell'azienda conoscono compiti, diritti e doveri stabiliti per legge?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.1.3",
+      "groupId": "2.3.1.3",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'azienda adempie alle disposizioni di legge?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.1.4",
+      "groupId": "2.3.1.4",
+      "collapsedId": "2.3.1",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I testi di legge vengono aggiornati e messi a disposizione con una procedura stabilita per convenzione? Se sì, chi se ne occupa?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2",
+      "groupId": "2.3.2",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Direttive e norme",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2.1",
+      "groupId": "2.3.2.1",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "In azienda sono presenti le direttive e le norme rilevanti per la sicurezza e la tutela della salute?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2.2",
+      "groupId": "2.3.2.2",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I diretti interessati sono in possesso di queste direttive e norme oppure possono accedervi in qualsiasi momento?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2.3",
+      "groupId": "2.3.2.3",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I diretti interessati conoscono i loro compiti, i loro diritti e doveri stabiliti dalle direttive e dalle norme?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2.4",
+      "groupId": "2.3.2.4",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'azienda adempie alle direttive e alle norme?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.2.5",
+      "groupId": "2.3.2.5",
+      "collapsedId": "2.3.2",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Le direttive e le norme vengono aggiornate e messe a disposizione con una procedura stabilita per convenzione? Se sì, chi se ne occupa?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.3",
+      "groupId": "2.3.3",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "Documentazione in materia di S & S",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.3.1",
+      "groupId": "2.3.3.1",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "L'azienda ha centralizzato tutti i documenti inerenti la sicurezza e la tutela della salute?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.3.2",
+      "groupId": "2.3.3.2",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I dipendenti ricevono una copia personale dei documenti importanti?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.3.3",
+      "groupId": "2.3.3.3",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "La documentazione relativa alla sicurezza e alla tutela della salute è facilmente accessibile (biblioteca o spazio similare)?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "2.3.3.4",
+      "groupId": "2.3.3.4",
+      "collapsedId": "2.3.3",
+      "chapter": 2,
+      "chapterLabel": "2 Organizzazione",
+      "question": "I documenti relativi alla sicurezza e alla tutela della salute vengono aggiornati e messi a disposizione con una procedura stabilita per convenzione? Se sì, chi se ne occupa?",
+      "sectionLabel": "2.3. Fondamenti"
+    },
+    {
+      "id": "3.1.1",
+      "groupId": "3.1.1",
+      "collapsedId": "3.1.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda ha stabilito criteri specifici per la selezione del personale?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.1.2",
+      "groupId": "3.1.2",
+      "collapsedId": "3.1.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Nella selezione del personale si tiene conto di aspetti come la sicurezza e la salute?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.1.3",
+      "groupId": "3.1.3",
+      "collapsedId": "3.1.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Nella selezione del personale si svolgono particolari test di idoneità? Se sì, per quali attività o situazioni di stress?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.1.4",
+      "groupId": "3.1.4",
+      "collapsedId": "3.1.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Si verifica se il candidato capisce la lingua parlata in azienda e questo aspetto è determinante ai fini della selezione?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.1.5",
+      "groupId": "3.1.5",
+      "collapsedId": "3.1.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Avere un comportamento sicuro è oggetto del contratto di lavoro per i dipendenti con un posto fisso?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.1.6",
+      "groupId": "3.1.6",
+      "collapsedId": "3.1.6",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Avere un comportamento sicuro è oggetto dei contratti di lavoro con i lavoratori part-time, con gli stagionali o gli ausiliari?",
+      "sectionLabel": "3.1. Criteri di selezione, contrattualistica"
+    },
+    {
+      "id": "3.2.1.a",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda dispone di un programma di introduzione standardizzato per: \ni dipendenti neo-assunti?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.1.b",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "i dipendenti interinali?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.1.c",
+      "groupId": "3.2.1",
+      "collapsedId": "3.2.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "i dipendenti trasferiti?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.2",
+      "groupId": "3.2.2",
+      "collapsedId": "3.2.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Per documentare l'introduzione si usano liste di controllo o parole chiave?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.3.a",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "La sicurezza e la tutela della salute sono parte integrante dell'introduzione per:\ni dipendenti neo-assunti?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.3.b",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "i dipendenti interinali?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.3.c",
+      "groupId": "3.2.3",
+      "collapsedId": "3.2.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "i dipendenti trasferiti?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.4.b",
+      "groupId": "3.2.4",
+      "collapsedId": "3.2.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "dei dipendenti interinali?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.4.c",
+      "groupId": "3.2.4",
+      "collapsedId": "3.2.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "dei dipendenti trasferiti?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.2.5",
+      "groupId": "3.2.5",
+      "collapsedId": "3.2.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Durante il periodo di prova il fatto di mostrare un comportamento conforme alla sicurezza è uno dei criteri di valutazione?",
+      "sectionLabel": "3.2. Neo-assunti"
+    },
+    {
+      "id": "3.3.1",
+      "groupId": "3.3.1",
+      "collapsedId": "3.3.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Si verificano periodicamente e sistematicamente i profili richiesti e le prestazioni dei lavoratori?",
+      "sectionLabel": "3.3. Bisogni formativi, misure di promozione"
+    },
+    {
+      "id": "3.3.2",
+      "groupId": "3.3.2",
+      "collapsedId": "3.3.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Si tiene conto della sicurezza e della tutela della salute nell'identificare le lacune a livello di qualifica e di bisogni formativi?",
+      "sectionLabel": "3.3. Bisogni formativi, misure di promozione"
+    },
+    {
+      "id": "3.3.3",
+      "groupId": "3.3.3",
+      "collapsedId": "3.3.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda ha un piano per la promozione del personale?",
+      "sectionLabel": "3.3. Bisogni formativi, misure di promozione"
+    },
+    {
+      "id": "3.3.4",
+      "groupId": "3.3.4",
+      "collapsedId": "3.3.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Se sì, la sicurezza e la promozione della salute* sono aspetti chiave di questo piano?\n*Il concetto di „promozione della salute“ è più ampio di „tutela della salute“. La promozione della salute comprende ogni aspetto individuale e sociale che contribuisce a tutelare la salute.",
+      "sectionLabel": "3.3. Bisogni formativi, misure di promozione"
+    },
+    {
+      "id": "3.3.5",
+      "groupId": "3.3.5",
+      "collapsedId": "3.3.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Si svolge un controllo specifico per ogni dipendente sulla formazione, sulle attività di aggiornamento e su altre misure di promozione del personale?",
+      "sectionLabel": "3.3. Bisogni formativi, misure di promozione"
+    },
+    {
+      "id": "3.4.1",
+      "groupId": "3.4.1",
+      "collapsedId": "3.4.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda offre al personale programmi e corsi di addestramento?",
+      "sectionLabel": "3.4. Addestramento del personale"
+    },
+    {
+      "id": "3.4.2",
+      "groupId": "3.4.2",
+      "collapsedId": "3.4.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "La sicurezza e la tutela della salute sono parte integrante dei corsi di addestramento?",
+      "sectionLabel": "3.4. Addestramento del personale"
+    },
+    {
+      "id": "3.4.3",
+      "groupId": "3.4.3",
+      "collapsedId": "3.4.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda ricorre ai corsi di addestramento di associazioni esterne?",
+      "sectionLabel": "3.4. Addestramento del personale"
+    },
+    {
+      "id": "3.4.4",
+      "groupId": "3.4.4",
+      "collapsedId": "3.4.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Le proposte di formazione offerte da enti esterni riguardano anche la sicurezza e la tutela della salute? Se sì, specificare gli argomenti",
+      "sectionLabel": "3.4. Addestramento del personale"
+    },
+    {
+      "id": "3.5.1",
+      "groupId": "3.5.1",
+      "collapsedId": "3.5.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "In azienda „si impara sul posto di lavoro“ e questa tendenza viene incoraggiata?",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.5.2",
+      "groupId": "3.5.2",
+      "collapsedId": "3.5.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Infortuni, quasi-infortuni e altri eventi indesiderati vengono usati come insegnamento, per adottare misure concrete e colmare le lacune a livello formativo?",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.5.3",
+      "groupId": "3.5.3",
+      "collapsedId": "3.5.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "I superiori sono stati istruiti nella metodica della formazione sul posto di lavoro?",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.5.4",
+      "groupId": "3.5.4",
+      "collapsedId": "3.5.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "I superiori e i dipendenti vengono istruiti in caso di introduzione o modifica delle attrezzature di lavoro*?\n*Attrezzature di lavoro: macchine, impianti, apparecchi, utensili, attrezzature, DPI.",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.5.5",
+      "groupId": "3.5.5",
+      "collapsedId": "3.5.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "I superiori e i dipendenti vengono istruiti in caso di introduzione di nuovi processi di lavoro o in caso di modifica degli stessi?",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.5.6",
+      "groupId": "3.5.6",
+      "collapsedId": "3.5.6",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "I superiori e i dipendenti vengono istruiti sulla presenza di nuovi materiali di lavoro*?\n*Sostanze di lavoro: Sostanze impiegate sul lavoro, solidi, liquidi o gassosi",
+      "sectionLabel": "3.5. Formazione sul posto di lavo"
+    },
+    {
+      "id": "3.6.1",
+      "groupId": "3.6.1",
+      "collapsedId": "3.6.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda dispone di un sistema di valutazione del personale?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.6.2",
+      "groupId": "3.6.2",
+      "collapsedId": "3.6.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "La condotta di sicurezza dei capi fa parte della valutazione?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.6.3",
+      "groupId": "3.6.3",
+      "collapsedId": "3.6.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Una competenza insufficiente a livello dirigenziale in materia di sicurezza ha delle conseguenze? Se sì, quali?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.6.4",
+      "groupId": "3.6.4",
+      "collapsedId": "3.6.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Per le promozioni la condotta di sicurezza è un criterio cruciale?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.6.5",
+      "groupId": "3.6.5",
+      "collapsedId": "3.6.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Un comportamento sicuro fa parte della valutazione del personale?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.6.6",
+      "groupId": "3.6.6",
+      "collapsedId": "3.6.6",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Il mancato rispetto della sicurezza ha delle conseguenze? Se sì, quali?",
+      "sectionLabel": "3.6. Valutazione del personale"
+    },
+    {
+      "id": "3.7.1",
+      "groupId": "3.7.1",
+      "collapsedId": "3.7.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda dispone di un programma per l'informazione e la comunicazione?",
+      "sectionLabel": "3.7. Programma di informazione"
+    },
+    {
+      "id": "3.7.2",
+      "groupId": "3.7.2",
+      "collapsedId": "3.7.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Nella vostra azienda ci sono regolamenti o particolari consuetudini in materia di informazione e comunicazione? Se sì, quali?",
+      "sectionLabel": "3.7. Programma di informazione"
+    },
+    {
+      "id": "3.7.3",
+      "groupId": "3.7.3",
+      "collapsedId": "3.7.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Nella vostra azienda c'è una persona o un ufficio che si occupa prevalentemente di informazione e comunicazione? Se sì, indicare l'ufficio o la persona responsabile.",
+      "sectionLabel": "3.7. Programma di informazione"
+    },
+    {
+      "id": "3.8.1.a",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Quali supporti informativi utilizza l'azienda nell'ambito della sicurezza e della tutela della salute?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.b",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Colloqui con i dipendenti?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.c",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Riunioni di lavoro?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.d",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Attribuzione dei compiti?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.e",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Direttive di lavoro?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.f",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Istruzioni di lavoro?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.g",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Colloquio sulla sicurezza?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.h",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Scambi d'idee - meeting?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.i",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Incarichi di lavoro scritti?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.j",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Direttive, disposizioni scritte?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.k",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Norme, prescrizioni?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.l",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Guide, manuali?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.m",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Opuscoli?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.n",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Informative?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.o",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Circolari?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.p",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Lettere personali?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.q",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Rivista interna?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.r",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Rivista del personale?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.s",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Stampa specializzata?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.t",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Biblioteca?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.u",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Rapporto annuale?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.v",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Sondaggio tra i dipendenti?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.w",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Internet?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.x",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Intranet?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.y",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "E-Mail?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.8.1.z",
+      "groupId": "3.8.1",
+      "collapsedId": "3.8.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Programmi informatici?",
+      "sectionLabel": "3.8. Mezzi di comunicazione ed eventi"
+    },
+    {
+      "id": "3.9.1.a",
+      "groupId": "3.9.1",
+      "collapsedId": "3.9.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "La sicurezza e la promozione della salute sono argomenti che vengono dibattuti solitamente durante:\ni colloqui aziendali?",
+      "sectionLabel": "3.9. La sicurezza come tema all'ordine del giorno"
+    },
+    {
+      "id": "3.9.1.b",
+      "groupId": "3.9.1",
+      "collapsedId": "3.9.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "i colloqui extra-aziendali?   (Per esempio, con terzi, ditte esterne, membri di  consorzi)",
+      "sectionLabel": "3.9. La sicurezza come tema all'ordine del giorno"
+    },
+    {
+      "id": "3.9.2",
+      "groupId": "3.9.2",
+      "collapsedId": "3.9.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Quando si parla di sicurezza e promozione della salute si definiscono anche gli obiettivi di sicurezza* e si adottano dei provvedimenti?\n*Obiettivi di sicurezza: obiettivi finalizzati a garantire la sicurezza e la tutela della salute in base all'esperienza comune e allo stato dell'arte. I mezzi e le modalità sono a discrezione.",
+      "sectionLabel": "3.9. La sicurezza come tema all'ordine del giorno"
+    },
+    {
+      "id": "3.10.1.a",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "La vostra azienda si avvale del supporto di ditte esterne:\ngiammai?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.1.b",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "raramente?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.1.c",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "occasionalmente?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.1.d",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "spesso?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.1.e",
+      "groupId": "3.10.1",
+      "collapsedId": "3.10.1",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "continuamente?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.2",
+      "groupId": "3.10.2",
+      "collapsedId": "3.10.2",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Le ditte esterne vengono informate sui pericoli e sui requisiti di sicurezza imposti nella vostra azienda?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.3",
+      "groupId": "3.10.3",
+      "collapsedId": "3.10.3",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Il rispetto delle prescrizioni di sicurezza è sancito nei contratti d'opera stipulati con le ditte esterne?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.4",
+      "groupId": "3.10.4",
+      "collapsedId": "3.10.4",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Il rispetto delle prescrizioni di sicurezza nelle ditte esterne è oggetto di un controllo sistematico?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.5",
+      "groupId": "3.10.5",
+      "collapsedId": "3.10.5",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Si impone sempre il rispetto delle prescrizioni di sicurezza nelle ditte esterne?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.6",
+      "groupId": "3.10.6",
+      "collapsedId": "3.10.6",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Siete disposti ad annullare un contratto d'opera con le ditte che non rispettano le prescrizioni di sicurezza?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.7",
+      "groupId": "3.10.7",
+      "collapsedId": "3.10.7",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "Il comportamento nei confronti della sicurezza e della tutela della salute delle ditte esterne è tenuto in considerazione nella valutazione del fornitore (sistema qualità)?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "3.10.8",
+      "groupId": "3.10.8",
+      "collapsedId": "3.10.8",
+      "chapter": 3,
+      "chapterLabel": "3 Qualificazione, formazione, comunicazione",
+      "question": "L'azienda offre dei corsi di formazione per il personale delle ditte esterne?",
+      "sectionLabel": "3.10. Requisiti imposti alle ditte esterne"
+    },
+    {
+      "id": "4.1.1",
+      "groupId": "4.1.1",
+      "collapsedId": "4.1.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "In azienda sono presenti opuscoli e istruzioni di lavoro in materia di sicurezza e salute?",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.2",
+      "groupId": "4.1.2",
+      "collapsedId": "4.1.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Si utilizzano le liste di controllo della Suva e della soluzione settoriale?",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.3",
+      "groupId": "4.1.3",
+      "collapsedId": "4.1.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Si utilizza il booklet / opuscolo “Regole vitali” della Suva?",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.4",
+      "groupId": "4.1.4",
+      "collapsedId": "4.1.4",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I diretti interessati sono in possesso di questi documenti o li possono consultare liberamente?",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.5",
+      "groupId": "4.1.5",
+      "collapsedId": "4.1.5",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "L'azienda ha elaborato delle direttive interne in materia di sicurezza sul lavoro e tutela della salute a completamento degli opuscoli sopra citati? Se sì, specificare quali.",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.6",
+      "groupId": "4.1.6",
+      "collapsedId": "4.1.6",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I dipendenti vengono coinvolti nel redigere le direttive interne?",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.1.7",
+      "groupId": "4.1.7",
+      "collapsedId": "4.1.7",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Si aggiornano regolarmente gli opuscoli, le istruzioni di lavoro e le direttive interne? Se sì, chi se ne occupa? Indicare ufficio o persona.",
+      "sectionLabel": "4.1. Opuscoli, direttive e liste di controllo"
+    },
+    {
+      "id": "4.2.1.a",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Quali dispositivi di protezione individuale sono necessari tenuto conto dei pericoli presenti in azienda:\nCasco di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.b",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Protezione per il volto?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.c",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Retina capelli?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.d",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Occhiali di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.e",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Schermo di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.f",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Cuffia di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.g",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Visiera di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.h",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Inserti auricolari?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.i",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Cuffie antirumore?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.j",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Casco con protettori auricolari?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.k",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Indumento di protezione dal rumore?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.l",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Respiratori a filtro?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.m",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Respiratori ad adduzione di aria compressa?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.n",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Autorespiratori a circuito chiuso?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.o",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Respiratori a circuito aperto?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.p",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Casco di respirazione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.q",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Tuta con autorespiratore all'interno?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.r",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Guanti?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.s",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Protettori braccia?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.t",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Prodotti per la protezione della pelle?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.u",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Calzature di sicurezza?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.v",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Gambali di protezione?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.w",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Proteggitibia?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.x",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Ginocchiere?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.y",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Indumenti alta visibilità?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.2.1.z",
+      "groupId": "4.2.1",
+      "collapsedId": "4.2.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Tuta protettiva?",
+      "sectionLabel": "4.2. DPI: necessità"
+    },
+    {
+      "id": "4.3.1",
+      "groupId": "4.3.1",
+      "collapsedId": "4.3.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I dipendenti partecipano alla scelta dei dispositivi di protezione individuale?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.2",
+      "groupId": "4.3.2",
+      "collapsedId": "4.3.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "L'azienda ha emanato delle direttive interne sull'uso dei dispositivi di protezione individuale?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.3",
+      "groupId": "4.3.3",
+      "collapsedId": "4.3.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I superiori danno l'esempio per quanto concerne l'uso dei dispositivi di protezione individuale?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.4",
+      "groupId": "4.3.4",
+      "collapsedId": "4.3.4",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Ai dipendenti viene spiegato a quali pericoli vanno incontro sul lavoro e quali sono le necessarie misure di sicurezza?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.5",
+      "groupId": "4.3.5",
+      "collapsedId": "4.3.5",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Ai dipendenti viene spiegato come usare correttamente e avere cura dei dispositivi di protezione individuale?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.6",
+      "groupId": "4.3.6",
+      "collapsedId": "4.3.6",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "L'uso corretto dei dispositivi di protezione è controllato e imposto?",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.3.7",
+      "groupId": "4.3.7",
+      "collapsedId": "4.3.7",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Avete notato se alcuni dispositivi di protezione individuale in determinati posti di lavoro e per determinate attività sono scarsamente utilizzati? Indicare in quali situazioni.",
+      "sectionLabel": "4.3. DPI: uso"
+    },
+    {
+      "id": "4.4.1",
+      "groupId": "4.4.1",
+      "collapsedId": "4.4.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I dipendenti rispettano le istruzioni del fabbricante o del fornitore in merito all'esercizio normale* e particolare** di impianti, macchinari e apparecchi?\n* Esercizio normale: impiego nelle condizioni d'uso previste, esecuzione della funzione prevista.\n** Esercizio particolare: tutti gli altri interventi, ossia configurazione / riconfigura-zione, preparazione / registrazione, teach-in, individuazione/eliminazione di guasti, pulizia.",
+      "sectionLabel": "4.4. Esercizio normale/esercizio particolare"
+    },
+    {
+      "id": "4.4.2",
+      "groupId": "4.4.2",
+      "collapsedId": "4.4.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Esistono direttive interne sul'esercizio normale e particolare di impianti, macchinari e apparecchi?",
+      "sectionLabel": "4.4. Esercizio normale/esercizio particolare"
+    },
+    {
+      "id": "4.4.3",
+      "groupId": "4.4.3",
+      "collapsedId": "4.4.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Conoscete il rapporto tra il numero di infortuni, quasi-infortuni  e le anomalie di processo nell'esercizio normale e particolare?",
+      "sectionLabel": "4.4. Esercizio normale/esercizio particolare"
+    },
+    {
+      "id": "4.5.1",
+      "groupId": "4.5.1",
+      "collapsedId": "4.5.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "In azienda c'è una specifica unità organizzativa che si occupa della manutenzione* delle attrezzature di lavoro?\n* Attrezzature di lavoro: macchine, impianti, apparecchi, utensili usati durante il lavoro; installazioni e apparecchi tecnici (IAT) che appartengono all'ambiente\ndi lavoro (ad es. ventilazione, riscaldamento, illuminazione); dispositivi di protezione\nindividuale (DPI).",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.5.2",
+      "groupId": "4.5.2",
+      "collapsedId": "4.5.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "I produttori o i fornitori delle attrezzature in dotazione alla vostra azienda si occupano di formare i vostri dipendenti su come svolgere la manutenzione?",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.5.3",
+      "groupId": "4.5.3",
+      "collapsedId": "4.5.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Ci sono direttive interne sulla manutenzione delle attrezzature di lavoro?",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.5.4",
+      "groupId": "4.5.4",
+      "collapsedId": "4.5.4",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Durante la manutenzione ci si attiene alle indicazioni del fabbricante e del fornitore (o alle direttive interne)?",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.5.5",
+      "groupId": "4.5.5",
+      "collapsedId": "4.5.5",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Gli interventi di manutenzione vengono pianificati (programma) e discussi con i diretti interessati?",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.5.6",
+      "groupId": "4.5.6",
+      "collapsedId": "4.5.6",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Dopo la manutenzione, l'autorizzazione all'uso delle attrezzature avviene secondo regole ben precise?",
+      "sectionLabel": "4.5. Manutenzione (delle attrezzature di lavoro)"
+    },
+    {
+      "id": "4.6.1",
+      "groupId": "4.6.1",
+      "collapsedId": "4.6.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Nella vostra azienda c'è una specifica unità organizzativa che si occupa della manutenzione di edifici e impianti?",
+      "sectionLabel": "4.6. Edifici e impianti"
+    },
+    {
+      "id": "4.6.2",
+      "groupId": "4.6.2",
+      "collapsedId": "4.6.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Sono stati identificati e documentati i pericoli associati alla manutenzione di edifici e impianti?",
+      "sectionLabel": "4.6. Edifici e impianti"
+    },
+    {
+      "id": "4.6.3",
+      "groupId": "4.6.3",
+      "collapsedId": "4.6.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Esistono norme di sicurezza o regolamenti riguardanti la manutenzione di edifici e impianti? (Ad esempio sull'agibilità delle parti dell'impianto)",
+      "sectionLabel": "4.6. Edifici e impianti"
+    },
+    {
+      "id": "4.6.4",
+      "groupId": "4.6.4",
+      "collapsedId": "4.6.4",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Alcuni dipendenti della vostra azienda ricevono una formazione specifica sulla manutenzione di edifici e impianti?",
+      "sectionLabel": "4.6. Edifici e impianti"
+    },
+    {
+      "id": "4.7.1",
+      "groupId": "4.7.1",
+      "collapsedId": "4.7.1",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Al momento dell'acquisto delle attrezzature di lavoro si tiene conto della sicurezza sul piano tecnico?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.2",
+      "groupId": "4.7.2",
+      "collapsedId": "4.7.2",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Ai fini dell'acquisto vi servite di liste di controllo, elenchi di parole chiave o direttive interne per valutare la sicurezza del prodotto da acquistare?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.3",
+      "groupId": "4.7.3",
+      "collapsedId": "4.7.3",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Si verifica che le attrezzatura di lavoro, gli impianti, i materiali e le sostanze pericolose siano sicuri prima che questi vengano utilizati dai dipendenti?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.4",
+      "groupId": "4.7.4",
+      "collapsedId": "4.7.4",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "La verifica delle attrezzature di lavoro, degli impianti, dei materiali e dlele sostanze pericolose prima dell'impiego da parte dei dipendenti viene documentata?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.5",
+      "groupId": "4.7.5",
+      "collapsedId": "4.7.5",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Al momento dell'offerta chiedete al fornitore di darvi le specifiche tecniche, i rapporti di prova, eventuali certificati o referenze?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.6",
+      "groupId": "4.7.6",
+      "collapsedId": "4.7.6",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Chiedete al fornitore una dichiarazione di conformità o una dichiarazione di incorporazione secondo l'OMacch*?\n* Omacch; Ordinanza concernente la sicurezza delle macchine",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "4.7.7",
+      "groupId": "4.7.7",
+      "collapsedId": "4.7.7",
+      "chapter": 4,
+      "chapterLabel": "4 Norme di sicurezza",
+      "question": "Si verifica che la dichiarazione di conformità sia completa e la si archivia?",
+      "sectionLabel": "4.7. Acquisto di attrezzature di lavoro"
+    },
+    {
+      "id": "5.1.1.a",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Come avete disciplinato il ricorso ai medici del lavoro e agli altri specialisti della sicurezza sul lavoro:\nSoluzione interna? \nSe sì, indicare il nome dei medici del lavoro competenti e degli specialisti nel documento „Figure chiave per la sicurezza sul lavoro“.",
+      "sectionLabel": "5.1. Ricorso (secondo la direttiva CFSL 6508)"
+    },
+    {
+      "id": "5.1.1.b",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Adesione a una soluzione settoriale? Se sì, nome della soluzione.",
+      "sectionLabel": "5.1. Ricorso (secondo la direttiva CFSL 6508)"
+    },
+    {
+      "id": "5.1.1.c",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Adesione a una soluzione per gruppi di aziende? Se sì, nome della soluzione.",
+      "sectionLabel": "5.1. Ricorso (secondo la direttiva CFSL 6508)"
+    },
+    {
+      "id": "5.1.1.d",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Adesione a una soluzione modello? Se sì, nome della soluzione.",
+      "sectionLabel": "5.1. Ricorso (secondo la direttiva CFSL 6508)"
+    },
+    {
+      "id": "5.1.1.e",
+      "groupId": "5.1.1",
+      "collapsedId": "5.1.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Altra soluzione? Se sì, specificare quale.",
+      "sectionLabel": "5.1. Ricorso (secondo la direttiva CFSL 6508)"
+    },
+    {
+      "id": "5.2.1",
+      "groupId": "5.2.1",
+      "collapsedId": "5.2.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Sono stati identificati e documentati i pericoli per la sicurezza e la salute dei lavoratori? Se sì, con quali metodi?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.a",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Su quali aspetti si concentra l'individuazione dei pericoli:\nAttrezzature di lavoro?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.b",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Processi, procedure, metodi?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.c",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Attività?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.d",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Posti di lavoro?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.e",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Attività / posti di lavoro con commissionario (per es. aziende terze)?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.f",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Prodotti?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.g",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Sostanze nocive?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.2.h",
+      "groupId": "5.2.2",
+      "collapsedId": "5.2.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Altri fatti o oggetti? Se sì, specificare quali.",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.3",
+      "groupId": "5.2.3",
+      "collapsedId": "5.2.3",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Si verifica regolarmente l'individuazione dei pericoli e la si adegua ai cambiamenti avvenuti nell'azienda?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.4",
+      "groupId": "5.2.4",
+      "collapsedId": "5.2.4",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "In azienda chi si occupa dell'individuazione sistematica dei pericoli?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.5",
+      "groupId": "5.2.5",
+      "collapsedId": "5.2.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "I dipendenti partecipano all'individuazione dei pericoli?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.2.7",
+      "groupId": "5.2.7",
+      "collapsedId": "5.2.7",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Nel definire gli obiettivi di sicurezza e tutela della salute si tiene conto dei risultati dell'individuazione dei pericoli?",
+      "sectionLabel": "5.2. Individuazione dei pericoli"
+    },
+    {
+      "id": "5.3.1",
+      "groupId": "5.3.1",
+      "collapsedId": "5.3.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Nella vostra azienda si svolge una valutazione dei rischi? Se sì, con quale metodo?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.2.a",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "In quali casi si svolge una valutazione dei rischi:\nQuando si introducono nuovi processi, nuove attrezzature, nuovi materiali?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.2.b",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Quando si modifica un processo, un'attrezzatura di lavoro?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.2.c",
+      "groupId": "5.3.2",
+      "collapsedId": "5.3.2",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Se le regole della tecnica sono assenti o carenti?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.3",
+      "groupId": "5.3.3",
+      "collapsedId": "5.3.3",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Si verifica regolarmente la valutazione dei rischi e la si adegua ai cambiamenti avvenuti in azienda?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.4",
+      "groupId": "5.3.4",
+      "collapsedId": "5.3.4",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Chi si occupa nella vostra azienda della valutazione sistematica dei rischi?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.5",
+      "groupId": "5.3.5",
+      "collapsedId": "5.3.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "I dipendenti partecipano alla valutazione dei rischi?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.6",
+      "groupId": "5.3.6",
+      "collapsedId": "5.3.6",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "I risultati della valutazione dei rischi sono documentati? Se sì, come?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.3.7",
+      "groupId": "5.3.7",
+      "collapsedId": "5.3.7",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Nel definire gli obiettivi in materia di sicurezza e tutela della salute si tiene conto dei risultati della valutazione dei rischi?",
+      "sectionLabel": "5.3. Valutazione dei rischi"
+    },
+    {
+      "id": "5.4.1.a",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Nella vostra azienda esiste una direttiva secondo la quale gli eventi devono essere notificati entro una determinata scadenza:\nInfortuni e malattie professionali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.b",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Infortuni non professionali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.c",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Malattia?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.d",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Danni materiali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.e",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Quasi-infortuni?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.f",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Anomalie di processo?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.1.g",
+      "groupId": "5.4.1",
+      "collapsedId": "5.4.1",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Altri eventi?\nSe sì, quali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.3",
+      "groupId": "5.4.3",
+      "collapsedId": "5.4.3",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "È stato designato un ufficio che si occupa di raccogliere e analizzare tutte le notifiche d'infortunio?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.4",
+      "groupId": "5.4.4",
+      "collapsedId": "5.4.4",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "È stata stabilita e messa per iscritto una procedura per l'esame degli eventi inattesi?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.a",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Ogni evento viene esaminato regolarmente e sistematicamente:\nInfortuni e malattie professionali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.b",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Infortuni non professionali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.c",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Malattia?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.d",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Danni materiali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.e",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Quasi-infortuni?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.f",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Anomalie di processo?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.5.g",
+      "groupId": "5.4.5",
+      "collapsedId": "5.4.5",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Altri eventi?\nSe sì, quali?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "5.4.6",
+      "groupId": "5.4.6",
+      "collapsedId": "5.4.6",
+      "chapter": 5,
+      "chapterLabel": "5 Individuazione dei pericoli, valutazione dei  rischi",
+      "question": "Dopo aver notificato un infortunio alla Suva, questo viene considerato liquidato?",
+      "sectionLabel": "5.4. Analisi degli eventi"
+    },
+    {
+      "id": "6.1.1",
+      "groupId": "6.1.1",
+      "collapsedId": "6.1.1",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Dopo aver individuato un pericolo si adotta in ogni caso un provvedimento?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.2",
+      "groupId": "6.1.2",
+      "collapsedId": "6.1.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Le misure di sicurezza vengono adottate in base a determinate strategie (obiettivi, mezzi, metodi)?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.3.a",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Chi partecipa alla ricerca delle misure:\nSuperiori?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.3.b",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Dipendenti?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.3.c",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Addetti alla sicurezza?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.3.d",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Soggetti dell'organizzazione della sicurezza?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.3.e",
+      "groupId": "6.1.3",
+      "collapsedId": "6.1.3",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Altri? Se sì, chi?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.4",
+      "groupId": "6.1.4",
+      "collapsedId": "6.1.4",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Le misure da adottare hanno tutte un termine e il loro rispetto è controllato?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.5",
+      "groupId": "6.1.5",
+      "collapsedId": "6.1.5",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Si verifica l'efficacia delle misure adottate?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.1.6",
+      "groupId": "6.1.6",
+      "collapsedId": "6.1.6",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Al momento di definire gli obiettivi in materia di sicurezza e tutela della salute si tiene conto delle possibili conseguenze delle misure adottate?",
+      "sectionLabel": "6.1. Ricerca delle misure"
+    },
+    {
+      "id": "6.2.1.a",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Nella vostra azienda, negli ultimi due anni sono stati svolti, iniziati programmati dei programmi a favore:\ndella sicurezza sul lavoro?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.1.b",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "della sicurezza nel tempo libero?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.1.c",
+      "groupId": "6.2.1",
+      "collapsedId": "6.2.1",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "della promozione della salute?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.a",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Nella vostra azienda, negli ultimi due anni sono stati svolti, iniziati programmati i seguenti programmi?\nPonteggi sicuri?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.b",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Presse sicure?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.c",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "STOP alla manipolazione dei dispositivi di protezione?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.d",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "inciampare.ch?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.e",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Amianto?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.f",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Manutenzione?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.g",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Tirocinio in sicurezza?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "6.2.2.h",
+      "groupId": "6.2.2",
+      "collapsedId": "6.2.2",
+      "chapter": 6,
+      "chapterLabel": "6 Misure",
+      "question": "Altri programmi di sucurezza? Se sì, quali?",
+      "sectionLabel": "6.2. Programmi per la sicurezza"
+    },
+    {
+      "id": "7.1.1",
+      "groupId": "7.1.1",
+      "collapsedId": "7.1.1",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "C'è un piano per far fronte alle emergenze adeguato ai rischi aziendali?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.2",
+      "groupId": "7.1.2",
+      "collapsedId": "7.1.2",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "È garantito un soccorso immediato e competente in caso di infortuni e malattie acute?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.3.a",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "I seguenti soggetti sanno quali sono i potenziali rischi cui è esposta la vostra azienda, conoscono le sostanze da voi stoccate e manipolate: Medici?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.3.b",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Ospedali/ambulanza?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.3.c",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Pompieri?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.3.d",
+      "groupId": "7.1.3",
+      "collapsedId": "7.1.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Polizia?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.4",
+      "groupId": "7.1.4",
+      "collapsedId": "7.1.4",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Nella vostra azienda esiste un sistema di avvertimento o di allerta in caso di emergenza?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.5",
+      "groupId": "7.1.5",
+      "collapsedId": "7.1.5",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "I numeri di emergenza sono visibili accanto ad ogni apparecchio?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.6",
+      "groupId": "7.1.6",
+      "collapsedId": "7.1.6",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "È possibile accedere rapidamente e liberamente al materiale di emergenza?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.7.a",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Il servizio di emergenza è garantito anche nei seguenti casi: \nLavoro a turni?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.7.b",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Lavoro nel fine settimana?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.7.c",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Lavoro straordinario?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.7.d",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Interventi speciali?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.7.e",
+      "groupId": "7.1.7",
+      "collapsedId": "7.1.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Persone tenute a lavorare da sole?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.8",
+      "groupId": "7.1.8",
+      "collapsedId": "7.1.8",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Gli interventi di primo soccorso sono documentati? Se sì, come?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.1.9",
+      "groupId": "7.1.9",
+      "collapsedId": "7.1.9",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Tutti i dipendenti, di qualsiasi livello, conoscono la corretta procedura in caso di emergenza?",
+      "sectionLabel": "7.1. Piano di emergenza"
+    },
+    {
+      "id": "7.2.1",
+      "groupId": "7.2.1",
+      "collapsedId": "7.2.1",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Il personale dispone di istruzioni scritte su come comportarsi in caso di emergenza?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.2",
+      "groupId": "7.2.2",
+      "collapsedId": "7.2.2",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "I dipendenti hanno con sé una tessera di emergenza con le informazioni principali?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.3.a",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Il comportamento da adottare in caso di emergenza (infortuni, quasi-infortuni, ecc.) viene:\nistruito?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.3.b",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "praticato?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.3.c",
+      "groupId": "7.2.3",
+      "collapsedId": "7.2.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "controllato?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.4",
+      "groupId": "7.2.4",
+      "collapsedId": "7.2.4",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "L'azienda ha un proprio servizio sanitario?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.5",
+      "groupId": "7.2.5",
+      "collapsedId": "7.2.5",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "In azienda ci sono persone formate appositamente a prestare i primi soccorsi in qualsiasi momento? Se sì, indicare il numero.",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.6",
+      "groupId": "7.2.6",
+      "collapsedId": "7.2.6",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "In azienda c'è una stanza attrezzata per il servizio di pronto soccorso, con attrezzature adeguate in base ai rischi?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.7.a",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "È stato stabilito chi in caso di emergenza (infortunio, incendio, ecc.) informa:\ni familiari della vittima?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.7.b",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "le assicurazioni?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.7.c",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "gli uffici competenti?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.2.7.d",
+      "groupId": "7.2.7",
+      "collapsedId": "7.2.7",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "i mass-media?",
+      "sectionLabel": "7.2. Condizioni personali"
+    },
+    {
+      "id": "7.3.1",
+      "groupId": "7.3.1",
+      "collapsedId": "7.3.1",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "L'azienda ha un proprio apparato organizzativo per far fronte agli incendi?",
+      "sectionLabel": "7.3. Lotta antincendio"
+    },
+    {
+      "id": "7.3.2",
+      "groupId": "7.3.2",
+      "collapsedId": "7.3.2",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Esiste un'organizzazione adeguata (sistema di allarme) e ci sono adeguati rilevatori antincendio?",
+      "sectionLabel": "7.3. Lotta antincendio"
+    },
+    {
+      "id": "7.3.3",
+      "groupId": "7.3.3",
+      "collapsedId": "7.3.3",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "I dipendenti sanno come comportarsi in caso d'incendio?",
+      "sectionLabel": "7.3. Lotta antincendio"
+    },
+    {
+      "id": "7.3.4",
+      "groupId": "7.3.4",
+      "collapsedId": "7.3.4",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "Si svolgono delle esercitazioni? Se sì, quando è avvenuta l'ultima esercitazione?",
+      "sectionLabel": "7.3. Lotta antincendio"
+    },
+    {
+      "id": "7.3.5",
+      "groupId": "7.3.5",
+      "collapsedId": "7.3.5",
+      "chapter": 7,
+      "chapterLabel": "7 Organizzazione per i casi di emergenza",
+      "question": "All'ultima esercitazione hanno preso parte tutti i dipendenti?",
+      "sectionLabel": "7.3. Lotta antincendio"
+    },
+    {
+      "id": "8.1.1",
+      "groupId": "8.1.1",
+      "collapsedId": "8.1.1",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "L'informazione e lo scambio con i dipendenti è regolamentato secondo la Legge sulla partecipazione*?\n* Legge sulla partecipazione: Legge federale sull'informazione e la\nconsultazione dei lavoratori nelle imprese",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.1.2.a",
+      "groupId": "8.1.2",
+      "collapsedId": "8.1.2",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Quale forma rappresentativa esiste in azienda:\nRappresentanza diretta?",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.1.2.b",
+      "groupId": "8.1.2",
+      "collapsedId": "8.1.2",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Rappresentante eletto dal personale?",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.1.3",
+      "groupId": "8.1.3",
+      "collapsedId": "8.1.3",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Si provvede a informare tempestivamente e in maniera esauriente i dipendenti o i loro rappresentanti?",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.1.4",
+      "groupId": "8.1.4",
+      "collapsedId": "8.1.4",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Sono garantiti i diritti di partecipazione dei lavoratori e dei loro rappresentanti nelle questioni inerenti la sicurezza sul lavoro e la tutela della salute?",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.1.5",
+      "groupId": "8.1.5",
+      "collapsedId": "8.1.5",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "I rappresentanti dei lavoratori sono appoggiati dal datore di lavoro?",
+      "sectionLabel": "8.1. Partecipazione dei lavoratori"
+    },
+    {
+      "id": "8.2.1",
+      "groupId": "8.2.1",
+      "collapsedId": "8.2.1",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Nella vostra azienda c'è un sistema istituzionalizzato per avanzare proposte?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.2",
+      "groupId": "8.2.2",
+      "collapsedId": "8.2.2",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Si dice esplicitamente che sono gradite proposte in materia di sicurezza e tutela della salute?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.3",
+      "groupId": "8.2.3",
+      "collapsedId": "8.2.3",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Le proposte sono state fatte negli ultimi 12 mesi? Se sì, quanti?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.4",
+      "groupId": "8.2.4",
+      "collapsedId": "8.2.4",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Sono state fatte negli ultimi 12 mesi le proposte che riguardavano la sicurezza e la salute in senso lato? Se sì, quanti?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.5",
+      "groupId": "8.2.5",
+      "collapsedId": "8.2.5",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Le proposte a favore della sicurezza vengono ricompensate? Se sì, in che modo?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.6",
+      "groupId": "8.2.6",
+      "collapsedId": "8.2.6",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "La vostra azienda applica un sistema di incentivi per promuovere la sicurezza e la tutela della salute? Se sì, in cosa consistono gli incentivi?",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "8.2.7",
+      "groupId": "8.2.7",
+      "collapsedId": "8.2.7",
+      "chapter": 8,
+      "chapterLabel": "8 Partecipazione",
+      "question": "Nella vostra azienda esiste un circolo di qualità* o qualcosa di analogo per sfruttare il potenziale creativo del personale? Se sì, quale?\n* Circolo di qualità: gruppo di lavoro che si occupa del miglioramento\ncostante della qualità.",
+      "sectionLabel": "8.2. Proposte, incentivi"
+    },
+    {
+      "id": "9.1.1",
+      "groupId": "9.1.1",
+      "collapsedId": "9.1.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I dipendenti possono ripartirsi il lavoro autonomamente?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.2",
+      "groupId": "9.1.2",
+      "collapsedId": "9.1.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I dipendenti possono interrompere il lavoro senza conseguenze negative?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.3",
+      "groupId": "9.1.3",
+      "collapsedId": "9.1.3",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I dipendenti possono mettersi d'accordo ogni qualvolta sia necessario?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.4",
+      "groupId": "9.1.4",
+      "collapsedId": "9.1.4",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Spesso si hanno dubbi su chi è competente di cosa, anche se pensavate che tutto era stato definito?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.5",
+      "groupId": "9.1.5",
+      "collapsedId": "9.1.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono settori interessati da frequenti disguidi (scambi, sviste, dimenticanze)? Se sì, quali?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.6",
+      "groupId": "9.1.6",
+      "collapsedId": "9.1.6",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono attività monotone, poco interessanti o poco qualificanti?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.1.7",
+      "groupId": "9.1.7",
+      "collapsedId": "9.1.7",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Se 9.1.6 è sì, secondo voi si potrebbe migliorare questa situazione ampliando lo spettro di attività o cambiando mansione?",
+      "sectionLabel": "9.1. Organizzazione del lavoro"
+    },
+    {
+      "id": "9.2.1",
+      "groupId": "9.2.1",
+      "collapsedId": "9.2.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono settori nei quali ci si lamenta spesso di stanchezza, mal di testa, disturbi del sonno o disturbi intestinali? Se sì, quali sono?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.2",
+      "groupId": "9.2.2",
+      "collapsedId": "9.2.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Qualcuno si lamenta che il lavoro è monotono o il carico unilaterale? Se sì, in quali settori?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.3",
+      "groupId": "9.2.3",
+      "collapsedId": "9.2.3",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono lamentele sulle scadenze pressanti, sul ritmo frenetico, sull'eccesso di lavoro o di responsabilità?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.4",
+      "groupId": "9.2.4",
+      "collapsedId": "9.2.4",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Capita di avvertire un senso di insoddisfazione generale, senza trovare una spiegazione concreta a questo (continui lamenti)?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.5.a",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Vi sono conflitti:\ntra i dipendenti?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.5.b",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "tra le divisioni?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.5.c",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "tra i superiori e i subalterni?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.5.d",
+      "groupId": "9.2.5",
+      "collapsedId": "9.2.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "tra i superiori?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.2.6",
+      "groupId": "9.2.6",
+      "collapsedId": "9.2.6",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Si applica un metodo documentato per risolvere i conflitti?",
+      "sectionLabel": "9.2. Carico di lavoro, insoddisfazione"
+    },
+    {
+      "id": "9.3.1.a",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda i dipendenti sono sottoposti a sollecitazioni di tipo fisico che potrebbero minacciare la loro sicurezza e salute:\nForti sollecitazioni cardio-circolatorie, lavoro fisico gravoso?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.b",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Forti sollecitazioni all'apparato muscolo-scheletrico?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.c",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Carichi unilaterali, sollecitazioni localizzate?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.d",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Forti sollecitazioni all'apparato respiratorio?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.e",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Elevata percentuale di lavoro statico/lavoro muscolare?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.f",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Posture incongrue e forzate?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.g",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Sollevare, trasportare e movimentare carichi pesanti?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.h",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Rumore?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.i",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Virazioni?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.j",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Gas si scarico?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.k",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Caldo?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.l",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Freddo?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.m",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Umidità?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.n",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Superfici bagnate?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.o",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Correnti d'aria?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.p",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Vapori?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.q",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Polveri?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.r",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nubi?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.s",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Fumi?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.t",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Gas?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.u",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Sostanze?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.v",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Radiazioni, campi magnetici?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.w",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Odori sgradevoli?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.x",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Illuminazione?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.y",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Visibilità?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.3.1.z",
+      "groupId": "9.3.1",
+      "collapsedId": "9.3.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Altri stress fisici? Se sì, quali?",
+      "sectionLabel": "9.3. Sollecitazioni fisiche"
+    },
+    {
+      "id": "9.4.1.a",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda i dipendenti sono sottoposti a sollecitazioni di tipo psichico che potrebbero minacciare la loro sicurezza e salute:\nCompetenze non chiare?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.b",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Inadeguatezza di compiti, competenze e responsabilità ?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.c",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Informazioni e istruzioni di lavoro contraddittorie?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.d",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Carenze a livello informativo e comunicativo?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.e",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Carenze a livello direttivo?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.f",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Tensioni sociali all'interno dell'azienda?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.g",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Tensioni sociali all'interno dei team?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.h",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Scarsa collaborazione tra le singole unità organizzative?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.i",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Contenuto insoddisfacente?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.j",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Velocità di lavoro elevata determinata dalle installazioni e dagli    apparecchi tecnici?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.k",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Picchi di lavoro frequenti?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.l",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Frequenti straordinari?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.m",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Sovraccarico di lavoro?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.n",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Frequenti situazioni di stress?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.4.1.o",
+      "groupId": "9.4.1",
+      "collapsedId": "9.4.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Forte determinazione esterna?",
+      "sectionLabel": "9.4. Sollecitazioni psichiche"
+    },
+    {
+      "id": "9.5.1.a",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Come è regolamentato l'orario di lavoro?\nOrario giornaliero?\nSe sì, quante ore è il lavoro giornaliero?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.1.b",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Orario settimanale?\nSe sì, quante ore è la settimana lavorativa?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.1.c",
+      "groupId": "9.5.1",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Orario annuale (orario di lavoro teorico)? Se sì, quante ore è il tempo di lavoro annuale?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.2",
+      "groupId": "9.5.2",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "L'orario di lavoro è flessibile? Se sì, come sono stabilite le ore di picchetto?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.3",
+      "groupId": "9.5.3",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono altri orari di lavoro? Se sì, quali?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.4",
+      "groupId": "9.5.4",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Si lavora il sabato?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.5",
+      "groupId": "9.5.5",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Si lavora la domenica e nei giorni festivi?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.6",
+      "groupId": "9.5.6",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono turni? In caso affermativo, se sì quando iniziano e finiscono i turni presto, tardi e la notte?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.5.7",
+      "groupId": "9.5.7",
+      "collapsedId": "9.5.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono altri orari di lavoro? Se sì, quali?",
+      "sectionLabel": "9.5. Regolamentazione dell'orario di lavoro"
+    },
+    {
+      "id": "9.6.1",
+      "groupId": "9.6.1",
+      "collapsedId": "9.6.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Le pause ufficiali sono regolamentate?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.2.a",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "C'è un pausa dal lavoro ufficiale:\nDel mattino? Se sì, quanto tempo fa questo?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.2.b",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "A mezzogiorno? Se sì, quanto tempo fa questo?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.2.c",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Del pomeriggio? Se sì, quanto tempo fa questo?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.2.d",
+      "groupId": "9.6.2",
+      "collapsedId": "9.6.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Pause di turno? Se sì, quanto tempo fa questo?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.3",
+      "groupId": "9.6.3",
+      "collapsedId": "9.6.3",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I dipendenti possono fare delle brevi pause in maniera indipendente dentro un contesto ragionevole?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.4",
+      "groupId": "9.6.4",
+      "collapsedId": "9.6.4",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "C'è un locale adeguato dove fare la pausa?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.6.5",
+      "groupId": "9.6.5",
+      "collapsedId": "9.6.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono spazi distinti per fumatori e non fumatori?",
+      "sectionLabel": "9.6. Organizzazione delle pause"
+    },
+    {
+      "id": "9.7.1.a",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Quale forma di retribuzione è in vigore nella vostra azienda:\nSalario a tempo: posto fisso, salario mensile/a ore?",
+      "sectionLabel": "9.7. Forme di retribuzione"
+    },
+    {
+      "id": "9.7.1.b",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Salario a premio (salario a tempo + premi)?",
+      "sectionLabel": "9.7. Forme di retribuzione"
+    },
+    {
+      "id": "9.7.1.c",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Salario a rendimento: a cottimo, a pezzo?",
+      "sectionLabel": "9.7. Forme di retribuzione"
+    },
+    {
+      "id": "9.7.1.e",
+      "groupId": "9.7.1",
+      "collapsedId": "9.7.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Cottimo in gruppo?",
+      "sectionLabel": "9.7. Forme di retribuzione"
+    },
+    {
+      "id": "9.7.2",
+      "groupId": "9.7.2",
+      "collapsedId": "9.7.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nel caso del salario a cottimo si garantisce un salario di base indipendente dal rendimento?",
+      "sectionLabel": "9.7. Forme di retribuzione"
+    },
+    {
+      "id": "9.8.1",
+      "groupId": "9.8.1",
+      "collapsedId": "9.8.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda si producono o si lavorano sostanze pericolose per la salute?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.2",
+      "groupId": "9.8.2",
+      "collapsedId": "9.8.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda sono stoccate sostanze pericolose per la salute?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.3",
+      "groupId": "9.8.3",
+      "collapsedId": "9.8.3",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda si rispettano le norme di sicurezza relative alle sostanze pericolose per la salute?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.4",
+      "groupId": "9.8.4",
+      "collapsedId": "9.8.4",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nella vostra azienda sono presenti le schede di sicurezza per ogni sostanza pericolosa?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.5",
+      "groupId": "9.8.5",
+      "collapsedId": "9.8.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Le schede di sicurezza sono disponibili sul posto di lavoro?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.6",
+      "groupId": "9.8.6",
+      "collapsedId": "9.8.6",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I dipendenti sono stati istruiti sul contenuto delle schede di sicurezza?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.8.7",
+      "groupId": "9.8.7",
+      "collapsedId": "9.8.7",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Sono disponibili le necessarie infrastrutture per rispettare le norme indicate nelle schede di sicurezza?",
+      "sectionLabel": "9.8. Sostanze pericolose per la salute"
+    },
+    {
+      "id": "9.9.1",
+      "groupId": "9.9.1",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono fattori che possono favorire un comportamento rischioso? (Richiesto un elevato rendimento, a qualsiasi prezzo; chi fa il rambo è ben visto, chi rispetta le regole viene deriso).",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.2",
+      "groupId": "9.9.2",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "In azienda esiste un regolamento sul consumo di sostanze che creano dipendenza (alcol, droga, fumo)?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.3",
+      "groupId": "9.9.3",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "La mensa aziendale vende alcolici?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.4",
+      "groupId": "9.9.4",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "L'azienda ha un programma di prevenzione sulle dipendenze?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.5",
+      "groupId": "9.9.5",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Ci sono casi concreti di dipendenze riconosciute? Se sì, quanti?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.6",
+      "groupId": "9.9.6",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Questi casi vengono affrontati concretamente e con sistematicità? Se sì, chi se ne occupa?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.7",
+      "groupId": "9.9.7",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Tutti i superiori sanno come comportarsi con chi ha un problema di dipendenza (alcol, ecc.)?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.8",
+      "groupId": "9.9.8",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Vengono adottate misure di protezione contro le malattie trasmissibili (ad es. piano pandemico dell'UFSP «Manuale per la preparazione aziendale», prescrizioni cantonali o specifiche per il settore)?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.9.9",
+      "groupId": "9.9.9",
+      "collapsedId": "9.9.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Si adottano misure adeguate a tutela di determinate categorie di persone (ad es. giovani, donne incinte, persone con disabilità)?",
+      "sectionLabel": "9.9. Comportamenti rischiosi, dipendenze, malttie"
+    },
+    {
+      "id": "9.10.1",
+      "groupId": "9.10.1",
+      "collapsedId": "9.10.1",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "Nel pianificare le nuove attrezzature di lavoro, i nuovi posti di lavoro e le nuove modalità di lavoro si rispettano i principi ergonomici?",
+      "sectionLabel": "9.10. Organizzazione del posto di lavoro e delle attrezzature"
+    },
+    {
+      "id": "9.10.2",
+      "groupId": "9.10.2",
+      "collapsedId": "9.10.2",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I posti di lavoro vengono sottoposti a verifica in base ai principi ergonomici?",
+      "sectionLabel": "9.10. Organizzazione del posto di lavoro e delle attrezzature"
+    },
+    {
+      "id": "9.10.3",
+      "groupId": "9.10.3",
+      "collapsedId": "9.10.3",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I pianificatori del lavoro e i progettisti delle attrezzature di lavoro hanno conoscenze di ergonomia?",
+      "sectionLabel": "9.10. Organizzazione del posto di lavoro e delle attrezzature"
+    },
+    {
+      "id": "9.10.4",
+      "groupId": "9.10.4",
+      "collapsedId": "9.10.4",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "In materia di ergonomia ci si rivolge anche a servizi interni o esterni? Se sì, quali?",
+      "sectionLabel": "9.10. Organizzazione del posto di lavoro e delle attrezzature"
+    },
+    {
+      "id": "9.10.5",
+      "groupId": "9.10.5",
+      "collapsedId": "9.10.5",
+      "chapter": 9,
+      "chapterLabel": "9 Tutela della salute",
+      "question": "I principi ergonomici e i relativi requisiti sono parte integrante dei contratti di acquisto e degli ordini?",
+      "sectionLabel": "9.10. Organizzazione del posto di lavoro e delle attrezzature"
+    },
+    {
+      "id": "10.1.1",
+      "groupId": "10.1.1",
+      "collapsedId": "10.1.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Nella vostra azienda esiste un piano di controllo e sorveglianza in materia di sicurezza e salute?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.2",
+      "groupId": "10.1.2",
+      "collapsedId": "10.1.2",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Nella vostra azienda si svolgono regolarmente degli audit di sicurezza? Se sì, chi se ne occupa?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.3.a",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Con quale frequenza si svolgono gli audit di sicurezza:\nogni settimana?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.3.b",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "ogni mese?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.3.c",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "ogni sei mesi?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.3.d",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "ogni anno?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.3.e",
+      "groupId": "10.1.3",
+      "collapsedId": "10.1.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "In altri intervalli? Se sì, quali intervalli?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.4",
+      "groupId": "10.1.4",
+      "collapsedId": "10.1.4",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Prima dello svolgimento si preparano i contenuti e la tabella di marcia?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.5",
+      "groupId": "10.1.5",
+      "collapsedId": "10.1.5",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "I superiori sono stati formati sull'esecuzione e la valutazione degli audit di sicurezza?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.6",
+      "groupId": "10.1.6",
+      "collapsedId": "10.1.6",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Applicate delle procedure mirate alla struttura dei rischi e alla realtà della vostra azienda?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.7",
+      "groupId": "10.1.7",
+      "collapsedId": "10.1.7",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Per svolgere gli audit vi servite di particolari strumenti, ad es. elenchi di parole chiave, liste di controllo, moduli?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.8",
+      "groupId": "10.1.8",
+      "collapsedId": "10.1.8",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Eventuali osservazioni e misure vengono messe per iscritto?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.1.9",
+      "groupId": "10.1.9",
+      "collapsedId": "10.1.9",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Le osservazioni vengono considerate nel sistema di sicurezza aziendale?",
+      "sectionLabel": "10.1. Audit di sicurezza"
+    },
+    {
+      "id": "10.2.1.a",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "La vostra azienda fa statistiche nei seguenti ambiti:\nInfortuni e malattie professionali?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.b",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Infortuni non professionali?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.c",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Malattia?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.d",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Danni materiali?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.e",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Disservizi?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.f",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Giorni di assenza?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.1.g",
+      "groupId": "10.2.1",
+      "collapsedId": "10.2.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Quasi-infortuni?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.2.a",
+      "groupId": "10.2.2",
+      "collapsedId": "10.2.2",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Ci sono statistiche eventi per: \nl'intera azienda? Se sì, chi si occupa della statistica eventi centrale (indicare ufficio o persona)?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.2.b",
+      "groupId": "10.2.2",
+      "collapsedId": "10.2.2",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "per le unità organizzative (ad es. settori, divisioni?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.2.3",
+      "groupId": "10.2.3",
+      "collapsedId": "10.2.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "La statistica eventi è utilizzata come strumento di gestione?",
+      "sectionLabel": "10.2. Statistica eventi"
+    },
+    {
+      "id": "10.3.1",
+      "groupId": "10.3.1",
+      "collapsedId": "10.3.1",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Nella vostra azienda si registra e si analizza il tasso di fluttuazione annuo*? Se sì, qual è il tasso di fluttuazione in azienda?\n*Con tasso di fluttuazione si intende il cambio di personale in un'azienda. Il tasso di fluttuazione esprime il rapporto tra le persone che abbandonano l'azienda e il numero degli occupati in un anno. Tasso di fluttuazione = partenze/occupati x 100.",
+      "sectionLabel": "10.3. Fluttuazione"
+    },
+    {
+      "id": "10.3.2",
+      "groupId": "10.3.2",
+      "collapsedId": "10.3.2",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "I motivi per cui i dipendenti abbandonano l'azienda sono noti e presi in esame?",
+      "sectionLabel": "10.3. Fluttuazione"
+    },
+    {
+      "id": "10.3.3",
+      "groupId": "10.3.3",
+      "collapsedId": "10.3.3",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Se ci sono determinati motivi alla base di un licenziamento o di una dimissione, si traggono le opportune conseguenze e si adottano eventuali misure?",
+      "sectionLabel": "10.3. Fluttuazione"
+    },
+    {
+      "id": "10.3.4",
+      "groupId": "10.3.4",
+      "collapsedId": "10.3.4",
+      "chapter": 10,
+      "chapterLabel": "10 Controllo",
+      "question": "Avete la possibilità di confrontare il tasso di fluttuazione della vostra azienda con quello di aziende simili nella stessa regione?",
+      "sectionLabel": "10.3. Fluttuazione"
+    },
+    {
+      "id": "11.2.a",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "I dati riferiti a infortuni e malattie (con rispettivi giorni di assenza) vengono:\nregistrati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.2.b",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "analizzati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.2.c",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "valutati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.2.d",
+      "groupId": "11.2",
+      "collapsedId": "11.2",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "comunicati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.7.a",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "I colloquio di rientro sono tenuti:\ndai quadri?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.7.b",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "dopo ogni assenza imprevista di lunga durata?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.7.c",
+      "groupId": "11.7",
+      "collapsedId": "11.7",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "dopo ogni assenza imprevista?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.13.a",
+      "groupId": "11.13",
+      "collapsedId": "11.13",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "Nelle loro attività di assistenza e reinserimento, i quadri ricevono sostegno:\ndalla divisione delle risorse umane?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "11.13.b",
+      "groupId": "11.13",
+      "collapsedId": "11.13",
+      "chapter": 11,
+      "chapterLabel": "11 Assenze",
+      "question": "da altre unità organizzative? Se sì, quale?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.6.a",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "Gli infortuni nel tempo libero vengono:\nregistrati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.6.b",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "analizzati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.6.c",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "valutati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.6.d",
+      "groupId": "12.6",
+      "collapsedId": "12.6",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "comunicati?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.a",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "Si sono già svolti progetti o sono state adottate misure in azienda per promuovere la sicurezza nel tempo libero? Se sì, quali tematiche generali sono state affrontate?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.b",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "rischio di inciampare e cadere (cadute in piano)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.c",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "sport con la palla?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.d",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "sport invernali?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.e",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "casa e giardino?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "12.11.f",
+      "groupId": "12.11",
+      "collapsedId": "12.11",
+      "chapter": 12,
+      "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+      "question": "altro?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.2.a",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "Esiste al riguardo un piano con:obiettivi?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.2.b",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "svolgimento e tempistiche?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.2.c",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "comunicazione ai gruppi target?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.2.d",
+      "groupId": "13.2",
+      "collapsedId": "13.2",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "budget per progetti di GSA?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.a",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "Per mantenersi in salute i collaboratori ricevono sostegno sugli argomenti sottostanti attraverso corsi, workshop o altro da svolgere nel proprio ambito di responsabilità:\nsufficiente movimento / sport?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.b",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "alimentazione / peso corporeo sano?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.c",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "strategie antistress e prevenzione del burnout (gestione dello stress / tecniche e possibilità di rilassamento, gestione del tempo, affrontare i cambiamenti)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.d",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "gestione di condizioni organizzative particolari come il lavoro a turni / lavoro notturno?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.e",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "equilibrio tra lavoro e vita privata (work-life balance)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.f",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "sonno e riposo?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.6.g",
+      "groupId": "13.6",
+      "collapsedId": "13.6",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "prevenzione delle dipendenze?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.a",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "Si incentivano le seguenti risorse in ambito lavorativo:\ncorsi formativi per quadri (importanza / ruolo dei quadri nella GSA, sviluppo di una cultura di stima e considerazione, incentivo al lavoro di squadra, gestione dei conflitti o delle dipendenze ecc.)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.b",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "infrastruttura inerente alla salute come ambienti di ritrovo, sale ricreazione, aree ristoro, spazi adibiti al riposo, docce?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.c",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "organizzazione degli ambienti e dei posti di lavoro secondo principi ergonomici e che favoriscono la salute, per es. con controlli periodici e analisi sistematiche in caso di cambiamenti e acquisti di nuove attrezzature e simili?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.d",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "corsi su come mantenere sul lavoro una postura e un atteggiamento che salvaguardino il benessere del corpo, per es. come sollevare e trasportare correttamente i carichi, ergonomia al videoterminale?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.e",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "inserimento di nuovi collaboratori (adottando per es. un programma sistematico di introduzione al lavoro, tutor personali ecc.)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.f",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "formazione continua anche in materia di competenze sociali e umane?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.g",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "incentivazione di una buona cooperazione all'interno del team (progetti in comune, riunioni di team, eventi informali)?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.h",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "incentivazione della collaborazione e comunicazione tra divisioni e livelli gerarchici diversi?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.i",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "proposte e misure per conciliare lavoro, famiglia / tempo libero?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "13.7.j",
+      "groupId": "13.7",
+      "collapsedId": "13.7",
+      "chapter": 13,
+      "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+      "question": "disponibilità di un'istanza neutrale a cui rivolgersi in caso di situazioni conflittuali o problemi personali?",
+      "sectionLabel": ""
+    },
+    {
+      "id": "14.1.1",
+      "groupId": "14.1.1",
+      "collapsedId": "14.1.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Sono state determinate le parti interessate che sono rilevanti per il vostro SG-SSL oltre ai propri dipendenti?  (per es. ente publico, fornitori, organizzazione dei lavoratori, visitatori, pubblico e vicinato in genere, clienti, media, NGO)",
+      "sectionLabel": "14.1. Comprendere le esigenze e le aspettative dei lavoratori e di altre parti interessate (4.2)"
+    },
+    {
+      "id": "14.1.2",
+      "groupId": "14.1.2",
+      "collapsedId": "14.1.2",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Sono stati determinati i requisiti e le aspettative rilevanti (esigenze) dei dipendenti e delle altre parti interessate? (per es. tabella con collaboatori e altre parti interessate rilevanti in riferimento al SG-SSL con esigenze e aspettative, opportunità e rischi, obiettivi/misure determinati)",
+      "sectionLabel": "14.1. Comprendere le esigenze e le aspettative dei lavoratori e di altre parti interessate (4.2)"
+    },
+    {
+      "id": "14.1.3",
+      "groupId": "14.1.3",
+      "collapsedId": "14.1.3",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "I requisiti e le aspettative rilevanti sono valutati e sorvegliati?",
+      "sectionLabel": "14.1. Comprendere le esigenze e le aspettative dei lavoratori e di altre parti interessate (4.2)"
+    },
+    {
+      "id": "14.2.1",
+      "groupId": "14.2.1",
+      "collapsedId": "14.2.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Le informazioni documentate sono conservate nella misura richiesta, affinché si possa confidare che i processi siano eseguiti come sono stati pianificati inizialmente? (per es. registrazioni derivanti dai processi, notifiche di mutamento, rapporti, verbali ecc.)",
+      "sectionLabel": "14.2. Sistema di gestione per la SSL (4.4.)"
+    },
+    {
+      "id": "14.3.1",
+      "groupId": "14.3.1",
+      "collapsedId": "14.3.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Esiste una procedura per la determinazione dei rischi e delle opportunità per l'organizzazione? (per es. attraverso analisi dei pericoli, realizzazione di una matrice dei rischi, analisi SWOT con annessa necessità d'intervento)",
+      "sectionLabel": "14.3. Azioni per affrontare rischi ed opportunità (6.1.)"
+    },
+    {
+      "id": "14.3.2",
+      "groupId": "14.3.2",
+      "collapsedId": "14.3.2",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "I rischi e le opportunità SSL da considerare sono custoditi e adeguatamente curati come informazioni documentate?",
+      "sectionLabel": "14.3. Azioni per affrontare rischi ed opportunità (6.1.)"
+    },
+    {
+      "id": "14.4.1",
+      "groupId": "14.4.1",
+      "collapsedId": "14.4.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Le informazioni a riguardo alle mutazioni di obblighi legali e alle altre esigenze sono gestite in modo che la loro diffusione sia documentata adeguatamente e altresì inequivocabilmente accertata?",
+      "sectionLabel": "14.4. Determinazione dei requisiti legali e altri requisiti (6.1.3.)"
+    },
+    {
+      "id": "14.5.1",
+      "groupId": "14.5.1",
+      "collapsedId": "14.5.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Esistono le informazioni documentate richieste per il SG-SSL? (tra l'altro informazioni documentate a riguardo di:\n• campo d'impiego\n• politica e obiettivi SSL\n• obblighi legali e altre esigenze \n• competenze\n• rischi e opportunità SSL\n• informazioni che sono prodotte per il funzionamento dell'organizzazione\n• attestazioni di risultati raggiunti ecc.)",
+      "sectionLabel": "14.5. Informazioni documentate (7.5.)"
+    },
+    {
+      "id": "14.5.2",
+      "groupId": "14.5.2",
+      "collapsedId": "14.5.2",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Ci si accerta di eseguire una adeguata marcatura e descrizione durante la produzione e l'attualizzazione delle informazioni documentate? (per es. titolo, data, autore, numero di riferimento, stato di revisione attuale)",
+      "sectionLabel": "14.5. Informazioni documentate (7.5.)"
+    },
+    {
+      "id": "14.5.3",
+      "groupId": "14.5.3",
+      "collapsedId": "14.5.3",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "È stata definita una procedura per la direzione delle informazioni documentate? (elaborazione, associazione, classificazione, autorizzazione, distribuzione, applicazionie, revisione, ritiro, archiviazione, cancellazione)",
+      "sectionLabel": "14.5. Informazioni documentate (7.5.)"
+    },
+    {
+      "id": "14.6.1",
+      "groupId": "14.6.1",
+      "collapsedId": "14.6.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "È stato assicurato siano gestiti e verificati le funzioni e i processi che sono stati scorporati? (non più eseguiti da propri dipendenti)",
+      "sectionLabel": "14.6. Approvvigionamento (8.1.4.)"
+    },
+    {
+      "id": "14.7.1",
+      "groupId": "14.7.1",
+      "collapsedId": "14.7.1",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Sono stati definiti, applicati e mantenuti i processi per il controllo, la misurazione, l'analisi e la valutazione del rendimento SSL?",
+      "sectionLabel": "14.7. Valutazione delle prestazioni (9.)"
+    },
+    {
+      "id": "14.7.2",
+      "groupId": "14.7.2",
+      "collapsedId": "14.7.2",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Sono stati defniti, applicati e mantenuti i processi per la valutazione della compliance con gli obblighi legali e le altre esigenze?",
+      "sectionLabel": "14.7. Valutazione delle prestazioni (9.)"
+    },
+    {
+      "id": "14.7.3",
+      "groupId": "14.7.3",
+      "collapsedId": "14.7.3",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "Sono stati formati gli auditor affinché siano in grado di eseguire i controlli del sistema SSL?",
+      "sectionLabel": "14.7. Valutazione delle prestazioni (9.)"
+    },
+    {
+      "id": "14.7.4",
+      "groupId": "14.7.4",
+      "collapsedId": "14.7.4",
+      "chapter": 14,
+      "chapterLabel": "14 Ampliamento per l'ISO 45001 (parte facoltativa)",
+      "question": "È possibile accertare attraverso gli audits interni che i requisiti alla ISO 45001 siano adempiuti?",
+      "sectionLabel": "14.7. Valutazione delle prestazioni (9.)"
+    }
+  ]
+}

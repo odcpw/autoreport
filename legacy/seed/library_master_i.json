@@ -1,0 +1,3308 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx",
+    "importedAt": "2026-01-07T19:30:36+00:00"
+  },
+  "entries": [
+    {
+      "id": "1.1.1",
+      "groupId": "1.1.1",
+      "finding": "L'azienda non dispone di una carta dei valori.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.2",
+      "groupId": "1.1.2",
+      "finding": "La sicurezza e la salute dei lavoratori non fanno parte dei valori dell'azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.3",
+      "groupId": "1.1.3",
+      "finding": "I dipendenti non sono informati sull'importanza dei valori aziendali e sulle loro conseguenze nella vita di tutti i giorni.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.4",
+      "groupId": "1.1.4",
+      "finding": "Quanto avviene in azienda non è in linea con la carta dei valori.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.5",
+      "groupId": "1.1.5",
+      "finding": "Il comportamento dei superiori non si ispira a principi o direttive di conduzione definiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.6",
+      "groupId": "1.1.6",
+      "finding": "La sicurezza e la tutela della salute non sono menzionati tra i principi direttivi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.7",
+      "groupId": "1.1.7",
+      "finding": "L'azienda non ha firmato la Charta della sicurezza della Suva.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.1.8",
+      "groupId": "1.1.8",
+      "finding": "Non è stato introdotto alcun sistema di gestione/certificazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.2.1",
+      "groupId": "1.2.1",
+      "finding": "La direzione non dà l'esempio in materia di sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.2.2",
+      "groupId": "1.2.2",
+      "finding": "La sicurezza sul lavoro non ha la stessa importanza della qualità e della produttività.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.2.3",
+      "groupId": "1.2.3",
+      "finding": "La direzione, durante le ispezioni, non affronta situazioni o comportamenti pericolosi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.2.4",
+      "groupId": "1.2.4",
+      "finding": "Non esiste un centro costi per la sicurezza sul lavoro e la tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.2.5",
+      "groupId": "1.2.5",
+      "finding": "La direzione non sostiene le attività di sicurezza e salute in azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.3.1",
+      "groupId": "1.3.1",
+      "finding": "I superiori gerarchici non promuovono la sicurezza e la salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.3.2.a",
+      "groupId": "1.3.2",
+      "finding": "I superiori gerarchici non si impegnano nelle attività di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.3.3",
+      "groupId": "1.3.3",
+      "finding": "I superiori gerarchici non conoscono i loro diritti e doveri previsti dalla legge in materia di sicurezza e salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.4.1.a",
+      "groupId": "1.4.1",
+      "finding": "Non esistono obiettivi misurabili per gli eventi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.4.2",
+      "groupId": "1.4.2",
+      "finding": "Non esistono obiettivi per limitare la durata delle assenze.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.4.3",
+      "groupId": "1.4.3",
+      "finding": "Gli obiettivi non si riferiscono a tutta l'azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.4.4",
+      "groupId": "1.4.4",
+      "finding": "Gli obiettivi non si riferiscono alle singole unità organizzative.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.4.5",
+      "groupId": "1.4.5",
+      "finding": "Non esistono possibilità di confronto con aziende simili (stesso settore).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.1",
+      "groupId": "1.5.1",
+      "finding": "Non esiste un processo definito per la formulazione degli obiettivi di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.2",
+      "groupId": "1.5.2",
+      "finding": "Gli obiettivi non prevedono il miglioramento continuo del sistema di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.3",
+      "groupId": "1.5.3",
+      "finding": "I quadri, o i loro rappresentanti, non partecipano alla formulazione degli obiettivi di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.4",
+      "groupId": "1.5.4",
+      "finding": "Non esiste un monitoraggio degli eventi per l'intera azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.5",
+      "groupId": "1.5.5",
+      "finding": "Non esiste un monitoraggio degli eventi per le singole unità organizzative.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.6",
+      "groupId": "1.5.6",
+      "finding": "In caso di obiettivi non raggiunti non si traggono conseguenze né si adottano misure correttive.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "1.5.7",
+      "groupId": "1.5.7",
+      "finding": "Non esiste una strategia di sicurezza per raggiungere gli obiettivi di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.1",
+      "groupId": "2.1.1",
+      "finding": "Forma organizzativa",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.1.1",
+      "groupId": "2.1.1.1",
+      "finding": "L’azienda non dispone di una chiara struttura organizzativa (né lineare, né lineare con staff, né funzionale, né a matrice, né per progetti, né altra forma definita).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.2",
+      "groupId": "2.1.2",
+      "finding": "Compiti, competenze, responsabilità",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.2.1",
+      "groupId": "2.1.2.1",
+      "finding": "Competenze e responsabilità per la sicurezza e la tutela della salute dei dipendenti non sono definite per iscritto.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.2.2",
+      "groupId": "2.1.2.2",
+      "finding": "L’azienda non dispone di documenti organizzativi (descrizioni di mansione, mansionari, diagrammi funzionali, regolamenti, contratti di lavoro, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.2.3",
+      "groupId": "2.1.2.3",
+      "finding": "Compiti, competenze e responsabilità in materia di sicurezza e salute non sono riportati in alcun documento organizzativo.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3",
+      "groupId": "2.1.3",
+      "finding": "Pianificazione e organizzazione del lavoro",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.1",
+      "groupId": "2.1.3.1",
+      "finding": "Pianificazione, preventivazione, organizzazione e preparazione degli ordini di lavoro non sono svolti da alcuna funzione definita.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.2",
+      "groupId": "2.1.3.2",
+      "finding": "In fase di pianificazione/organizzazione/preparazione non vengono considerati aspetti di sicurezza sul lavoro e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.3",
+      "groupId": "2.1.3.3",
+      "finding": "Esiste una separazione rigida tra pianificazione/preparazione ed esecuzione dei lavori.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.4",
+      "groupId": "2.1.3.4",
+      "finding": "Il livello esecutivo non viene coinvolto nella preparazione del lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.5",
+      "groupId": "2.1.3.5",
+      "finding": "Gli ordini di lavoro non vengono spiegati né discussi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.6",
+      "groupId": "2.1.3.6",
+      "finding": "Sicurezza e tutela della salute non sono parte degli ordini di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.7",
+      "groupId": "2.1.3.7",
+      "finding": "Gli ordini di lavoro non vengono impartiti e documentati per iscritto.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.3.8",
+      "groupId": "2.1.3.8",
+      "finding": "Le istruzioni di lavoro scritte non contengono indicazioni sulle misure di sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.4",
+      "groupId": "2.1.4",
+      "finding": "Regolamento aziendale",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.4.1",
+      "groupId": "2.1.4.1",
+      "finding": "L’azienda non dispone di un regolamento aziendale obbligatorio ai sensi della legge sul lavoro (se previsto).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.1.4.2",
+      "groupId": "2.1.4.2",
+      "finding": "L’azienda non dispone di un regolamento aziendale volontario con disposizioni su sicurezza e promozione della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1",
+      "groupId": "2.2.1",
+      "finding": "Struttura organizzativa",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.1",
+      "groupId": "2.2.1.1",
+      "finding": "Nessun membro della direzione è responsabile della sicurezza sul lavoro e della tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.2",
+      "groupId": "2.2.1.2",
+      "finding": "L’azienda non dispone di un’organizzazione della sicurezza direttamente subordinata alla direzione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.3",
+      "groupId": "2.2.1.3",
+      "finding": "L’organizzazione della sicurezza non è rappresentata in un organigramma.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.4",
+      "groupId": "2.2.1.4",
+      "finding": "In azienda non vengono coinvolti specialisti esterni (medici del lavoro, igienisti del lavoro, ingegneri della sicurezza, esperti della sicurezza, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.5",
+      "groupId": "2.2.1.5",
+      "finding": "Compiti, doveri e diritti dei singoli organi dell’organizzazione della sicurezza non sono definiti per iscritto.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.6",
+      "groupId": "2.2.1.6",
+      "finding": "Il responsabile della sicurezza non è incaricato di riferire su sicurezza e tutela della salute alla direzione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.1.7",
+      "groupId": "2.2.1.7",
+      "finding": "L’organizzazione della sicurezza non è sostenuta attivamente dai responsabili di linea.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.2",
+      "groupId": "2.2.2",
+      "finding": "Concetto di sicurezza",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.2.1",
+      "groupId": "2.2.2.1",
+      "finding": "L’azienda non dispone di un concetto/piano di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.2.2",
+      "groupId": "2.2.2.2",
+      "finding": "Il campo di applicazione del concetto di sicurezza non è definito né documentato.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.2.3",
+      "groupId": "2.2.2.3",
+      "finding": "La struttura della documentazione di sistema del concetto di sicurezza non è definita e non è indicato il collegamento ai documenti di riferimento.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.3",
+      "groupId": "2.2.3",
+      "finding": "Formazione sulla sicurezza",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.3.1",
+      "groupId": "2.2.3.1",
+      "finding": "Nessun dipendente ha completato la formazione da assistente alla sicurezza, specialista della sicurezza o ingegnere della sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.3.2",
+      "groupId": "2.2.3.2",
+      "finding": "Nessun dipendente ha frequentato corsi Suva su sicurezza e salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.2.3.3",
+      "groupId": "2.2.3.3",
+      "finding": "Nessun dipendente ha frequentato altre formazioni in materia di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.1",
+      "groupId": "2.3.1",
+      "finding": "Basi legali",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.1.1",
+      "groupId": "2.3.1.1",
+      "finding": "In azienda non sono disponibili le basi legali in materia di sicurezza sul lavoro e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.1.2",
+      "groupId": "2.3.1.2",
+      "finding": "Il personale non conosce compiti, doveri e diritti derivanti dalle basi legali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.1.3",
+      "groupId": "2.3.1.3",
+      "finding": "L’azienda non applica correttamente le disposizioni legali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.1.4",
+      "groupId": "2.3.1.4",
+      "finding": "L’aggiornamento continuo e la disponibilità dei documenti di base legale non sono garantiti da una procedura definita.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2",
+      "groupId": "2.3.2",
+      "finding": "Direttive e norme",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2.1",
+      "groupId": "2.3.2.1",
+      "finding": "In azienda non sono disponibili direttive e norme rilevanti per sicurezza e salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2.2",
+      "groupId": "2.3.2.2",
+      "finding": "Le persone interessate non possiedono le direttive/norme pertinenti o non hanno accesso ad esse.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2.3",
+      "groupId": "2.3.2.3",
+      "finding": "Le persone interessate non conoscono compiti, doveri e diritti derivanti da direttive e norme.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2.4",
+      "groupId": "2.3.2.4",
+      "finding": "L’azienda non applica correttamente direttive e norme.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.2.5",
+      "groupId": "2.3.2.5",
+      "finding": "L’aggiornamento e la disponibilità dei documenti di direttive e norme non sono garantiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.3",
+      "groupId": "2.3.3",
+      "finding": "Documentazione su sicurezza e salute",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.3.1",
+      "groupId": "2.3.3.1",
+      "finding": "L’azienda non dispone di una raccolta centrale di documentazione su sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.3.2",
+      "groupId": "2.3.3.2",
+      "finding": "Documenti importanti non vengono messi a disposizione di singoli dipendenti come copie personali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.3.3",
+      "groupId": "2.3.3.3",
+      "finding": "La documentazione su sicurezza e tutela della salute non è facilmente accessibile a tutti i lavoratori.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "2.3.3.4",
+      "groupId": "2.3.3.4",
+      "finding": "L’aggiornamento e la disponibilità della documentazione non sono garantiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.1",
+      "groupId": "3.1.1",
+      "finding": "L'azienda non dispone di criteri specifici per la selezione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.2",
+      "groupId": "3.1.2",
+      "finding": "Nella selezione del personale non si tiene conto di aspetti della sicurezza e della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.3",
+      "groupId": "3.1.3",
+      "finding": "Nella selezione del personale non si svolgono test di idoneità.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.4",
+      "groupId": "3.1.4",
+      "finding": "Non si verifica la comprensione della lingua parlata in azienda e questo aspetto non è determinante nella selezione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.5",
+      "groupId": "3.1.5",
+      "finding": "Avere un comportamento sicuro non è oggetto del contratto di lavoro per i dipendenti con un posto fisso.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.1.6",
+      "groupId": "3.1.6",
+      "finding": "Avere un comportamento sicuro non è oggetto dei contratti di lavoro con i lavoratori part-time, con gli stagionali o gli ausiliari.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.2.1",
+      "groupId": "3.2.1",
+      "finding": "L'azienda non dispone di un programma di introduzione standardizzato per i dipendenti neo-assunti, interinali o trasferiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.2.2",
+      "groupId": "3.2.2",
+      "finding": "Per documentare l'introduzione non si usano liste di controllo o parole chiave.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.2.3",
+      "groupId": "3.2.3",
+      "finding": "La sicurezza e la tutela della salute non sono parte integrante dell'introduzione per i dipendenti neo-assunti, interinali o trasferiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.2.4",
+      "groupId": "3.2.4",
+      "finding": "Documentazione in materia di sicurezza e tutela della salute non sono messi a disposizione dei dipendenti neo-assunti, interinali o trasferiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.2.5",
+      "groupId": "3.2.5",
+      "finding": "Durante il periodo di prova mostrare un comportamento conforme alla sicurezza non è uno dei criteri di valutazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.3.1",
+      "groupId": "3.3.1",
+      "finding": "I profili richiesti e le prestazioni dei lavoratori non si verificano periodicamente e sistematicamente.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.3.2",
+      "groupId": "3.3.2",
+      "finding": "Non si tiene conto della sicurezza e della tutela della salute nell'identificare le lacune a livello di qualifica e di bisogni formativi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.3.3",
+      "groupId": "3.3.3",
+      "finding": "L'azienda non ha un piano per la promozione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.3.4",
+      "groupId": "3.3.4",
+      "finding": "La sicurezza e la promozione della salute non sono aspetti chiave del piano di promozione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.3.5",
+      "groupId": "3.3.5",
+      "finding": "Non si svolge un controllo specifico per ogni dipendente sulla formazione, sulle attività di aggiornamento e su altre misure di promozione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.4.1",
+      "groupId": "3.4.1",
+      "finding": "L'azienda non offre al personale programmi e corsi di addestramento.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.4.2",
+      "groupId": "3.4.2",
+      "finding": "La sicurezza e la tutela della salute non sono parte integrante dei corsi di addestramento.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.4.3",
+      "groupId": "3.4.3",
+      "finding": "L'azienda non ricorre ai corsi di addestramento di associazioni esterne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.4.4",
+      "groupId": "3.4.4",
+      "finding": "Le proposte di formazione offerte da enti esterni non riguardano la sicurezza e la tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.1",
+      "groupId": "3.5.1",
+      "finding": "In azienda non si impara sul posto di lavoro e questa tendenza non viene incoraggiata.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.2",
+      "groupId": "3.5.2",
+      "finding": "Infortuni, quasi-infortuni e altri eventi indesiderati non vengono usati come insegnamento per adottare misure concrete e colmare le lacune a livello formativo.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.3",
+      "groupId": "3.5.3",
+      "finding": "I superiori non sono stati istruiti nella metodica della formazione sul posto di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.4",
+      "groupId": "3.5.4",
+      "finding": "I superiori e i dipendenti non vengono istruiti in caso di introduzione o modifica delle attrezzature di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.5",
+      "groupId": "3.5.5",
+      "finding": "I superiori e i dipendenti non vengono istruiti in caso di introduzione di nuovi processi di lavoro o in caso di modifica degli stessi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.5.6",
+      "groupId": "3.5.6",
+      "finding": "I superiori e i dipendenti non vengono istruiti sulla presenza di nuovi materiali di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.1",
+      "groupId": "3.6.1",
+      "finding": "L'azienda non dispone di un sistema di valutazione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.2",
+      "groupId": "3.6.2",
+      "finding": "La condotta di sicurezza dei capi non fa parte della valutazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.3",
+      "groupId": "3.6.3",
+      "finding": "Una competenza insufficiente a livello dirigenziale in materia di sicurezza non ha conseguenze.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.4",
+      "groupId": "3.6.4",
+      "finding": "Per le promozioni la condotta di sicurezza non è un criterio cruciale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.5",
+      "groupId": "3.6.5",
+      "finding": "Un comportamento sicuro non fa parte della valutazione del personale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.6.6",
+      "groupId": "3.6.6",
+      "finding": "Il mancato rispetto della sicurezza non ha conseguenze.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.7.1",
+      "groupId": "3.7.1",
+      "finding": "L'azienda non dispone di un programma per l'informazione e la comunicazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.7.2",
+      "groupId": "3.7.2",
+      "finding": "Nella vostra azienda non ci sono regolamenti o particolari consuetudini in materia di informazione e comunicazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.7.3",
+      "groupId": "3.7.3",
+      "finding": "Nella vostra azienda non c'è una persona o un ufficio che si occupa prevalentemente di informazione e comunicazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.8.1",
+      "groupId": "3.8.1",
+      "finding": "Diversi supporti informativi non vengono utilizzati dall'azienda nell'ambito della sicurezza e della tutela della salute (nessun colloquio, riunione, istruzione, comunicazione scritta, media digitali ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.9.1",
+      "groupId": "3.9.1",
+      "finding": "La sicurezza e la promozione della salute non sono argomenti che vengono dibattuti durante i colloqui aziendali ed extra-aziendali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.9.2",
+      "groupId": "3.9.2",
+      "finding": "Quando si parla di sicurezza e promozione della salute non si definiscono obiettivi di sicurezza e non si adottano provvedimenti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.1",
+      "groupId": "3.10.1",
+      "finding": "(Contesto: si richiede la frequenza del ricorso a ditte esterne - non è possibile una constatazione negativa)",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.2",
+      "groupId": "3.10.2",
+      "finding": "Le ditte esterne non vengono informate sui pericoli e sui requisiti di sicurezza imposti nella vostra azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.3",
+      "groupId": "3.10.3",
+      "finding": "Il rispetto delle prescrizioni di sicurezza non è sancito nei contratti d'opera stipulati con le ditte esterne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.4",
+      "groupId": "3.10.4",
+      "finding": "Il rispetto delle prescrizioni di sicurezza nelle ditte esterne non è oggetto di un controllo sistematico.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.5",
+      "groupId": "3.10.5",
+      "finding": "Non si impone il rispetto delle prescrizioni di sicurezza nelle ditte esterne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.6",
+      "groupId": "3.10.6",
+      "finding": "L'azienda non è disposta ad annullare un contratto d'opera con le ditte che non rispettano le prescrizioni di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.7",
+      "groupId": "3.10.7",
+      "finding": "Il comportamento nei confronti della sicurezza e della tutela della salute delle ditte esterne non è tenuto in considerazione nella valutazione del fornitore.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "3.10.8",
+      "groupId": "3.10.8",
+      "finding": "L'azienda non offre corsi di formazione per il personale delle ditte esterne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.1",
+      "groupId": "4.1.1",
+      "finding": "In azienda mancano opuscoli e istruzioni di lavoro rilevanti per la sicurezza e la salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.2",
+      "groupId": "4.1.2",
+      "finding": "Non vengono utilizzate le liste di controllo della Suva e della soluzione settoriale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.3",
+      "groupId": "4.1.3",
+      "finding": "Il booklet Suva “Regole vitali” non viene utilizzato.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.4",
+      "groupId": "4.1.4",
+      "finding": "I destinatari non dispongono dei documenti pertinenti o non vi hanno accesso.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.5",
+      "groupId": "4.1.5",
+      "finding": "Non sono state elaborate né applicate direttive interne su sicurezza e salute a integrazione dei documenti ufficiali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.6",
+      "groupId": "4.1.6",
+      "finding": "I lavoratori interessati non vengono coinvolti nella redazione delle direttive interne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.1.7",
+      "groupId": "4.1.7",
+      "finding": "Non è garantito l’aggiornamento regolare di opuscoli, istruzioni di lavoro e direttive interne.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.2.1",
+      "groupId": "4.2.1",
+      "finding": "I DPI necessari in base ai rischi non sono definiti (manca una rilevazione sistematica di dove servono).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.1",
+      "groupId": "4.3.1",
+      "finding": "I lavoratori interessati non sono coinvolti nella scelta dei DPI.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.2",
+      "groupId": "4.3.2",
+      "finding": "Mancano direttive interne scritte sull’uso dei DPI.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.3",
+      "groupId": "4.3.3",
+      "finding": "I superiori non danno l’esempio nell’utilizzo dei DPI.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.4",
+      "groupId": "4.3.4",
+      "finding": "I dipendenti non sono informati sui pericoli del posto di lavoro e sulle misure di sicurezza correlate.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.5",
+      "groupId": "4.3.5",
+      "finding": "I dipendenti non sono istruiti sull’uso corretto e sulla cura/manutenzione dei DPI.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.6",
+      "groupId": "4.3.6",
+      "finding": "L’uso corretto dei DPI non viene controllato né fatto rispettare.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.3.7",
+      "groupId": "4.3.7",
+      "finding": "In alcuni posti di lavoro o attività l’accettazione dei DPI è insufficiente.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.4.1",
+      "groupId": "4.4.1",
+      "finding": "Non vengono seguite le istruzioni di produttori/fornitori per l’esercizio normale e straordinario di impianti, macchine e attrezzature.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.4.2",
+      "groupId": "4.4.2",
+      "finding": "Mancano direttive interne per l’esercizio normale e straordinario di impianti, macchine e attrezzature.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.4.3",
+      "groupId": "4.4.3",
+      "finding": "Non è noto il rapporto tra infortuni in esercizio normale e in esercizio straordinario.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.1",
+      "groupId": "4.5.1",
+      "finding": "Non esiste una struttura/entità dedicata alla manutenzione delle attrezzature di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.2",
+      "groupId": "4.5.2",
+      "finding": "Alcuni addetti non sono formati da produttori o fornitori sulla manutenzione delle attrezzature di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.3",
+      "groupId": "4.5.3",
+      "finding": "Mancano direttive interne sulla manutenzione delle attrezzature di lavoro.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.4",
+      "groupId": "4.5.4",
+      "finding": "Non vengono rispettate le istruzioni del produttore o le direttive interne sulla manutenzione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.5",
+      "groupId": "4.5.5",
+      "finding": "Gli interventi di manutenzione non sono pianificati né discussi con il personale coinvolto.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.5.6",
+      "groupId": "4.5.6",
+      "finding": "La rimessa in servizio dopo manutenzione non avviene secondo regole di sicurezza definite.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.6.1",
+      "groupId": "4.6.1",
+      "finding": "Non esiste una struttura/entità dedicata alla manutenzione di edifici e impianti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.6.2",
+      "groupId": "4.6.2",
+      "finding": "I pericoli legati alla manutenzione di edifici e impianti non sono identificati né documentati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.6.3",
+      "groupId": "4.6.3",
+      "finding": "Mancano disposizioni di sicurezza per la manutenzione di edifici e impianti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.6.4",
+      "groupId": "4.6.4",
+      "finding": "Il personale non è formato e istruito per la manutenzione di edifici e impianti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.1",
+      "groupId": "4.7.1",
+      "finding": "Nell’acquisto di attrezzature di lavoro non vengono considerati gli aspetti di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.2",
+      "groupId": "4.7.2",
+      "finding": "Negli acquisti non si usano checklist o prescrizioni per verificare gli aspetti di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.3",
+      "groupId": "4.7.3",
+      "finding": "Non si verifica che attrezzature, impianti, materiali e sostanze pericolose siano sicuri prima dell’uso.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.4",
+      "groupId": "4.7.4",
+      "finding": "La verifica delle attrezzature prima dell’uso non viene documentata.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.5",
+      "groupId": "4.7.5",
+      "finding": "Non vengono richiesti già in fase di offerta dati di sicurezza, rapporti di prova, certificati, ecc.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.6",
+      "groupId": "4.7.6",
+      "finding": "Non vengono richieste dichiarazioni di conformità/istruzioni d’uso (o, per macchine incomplete, dichiarazioni di incorporazione/istruzioni di montaggio).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "4.7.7",
+      "groupId": "4.7.7",
+      "finding": "Le dichiarazioni di conformità non vengono verificate per completezza né archiviate.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.1.1",
+      "groupId": "5.1.1",
+      "finding": "Il ricorso ai medici del lavoro e agli altri specialisti della sicurezza sul lavoro non è disciplinato (né tramite soluzione interna, soluzione settoriale, soluzione per gruppi di aziende, soluzione modello, né altra soluzione).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.1",
+      "groupId": "5.2.1",
+      "finding": "I pericoli per la sicurezza e la salute dei lavoratori non sono identificati e documentati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.2",
+      "groupId": "5.2.2",
+      "finding": "L'individuazione dei pericoli non copre tutti gli aspetti rilevanti (attrezzature di lavoro, processi, attività, posti di lavoro, aziende terze, prodotti, sostanze nocive, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.3",
+      "groupId": "5.2.3",
+      "finding": "L'individuazione dei pericoli non viene verificata regolarmente e adeguata ai cambiamenti avvenuti in azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.4",
+      "groupId": "5.2.4",
+      "finding": "In azienda manca una persona o un ufficio responsabile dell'individuazione sistematica dei pericoli.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.5",
+      "groupId": "5.2.5",
+      "finding": "I dipendenti non partecipano all'individuazione dei pericoli.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.2.7",
+      "groupId": "5.2.7",
+      "finding": "I risultati dell'individuazione dei pericoli non vengono considerati nel definire gli obiettivi di sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.1",
+      "groupId": "5.3.1",
+      "finding": "In azienda non si svolge alcuna valutazione dei rischi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.2",
+      "groupId": "5.3.2",
+      "finding": "La valutazione dei rischi non viene svolta in tutte le situazioni rilevanti (nuovi processi, modifiche, assenza o carenza delle regole della tecnica).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.3",
+      "groupId": "5.3.3",
+      "finding": "La valutazione dei rischi non viene verificata regolarmente e adeguata ai cambiamenti avvenuti in azienda.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.4",
+      "groupId": "5.3.4",
+      "finding": "Manca una persona o un ufficio responsabile della valutazione sistematica dei rischi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.5",
+      "groupId": "5.3.5",
+      "finding": "I dipendenti non partecipano alla valutazione dei rischi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.6",
+      "groupId": "5.3.6",
+      "finding": "I risultati della valutazione dei rischi non sono documentati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.3.7",
+      "groupId": "5.3.7",
+      "finding": "I risultati della valutazione dei rischi non vengono considerati nel definire gli obiettivi in materia di sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.4.1",
+      "groupId": "5.4.1",
+      "finding": "Manca una direttiva che preveda la notifica degli eventi (infortuni, malattie, danni materiali, quasi-infortuni, ecc.) entro una determinata scadenza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.4.3",
+      "groupId": "5.4.3",
+      "finding": "Nessun ufficio è designato per raccogliere e analizzare tutte le notifiche d'infortunio.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.4.4",
+      "groupId": "5.4.4",
+      "finding": "Manca una procedura definita e messa per iscritto per l'esame degli eventi inattesi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.4.5",
+      "groupId": "5.4.5",
+      "finding": "I diversi tipi di eventi non vengono esaminati regolarmente e sistematicamente (solo gli infortuni professionali, ma non i quasi-infortuni, i danni materiali, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "5.4.6",
+      "groupId": "5.4.6",
+      "finding": "Gli eventi infortunistici sono considerati liquidati dopo la notifica alla Suva.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.1",
+      "groupId": "6.1.1",
+      "finding": "Dopo aver individuato un pericolo non si adotta in ogni caso un provvedimento.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.2",
+      "groupId": "6.1.2",
+      "finding": "Le misure di sicurezza non vengono adottate in base a determinate strategie (mancano obiettivi chiari, mezzi e metodi definiti).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.3",
+      "groupId": "6.1.3",
+      "finding": "Diversi soggetti non partecipano alla ricerca delle misure (manca il coinvolgimento di superiori, dipendenti, addetti alla sicurezza, soggetti dell'organizzazione della sicurezza).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.4",
+      "groupId": "6.1.4",
+      "finding": "Le misure da adottare non hanno tutte un termine e il loro rispetto non è controllato.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.5",
+      "groupId": "6.1.5",
+      "finding": "L'efficacia delle misure adottate non viene verificata.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.1.6",
+      "groupId": "6.1.6",
+      "finding": "Al momento di definire nuovi obiettivi in materia di sicurezza e tutela della salute non si tiene conto delle possibili conseguenze delle misure adottate.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.2.1",
+      "groupId": "6.2.1",
+      "finding": "Negli ultimi due anni non sono stati condotti né pianificati programmi per la sicurezza sul lavoro, la sicurezza nel tempo libero o la promozione della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "6.2.2",
+      "groupId": "6.2.2",
+      "finding": "Non sono stati utilizzati programmi specifici della Suva (Ponteggi sicuri, Presse sicure, STOP alla manipolazione dei dispositivi di protezione, inciampare.ch, Amianto, Manutenzione, Tirocinio in sicurezza, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.1",
+      "groupId": "7.1.1",
+      "finding": "L'azienda non dispone di un piano per far fronte alle emergenze adeguato ai rischi aziendali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.2",
+      "groupId": "7.1.2",
+      "finding": "Un soccorso immediato e competente in caso di infortuni e malattie acute non è garantito.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.3",
+      "groupId": "7.1.3",
+      "finding": "Le persone e le istituzioni della regione (medici, ospedali e ambulanze, vigili del fuoco, polizia) non sono informate sui rischi specifici, sugli incidenti possibili e sui materiali usati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.4",
+      "groupId": "7.1.4",
+      "finding": "Nell'azienda non esiste un sistema di avvertimento o di allerta in caso di emergenza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.5",
+      "groupId": "7.1.5",
+      "finding": "I numeri di emergenza non sono visibili accanto ad ogni apparecchio di comunicazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.6",
+      "groupId": "7.1.6",
+      "finding": "L'accesso rapido e libero al materiale di emergenza non è possibile.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.7",
+      "groupId": "7.1.7",
+      "finding": "Il servizio d'emergenza non è garantito per tutti gli orari di lavoro (turni, fine settimana, straordinari, missioni speciali, persone che lavorano sole).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.8",
+      "groupId": "7.1.8",
+      "finding": "Gli interventi di primo soccorso non sono documentati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.1.9",
+      "groupId": "7.1.9",
+      "finding": "Non tutti i dipendenti, di qualsiasi livello, conoscono la corretta procedura in caso di emergenza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.1",
+      "groupId": "7.2.1",
+      "finding": "Il personale non dispone di istruzioni scritte su come comportarsi in caso di emergenza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.2",
+      "groupId": "7.2.2",
+      "finding": "I dipendenti non hanno con sé una tessera di emergenza con le informazioni principali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.3",
+      "groupId": "7.2.3",
+      "finding": "Il comportamento corretto in emergenza non è istruito, esercitato e verificato.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.4",
+      "groupId": "7.2.4",
+      "finding": "L'azienda non ha un proprio servizio sanitario.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.5",
+      "groupId": "7.2.5",
+      "finding": "In azienda non ci sono persone formate appositamente a prestare i primi soccorsi in qualsiasi momento.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.6",
+      "groupId": "7.2.6",
+      "finding": "In azienda manca una stanza attrezzata per il pronto soccorso, adeguata ai rischi presenti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.2.7",
+      "groupId": "7.2.7",
+      "finding": "Non è stato stabilito chi informa in emergenza i familiari, le assicurazioni, le autorità e i mass-media.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.3.1",
+      "groupId": "7.3.1",
+      "finding": "L'azienda non dispone di un proprio apparato organizzativo per far fronte agli incendi.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.3.2",
+      "groupId": "7.3.2",
+      "finding": "Manca un'organizzazione adeguata con sistema di allarme e rilevatori antincendio.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.3.3",
+      "groupId": "7.3.3",
+      "finding": "I dipendenti non sanno come comportarsi in caso d'incendio.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.3.4",
+      "groupId": "7.3.4",
+      "finding": "Non si svolgono delle esercitazioni.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "7.3.5",
+      "groupId": "7.3.5",
+      "finding": "All'ultima esercitazione non hanno preso parte tutti i dipendenti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.1.1",
+      "groupId": "8.1.1",
+      "finding": "L'informazione e lo scambio con i dipendenti secondo la Legge sulla partecipazione non sono regolamentati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.1.2",
+      "groupId": "8.1.2",
+      "finding": "Nell'azienda non esiste alcuna forma di rappresentanza dei lavoratori (né rappresentanza diretta né rappresentante eletto).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.1.3",
+      "groupId": "8.1.3",
+      "finding": "L'informazione tempestiva ed esauriente dei dipendenti o dei rappresentanti non è garantita.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.1.4",
+      "groupId": "8.1.4",
+      "finding": "I diritti di partecipazione dei lavoratori in materia di sicurezza e salute sul lavoro non sono garantiti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.1.5",
+      "groupId": "8.1.5",
+      "finding": "I rappresentanti dei lavoratori non ricevono supporto dal datore di lavoro nello svolgimento della loro attività.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.1",
+      "groupId": "8.2.1",
+      "finding": "Nell'azienda non esiste un sistema istituzionalizzato per avanzare proposte.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.2",
+      "groupId": "8.2.2",
+      "finding": "Non si dice esplicitamente che sono gradite proposte in materia di sicurezza e tutela della salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.3",
+      "groupId": "8.2.3",
+      "finding": "Negli ultimi 12 mesi non sono state fatte proposte.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.4",
+      "groupId": "8.2.4",
+      "finding": "Negli ultimi 12 mesi non sono state fatte proposte su sicurezza e salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.5",
+      "groupId": "8.2.5",
+      "finding": "Le proposte a favore della sicurezza non vengono ricompensate.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.6",
+      "groupId": "8.2.6",
+      "finding": "Non esiste un sistema di incentivi per promuovere sicurezza e salute.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "8.2.7",
+      "groupId": "8.2.7",
+      "finding": "Non esistono circoli di qualità o mezzi analoghi per sfruttare il potenziale creativo.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.1",
+      "groupId": "9.1.1",
+      "finding": "I dipendenti non possono ripartirsi il lavoro autonomamente.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.2",
+      "groupId": "9.1.2",
+      "finding": "I dipendenti non possono interrompere il lavoro senza conseguenze negative.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.3",
+      "groupId": "9.1.3",
+      "finding": "I dipendenti non possono mettersi d'accordo ogni qualvolta sia necessario.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.4",
+      "groupId": "9.1.4",
+      "finding": "Si hanno frequentemente dubbi su chi è competente di cosa.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.5",
+      "groupId": "9.1.5",
+      "finding": "In alcuni settori si verificano frequentemente disguidi (scambi, sviste, dimenticanze).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.6",
+      "groupId": "9.1.6",
+      "finding": "Esistono attività monotone, poco interessanti o poco qualificanti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.1.7",
+      "groupId": "9.1.7",
+      "finding": "Le attività monotone non possono essere migliorate ampliando le attività o cambiando mansione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.1",
+      "groupId": "9.2.1",
+      "finding": "In alcuni settori ci si lamenta spesso di stanchezza, mal di testa, disturbi del sonno o intestinali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.2",
+      "groupId": "9.2.2",
+      "finding": "Ci sono lamentele per lavoro monotono o carico unilaterale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.3",
+      "groupId": "9.2.3",
+      "finding": "Ci sono lamentele su scadenze pressanti, ritmo frenetico, eccesso di lavoro o responsabilità.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.4",
+      "groupId": "9.2.4",
+      "finding": "Si avverte un'insoddisfazione generale senza una ragione chiara (lamenti continui).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.5",
+      "groupId": "9.2.5",
+      "finding": "Esistono conflitti tra dipendenti, reparti o livelli gerarchici.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.2.6",
+      "groupId": "9.2.6",
+      "finding": "Non si applica una procedura documentata per la gestione dei conflitti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.3.1",
+      "groupId": "9.3.1",
+      "finding": "Ai posti di lavoro si manifestano diverse sollecitazioni fisiche (lavori pesanti, posture forzate, sollevamento, rumore, vibrazioni, caldo/freddo, polveri, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.4.1",
+      "groupId": "9.4.1",
+      "finding": "Ai posti di lavoro si manifestano sollecitazioni psichiche (competenze poco chiare, tensioni sociali, sovraccarico, stress, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.5.1",
+      "groupId": "9.5.1",
+      "finding": "Gli orari di lavoro non sono chiaramente regolati (giornalieri, settimanali, annuali).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "9.9.1",
+      "groupId": "9.9.1",
+      "finding": "Esistono fattori che rafforzano comportamenti a rischio (produttività a ogni costo, Rambo, derisione di chi segue le regole, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.1",
+      "groupId": "10.1.1",
+      "finding": "L'azienda non dispone di un concetto di controllo o sorveglianza per la sicurezza e la salute dei collaboratori.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.2",
+      "groupId": "10.1.2",
+      "finding": "In azienda non vengono svolti audit di sicurezza regolari.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.3",
+      "groupId": "10.1.3",
+      "finding": "La frequenza degli audit di sicurezza non è definita.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.4",
+      "groupId": "10.1.4",
+      "finding": "Contenuto e svolgimento degli audit di sicurezza non sono preparati né pianificati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.5",
+      "groupId": "10.1.5",
+      "finding": "I superiori non sono formati nell'esecuzione e nella valutazione degli audit di sicurezza.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.6",
+      "groupId": "10.1.6",
+      "finding": "Le procedure di audit non sono adattate alla struttura dei rischi e alle condizioni aziendali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.7",
+      "groupId": "10.1.7",
+      "finding": "Durante gli audit non si usano strumenti di supporto (checklist, moduli, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.8",
+      "groupId": "10.1.8",
+      "finding": "Le constatazioni e le misure adottate non sono documentate per iscritto.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.1.9",
+      "groupId": "10.1.9",
+      "finding": "Le constatazioni non sono integrate nel sistema di sicurezza aziendale.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.2.1",
+      "groupId": "10.2.1",
+      "finding": "Non vengono tenute statistiche sui diversi tipi di eventi (infortuni, malattie, danni materiali, quasi infortuni, ecc.).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.2.2",
+      "groupId": "10.2.2",
+      "finding": "Non esistono statistiche degli eventi per l'intera azienda e per le unità organizzative.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.2.3",
+      "groupId": "10.2.3",
+      "finding": "La statistica degli eventi non è utilizzata come strumento di gestione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.3.1",
+      "groupId": "10.3.1",
+      "finding": "Il tasso di fluttuazione annuo non è registrato né analizzato statisticamente.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.3.2",
+      "groupId": "10.3.2",
+      "finding": "Le cause di uscita non sono rilevate né analizzate.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.3.3",
+      "groupId": "10.3.3",
+      "finding": "Per determinate cause di uscita non vengono tratte conseguenze concrete né adottate misure.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "10.3.4",
+      "groupId": "10.3.4",
+      "finding": "Non esistono possibilità di confronto del tasso di fluttuazione con il settore o aziende comparabili.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "11.2",
+      "groupId": "11.2",
+      "finding": "I dati riferiti a infortuni e malattie con rispettivi giorni di assenza non vengono registrati, analizzati, valutati né comunicati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "11.7",
+      "groupId": "11.7",
+      "finding": "I colloqui di rientro non sono tenuti dai quadri né dopo assenze impreviste di lunga durata né dopo ogni assenza imprevista.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "11.13",
+      "groupId": "11.13",
+      "finding": "Nelle loro attività di assistenza e reinserimento, i quadri non ricevono sostegno dalla divisione delle risorse umane né da altre unità organizzative.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "12.6",
+      "groupId": "12.6",
+      "finding": "Gli infortuni nel tempo libero non vengono registrati, analizzati, valutati né comunicati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "12.11",
+      "groupId": "12.11",
+      "finding": "Non si sono svolti progetti né sono state adottate misure in azienda per promuovere la sicurezza nel tempo libero, inclusi i rischi di inciampare e cadere, sport con la palla, sport invernali, casa e giardino.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "13.2",
+      "groupId": "13.2",
+      "finding": "Non esiste un piano strutturato per la gestione della salute in azienda con obiettivi definiti, tempistiche, comunicazione ai gruppi target e budget dedicato.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "13.6",
+      "groupId": "13.6",
+      "finding": "I collaboratori non ricevono sostegno attraverso corsi o workshop su argomenti fondamentali per la salute: movimento e sport, alimentazione, gestione dello stress e prevenzione del burnout, lavoro a turni, equilibrio vita-lavoro, sonno e riposo, prevenzione delle dipendenze.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "13.7",
+      "groupId": "13.7",
+      "finding": "Non vengono incentivate risorse in ambito lavorativo per la salute: mancano corsi formativi per quadri sulla cultura del benessere, infrastrutture dedicate (sale ricreazione, spazi riposo), organizzazione ergonomica degli ambienti, formazione su postura e movimentazione carichi, programmi di inserimento per i nuovi collaboratori, formazione continua su competenze sociali, iniziative per la cooperazione di team, comunicazione tra divisioni e livelli gerarchici, conciliazione lavoro-famiglia/tempo libero e un'istanza neutrale per conflitti o problemi personali.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.1.1",
+      "groupId": "14.1.1",
+      "finding": "Non sono state determinate le parti interessate rilevanti per il SG-SSL oltre ai propri dipendenti (enti pubblici, fornitori, organizzazioni dei lavoratori, visitatori, pubblico, vicinato, clienti, media, ONG).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.1.2",
+      "groupId": "14.1.2",
+      "finding": "Non sono stati determinati i requisiti e le aspettative rilevanti dei dipendenti e delle altre parti interessate in riferimento al SG-SSL.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.1.3",
+      "groupId": "14.1.3",
+      "finding": "I requisiti e le aspettative rilevanti non sono valutati né sorvegliati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.2.1",
+      "groupId": "14.2.1",
+      "finding": "Le informazioni documentate non sono conservate nella misura richiesta per garantire che i processi siano eseguiti come pianificati (registrazioni, notifiche di mutamento, rapporti, verbali).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.3.1",
+      "groupId": "14.3.1",
+      "finding": "Non esiste una procedura per la determinazione dei rischi e delle opportunità per l'organizzazione.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.3.2",
+      "groupId": "14.3.2",
+      "finding": "I rischi e le opportunità SSL non sono custoditi come informazioni documentate né adeguatamente curati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.4.1",
+      "groupId": "14.4.1",
+      "finding": "Le informazioni riguardanti mutazioni di obblighi legali e altre esigenze non sono gestite in modo documentato con diffusione inequivocabilmente accertata.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.5.1",
+      "groupId": "14.5.1",
+      "finding": "Non esistono le informazioni documentate richieste per il SG-SSL (campo d'impiego, politica e obiettivi SSL, obblighi legali, competenze, rischi e opportunità, informazioni operative, attestazioni di risultati).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.5.2",
+      "groupId": "14.5.2",
+      "finding": "Non viene eseguita una adeguata marcatura e descrizione durante la produzione e l'attualizzazione delle informazioni documentate (titolo, data, autore, numero di riferimento, stato di revisione).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.5.3",
+      "groupId": "14.5.3",
+      "finding": "Non è stata definita una procedura per la direzione delle informazioni documentate (elaborazione, classificazione, autorizzazione, distribuzione, applicazione, revisione, ritiro, archiviazione, cancellazione).",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.6.1",
+      "groupId": "14.6.1",
+      "finding": "Non è stato assicurato che funzioni e processi scorporati (non più eseguiti da propri dipendenti) siano gestiti e verificati.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.7.1",
+      "groupId": "14.7.1",
+      "finding": "Non sono stati definiti, applicati e mantenuti i processi per il controllo, la misurazione, l'analisi e la valutazione del rendimento SSL.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.7.2",
+      "groupId": "14.7.2",
+      "finding": "Non sono stati definiti, applicati e mantenuti i processi per la valutazione della compliance con gli obblighi legali e le altre esigenze.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.7.3",
+      "groupId": "14.7.3",
+      "finding": "Gli auditor non sono stati formati per eseguire i controlli del sistema SSL.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    },
+    {
+      "id": "14.7.4",
+      "groupId": "14.7.4",
+      "finding": "Non è possibile accertare attraverso gli audit interni che i requisiti della ISO 45001 siano adempiuti.",
+      "levels": {
+        "1": [],
+        "2": [],
+        "3": [],
+        "4": []
+      },
+      "children": []
+    }
+  ]
+}

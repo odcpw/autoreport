@@ -351,13 +351,15 @@ We will update the knowledge base list once the layout names are finalized.
 - project_db.xlsx is the human-readable fallback.
 - project_sidecar.json is the working state (portable, inspectable).
 - Recommendation library stored per engineer in a user folder; optional sharing.
+- Legacy seed artifacts are archived in `legacy/seed/` for reference only.
 
 Seed and library resolution (fresh projects):
 - Prefer existing `project_sidecar.json` if present.
 - If no sidecar, load a user **knowledge base** in project root
-  (e.g., `library_user_XX_de-CH.json`).
+  (e.g., `library_user_XX_de-CH.json`) and use it **as-is**.
 - If no user knowledge base, load bundled seed knowledge base from
   `AutoBericht/data/seed/knowledge_base_*.json`.
+- If neither exists, the app reports an error (no hidden fallbacks).
 
 ### 12a. Current Sidecar Schema (as implemented)
 

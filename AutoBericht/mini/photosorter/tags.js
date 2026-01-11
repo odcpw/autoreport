@@ -89,13 +89,7 @@
   };
 
   const ensureTagOptions = (options) => {
-    const incoming = normalizeIncomingOptions(options);
-    const merged = {
-      report: [...(stateHelpers.DEFAULT_TAGS?.report || []), ...(incoming.report || [])],
-      observations: [...(stateHelpers.DEFAULT_TAGS?.observations || []), ...(incoming.observations || [])],
-      training: [...(stateHelpers.DEFAULT_TAGS?.training || []), ...(incoming.training || [])],
-    };
-    const normalized = normalizeTagOptions(merged);
+    const normalized = normalizeTagOptions(options);
     normalized.report = sortOptionsForGroup("report", dedupeOptions(normalized.report));
     normalized.observations = sortOptionsForGroup("observations", dedupeOptions(normalized.observations));
     normalized.training = sortOptionsForGroup("training", dedupeOptions(normalized.training));
@@ -152,7 +146,7 @@
     return { chapters, rest };
   };
 
-  const DEFAULT_TAG_OPTIONS = ensureTagOptions(stateHelpers.DEFAULT_TAGS);
+  const EMPTY_TAG_OPTIONS = ensureTagOptions({});
 
   const buildReportTagOptionsFromStructure = (items) => {
     if (!Array.isArray(items)) return [];
@@ -198,6 +192,6 @@
     splitChapterOptions,
     sortOptionsForGroup,
     dedupeOptions,
-    DEFAULT_TAG_OPTIONS,
+    EMPTY_TAG_OPTIONS,
   };
 })();

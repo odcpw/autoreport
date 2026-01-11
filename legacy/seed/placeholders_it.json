@@ -1,0 +1,293 @@
+{
+  "meta": {
+    "source": "Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx",
+    "importedAt": "2026-01-07T19:21:21+00:00",
+    "notes": "Placeholder chapters 11-14 derived from Selbstbeurteilung (raw IDs).",
+    "locale": "it"
+  },
+  "chapters": {
+    "11": [
+      {
+        "id": "11.13.a",
+        "collapsedId": "11.13",
+        "question": "Nelle loro attività di assistenza e reinserimento, i quadri ricevono sostegno:\ndalla divisione delle risorse umane?"
+      },
+      {
+        "id": "11.13.b",
+        "collapsedId": "11.13",
+        "question": "da altre unità organizzative? Se sì, quale?"
+      },
+      {
+        "id": "11.2.a",
+        "collapsedId": "11.2",
+        "question": "I dati riferiti a infortuni e malattie (con rispettivi giorni di assenza) vengono:\nregistrati?"
+      },
+      {
+        "id": "11.2.b",
+        "collapsedId": "11.2",
+        "question": "analizzati?"
+      },
+      {
+        "id": "11.2.c",
+        "collapsedId": "11.2",
+        "question": "valutati?"
+      },
+      {
+        "id": "11.2.d",
+        "collapsedId": "11.2",
+        "question": "comunicati?"
+      },
+      {
+        "id": "11.7.a",
+        "collapsedId": "11.7",
+        "question": "I colloquio di rientro sono tenuti:\ndai quadri?"
+      },
+      {
+        "id": "11.7.b",
+        "collapsedId": "11.7",
+        "question": "dopo ogni assenza imprevista di lunga durata?"
+      },
+      {
+        "id": "11.7.c",
+        "collapsedId": "11.7",
+        "question": "dopo ogni assenza imprevista?"
+      }
+    ],
+    "12": [
+      {
+        "id": "12.11.a",
+        "collapsedId": "12.11",
+        "question": "Si sono già svolti progetti o sono state adottate misure in azienda per promuovere la sicurezza nel tempo libero? Se sì, quali tematiche generali sono state affrontate?"
+      },
+      {
+        "id": "12.11.b",
+        "collapsedId": "12.11",
+        "question": "rischio di inciampare e cadere (cadute in piano)?"
+      },
+      {
+        "id": "12.11.c",
+        "collapsedId": "12.11",
+        "question": "sport con la palla?"
+      },
+      {
+        "id": "12.11.d",
+        "collapsedId": "12.11",
+        "question": "sport invernali?"
+      },
+      {
+        "id": "12.11.e",
+        "collapsedId": "12.11",
+        "question": "casa e giardino?"
+      },
+      {
+        "id": "12.11.f",
+        "collapsedId": "12.11",
+        "question": "altro?"
+      },
+      {
+        "id": "12.6.a",
+        "collapsedId": "12.6",
+        "question": "Gli infortuni nel tempo libero vengono:\nregistrati?"
+      },
+      {
+        "id": "12.6.b",
+        "collapsedId": "12.6",
+        "question": "analizzati?"
+      },
+      {
+        "id": "12.6.c",
+        "collapsedId": "12.6",
+        "question": "valutati?"
+      },
+      {
+        "id": "12.6.d",
+        "collapsedId": "12.6",
+        "question": "comunicati?"
+      }
+    ],
+    "13": [
+      {
+        "id": "13.2.a",
+        "collapsedId": "13.2",
+        "question": "Esiste al riguardo un piano con:obiettivi?"
+      },
+      {
+        "id": "13.2.b",
+        "collapsedId": "13.2",
+        "question": "svolgimento e tempistiche?"
+      },
+      {
+        "id": "13.2.c",
+        "collapsedId": "13.2",
+        "question": "comunicazione ai gruppi target?"
+      },
+      {
+        "id": "13.2.d",
+        "collapsedId": "13.2",
+        "question": "budget per progetti di GSA?"
+      },
+      {
+        "id": "13.6.a",
+        "collapsedId": "13.6",
+        "question": "Per mantenersi in salute i collaboratori ricevono sostegno sugli argomenti sottostanti attraverso corsi, workshop o altro da svolgere nel proprio ambito di responsabilità:\nsufficiente movimento / sport?"
+      },
+      {
+        "id": "13.6.b",
+        "collapsedId": "13.6",
+        "question": "alimentazione / peso corporeo sano?"
+      },
+      {
+        "id": "13.6.c",
+        "collapsedId": "13.6",
+        "question": "strategie antistress e prevenzione del burnout (gestione dello stress / tecniche e possibilità di rilassamento, gestione del tempo, affrontare i cambiamenti)?"
+      },
+      {
+        "id": "13.6.d",
+        "collapsedId": "13.6",
+        "question": "gestione di condizioni organizzative particolari come il lavoro a turni / lavoro notturno?"
+      },
+      {
+        "id": "13.6.e",
+        "collapsedId": "13.6",
+        "question": "equilibrio tra lavoro e vita privata (work-life balance)?"
+      },
+      {
+        "id": "13.6.f",
+        "collapsedId": "13.6",
+        "question": "sonno e riposo?"
+      },
+      {
+        "id": "13.6.g",
+        "collapsedId": "13.6",
+        "question": "prevenzione delle dipendenze?"
+      },
+      {
+        "id": "13.7.a",
+        "collapsedId": "13.7",
+        "question": "Si incentivano le seguenti risorse in ambito lavorativo:\ncorsi formativi per quadri (importanza / ruolo dei quadri nella GSA, sviluppo di una cultura di stima e considerazione, incentivo al lavoro di squadra, gestione dei conflitti o delle dipendenze ecc.)?"
+      },
+      {
+        "id": "13.7.b",
+        "collapsedId": "13.7",
+        "question": "infrastruttura inerente alla salute come ambienti di ritrovo, sale ricreazione, aree ristoro, spazi adibiti al riposo, docce?"
+      },
+      {
+        "id": "13.7.c",
+        "collapsedId": "13.7",
+        "question": "organizzazione degli ambienti e dei posti di lavoro secondo principi ergonomici e che favoriscono la salute, per es. con controlli periodici e analisi sistematiche in caso di cambiamenti e acquisti di nuove attrezzature e simili?"
+      },
+      {
+        "id": "13.7.d",
+        "collapsedId": "13.7",
+        "question": "corsi su come mantenere sul lavoro una postura e un atteggiamento che salvaguardino il benessere del corpo, per es. come sollevare e trasportare correttamente i carichi, ergonomia al videoterminale?"
+      },
+      {
+        "id": "13.7.e",
+        "collapsedId": "13.7",
+        "question": "inserimento di nuovi collaboratori (adottando per es. un programma sistematico di introduzione al lavoro, tutor personali ecc.)?"
+      },
+      {
+        "id": "13.7.f",
+        "collapsedId": "13.7",
+        "question": "formazione continua anche in materia di competenze sociali e umane?"
+      },
+      {
+        "id": "13.7.g",
+        "collapsedId": "13.7",
+        "question": "incentivazione di una buona cooperazione all'interno del team (progetti in comune, riunioni di team, eventi informali)?"
+      },
+      {
+        "id": "13.7.h",
+        "collapsedId": "13.7",
+        "question": "incentivazione della collaborazione e comunicazione tra divisioni e livelli gerarchici diversi?"
+      },
+      {
+        "id": "13.7.i",
+        "collapsedId": "13.7",
+        "question": "proposte e misure per conciliare lavoro, famiglia / tempo libero?"
+      },
+      {
+        "id": "13.7.j",
+        "collapsedId": "13.7",
+        "question": "disponibilità di un'istanza neutrale a cui rivolgersi in caso di situazioni conflittuali o problemi personali?"
+      }
+    ],
+    "14": [
+      {
+        "id": "14.1.1",
+        "collapsedId": "14.1.1",
+        "question": "Sono state determinate le parti interessate che sono rilevanti per il vostro SG-SSL oltre ai propri dipendenti?  (per es. ente publico, fornitori, organizzazione dei lavoratori, visitatori, pubblico e vicinato in genere, clienti, media, NGO)"
+      },
+      {
+        "id": "14.1.2",
+        "collapsedId": "14.1.2",
+        "question": "Sono stati determinati i requisiti e le aspettative rilevanti (esigenze) dei dipendenti e delle altre parti interessate? (per es. tabella con collaboatori e altre parti interessate rilevanti in riferimento al SG-SSL con esigenze e aspettative, opportunità e rischi, obiettivi/misure determinati)"
+      },
+      {
+        "id": "14.1.3",
+        "collapsedId": "14.1.3",
+        "question": "I requisiti e le aspettative rilevanti sono valutati e sorvegliati?"
+      },
+      {
+        "id": "14.2.1",
+        "collapsedId": "14.2.1",
+        "question": "Le informazioni documentate sono conservate nella misura richiesta, affinché si possa confidare che i processi siano eseguiti come sono stati pianificati inizialmente? (per es. registrazioni derivanti dai processi, notifiche di mutamento, rapporti, verbali ecc.)"
+      },
+      {
+        "id": "14.3.1",
+        "collapsedId": "14.3.1",
+        "question": "Esiste una procedura per la determinazione dei rischi e delle opportunità per l'organizzazione? (per es. attraverso analisi dei pericoli, realizzazione di una matrice dei rischi, analisi SWOT con annessa necessità d'intervento)"
+      },
+      {
+        "id": "14.3.2",
+        "collapsedId": "14.3.2",
+        "question": "I rischi e le opportunità SSL da considerare sono custoditi e adeguatamente curati come informazioni documentate?"
+      },
+      {
+        "id": "14.4.1",
+        "collapsedId": "14.4.1",
+        "question": "Le informazioni a riguardo alle mutazioni di obblighi legali e alle altre esigenze sono gestite in modo che la loro diffusione sia documentata adeguatamente e altresì inequivocabilmente accertata?"
+      },
+      {
+        "id": "14.5.1",
+        "collapsedId": "14.5.1",
+        "question": "Esistono le informazioni documentate richieste per il SG-SSL? (tra l'altro informazioni documentate a riguardo di:\n• campo d'impiego\n• politica e obiettivi SSL\n• obblighi legali e altre esigenze \n• competenze\n• rischi e opportunità SSL\n• informazioni che sono prodotte per il funzionamento dell'organizzazione\n• attestazioni di risultati raggiunti ecc.)"
+      },
+      {
+        "id": "14.5.2",
+        "collapsedId": "14.5.2",
+        "question": "Ci si accerta di eseguire una adeguata marcatura e descrizione durante la produzione e l'attualizzazione delle informazioni documentate? (per es. titolo, data, autore, numero di riferimento, stato di revisione attuale)"
+      },
+      {
+        "id": "14.5.3",
+        "collapsedId": "14.5.3",
+        "question": "È stata definita una procedura per la direzione delle informazioni documentate? (elaborazione, associazione, classificazione, autorizzazione, distribuzione, applicazionie, revisione, ritiro, archiviazione, cancellazione)"
+      },
+      {
+        "id": "14.6.1",
+        "collapsedId": "14.6.1",
+        "question": "È stato assicurato siano gestiti e verificati le funzioni e i processi che sono stati scorporati? (non più eseguiti da propri dipendenti)"
+      },
+      {
+        "id": "14.7.1",
+        "collapsedId": "14.7.1",
+        "question": "Sono stati definiti, applicati e mantenuti i processi per il controllo, la misurazione, l'analisi e la valutazione del rendimento SSL?"
+      },
+      {
+        "id": "14.7.2",
+        "collapsedId": "14.7.2",
+        "question": "Sono stati defniti, applicati e mantenuti i processi per la valutazione della compliance con gli obblighi legali e le altre esigenze?"
+      },
+      {
+        "id": "14.7.3",
+        "collapsedId": "14.7.3",
+        "question": "Sono stati formati gli auditor affinché siano in grado di eseguire i controlli del sistema SSL?"
+      },
+      {
+        "id": "14.7.4",
+        "collapsedId": "14.7.4",
+        "question": "È possibile accertare attraverso gli audits interni che i requisiti alla ISO 45001 siano adempiuti?"
+      }
+    ]
+  }
+}

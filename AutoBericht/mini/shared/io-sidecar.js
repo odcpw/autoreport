@@ -57,17 +57,21 @@
           debug.logLine("warn", `Sidecar not found; loaded seeds (${err.message || err})`);
           return true;
         } catch (seedErr) {
+          const locale = state.project?.meta?.locale || "de-CH";
           state.project = normalizeHelpers.normalizeProject(
-            structuredClone(stateHelpers.defaultProject),
+            {
+              meta: { locale, createdAt: new Date().toISOString() },
+              chapters: [],
+            },
             ctx.i18n.setLocale,
           );
           normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
-          state.selectedChapterId = state.project.chapters[0]?.id || "";
+          state.selectedChapterId = "";
           runtime.sidecarDoc = null;
           renderApi.buildPhotoIndex();
           renderApi.render();
-          setStatus("Sidecar not found; loaded default template.");
-          debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+          setStatus(`Seed load failed: ${seedErr.message || seedErr}`);
+          debug.logLine("error", `Seed load failed: ${seedErr.message || seedErr}`);
           return false;
         }
       }
@@ -126,26 +130,28 @@
       if (!runtime.dirHandle) return;
       normalizeHelpers.ensureProjectMeta(state.project, ctx.i18n.setLocale);
       const locale = state.project.meta?.locale || "de-CH";
-      const seedFilename = seeds.getKnowledgeBaseFilename
-        ? seeds.getKnowledgeBaseFilename(locale)
-        : "knowledge_base_de.json";
-      let seedKnowledge = await seeds.readSeedFromProject(runtime.dirHandle, seedFilename);
-      if (!seedKnowledge) {
-        seedKnowledge = await seeds.readSeedFromHttp(seedFilename);
+      const seedFilename = seeds.getKnowledgeBaseFilename(locale);
+      let knowledgeBase = await loadLibraryFile();
+      if (!knowledgeBase) {
+        knowledgeBase = await seeds.readSeedFromProject(runtime.dirHandle, seedFilename);
       }
-      if (!seedKnowledge) {
+      if (!knowledgeBase) {
+        knowledgeBase = await seeds.readSeedFromHttp(seedFilename);
+      }
+      if (!knowledgeBase) {
         setStatus("Knowledge base seed not found.");
         debug.logLine("error", "Knowledge base seed not found.");
         return;
       }
+      try {
+        seeds.validateKnowledgeBase(knowledgeBase);
+      } catch (err) {
+        setStatus(`Invalid knowledge base: ${err.message}`);
+        debug.logLine("error", `Invalid knowledge base: ${err.message || err}`);
+        return;
+      }
 
-      const userKnowledge = await loadLibraryFile();
-      const knowledgeBase = seeds.normalizeKnowledgeBase
-        ? seeds.normalizeKnowledgeBase(userKnowledge, seedKnowledge)
-        : seedKnowledge;
-      const existingEntries = seeds.normalizeLibraryEntries
-        ? seeds.normalizeLibraryEntries(knowledgeBase)
-        : (knowledgeBase?.library?.entries || []);
+      const existingEntries = knowledgeBase.library?.entries || [];
       const entriesMap = new Map(existingEntries.map((entry) => [entry.id, entry]));
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const lastUsedAt = new Date().toISOString();
@@ -200,10 +206,8 @@
         // Keep last loaded sidecar snapshot.
       }
       const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
-      if (photoTags && output.tags) {
-        const normalizedTags = seeds.normalizeTagGroups
-          ? seeds.normalizeTagGroups(photoTags)
-          : photoTags;
+      if (photoTags) {
+        const normalizedTags = seeds.normalizeTagGroups(photoTags);
         output.tags.report = normalizedTags.report || output.tags.report || [];
         output.tags.observations = normalizedTags.observations || output.tags.observations || [];
         output.tags.training = normalizedTags.training || output.tags.training || [];
