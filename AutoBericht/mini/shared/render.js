@@ -920,19 +920,29 @@
 
     const createPreviewPanel = (row, ws, previewBtn) => {
       const preview = document.createElement("div");
-      preview.className = "preview-panel";
+      preview.className = "row-preview";
       const findingText = ws.useFindingOverride ? ws.findingOverride : row.master?.finding;
       const levelKey = String(ws.selectedLevel);
       const recommendation = ws.useLevelOverride?.[levelKey]
         ? ws.levelOverrides?.[levelKey]
         : row.master?.levels?.[levelKey];
 
-      preview.innerHTML = [
+      const findingCol = document.createElement("div");
+      findingCol.className = "row-preview__col";
+      findingCol.innerHTML = [
         `<strong>${escapeHtml(t("preview_finding", "Finding"))}</strong>`,
         `<p>${markdownToHtml(findingText || "")}</p>`,
+      ].join("\n");
+
+      const recCol = document.createElement("div");
+      recCol.className = "row-preview__col";
+      recCol.innerHTML = [
         `<strong>${escapeHtml(t("preview_recommendation", "Recommendation"))}</strong>`,
         `<p>${markdownToHtml(recommendation || "")}</p>`,
       ].join("\n");
+
+      preview.appendChild(findingCol);
+      preview.appendChild(recCol);
 
       const showPreview = () => {
         preview.classList.add("is-visible");
