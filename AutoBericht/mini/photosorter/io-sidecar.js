@@ -9,7 +9,7 @@
         createdAt: new Date().toISOString(),
       },
       photos: {},
-      photoTagOptions: structuredClone(tagsApi.SEED_TAG_OPTIONS),
+      photoTagOptions: structuredClone(tagsApi.DEFAULT_TAG_OPTIONS),
       photoRoot: "",
     });
 
@@ -17,7 +17,7 @@
       const base = doc && typeof doc === "object" ? structuredClone(doc) : {};
       if (!base.meta) base.meta = { projectId: "", createdAt: new Date().toISOString() };
       if (!base.photos) base.photos = {};
-      if (!base.photoTagOptions) base.photoTagOptions = structuredClone(tagsApi.SEED_TAG_OPTIONS);
+      if (!base.photoTagOptions) base.photoTagOptions = structuredClone(tagsApi.DEFAULT_TAG_OPTIONS);
       if (!base.photoRoot) base.photoRoot = "";
       return base;
     };
@@ -37,6 +37,53 @@
         .filter(Boolean);
       if (!parts.length) return rootHandle;
       return getNestedDirectory(rootHandle, parts, options);
+    };
+
+    const readJsonFromPath = async (rootHandle, parts) => {
+      let current = rootHandle;
+      for (let i = 0; i < parts.length - 1; i += 1) {
+        current = await current.getDirectoryHandle(parts[i]);
+      }
+      const fileHandle = await current.getFileHandle(parts[parts.length - 1]);
+      const file = await fileHandle.getFile();
+      return JSON.parse(await file.text());
+    };
+
+    const findLibraryFileHandle = async () => {
+      if (!state.projectHandle?.entries) return null;
+      for await (const [name, handle] of state.projectHandle.entries()) {
+        if (handle.kind !== "file") continue;
+        if (!name.startsWith("library_user_") || !name.endsWith(".json")) continue;
+        if (/_\d{4}-\d{2}-\d{2}/.test(name)) continue;
+        return handle;
+      }
+      return null;
+    };
+
+    const readKnowledgeBase = async () => {
+      if (!state.projectHandle) return null;
+      try {
+        const libraryHandle = await findLibraryFileHandle();
+        if (libraryHandle) {
+          const file = await libraryHandle.getFile();
+          return JSON.parse(await file.text());
+        }
+      } catch (err) {
+        // Ignore and try seed.
+      }
+      const seedCandidates = [
+        "knowledge_base_de.json",
+        "knowledge_base_fr.json",
+        "knowledge_base_it.json",
+      ];
+      for (const filename of seedCandidates) {
+        try {
+          return await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
+        } catch (err) {
+          // try next
+        }
+      }
+      return null;
     };
 
     const setDefaultPhotoHandle = async () => {
@@ -145,7 +192,19 @@
       } catch (err) {
         state.sidecarDoc = null;
         state.projectDoc = createEmptyProjectDoc();
-        state.tagOptions = tagsApi.ensureTagOptions(tagsApi.SEED_TAG_OPTIONS);
+        state.tagOptions = tagsApi.DEFAULT_TAG_OPTIONS;
+        const knowledgeBase = await readKnowledgeBase();
+        if (knowledgeBase) {
+          const nextOptions = tagsApi.ensureTagOptions(knowledgeBase.tags || {});
+          const reportOptions = tagsApi.buildReportTagOptionsFromStructure
+            ? tagsApi.buildReportTagOptionsFromStructure(knowledgeBase.structure?.items || [])
+            : null;
+          if (reportOptions && reportOptions.length) {
+            nextOptions.report = reportOptions;
+          }
+          state.tagOptions = nextOptions;
+          state.projectDoc.photoTagOptions = structuredClone(nextOptions);
+        }
         state.photoRootName = "";
         setStatus("Sidecar not found; starting fresh.");
         debug.logLine("warn", `Sidecar not found: ${err.message || err}`);

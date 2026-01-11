@@ -3,6 +3,15 @@
   const normalizeHelpers = window.AutoBerichtNormalize || {};
   const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => 0);
 
+  const resolveLocaleKey = (locale) => {
+    const base = String(locale || "de-CH").toLowerCase();
+    if (base.startsWith("fr")) return "fr";
+    if (base.startsWith("it")) return "it";
+    return "de";
+  };
+
+  const getKnowledgeBaseFilename = (locale) => `knowledge_base_${resolveLocaleKey(locale)}.json`;
+
   const seedPathCandidates = (filename) => ([
     ["AutoBericht", "data", "seed", filename],
   ]);
@@ -64,11 +73,23 @@
 
   const normalizeLibraryEntries = (libraryData) => {
     if (!libraryData) return [];
+    if (Array.isArray(libraryData.library?.entries)) return libraryData.library.entries;
     if (Array.isArray(libraryData.entries)) return libraryData.entries;
     if (libraryData.entries && typeof libraryData.entries === "object") {
       return Object.entries(libraryData.entries).map(([id, levels]) => ({ id, levels }));
     }
     return [];
+  };
+
+  const normalizeTagGroups = (tags) => {
+    if (!tags || typeof tags !== "object") {
+      return { report: [], observations: [], training: [] };
+    }
+    return {
+      report: tags.report || tags.bericht || [],
+      observations: tags.observations || tags.topic || [],
+      training: tags.training || tags.seminar || [],
+    };
   };
 
   const buildLibraryMap = (masterData, userData) => {
@@ -94,11 +115,47 @@
     return map;
   };
 
-  const buildProjectFromSeeds = (selbstData, masterLibrary, userLibrary) => {
-    const libraryMap = buildLibraryMap(masterLibrary, userLibrary);
+  const normalizeKnowledgeBase = (knowledge, fallback) => {
+    const base = fallback && typeof fallback === "object"
+      ? structuredClone(fallback)
+      : {
+        schemaVersion: "1.0",
+        meta: { locale: "de-CH", updatedAt: new Date().toISOString(), source: "generated" },
+        structure: { items: [] },
+        library: { entries: [] },
+        tags: { report: [], observations: [], training: [] },
+      };
+
+    if (!knowledge || typeof knowledge !== "object") return base;
+
+    const looksNew = knowledge.schemaVersion && knowledge.structure && knowledge.library;
+    if (looksNew) {
+      const normalized = structuredClone(knowledge);
+      normalized.schemaVersion = normalized.schemaVersion || "1.0";
+      normalized.meta = normalized.meta || {};
+      normalized.structure = normalized.structure || { items: [] };
+      normalized.structure.items = normalized.structure.items || [];
+      normalized.library = normalized.library || { entries: [] };
+      normalized.library.entries = normalized.library.entries || [];
+      normalized.tags = normalizeTagGroups(normalized.tags);
+      return normalized;
+    }
+
+    const legacyEntries = normalizeLibraryEntries(knowledge);
+    const merged = structuredClone(base);
+    if (legacyEntries.length) {
+      const mergedMap = buildLibraryMap(base, { entries: legacyEntries });
+      merged.library.entries = Array.from(mergedMap.values());
+    }
+    if (knowledge.meta) merged.meta = { ...merged.meta, ...knowledge.meta };
+    return merged;
+  };
+
+  const buildProjectFromKnowledgeBase = (knowledgeBase) => {
+    const libraryMap = buildLibraryMap(knowledgeBase, null);
     const groups = new Map();
 
-    (selbstData.items || []).forEach((item) => {
+    (knowledgeBase?.structure?.items || []).forEach((item) => {
       const collapsedId = item.collapsedId || item.groupId || item.id;
       if (!collapsedId) return;
       const rawId = String(collapsedId);
@@ -190,7 +247,7 @@
       meta: {
         projectId: "seed-import",
         company: "",
-        locale: "de-CH",
+        locale: knowledgeBase?.meta?.locale || "de-CH",
         author: "",
         createdAt: new Date().toISOString(),
       },
@@ -198,28 +255,27 @@
     };
   };
 
-  const loadSeedsForProject = async ({ dirHandle, getLibraryFileName }) => {
-    let selbst = null;
-    let masterLibrary = null;
-    let userLibrary = null;
+  const loadSeedsForProject = async ({ dirHandle, getLibraryFileName, locale }) => {
+    const resolvedLocale = locale || stateHelpers.defaultProject?.meta?.locale || "de-CH";
+    const seedFilename = getKnowledgeBaseFilename(resolvedLocale);
+    let seedKnowledge = null;
+    let userKnowledge = null;
     if (dirHandle) {
-      selbst = await readSeedFromProject(dirHandle, "selbstbeurteilung_ids.json");
-      masterLibrary = await readSeedFromProject(dirHandle, "library_master.json");
-      userLibrary = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
+      seedKnowledge = await readSeedFromProject(dirHandle, seedFilename);
+      userKnowledge = await readJsonIfExists(dirHandle, [getLibraryFileName()]);
     }
-    if (!selbst) {
-      selbst = await readSeedFromHttp("selbstbeurteilung_ids.json");
+    if (!seedKnowledge) {
+      seedKnowledge = await readSeedFromHttp(seedFilename);
     }
-    if (!masterLibrary) {
-      masterLibrary = await readSeedFromHttp("library_master.json");
-    }
-    if (!selbst) throw new Error("Self assessment seed not found.");
-    if (!masterLibrary) throw new Error("Master library seed not found.");
-    const project = buildProjectFromSeeds(selbst, masterLibrary, userLibrary);
+    if (!seedKnowledge) throw new Error("Knowledge base seed not found.");
+    const knowledgeBase = normalizeKnowledgeBase(userKnowledge, seedKnowledge);
+    const project = buildProjectFromKnowledgeBase(knowledgeBase);
     return normalizeHelpers.ensureObservationChapter(project);
   };
 
   window.AutoBerichtSeeds = {
+    resolveLocaleKey,
+    getKnowledgeBaseFilename,
     seedPathCandidates,
     seedHttpCandidates,
     readJsonFromPath,
@@ -228,8 +284,10 @@
     readSeedFromProject,
     readSeedFromHttp,
     normalizeLibraryEntries,
+    normalizeTagGroups,
     buildLibraryMap,
-    buildProjectFromSeeds,
+    normalizeKnowledgeBase,
+    buildProjectFromKnowledgeBase,
     loadSeedsForProject,
   };
 })();

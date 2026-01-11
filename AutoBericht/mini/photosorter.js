@@ -139,7 +139,7 @@
   actions.enableActions = bindApi.enableActions || (() => {});
 
   const init = async () => {
-    state.tagOptions = tagsApi.SEED_TAG_OPTIONS;
+    state.tagOptions = tagsApi.DEFAULT_TAG_OPTIONS;
     const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
     renderApi.updateStatusVisibility?.(statusHidden);
     renderApi.applyLayoutMode?.();
@@ -149,10 +149,6 @@
     bindApi.ensureFsAccess?.();
     await ioApi.restoreLastHandle?.();
     actions.enableActions();
-
-    if (window.PS_CATEGORY_LABELS_SEED) {
-      setStatus("Loaded categories from bundled seed.");
-    }
 
     if (config.demoPhotosMode) {
       photosApi.loadDemoPhotos?.().catch((err) => {

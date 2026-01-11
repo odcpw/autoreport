@@ -152,9 +152,40 @@
     return { chapters, rest };
   };
 
-  const SEED_TAG_OPTIONS = window.PS_CATEGORY_LABELS_SEED
-    ? ensureTagOptions(window.PS_CATEGORY_LABELS_SEED)
-    : ensureTagOptions(stateHelpers.DEFAULT_TAGS);
+  const DEFAULT_TAG_OPTIONS = ensureTagOptions(stateHelpers.DEFAULT_TAGS);
+
+  const buildReportTagOptionsFromStructure = (items) => {
+    if (!Array.isArray(items)) return [];
+    const tags = new Map();
+    const addTag = (value, label) => {
+      const val = String(value || "").trim();
+      if (!val || isUnsortedLabel(val)) return;
+      let lbl = String(label || val).trim();
+      if (lbl && !(lbl === val || lbl.startsWith(`${val} `) || lbl.startsWith(`${val}.`))) {
+        lbl = `${val} ${lbl}`;
+      }
+      if (!tags.has(val)) tags.set(val, lbl || val);
+    };
+    const shouldSkipSection = (sectionId) => {
+      const topLevel = String(sectionId || "").split(".")[0];
+      return ["11", "12", "13", "14"].includes(topLevel);
+    };
+    items.forEach((item) => {
+      if (!item) return;
+      if (item.chapter) {
+        addTag(String(item.chapter), item.chapterLabel || "");
+      }
+      const sectionId = String(item.id || "").split(".").slice(0, 2).join(".");
+      if (sectionId && item.sectionLabel && !shouldSkipSection(sectionId)) {
+        addTag(sectionId, item.sectionLabel);
+      }
+    });
+    if (!tags.has("4.8")) {
+      tags.set("4.8", "4.8 Beobachtungen");
+    }
+    const options = Array.from(tags.entries()).map(([value, label]) => ({ value, label }));
+    return sortOptionsForGroup("report", options);
+  };
 
   window.AutoBerichtPhotoSorterTags = {
     isUnsortedLabel,
@@ -163,9 +194,10 @@
     normalizePhotoTags,
     ensureTagOptions,
     buildReportTagOptionsFromProject,
+    buildReportTagOptionsFromStructure,
     splitChapterOptions,
     sortOptionsForGroup,
     dedupeOptions,
-    SEED_TAG_OPTIONS,
+    DEFAULT_TAG_OPTIONS,
   };
 })();

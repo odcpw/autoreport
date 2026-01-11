@@ -342,9 +342,9 @@ The macro will target standard placeholders by type:
    - add a `chapterorange` slide per training tag, then photo slides.
 
 ### Training tag alignment
-Training tag names in the PhotoSorter seed must match the PPT layout mapping
+Training tag names in the **knowledge base** must match the PPT layout mapping
 (e.g., `Unterlassen`, `Dulden`, `Handeln`, `Audit`, `Risikobeurteilung`, etc.).
-We will update the seed list once the layout names are finalized.
+We will update the knowledge base list once the layout names are finalized.
 
 ## 12. Maintainability
 
@@ -354,8 +354,10 @@ We will update the seed list once the layout names are finalized.
 
 Seed and library resolution (fresh projects):
 - Prefer existing `project_sidecar.json` if present.
-- If no sidecar, load user library in project root (e.g., `library_user_XX.json`).
-- Load bundled seed data from `AutoBericht/data/seed/`.
+- If no sidecar, load a user **knowledge base** in project root
+  (e.g., `library_user_XX_de-CH.json`).
+- If no user knowledge base, load bundled seed knowledge base from
+  `AutoBericht/data/seed/knowledge_base_*.json`.
 
 ### 12a. Current Sidecar Schema (as implemented)
 
@@ -382,6 +384,30 @@ project_sidecar.json
    ├─ photoRoot
    ├─ photoTagOptions { report, observations, training }
    └─ photos{ path → { tags, notes } }
+```
+
+### 12b. Knowledge Base Schema (seed + user library)
+
+```
+knowledge_base_*.json   (seed + user library share the same schema)
+├─ schemaVersion
+├─ meta { locale, updatedAt, author?, source? }
+├─ structure
+│  └─ items[] (self-assessment questions + grouping metadata)
+│     ├─ id / groupId / collapsedId
+│     ├─ chapter / chapterLabel
+│     ├─ sectionLabel
+│     └─ question
+├─ library
+│  └─ entries[]
+│     ├─ id
+│     ├─ finding
+│     ├─ levels { 1..4 }
+│     └─ lastUsed?
+└─ tags
+   ├─ observations[]
+   ├─ training[]
+   └─ report[] (optional; can be derived from structure)
 ```
 
 Notes:

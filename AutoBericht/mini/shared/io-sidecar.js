@@ -45,6 +45,7 @@
           state.project = await seeds.loadSeedsForProject({
             dirHandle: runtime.dirHandle,
             getLibraryFileName: () => stateHelpers.getLibraryFileName(state.project.meta || {}),
+            locale: state.project?.meta?.locale,
           });
           normalizeHelpers.normalizeProject(state.project, ctx.i18n.setLocale);
           normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
@@ -124,16 +125,28 @@
     const generateLibrary = async () => {
       if (!runtime.dirHandle) return;
       normalizeHelpers.ensureProjectMeta(state.project, ctx.i18n.setLocale);
-      let masterLibrary = await seeds.readSeedFromProject(runtime.dirHandle, "library_master.json");
-      if (!masterLibrary) {
-        masterLibrary = await seeds.readSeedFromHttp("library_master.json");
+      const locale = state.project.meta?.locale || "de-CH";
+      const seedFilename = seeds.getKnowledgeBaseFilename
+        ? seeds.getKnowledgeBaseFilename(locale)
+        : "knowledge_base_de.json";
+      let seedKnowledge = await seeds.readSeedFromProject(runtime.dirHandle, seedFilename);
+      if (!seedKnowledge) {
+        seedKnowledge = await seeds.readSeedFromHttp(seedFilename);
       }
-      if (!masterLibrary) {
-        masterLibrary = { entries: [] };
+      if (!seedKnowledge) {
+        setStatus("Knowledge base seed not found.");
+        debug.logLine("error", "Knowledge base seed not found.");
+        return;
       }
-      const userLibrary = await loadLibraryFile();
-      const libraryMap = seeds.buildLibraryMap(masterLibrary, userLibrary);
-      const entriesMap = new Map(Array.from(libraryMap.entries()).map(([id, entry]) => [id, entry]));
+
+      const userKnowledge = await loadLibraryFile();
+      const knowledgeBase = seeds.normalizeKnowledgeBase
+        ? seeds.normalizeKnowledgeBase(userKnowledge, seedKnowledge)
+        : seedKnowledge;
+      const existingEntries = seeds.normalizeLibraryEntries
+        ? seeds.normalizeLibraryEntries(knowledgeBase)
+        : (knowledgeBase?.library?.entries || []);
+      const entriesMap = new Map(existingEntries.map((entry) => [entry.id, entry]));
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const lastUsedAt = new Date().toISOString();
       let applied = 0;
@@ -165,13 +178,37 @@
         });
       });
 
-      const meta = {
+      const output = structuredClone(knowledgeBase);
+      output.schemaVersion = output.schemaVersion || "1.0";
+      output.meta = {
+        ...(output.meta || {}),
         author: state.project.meta.author || "",
         initials: state.project.meta.initials || "",
         locale: state.project.meta.locale || "",
         updatedAt: new Date().toISOString(),
       };
-      const output = { meta, entries: Array.from(entriesMap.values()) };
+      output.library = output.library || { entries: [] };
+      output.library.entries = Array.from(entriesMap.values());
+      output.tags = output.tags || { report: [], observations: [], training: [] };
+
+      let latestSidecar = runtime.sidecarDoc;
+      try {
+        const existingHandle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
+        const existingFile = await existingHandle.getFile();
+        latestSidecar = JSON.parse(await existingFile.text());
+      } catch (err) {
+        // Keep last loaded sidecar snapshot.
+      }
+      const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
+      if (photoTags && output.tags) {
+        const normalizedTags = seeds.normalizeTagGroups
+          ? seeds.normalizeTagGroups(photoTags)
+          : photoTags;
+        output.tags.report = normalizedTags.report || output.tags.report || [];
+        output.tags.observations = normalizedTags.observations || output.tags.observations || [];
+        output.tags.training = normalizedTags.training || output.tags.training || [];
+      }
+
       await saveLibraryFile(output, timestamp);
       await saveSidecar();
       setStatus(`Library updated (${applied} changes).`);
