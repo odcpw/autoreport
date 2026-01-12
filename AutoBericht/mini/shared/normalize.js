@@ -1,6 +1,7 @@
 (() => {
   const stateHelpers = window.AutoBerichtState || {};
   const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => 0);
+  const OBS_FINDING_TEXT = "Folgende unsichere Situationen wurden beobachtet:";
 
   const ensureWorkstateDefaults = (row) => {
     if (!row.workstate) row.workstate = {};
@@ -65,7 +66,7 @@
           includeRecommendation: true,
           done: false,
           useFindingOverride: true,
-          findingOverride: tag.label || tag.value || "Beobachtung",
+          findingOverride: OBS_FINDING_TEXT,
           useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
           levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
         },
@@ -74,6 +75,19 @@
     if (newRows.length) {
       chapter.rows = [...(chapter.rows || []), ...newRows];
       chapter.rows.sort((a, b) => compareIdSegments(a.id, b.id));
+    }
+    if (!chapter.meta) chapter.meta = {};
+    if (!Array.isArray(chapter.meta.order)) {
+      chapter.meta.order = (chapter.rows || [])
+        .filter((row) => row.kind !== "section")
+        .map((row) => row.id);
+    } else {
+      const order = chapter.meta.order.filter((id) => (chapter.rows || []).some((row) => row.id === id));
+      (chapter.rows || []).forEach((row) => {
+        if (row.kind === "section") return;
+        if (!order.includes(row.id)) order.push(row.id);
+      });
+      chapter.meta.order = order;
     }
     return project;
   };
@@ -154,7 +168,7 @@
     tag,
     titleOverride: tag,
     master: {
-      finding: "Es wurden folgende unsichere Situationen beobachtet.",
+      finding: OBS_FINDING_TEXT,
       levels: {
         "1": "",
         "2": "",
@@ -173,7 +187,7 @@
       includeRecommendation: true,
       done: false,
       useFindingOverride: true,
-      findingOverride: "Es wurden folgende unsichere Situationen beobachtet.",
+      findingOverride: OBS_FINDING_TEXT,
       useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
       levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
     },

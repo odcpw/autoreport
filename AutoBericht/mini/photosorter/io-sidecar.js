@@ -221,7 +221,6 @@
           state.projectDoc.photoTagOptions.report = reportOptions;
         }
         await fillMissingTagsFromSeed();
-        normalizeHelpers.ensureObservationRowsFromTags(state.projectDoc, state.tagOptions);
         state.photoRootName = state.projectDoc.photoRoot || "";
         setStatus("Loaded project_sidecar.json");
         debug.logLine("info", "Loaded project_sidecar.json");
@@ -242,7 +241,6 @@
           state.tagOptions = nextOptions;
           state.projectDoc.photoTagOptions = structuredClone(nextOptions);
           await fillMissingTagsFromSeed();
-          normalizeHelpers.ensureObservationRowsFromTags(state.projectDoc, state.tagOptions);
         } else {
           statusMessage = "Sidecar not found and knowledge base missing.";
           debug.logLine("error", "Knowledge base not found. Tags unavailable.");

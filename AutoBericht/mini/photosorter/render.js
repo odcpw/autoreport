@@ -213,8 +213,8 @@
         allowAdd: false,
       });
       renderTagPanel("observations", {
-        title: "Beobachtungen",
-        description: "Themen/Begriffe aus der Begehung.",
+        title: "4.8 Beobachtungen",
+        description: "Diese Tags werden als Kapitel 4.8 im Bericht verwendet.",
         filter: state.tagFilters.observations,
         allowAdd: true,
       });
@@ -274,7 +274,9 @@
         removeBtn.type = "button";
         removeBtn.textContent = "Remove";
         removeBtn.addEventListener("click", () => {
-          const confirmed = window.confirm(`Remove "${option.label}" and clear it from all photos?`);
+          const confirmed = window.confirm(
+            `Remove "${option.label}"? This clears it from all photos and Chapter 4.8 in the report.`
+          );
           if (!confirmed) return;
           actions.removeObservationTag(option.value);
         });

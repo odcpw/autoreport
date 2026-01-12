@@ -69,10 +69,23 @@
     });
   };
 
+  const isTopLevelChapterTag = (value) => {
+    const val = String(value || "").trim();
+    return !val.includes("."); // anything without a dot is treated as top-level and excluded
+  };
+  const isZeroChapterTag = (value) => String(value || "").trim().startsWith("0.");
+
   const normalizeTagOptions = (options) => {
     const incoming = normalizeIncomingOptions(options);
+    const report = (incoming.report || [])
+      .map(normalizeTagOption)
+      .filter(Boolean)
+      // Keep only 1.x style entries; drop anything without a dot (top-level)
+      .filter((opt) => !isTopLevelChapterTag(opt.value))
+      // Drop 0.x chapters (Management Summary) from tag options
+      .filter((opt) => !isZeroChapterTag(opt.value));
     return {
-      report: (incoming.report || []).map(normalizeTagOption).filter(Boolean),
+      report,
       observations: (incoming.observations || []).map(normalizeTagOption).filter(Boolean),
       training: (incoming.training || []).map(normalizeTagOption).filter(Boolean),
     };
@@ -110,10 +123,11 @@
     };
     const shouldSkipSection = (sectionId) => {
       const topLevel = String(sectionId || "").split(".")[0];
-      return ["11", "12", "13", "14"].includes(topLevel);
+      // Skip top-level (0,1,2,3,4...) and specific exclusion chapters
+      return /^[0-9]+$/.test(topLevel) || ["11", "12", "13", "14"].includes(topLevel);
     };
     project.chapters.forEach((chapter) => {
-      addTag(chapter.id, chapter.title?.de || chapter.title || chapter.id);
+      // Do not include whole-chapter tags; we only want 1.1-style sections
       (chapter.rows || []).forEach((row) => {
         if (row.kind === "section") {
           if (!shouldSkipSection(row.id)) {
@@ -154,6 +168,8 @@
     const addTag = (value, label) => {
       const val = String(value || "").trim();
       if (!val || isUnsortedLabel(val)) return;
+      if (!val.includes(".")) return; // only 1.x style tags
+      if (isZeroChapterTag(val)) return; // exclude 0.x
       let lbl = String(label || val).trim();
       if (lbl && !(lbl === val || lbl.startsWith(`${val} `) || lbl.startsWith(`${val}.`))) {
         lbl = `${val} ${lbl}`;

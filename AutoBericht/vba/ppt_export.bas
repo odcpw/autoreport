@@ -292,6 +292,38 @@ Private Function CollectionToArray(ByVal coll As Collection) As Variant()
     CollectionToArray = arr
 End Function
 
+Private Function CollectionToArrayDistinct(ByVal coll As Collection) As Variant()
+    ' Deduplicate collection items using Dictionary (case-insensitive)
+    Dim dict As Object
+    Set dict = CreateObject("Scripting.Dictionary")
+    dict.CompareMode = vbTextCompare
+
+    Dim item As Variant
+    For Each item In coll
+        If Not dict.Exists(CStr(item)) Then
+            dict.Add CStr(item), True
+        End If
+    Next item
+
+    ' Convert unique keys to array (1-based for VBA consistency)
+    Dim arr() As Variant
+    If dict.Count = 0 Then
+        ReDim arr(1 To 1)
+        arr(1) = ""
+    Else
+        ReDim arr(1 To dict.Count)
+        Dim i As Long
+        i = 1
+        Dim key As Variant
+        For Each key In dict.Keys
+            arr(i) = key
+            i = i + 1
+        Next key
+    End If
+
+    CollectionToArrayDistinct = arr
+End Function
+
 Private Function ExistsInCollection(ByVal coll As Collection, ByVal value As String) As Boolean
     Dim item As Variant
     For Each item In coll
