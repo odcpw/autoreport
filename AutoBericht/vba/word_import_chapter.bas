@@ -669,13 +669,30 @@ Public Sub InsertSpiderChart()
     Dim dataRange As Object
     Set dataRange = wsData.Range(wsData.Cells(1, 1), wsData.Cells(lastRow, 3))
 
-    ' 2 = xlColumns (avoid Excel constants to keep late-binding)
-    cht.SetSourceData Source:=dataRange, PlotBy:=2
-
-    ' Ensure series names follow our desired wording
+    ' Try bulk binding first; if the host balks (type mismatch), fall back to manual series wiring.
     On Error Resume Next
-    cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
-    cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
+    cht.SetSourceData Source:=dataRange, PlotBy:=2 ' 2 = xlColumns
+    If Err.Number <> 0 Then
+        Err.Clear
+        ' Manual series setup
+        Dim sc As Object
+        For Each sc In cht.SeriesCollection
+            sc.Delete
+        Next sc
+        cht.SeriesCollection.NewSeries
+        cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
+        cht.SeriesCollection(1).Values = wsData.Range(wsData.Cells(2, 2), wsData.Cells(lastRow, 2))
+        cht.SeriesCollection(1).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
+
+        cht.SeriesCollection.NewSeries
+        cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
+        cht.SeriesCollection(2).Values = wsData.Range(wsData.Cells(2, 3), wsData.Cells(lastRow, 3))
+        cht.SeriesCollection(2).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
+    Else
+        ' Ensure series names follow our desired wording
+        cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
+        cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
+    End If
     On Error GoTo 0
 
     ' Style chart
