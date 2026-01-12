@@ -110,9 +110,8 @@ Private Sub ExportTrainingPptInternal(ByVal langSuffix As String)
         Dim idx As Long
         Dim slide As Object
         Dim s As Long
-        Dim photoPath As Variant
         Dim photoArray() As Variant
-        photoArray = CollectionToArray(photos)
+        photoArray = CollectionToArrayDistinct(photos)
 
         idx = LBound(photoArray)
         Do While idx <= UBound(photoArray)
@@ -256,11 +255,11 @@ Private Sub InsertPictureIntoBounds(ByVal slide As Object, ByVal placeholder As 
     On Error Resume Next
     pic.LockAspectRatio = msoTrue
     If pic.Height = 0 Or pic.Width = 0 Then GoTo Done
-    Dim scale As Double
-    scale = w / pic.Width
-    If (pic.Height * scale) > h Then scale = h / pic.Height
-    pic.Width = pic.Width * scale
-    pic.Height = pic.Height * scale
+    Dim scaleFactor As Double
+    scaleFactor = w / pic.Width
+    If (pic.Height * scaleFactor) > h Then scaleFactor = h / pic.Height
+    pic.Width = pic.Width * scaleFactor
+    pic.Height = pic.Height * scaleFactor
     pic.Left = l + (w - pic.Width) / 2
     pic.Top = t + (h - pic.Height) / 2
 Done:
