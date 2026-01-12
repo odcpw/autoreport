@@ -8,6 +8,78 @@
   "structure": {
     "items": [
       {
+        "id": "0.1",
+        "groupId": "0.1",
+        "collapsedId": "0.1",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.2",
+        "groupId": "0.2",
+        "collapsedId": "0.2",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.3",
+        "groupId": "0.3",
+        "collapsedId": "0.3",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.4",
+        "groupId": "0.4",
+        "collapsedId": "0.4",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.5",
+        "groupId": "0.5",
+        "collapsedId": "0.5",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.6",
+        "groupId": "0.6",
+        "collapsedId": "0.6",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.7",
+        "groupId": "0.7",
+        "collapsedId": "0.7",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
+        "id": "0.8",
+        "groupId": "0.8",
+        "collapsedId": "0.8",
+        "chapter": 0,
+        "chapterLabel": "0 Management Summary",
+        "question": "",
+        "sectionLabel": "Management Summary"
+      },
+      {
         "id": "1.1.1",
         "groupId": "1.1.1",
         "collapsedId": "1.1.1",

@@ -83,24 +83,7 @@
         }
       }
 
-      // 2) Bundled seed inside project (preferred)
-      const seedCandidates = [
-        "knowledge_base_de.json",
-        "knowledge_base_fr.json",
-        "knowledge_base_it.json",
-      ];
-      for (const filename of seedCandidates) {
-        if (state.projectHandle) {
-          try {
-            const parsed = await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
-            if (isValidKnowledgeBase(parsed)) return parsed;
-          } catch (err) {
-            // try next
-          }
-        }
-      }
-
-      // 3) Bundled seed next to the app (fallback if project lacks AutoBericht/)
+      // 2) Bundled seed next to the app (served by the local server)
       try {
         const baseUrl = new URL(window.location.href);
         const tryPaths = [
