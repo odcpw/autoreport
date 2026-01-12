@@ -19,3 +19,6 @@ This folder is a clean project skeleton. For a new project:
 Notes
 - project_sidecar.json and library_user_*.json will be created in this root.
 - If we materialize photo views later, they will appear under Photos\_views\...
+- Templates:
+  - Templates\\Training_D.pptx and Templates\\Training_F.pptx (copied from repo test/AutoBericht_slides.pptx)
+  - Templates\\Vorlage IST-Aufnahme-Bericht d.V01.docm (Word report template)
