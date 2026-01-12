@@ -286,12 +286,12 @@
 
     const getChecklistCategories = () => ([
       {
-        key: "ekas",
-        label: t("checklist_filter_ekas", "EKAS"),
-      },
-      {
         key: "vital",
         label: t("checklist_filter_vital", "Lebenswichtige Regeln"),
+      },
+      {
+        key: "ekas",
+        label: t("checklist_filter_ekas", "EKAS"),
       },
     ]);
 

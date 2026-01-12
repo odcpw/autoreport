@@ -28,6 +28,7 @@ project_sidecar.json
 project_db.xlsx
 out/
 cache/
+sources/
 
 # Debug logs / temp artifacts
 *.log
