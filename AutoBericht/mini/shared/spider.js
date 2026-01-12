@@ -62,8 +62,22 @@
     return out;
   };
 
-  const pctFromCustomer = (answer) => {
-    if (answer === 1 || answer === "1" || answer === true) return 100;
+  const pctFromCustomer = (row) => {
+    // Prefer row.customer.answer, else average of customer.items[*].answer
+    const ans = row?.customer?.answer;
+    if (ans === 1 || ans === "1" || ans === true) return 100;
+    if (ans === 0 || ans === "0" || ans === false) return 0;
+    const items = row?.customer?.items;
+    if (Array.isArray(items) && items.length) {
+      let total = 0; let count = 0;
+      items.forEach((it) => {
+        if (it && (it.answer === 0 || it.answer === 1 || it.answer === "0" || it.answer === "1")) {
+          total += Number(it.answer);
+          count += 1;
+        }
+      });
+      if (count > 0) return (total / count) * 100;
+    }
     return 0;
   };
 
@@ -83,7 +97,7 @@
           if (ws.includeFinding === false) return 100;
           return LEVEL_TO_PCT(ws.selectedLevel || 1);
         })();
-        const compPct = pctFromCustomer(row.customer?.answer);
+        const compPct = pctFromCustomer(row);
         const acc = totals.get(chapterId) || { w: 0, comp: 0, cons: 0 };
         acc.w += weight;
         acc.comp += weight * compPct;

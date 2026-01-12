@@ -138,7 +138,7 @@ button.ghost {
   background: var(--ui-surface);
   border-radius: var(--ui-radius-lg);
   width: min(640px, 92vw);
-  max-height: 80vh;
+  max-height: 90vh;
   overflow: auto;
   border: 1px solid var(--ui-border);
   box-shadow: var(--ui-shadow-lg);
