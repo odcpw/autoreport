@@ -61,6 +61,8 @@
           const path = `${prefix}${entry.name}`;
           collection.push(buildPhotoEntry(path, entry, null));
         } else if (entry.kind === "directory") {
+          const lower = entry.name.toLowerCase();
+          if (lower === "raw") continue; // skip raw tree for display; resized is source of truth
           await collectImages(entry, `${prefix}${entry.name}/`, collection);
         }
       }

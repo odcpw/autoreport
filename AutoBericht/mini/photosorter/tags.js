@@ -90,6 +90,18 @@
 
   const ensureTagOptions = (options) => {
     const normalized = normalizeTagOptions(options);
+    const defaults = (window.AutoBerichtPhotoSorterState && window.AutoBerichtPhotoSorterState.DEFAULT_TAGS) || null;
+    if (defaults) {
+      if (!normalized.observations.length && defaults.observations) {
+        normalized.observations = normalizeTagOptions({ observations: defaults.observations }).observations;
+      }
+      if (!normalized.training.length && defaults.training) {
+        normalized.training = normalizeTagOptions({ training: defaults.training }).training;
+      }
+      if (!normalized.report.length && defaults.report) {
+        normalized.report = normalizeTagOptions({ report: defaults.report }).report;
+      }
+    }
     normalized.report = sortOptionsForGroup("report", dedupeOptions(normalized.report));
     normalized.observations = sortOptionsForGroup("observations", dedupeOptions(normalized.observations));
     normalized.training = sortOptionsForGroup("training", dedupeOptions(normalized.training));
