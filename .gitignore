@@ -18,6 +18,7 @@ Thumbs.db
 
 # Agent / local tooling
 .claude/
+.oracle/
 
 # Build / export artifacts (keep directory via .gitkeep)
 output/**
@@ -46,4 +47,3 @@ AutoBericht/AI/
 
 # Internal agent scratch
 .code/
-

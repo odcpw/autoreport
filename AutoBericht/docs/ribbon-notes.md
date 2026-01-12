@@ -47,3 +47,27 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - Templates now reside in `ProjectTemplate/` root (`Vorlage IST-Aufnahme-Bericht d.V01.docm`, `Vorlage AutoBericht.pptx`).
 - If a repair prompt reappears, re-embed the ribbon using the steps above to eliminate duplicate overrides/relationships left by manual zip edits.
  - Jan 2026: fixed DOCM `_rels/.rels` target from `/customUI/customUI.xml` to `customUI/customUI.xml` (leading slash caused repair prompt).
+
+## 2026-01 refresh (what works now)
+- Replaced PowerPoint-only `imageMso` ids with Word-safe icons: `FileOpen`, `TextToTableDialog`, `FormatPainter`, `MailMergeInsertFields`, `PictureInsertFromFile`, `ChartRadar`, `FileSaveAsPdfOrXps`.
+- Added in-group separators in Markdown and Export groups; separators are only valid inside `<group>`.
+- Deduped `customUI/customUI.xml` inside `ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm` and ensured a single override + relationship (2006/01 schema).
+- Keep using the 2006/01 namespace/part. If you add `customUI14.xml`, switch namespace to `http://schemas.microsoft.com/office/2009/07/customui` and add the correct root relationship.
+
+## Field guide (from “don’t get burned” note)
+- Match namespace to part: `customUI` → 2006/01; `customUI14` → 2009/07.
+- Use macro-enabled docs (`.docm`/`.dotm`) in a trusted location; enable “Show add-in user interface errors” in Word options when debugging.
+- Validate XML: unique ids, escaped `&`, controls live inside a `<group>`.
+- Restart Word fully when testing; UI state can cache.
+
+## 2026-01 refresh (what works now)
+- Replaced PowerPoint-only `imageMso` ids with Word-safe icons: `FileOpen`, `TextToTableDialog`, `FormatPainter`, `MailMergeInsertFields`, `PictureInsertFromFile`, `ChartRadar`, `FileSaveAsPdfOrXps`.
+- Added in-group separators in Markdown and Export groups; separators are only valid inside `<group>`.
+- Deduped `customUI/customUI.xml` inside `ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm` and ensured a single override + relationship (2006/01 schema).
+- Keep using the 2006/01 namespace/part. If you add `customUI14.xml`, switch namespace to `http://schemas.microsoft.com/office/2009/07/customui` and add the correct root relationship.
+
+## Field guide (from “don’t get burned” note)
+- Match namespace to part: `customUI` → 2006/01; `customUI14` → 2009/07.
+- Use macro-enabled docs (`.docm`/`.dotm`) in a trusted location; enable “Show add-in user interface errors” in Word options when debugging.
+- Validate XML: unique ids, escaped `&`, controls live inside a `<group>`.
+- Restart Word fully when testing; UI state can cache.

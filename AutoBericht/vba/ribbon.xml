@@ -2,21 +2,22 @@
   <ribbon>
     <tabs>
       <tab id="tabAutoBericht" label="AutoBericht">
-        <!-- IMPORT GROUP -->
+
+        <!-- IMPORT -->
         <group id="grpImport" label="Import">
           <button id="btnImportAll"
                   label="Import All"
                   size="large"
-                  imageMso="TableInsertDialog"
+                  imageMso="FileOpen"
                   onAction="AB_ImportAll" />
           <button id="btnImportChapter"
                   label="Import Chapter…"
                   size="large"
-                  imageMso="TableInsert"
+                  imageMso="FileOpen"
                   onAction="AB_ImportChapter" />
         </group>
 
-        <!-- MARKDOWN GROUP -->
+        <!-- MARKDOWN -->
         <group id="grpMarkdown" label="Markdown">
           <button id="btnMarkdownAll"
                   label="Markdown All"
@@ -26,8 +27,9 @@
           <button id="btnMarkdownChapter"
                   label="Markdown Chapter…"
                   size="large"
-                  imageMso="TextToTable"
+                  imageMso="TextToTableDialog"
                   onAction="AB_ConvertMarkdownChapter" />
+          <separator id="sepMarkdown1" />
           <button id="btnMarkdownSelection"
                   label="Markdown Selection"
                   size="large"
@@ -35,7 +37,7 @@
                   onAction="AB_ConvertMarkdownSelection" />
         </group>
 
-        <!-- TEXT/LOGO/SPIDER GROUP -->
+        <!-- TEXT / LOGOS -->
         <group id="grpTextMarkers" label="Textfelder">
           <button id="btnTextFields"
                   label="Text Markers"
@@ -54,24 +56,26 @@
                   onAction="AB_InsertSpider" />
         </group>
 
-        <!-- EXPORT GROUP -->
+        <!-- EXPORT -->
         <group id="grpExport" label="Export">
           <button id="btnExportTrainingD"
                   label="Training D"
                   size="large"
-                  imageMso="PresentationSlideShowFromBeginning"
+                  imageMso="FileSaveAsPdfOrXps"
                   onAction="AB_ExportPptTrainingD" />
           <button id="btnExportTrainingF"
                   label="Training F"
                   size="large"
-                  imageMso="PresentationSlideShowFromBeginning"
+                  imageMso="FileSaveAsPdfOrXps"
                   onAction="AB_ExportPptTrainingF" />
+          <separator id="sepExport1" />
           <button id="btnExportBesprechung"
                   label="Besprechung"
                   size="large"
-                  imageMso="SlideShowFromBeginning"
+                  imageMso="FileSaveAsPdfOrXps"
                   onAction="AB_ExportPptBesprechung" />
         </group>
+
       </tab>
     </tabs>
   </ribbon>
