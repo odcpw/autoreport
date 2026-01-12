@@ -426,9 +426,9 @@ Public Sub InsertLogoAtToken()
     inline.Height = CentimetersToPoints(LOGO_HEIGHT_CM)
 End Sub
 
-Public Sub ImportTextMarkers()
-    ' Replace all TEXT$$ markers from sidecar metadata
-    LogDebug "ImportTextMarkers: start"
+Public Sub ImportTextFields()
+    ' Replace text field markers from sidecar metadata (NAME$$, COMPANY$$, etc.)
+    LogDebug "ImportTextFields: start"
 
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
@@ -480,20 +480,27 @@ Public Sub ImportTextMarkers()
     End If
     ReplaceTextMarker "DATE$$", dateValue
 
-    ' Logo marker - prompt for file
-    If Not FindMarkerRange(LOGO_MARKER) Is Nothing Then
-        InsertLogoAtToken
-    End If
+    MsgBox "Text fields replaced.", vbInformation
+    LogDebug "ImportTextFields: done"
+End Sub
 
-    ' Spider chart - stub for now
+Public Sub InsertSpiderChart()
+    ' Insert spider/radar chart at SPIDER$$ marker
+    LogDebug "InsertSpiderChart: start"
+
     Dim spiderRange As Range
     Set spiderRange = FindMarkerRange("SPIDER$$")
-    If Not spiderRange Is Nothing Then
-        spiderRange.Text = "[Spider chart - not implemented]"
+    If spiderRange Is Nothing Then
+        MsgBox "Spider marker (SPIDER$$) not found in document.", vbExclamation
+        Exit Sub
     End If
 
-    MsgBox "Text markers replaced.", vbInformation
-    LogDebug "ImportTextMarkers: done"
+    ' TODO: Implement actual spider chart generation
+    ' For now, insert placeholder text
+    spiderRange.Text = "[Spider chart - not implemented yet]"
+
+    MsgBox "Spider chart placeholder inserted.", vbInformation
+    LogDebug "InsertSpiderChart: done"
 End Sub
 
 Private Sub ReplaceTextMarker(ByVal marker As String, ByVal value As String)

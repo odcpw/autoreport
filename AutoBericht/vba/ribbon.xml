@@ -14,11 +14,6 @@
                   size="large"
                   imageMso="TableInsert"
                   onAction="AB_ImportChapter" />
-          <button id="btnImportTextMarkers"
-                  label="Text Markers"
-                  size="large"
-                  imageMso="MailMergeInsertFields"
-                  onAction="AB_ImportTextMarkers" />
         </group>
 
         <!-- MARKDOWN GROUP -->
@@ -40,6 +35,25 @@
                   onAction="AB_ConvertMarkdownSelection" />
         </group>
 
+        <!-- TEXT/LOGO/SPIDER GROUP -->
+        <group id="grpTextMarkers" label="Textfelder">
+          <button id="btnTextFields"
+                  label="Text Markers"
+                  size="large"
+                  imageMso="MailMergeInsertFields"
+                  onAction="AB_ImportTextFields" />
+          <button id="btnInsertLogo"
+                  label="Insert Logo"
+                  size="large"
+                  imageMso="PictureInsertFromFile"
+                  onAction="AB_InsertLogo" />
+          <button id="btnInsertSpider"
+                  label="Insert Spider"
+                  size="large"
+                  imageMso="ChartRadar"
+                  onAction="AB_InsertSpider" />
+        </group>
+
         <!-- EXPORT GROUP -->
         <group id="grpExport" label="Export">
           <button id="btnExportTrainingD"
@@ -52,6 +66,11 @@
                   size="large"
                   imageMso="PresentationSlideShowFromBeginning"
                   onAction="AB_ExportPptTrainingF" />
+          <button id="btnExportBesprechung"
+                  label="Besprechung"
+                  size="large"
+                  imageMso="SlideShowFromBeginning"
+                  onAction="AB_ExportPptBesprechung" />
         </group>
       </tab>
     </tabs>

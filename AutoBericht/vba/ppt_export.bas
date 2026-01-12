@@ -25,6 +25,17 @@ Public Sub ExportTrainingPptF()
     ExportTrainingPptInternal "F"
 End Sub
 
+Public Sub ExportBesprechungPpt()
+    ' Export Bericht Besprechung presentation
+    LogDebug "ExportBesprechungPpt: start"
+
+    ' TODO: Implement Besprechung PPT export
+    ' This should create a presentation for report discussion/review meetings
+    MsgBox "Besprechung PPT export not implemented yet.", vbInformation
+
+    LogDebug "ExportBesprechungPpt: done (stub)"
+End Sub
+
 Private Sub ExportTrainingPptInternal(ByVal langSuffix As String)
     LogDebug "ExportTrainingPpt: start (" & langSuffix & ")"
     Dim sidecarPath As String

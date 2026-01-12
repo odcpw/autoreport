@@ -2,7 +2,7 @@ Attribute VB_Name = "modWordRibbonCallbacks"
 Option Explicit
 
 ' Ribbon callbacks for AutoBericht tab.
-' 8 buttons: Import (3) + Markdown (3) + Export (2)
+' 11 buttons: Import (2) + Markdown (3) + Textfelder (3) + Export (3)
 
 ' === IMPORT GROUP ===
 
@@ -21,14 +21,6 @@ Public Sub AB_ImportChapter(control As Object)
     Exit Sub
 Fail:
     MsgBox "Import chapter failed: " & Err.Description, vbExclamation
-End Sub
-
-Public Sub AB_ImportTextMarkers(control As Object)
-    On Error GoTo Fail
-    ImportTextMarkers
-    Exit Sub
-Fail:
-    MsgBox "Text markers import failed: " & Err.Description, vbExclamation
 End Sub
 
 ' === MARKDOWN GROUP ===
@@ -57,6 +49,32 @@ Fail:
     MsgBox "Markdown selection failed: " & Err.Description, vbExclamation
 End Sub
 
+' === TEXTFELDER GROUP ===
+
+Public Sub AB_ImportTextFields(control As Object)
+    On Error GoTo Fail
+    ImportTextFields
+    Exit Sub
+Fail:
+    MsgBox "Text fields import failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_InsertLogo(control As Object)
+    On Error GoTo Fail
+    InsertLogoAtToken
+    Exit Sub
+Fail:
+    MsgBox "Logo insertion failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_InsertSpider(control As Object)
+    On Error GoTo Fail
+    InsertSpiderChart
+    Exit Sub
+Fail:
+    MsgBox "Spider chart insertion failed: " & Err.Description, vbExclamation
+End Sub
+
 ' === EXPORT GROUP ===
 
 Public Sub AB_ExportPptTrainingD(control As Object)
@@ -73,4 +91,12 @@ Public Sub AB_ExportPptTrainingF(control As Object)
     Exit Sub
 Fail:
     MsgBox "Training export (FR) failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_ExportPptBesprechung(control As Object)
+    On Error GoTo Fail
+    ExportBesprechungPpt
+    Exit Sub
+Fail:
+    MsgBox "Besprechung export failed: " & Err.Description, vbExclamation
 End Sub
