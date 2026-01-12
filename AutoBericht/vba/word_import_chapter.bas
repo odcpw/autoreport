@@ -11,9 +11,8 @@ Private Const STYLE_TABLE As String = "Grid Table Light"
 Private Const STYLE_LIST As String = "List Paragraph"
 Private Const DEBUG_ENABLED As Boolean = True
 Private Const USE_MARKER_TOKENS As Boolean = False
-Private Const CHAPTER0_MARKER As String = "CHAPTER0$$"
-Private Const CHAPTER1_MARKER As String = "CHAPTER1$$"
 Private Const LOGO_MARKER As String = "LOGO$$"
+Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
 Private Const LOGO_HEIGHT_CM As Double = 1#
 
 ' === TABLE CONFIG (edit widths as needed) ===
@@ -23,7 +22,186 @@ Private Const COL3_WIDTH_PCT As Long = 7
 Private Const HEADER_CHECKMARK As String = "✓"
 
 Public Sub ImportChapter1Table()
-    LogDebug "ImportChapter1Table: start"
+    ImportChapterTable "1", "Chapter1_start", "Chapter1_end"
+End Sub
+
+Public Sub ImportChapter0Summary()
+    LogDebug "ImportChapter0Summary: start"
+    Dim jsonPath As String
+    jsonPath = ResolveSidecarPath()
+    If Len(jsonPath) = 0 Then Exit Sub
+
+    Dim jsonText As String
+    jsonText = ReadAllText(jsonPath)
+    If Len(jsonText) = 0 Then
+        MsgBox "Sidecar JSON is empty.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim root As Object
+    Set root = JsonConverter.ParseJson(jsonText)
+    LogDebug "ImportChapter0Summary: JSON parsed"
+
+    Dim report As Object
+    Set report = GetObject(root, "report")
+    If report Is Nothing Then
+        MsgBox "Missing report section in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim project As Object
+    Set project = GetObject(report, "project")
+    If project Is Nothing Then
+        MsgBox "Missing report.project in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim chapters As Object
+    Set chapters = GetObject(project, "chapters")
+    If chapters Is Nothing Or chapters.Count = 0 Then
+        MsgBox "No chapters found in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim chapter As Object
+    Set chapter = FindChapterById(chapters, "0")
+    If chapter Is Nothing Then
+        Set chapter = chapters.Item(1)
+    End If
+    LogDebug "ImportChapter0Summary: chapter selected"
+
+    Dim rows As Object
+    Set rows = GetObject(chapter, "rows")
+    If rows Is Nothing Then
+        MsgBox "No rows in Chapter 0.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim insertRng As Range
+    Set insertRng = ResolveBookmarkInsertRange("Chapter0_start", "Chapter0_end", "")
+    If insertRng Is Nothing Then
+        Set insertRng = ResolveInsertRange("Chapter0")
+    End If
+    If insertRng Is Nothing Then
+        MsgBox "Bookmark range 'Chapter0_start'/'Chapter0_end' not found.", vbExclamation
+        Exit Sub
+    End If
+    LogDebug "ImportChapter0Summary: insert range " & insertRng.Start & "-" & insertRng.End
+
+    insertRng.Collapse wdCollapseStart
+
+    Dim writer As Range
+    Set writer = insertRng.Duplicate
+    writer.Collapse wdCollapseStart
+    Dim startPos As Long
+    startPos = writer.Start
+
+    Dim wrote As Boolean
+    Dim row As Variant
+    For Each row In rows
+        If Not IsSectionRow(row) Then
+            If IsIncludedRow(row) Then
+                Dim summaryText As String
+                summaryText = ResolveRecommendation(row)
+                If Len(Trim$(summaryText)) > 0 Then
+                    LogDebug "Summary row: " & ResolveDisplayId(row, Nothing)
+                    summaryText = Replace(summaryText, vbCrLf, " ")
+                    summaryText = Replace(summaryText, vbCr, " ")
+                    summaryText = Replace(summaryText, vbLf, " ")
+                    If wrote Then
+                        writer.InsertParagraphAfter
+                        writer.Collapse wdCollapseEnd
+                    End If
+                    Dim lineRange As Range
+                    Set lineRange = writer.Duplicate
+                    lineRange.Text = summaryText
+                    On Error Resume Next
+                    lineRange.Style = STYLE_BODY
+                    On Error GoTo 0
+                    writer.SetRange lineRange.End, lineRange.End
+                    wrote = True
+                End If
+            End If
+        End If
+    Next row
+
+    If Not wrote Then
+        MsgBox "No summary rows to import for Chapter 0.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim listRange As Range
+    Set listRange = ActiveDocument.Range(startPos, writer.End)
+    On Error Resume Next
+    listRange.ListFormat.ApplyListTemplateWithLevel _
+        ListTemplate:=ListGalleries(wdNumberGallery).ListTemplates(1), _
+        ContinuePreviousList:=False, _
+        ApplyTo:=wdListApplyToWholeList, _
+        DefaultListBehavior:=wdWord10ListBehavior
+    listRange.ListFormat.ListTemplate.ListLevels(1).NumberStyle = wdListNumberStyleUppercaseLetter
+    On Error GoTo 0
+
+    MsgBox "Chapter 0 summary imported.", vbInformation
+    LogDebug "ImportChapter0Summary: done"
+End Sub
+
+' ========= Generalized chapter table =========
+
+Public Sub ImportChapterDialog()
+    Dim chapterId As String
+    chapterId = PromptChapterId("Import chapter (0, 1-14, 4.8):")
+    If Len(chapterId) = 0 Then Exit Sub
+    ImportChapterTable chapterId, BuildStartBookmark(chapterId), BuildEndBookmark(chapterId)
+End Sub
+
+Public Sub ImportChapterAll()
+    Dim ids() As String
+    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    Dim i As Long
+    ImportChapter0Summary
+    For i = LBound(ids) To UBound(ids)
+        Dim cid As String
+        cid = Trim$(ids(i))
+        If cid <> "0" Then
+            ImportChapterTable cid, BuildStartBookmark(cid), BuildEndBookmark(cid)
+        End If
+    Next i
+End Sub
+
+Private Function BuildStartBookmark(ByVal chapterId As String) As String
+    BuildStartBookmark = Replace$("Chapter" & chapterId & "_start", ".", "_")
+End Function
+
+Private Function BuildEndBookmark(ByVal chapterId As String) As String
+    BuildEndBookmark = Replace$("Chapter" & chapterId & "_end", ".", "_")
+End Function
+
+Private Function PromptChapterId(ByVal prompt As String) As String
+    Dim input As String
+    input = InputBox(prompt, "Choose chapter", "1")
+    input = Trim$(input)
+    If Len(input) = 0 Then Exit Function
+    If Not IsValidChapterId(input) Then
+        MsgBox "Invalid chapter ID: " & input, vbExclamation
+        Exit Function
+    End If
+    PromptChapterId = input
+End Function
+
+Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
+    Dim ids() As String
+    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    Dim i As Long
+    For i = LBound(ids) To UBound(ids)
+        If Trim$(ids(i)) = Trim$(chapterId) Then
+            IsValidChapterId = True
+            Exit Function
+        End If
+    Next i
+End Function
+
+Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As String, ByVal endBm As String)
+    LogDebug "ImportChapterTable: start " & chapterId
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
     If Len(jsonPath) = 0 Then Exit Sub
@@ -63,33 +241,32 @@ Public Sub ImportChapter1Table()
     LogDebug "ImportChapter1Table: chapters=" & chapters.Count
 
     Dim chapter As Object
-    Set chapter = FindChapterById(chapters, "1")
+    Set chapter = FindChapterById(chapters, chapterId)
     If chapter Is Nothing Then
-        MsgBox "Chapter id '1' not found in JSON.", vbExclamation
+        MsgBox "Chapter id '" & chapterId & "' not found in JSON.", vbExclamation
         Exit Sub
     End If
-    Dim chapterId As String
     chapterId = SafeText(chapter, "id")
-    LogDebug "ImportChapter1Table: chapterId=" & chapterId
+    LogDebug "ImportChapterTable: chapterId=" & chapterId
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkInsertRange("Chapter1_start", "Chapter1_end", CHAPTER1_MARKER)
+    Set insertRng = ResolveBookmarkInsertRange(startBm, endBm, "")
     If insertRng Is Nothing Then
-        Set insertRng = ResolveInsertRange("Chapter1")
+        Set insertRng = ResolveInsertRange(Replace$("Chapter" & chapterId, ".", "_"))
     End If
     If insertRng Is Nothing Then
-        MsgBox "Bookmark range 'Chapter1_start'/'Chapter1_end' not found.", vbExclamation
+        MsgBox "Bookmark range '" & startBm & "' / '" & endBm & "' not found.", vbExclamation
         Exit Sub
     End If
-    LogDebug "ImportChapter1Table: insert range " & insertRng.Start & "-" & insertRng.End
+    LogDebug "ImportChapterTable: insert range " & insertRng.Start & "-" & insertRng.End
 
     Dim rows As Object
     Set rows = GetObject(chapter, "rows")
     If rows Is Nothing Then
-        MsgBox "No rows in Chapter 1.", vbExclamation
+        MsgBox "No rows in Chapter " & chapterId & ".", vbExclamation
         Exit Sub
     End If
-    LogDebug "ImportChapter1Table: rows=" & rows.Count
+    LogDebug "ImportChapterTable: rows=" & rows.Count
 
     Dim includedSections As Object
     Set includedSections = BuildIncludedSections(rows)
@@ -100,16 +277,16 @@ Public Sub ImportChapter1Table()
     Dim tableRowCount As Long
     tableRowCount = CountDataRows(rows, includedSections)
     If tableRowCount = 0 Then
-        MsgBox "No data rows found in Chapter 1.", vbExclamation
+        MsgBox "No data rows found in Chapter " & chapterId & ".", vbExclamation
         Exit Sub
     End If
-    LogDebug "ImportChapter1Table: table rows=" & tableRowCount
+    LogDebug "ImportChapterTable: table rows=" & tableRowCount
 
     insertRng.Collapse wdCollapseStart
 
     Dim tbl As Table
     Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 3, 3)
-    LogDebug "ImportChapter1Table: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
+    LogDebug "ImportChapterTable: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
     On Error Resume Next
     tbl.Style = STYLE_TABLE
     On Error GoTo 0
@@ -229,9 +406,9 @@ Public Sub ImportChapter1Table()
         On Error GoTo 0
     Next h
 
-    MsgBox "Chapter 1 table imported.", vbInformation
-    LogDebug "ImportChapter1Table: done"
-    ResetTableBookmarks "Chapter1_start", "Chapter1_end", tbl
+    MsgBox "Chapter " & chapterId & " imported.", vbInformation
+    LogDebug "ImportChapterTable: done"
+    ResetTableBookmarks startBm, endBm, tbl
 End Sub
 
 Public Sub InsertLogoAtToken()
@@ -497,15 +674,6 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
 End Function
 
 Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String, ByVal markerText As String) As Range
-    If USE_MARKER_TOKENS And Len(markerText) > 0 Then
-        Dim markerRange As Range
-        Set markerRange = FindMarkerRange(markerText)
-        If Not markerRange Is Nothing Then
-            markerRange.Text = ""
-            Set ResolveBookmarkInsertRange = markerRange
-            Exit Function
-        End If
-    End If
 
     Dim bmStart As Bookmark
     Dim bmEnd As Bookmark

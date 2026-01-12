@@ -14,6 +14,9 @@ Private Const LAYOUT_CHAPTER As String = "chapterorange"
 Private Const LAYOUT_SEMINAR As String = "seminar_d"
 Private Const LAYOUT_PICTURE As String = "picture"
 
+Private Const PP_PLACEHOLDER_PICTURE As Long = 18 ' fallback magic number
+Private Const MSO_PLACEHOLDER As Long = 14
+
 Public Sub ExportTrainingPptD()
     ExportTrainingPptInternal "D", TRAINING_TEMPLATE_D
 End Sub
@@ -100,13 +103,27 @@ Private Sub ExportTrainingPptInternal(ByVal langSuffix As String, ByVal template
             Set layout = FindLayoutByName(pres, LAYOUT_PICTURE)
         End If
 
+        Dim slots As Long
+        slots = CountPictureSlots(layout)
+        If slots < 1 Then slots = 1
+
+        Dim idx As Long
+        Dim slide As Object
+        Dim s As Long
         Dim photoPath As Variant
-        For Each photoPath In photos
-            Dim slide As Object
+        Dim photoArray() As Variant
+        photoArray = CollectionToArray(photos)
+
+        idx = LBound(photoArray)
+        Do While idx <= UBound(photoArray)
             Set slide = pres.Slides.AddSlide(pres.Slides.Count + 1, layout)
             SetTitleIfPresent slide, CStr(tag)
-            InsertFirstPicture slide, CStr(photoPath)
-        Next photoPath
+            For s = 1 To slots
+                If idx > UBound(photoArray) Then Exit For
+                InsertPictureSlot slide, CStr(photoArray(idx)), s
+                idx = idx + 1
+            Next s
+        Loop
 ContinueTag:
     Next tag
 
@@ -212,21 +229,49 @@ Private Sub SetTitleIfPresent(ByVal slide As Object, ByVal titleText As String)
     Next shape
 End Sub
 
-Private Sub InsertFirstPicture(ByVal slide As Object, ByVal filePath As String)
+Private Sub InsertPictureSlot(ByVal slide As Object, ByVal filePath As String, ByVal slotIndex As Long)
     Dim shape As Object
+    Dim slot As Long
+    slot = 0
     For Each shape In slide.Shapes
         On Error Resume Next
-        If shape.Type = 14 Then
-            shape.Fill.UserPicture filePath
-            Exit Sub
-        End If
-        If shape.PlaceholderFormat.Type = 18 Then
-            shape.Fill.UserPicture filePath
-            Exit Sub
+        If shape.Type = MSO_PLACEHOLDER Or shape.Type = PP_PLACEHOLDER_PICTURE Then
+            If shape.PlaceholderFormat.Type = PP_PLACEHOLDER_PICTURE Or shape.Type = PP_PLACEHOLDER_PICTURE Then
+                slot = slot + 1
+                If slot = slotIndex Then
+                    shape.Fill.UserPicture filePath
+                    Exit Sub
+                End If
+            End If
         End If
         On Error GoTo 0
     Next shape
 End Sub
+
+Private Function CountPictureSlots(ByVal layout As Object) As Long
+    Dim shape As Object
+    Dim count As Long
+    For Each shape In layout.Shapes
+        On Error Resume Next
+        If shape.Type = MSO_PLACEHOLDER Or shape.Type = PP_PLACEHOLDER_PICTURE Then
+            If shape.PlaceholderFormat.Type = PP_PLACEHOLDER_PICTURE Or shape.Type = PP_PLACEHOLDER_PICTURE Then
+                count = count + 1
+            End If
+        End If
+        On Error GoTo 0
+    Next shape
+    CountPictureSlots = count
+End Function
+
+Private Function CollectionToArray(ByVal coll As Collection) As Variant()
+    Dim arr() As Variant
+    ReDim arr(1 To coll.Count)
+    Dim i As Long
+    For i = 1 To coll.Count
+        arr(i) = coll(i)
+    Next i
+    CollectionToArray = arr
+End Function
 
 Private Function ExistsInCollection(ByVal coll As Collection, ByVal value As String) As Boolean
     Dim item As Variant

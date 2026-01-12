@@ -14,6 +14,8 @@
     generateLibraryBtn: document.getElementById("generate-library"),
     settingsAuthorEl: document.getElementById("settings-author"),
     settingsInitialsEl: document.getElementById("settings-initials"),
+    settingsCompanyEl: document.getElementById("settings-company"),
+    settingsCompanyIdEl: document.getElementById("settings-companyid"),
     settingsLocaleEl: document.getElementById("settings-locale"),
     settingsLibraryHintEl: document.getElementById("settings-library-hint"),
     statusEl: document.getElementById("status"),

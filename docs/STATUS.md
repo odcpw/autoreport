@@ -30,8 +30,8 @@ This document tracks the **redesign** direction (2026).
 
 ## Immediate Next Steps
 
-1. Word template: add bookmarks/content controls + styles per chapter.
-2. Word VBA importer: read sidecar JSON, inject content, apply styles, renumber.
-3. Export rules: handle 4.8 ordering + photo lists in Word output.
-4. Spider chart data export (per‑chapter scores).
-5. Optional: File System Access fallback (manual import/export).
+- [ ] Word template: add bookmarks/content controls + styles per chapter (template work).
+- [x] Word VBA importer: read sidecar JSON, inject content, apply styles, renumber (chapters 0, 1–14, 4.8).
+- [ ] Meta token replacement in Word (company, companyId, author, etc.).
+- [ ] Spider/radar data export (per‑chapter scores).
+- [x] No File System Access fallback (removed by design).

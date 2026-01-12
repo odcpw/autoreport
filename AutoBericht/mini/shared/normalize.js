@@ -20,6 +20,10 @@
   const ensureProjectMeta = (project, setLocale) => {
     if (!project.meta) project.meta = {};
     if (!project.meta.locale) project.meta.locale = "de-CH";
+    if (!project.meta.company) project.meta.company = "";
+    if (!project.meta.companyId) project.meta.companyId = "";
+    if (!project.meta.author) project.meta.author = "";
+    if (!project.meta.initials) project.meta.initials = "";
     if (setLocale) setLocale(project.meta.locale);
   };
 

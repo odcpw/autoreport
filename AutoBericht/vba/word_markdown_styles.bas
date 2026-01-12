@@ -18,6 +18,7 @@ Private Const STYLE_BOLD As String = ""
 Private Const STYLE_ITALIC As String = ""
 Private Const STYLE_BOLDITALIC As String = ""
 Private Const DEBUG_ENABLED As Boolean = True
+Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
 
 Public Sub ConvertMarkdownInSelection()
     LogDebug "ConvertMarkdownInSelection: start"
@@ -34,20 +35,9 @@ End Sub
 
 Public Sub ConvertMarkdownInContentControl()
     LogDebug "ConvertMarkdownInContentControl: start"
-    Dim rng As Range
-    Set rng = ResolveBookmarkRange("Chapter1_start", "Chapter1_end")
-    If Not rng Is Nothing Then
-        ConvertMarkdownRange rng
-        Exit Sub
-    End If
-
-    Dim cc As ContentControl
-    Set cc = FindContentControl("Chapter1")
-    If cc Is Nothing Then
-        MsgBox "Content control or bookmark for Chapter1 not found.", vbExclamation
-        Exit Sub
-    End If
-    ConvertMarkdownWithUnlock cc, cc.Range
+    Dim chapterId As String
+    chapterId = "1"
+    ConvertMarkdownForChapter chapterId
 End Sub
 
 Private Sub ConvertMarkdownWithUnlock(ByVal cc As ContentControl, ByVal rng As Range)
@@ -77,6 +67,68 @@ Private Sub ConvertMarkdownRange(ByVal rng As Range)
     End If
     ConvertMarkdownPlainRange rng
 End Sub
+
+Public Sub ConvertMarkdownChapterDialog()
+    Dim chapterId As String
+    chapterId = PromptChapterId("Markdown for chapter (0, 1-14, 4.8):")
+    If Len(chapterId) = 0 Then Exit Sub
+    ConvertMarkdownForChapter chapterId
+End Sub
+
+Public Sub ConvertMarkdownAll()
+    Dim ids() As String
+    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    Dim i As Long
+    For i = LBound(ids) To UBound(ids)
+        ConvertMarkdownForChapter Trim$(ids(i))
+    Next i
+    MsgBox "Markdown for all chapters completed.", vbInformation
+End Sub
+
+Public Sub ConvertMarkdownForChapter(ByVal chapterId As String)
+    Dim startName As String
+    Dim endName As String
+    BuildChapterBookmarks chapterId, startName, endName
+
+    Dim rng As Range
+    Set rng = ResolveBookmarkRange(startName, endName)
+    If rng Is Nothing Then
+        LogDebug "Markdown: bookmark range missing for chapter " & chapterId
+        Exit Sub
+    End If
+    ConvertMarkdownRange rng
+End Sub
+
+Private Sub BuildChapterBookmarks(ByVal chapterId As String, ByRef startName As String, ByRef endName As String)
+    startName = "Chapter" & chapterId & "_start"
+    endName = "Chapter" & chapterId & "_end"
+    startName = Replace(startName, ".", "_")
+    endName = Replace(endName, ".", "_")
+End Sub
+
+Private Function PromptChapterId(ByVal prompt As String) As String
+    Dim input As String
+    input = InputBox(prompt, "Choose chapter", "1")
+    input = Trim$(input)
+    If Len(input) = 0 Then Exit Function
+    If Not IsValidChapterId(input) Then
+        MsgBox "Invalid chapter ID: " & input, vbExclamation
+        Exit Function
+    End If
+    PromptChapterId = input
+End Function
+
+Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
+    Dim ids() As String
+    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    Dim i As Long
+    For i = LBound(ids) To UBound(ids)
+        If Trim$(ids(i)) = Trim$(chapterId) Then
+            IsValidChapterId = True
+            Exit Function
+        End If
+    Next i
+End Function
 
 Private Sub ConvertMarkdownCell(ByVal cell As Cell)
     LogDebug "ConvertMarkdownCell"

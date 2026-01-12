@@ -3,6 +3,7 @@
     meta: {
       projectId: "2026-TEST-001",
       company: "ACME AG",
+      companyId: "CH-000000",
       locale: "de-CH",
       author: "consultant@example.com",
       createdAt: new Date().toISOString(),

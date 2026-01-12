@@ -3,9 +3,11 @@
     <tabs>
       <tab id="tabAutoBericht" label="AutoBericht">
         <group id="grpAutoBerichtMain" label="AutoBericht">
-          <button id="btnAutoBerichtImport" label="Import" size="large" imageMso="FileOpen" onAction="AB_ImportReport" />
-          <button id="btnAutoBerichtMarkdown" label="Markdown" size="large" imageMso="TextToTable" onAction="AB_ConvertMarkdown" />
-          <button id="btnAutoBerichtLogo" label="Logo" size="large" imageMso="PictureInsert" onAction="AB_InsertLogo" />
+          <button id="btnAutoBerichtImportChapter" label="Import chapter…" size="large" imageMso="TableInsert" onAction="AB_ImportChapterDialog" />
+          <button id="btnAutoBerichtImportAll" label="Import all" size="large" imageMso="TableInsertDialog" onAction="AB_ImportAll" />
+          <button id="btnAutoBerichtMarkdownChapter" label="Markdown chapter…" size="large" imageMso="TextToTable" onAction="AB_ConvertMarkdownChapter" />
+          <button id="btnAutoBerichtMarkdownAll" label="Markdown all" size="large" imageMso="TextToTableDialog" onAction="AB_ConvertMarkdownAll" />
+          <button id="btnAutoBerichtLogo" label="Insert logo" size="large" imageMso="PictureInsertFromFile" onAction="AB_InsertLogo" />
         </group>
         <group id="grpAutoBerichtPpt" label="PowerPoint">
           <button id="btnAutoBerichtPptReport" label="PPT Bericht" size="large" imageMso="SlideNew" onAction="AB_ExportPptReport" />

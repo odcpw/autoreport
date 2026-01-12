@@ -100,6 +100,8 @@
       if (!elements.settingsModal) return;
       elements.settingsAuthorEl.value = state.project.meta?.author || "";
       elements.settingsInitialsEl.value = state.project.meta?.initials || "";
+      elements.settingsCompanyEl.value = state.project.meta?.company || "";
+      elements.settingsCompanyIdEl.value = state.project.meta?.companyId || "";
       elements.settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
       const libraryName = stateHelpers.getLibraryFileName(state.project.meta || {});
       if (elements.settingsLibraryHintEl) {
@@ -119,6 +121,8 @@
       normalizeHelpers.ensureProjectMeta(state.project, i18n.setLocale);
       state.project.meta.author = elements.settingsAuthorEl.value.trim();
       state.project.meta.initials = elements.settingsInitialsEl.value.trim();
+      state.project.meta.company = elements.settingsCompanyEl.value.trim();
+      state.project.meta.companyId = elements.settingsCompanyIdEl.value.trim();
       state.project.meta.locale = elements.settingsLocaleEl.value || "de-CH";
       if (elements.settingsLibraryHintEl) {
         elements.settingsLibraryHintEl.textContent = `Library file: ${stateHelpers.getLibraryFileName(state.project.meta)} (timestamped backup on generate).`;
