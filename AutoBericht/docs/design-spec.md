@@ -273,6 +273,7 @@ Benefits
 - Word remains the single source of formatting truth.
 - No unsafe browser flags and no Excel dependency for export.
 - Templates can be updated independently by corporate design.
+- Chapter tables: inserted at 100% width with percent-based columns (35/58/7) set before any merges; table wrapping enabled (WrapAroundText). Header merges happen after sizing, and we avoid AutoFit-to-contents to keep column 3 stable.
 
 ## 11b. PowerPoint Export (Draft)
 
