@@ -349,7 +349,7 @@ Seed and library resolution (fresh projects):
 - If no sidecar, load a user **knowledge base** in project root
   (e.g., `library_user_XX_de-CH.json`) and use it **as-is**.
 - If no user knowledge base, load bundled seed knowledge base from
-  `AutoBericht/data/seed/knowledge_base_*.json`.
+  `AutoBericht/data/seed/knowledge_base_*.json` (single source of defaults: tags, structure, content).
 - If neither exists, the app reports an error (no hidden fallbacks).
 
 ### 12a. Current Sidecar Schema (as implemented)
