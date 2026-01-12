@@ -1,0 +1,1 @@
+Ribbon note: ProjectTemplate/Templates/Vorlage IST-Aufnahme-Bericht d.V01.docm already has customUI/customUI.xml injected (commit 3723b34). Backup: .bak.docm. If ribbon changes again, re-run the inject step or the refresh_ribbon.bas macro (though manual ZIP replace is most reliable).
