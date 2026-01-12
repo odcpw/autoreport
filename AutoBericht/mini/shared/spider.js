@@ -92,16 +92,22 @@
         const weight = itemWeights.get(id);
         if (!weight || Number.isNaN(weight)) return;
         const chapterId = id.split(".")[0];
+        const chapterTitle = (() => {
+          if (row.sectionLabel) return row.sectionLabel;
+          if (chapter.title?.de) return `${chapterId}. ${chapter.title.de}`;
+          return chapterId;
+        })();
         const consPct = (() => {
           const ws = row.workstate || {};
           if (ws.includeFinding === false) return 100;
           return LEVEL_TO_PCT(ws.selectedLevel || 1);
         })();
         const compPct = pctFromCustomer(row);
-        const acc = totals.get(chapterId) || { w: 0, comp: 0, cons: 0 };
+        const acc = totals.get(chapterId) || { w: 0, comp: 0, cons: 0, title: chapterTitle };
         acc.w += weight;
         acc.comp += weight * compPct;
         acc.cons += weight * consPct;
+        if (!acc.title && chapterTitle) acc.title = chapterTitle;
         totals.set(chapterId, acc);
       });
     });
@@ -115,12 +121,13 @@
     const build = (predicate) => chapters
       .filter(predicate)
       .map((ch) => {
-        const acc = totals.get(String(ch.id)) || { w: 0, comp: 0, cons: 0 };
+        const acc = totals.get(String(ch.id)) || { w: 0, comp: 0, cons: 0, title: "" };
         const denom = acc.w || ch.weightSum || 0;
         const comp = denom ? acc.comp / denom : 0;
         const cons = denom ? acc.cons / denom : 0;
         return {
           id: String(ch.id),
+          label: acc.title || `${ch.id}`,
           weightSum: denom,
           company: round5(comp),
           consultant: round5(cons),

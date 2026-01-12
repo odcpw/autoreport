@@ -658,7 +658,10 @@ Public Sub InsertSpiderChart()
     Dim r As Long: r = 2
     Dim item As Variant
     For Each item In selected
-        wsData.Cells(r, 1).Value = SafeText(item, "id")
+        Dim label As String
+        label = SafeText(item, "label")
+        If Len(label) = 0 Then label = SafeText(item, "id")
+        wsData.Cells(r, 1).Value = label
         wsData.Cells(r, 2).Value = CDbl(Val(SafeText(item, "company")))
         wsData.Cells(r, 3).Value = CDbl(Val(SafeText(item, "consultant")))
         r = r + 1
@@ -671,31 +674,23 @@ Public Sub InsertSpiderChart()
     Dim dataRange As Object
     Set dataRange = wsData.Range(wsData.Cells(1, 1), wsData.Cells(lastRow, 3))
 
-    ' Try bulk binding first; if the host balks (type mismatch), fall back to manual series wiring.
+    ' Manual series wiring to avoid host PlotBy quirks and ensure both series render
     On Error Resume Next
-    cht.SetSourceData Source:=dataRange, PlotBy:=2 ' 2 = xlColumns
-    If Err.Number <> 0 Then
-        Err.Clear
-        ' Manual series setup
-        Dim sc As Object
-        For Each sc In cht.SeriesCollection
-            sc.Delete
-        Next sc
-        cht.SeriesCollection.NewSeries
-        cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
-        cht.SeriesCollection(1).Values = wsData.Range(wsData.Cells(2, 2), wsData.Cells(lastRow, 2))
-        cht.SeriesCollection(1).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
-
-        cht.SeriesCollection.NewSeries
-        cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
-        cht.SeriesCollection(2).Values = wsData.Range(wsData.Cells(2, 3), wsData.Cells(lastRow, 3))
-        cht.SeriesCollection(2).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
-    Else
-        ' Ensure series names follow our desired wording
-        cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
-        cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
-    End If
+    Dim sc As Object
+    For Each sc In cht.SeriesCollection
+        sc.Delete
+    Next sc
     On Error GoTo 0
+
+    cht.SeriesCollection.NewSeries
+    cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
+    cht.SeriesCollection(1).Values = wsData.Range(wsData.Cells(2, 2), wsData.Cells(lastRow, 2))
+    cht.SeriesCollection(1).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
+
+    cht.SeriesCollection.NewSeries
+    cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
+    cht.SeriesCollection(2).Values = wsData.Range(wsData.Cells(2, 3), wsData.Cells(lastRow, 3))
+    cht.SeriesCollection(2).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
 
     ' Style chart
     cht.HasTitle = False
