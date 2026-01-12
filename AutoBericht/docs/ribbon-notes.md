@@ -63,6 +63,14 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - Validate XML: unique ids, escaped `&`, controls live inside a `<group>`.
 - Restart Word fully when testing; UI state can cache.
 
+## Preflight script (foolproof)
+Run before shipping any ribbon change:
+```bash
+python tools/check-ribbon.py  # defaults to ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm
+# or python tools/check-ribbon.py path/to/file.docm
+```
+Checks: customUI part exists once, single content-type override, single root relationship to `customUI/customUI.xml` (no leading slash), no duplicate ui/extensibility rels in `word/_rels/document.xml.rels`, namespace = 2006/01. Fails (exit 1) if any issue is found.
+
 ## 2026-01 refresh (what works now)
 - Replaced PowerPoint-only `imageMso` ids with Word-safe icons: `FileOpen`, `TextToTableDialog`, `FormatPainter`, `MailMergeInsertFields`, `PictureInsertFromFile`, `ChartRadar`, `FileSaveAsPdfOrXps`.
 - Added in-group separators in Markdown and Export groups; separators are only valid inside `<group>`.
