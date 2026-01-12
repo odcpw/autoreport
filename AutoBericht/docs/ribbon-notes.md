@@ -45,4 +45,5 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 ## Current project status
 - Ribbon XML lives in `AutoBericht/vba/ribbon.xml`.
 - Templates now reside in `ProjectTemplate/` root (`Vorlage IST-Aufnahme-Bericht d.V01.docm`, `Vorlage AutoBericht.pptx`).
-- If a repair prompt reappears, re‑embed the ribbon using the steps above to eliminate duplicate overrides/relationships left by manual zip edits.
+- If a repair prompt reappears, re-embed the ribbon using the steps above to eliminate duplicate overrides/relationships left by manual zip edits.
+ - Jan 2026: fixed DOCM `_rels/.rels` target from `/customUI/customUI.xml` to `customUI/customUI.xml` (leading slash caused repair prompt).
