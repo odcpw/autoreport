@@ -83,7 +83,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 ## Documentation
 
-📚 **[Complete Documentation Index →](docs/INDEX.md)**
+📚 **[Status & Docs →](STATUS.md)**
 
 ### Key Documents
 
@@ -184,4 +184,4 @@ Internal use only. All rights reserved.
 
 ---
 
-**Next Steps**: Read the [Documentation Index](docs/INDEX.md) or jump to [Workflow](AutoBericht/docs/workflow.md)
+**Next Steps**: Read the [Status](STATUS.md) or jump to [Workflow](AutoBericht/docs/workflow.md)
