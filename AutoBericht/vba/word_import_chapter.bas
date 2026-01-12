@@ -19,8 +19,8 @@ Private Const LOGO_HEIGHT_CM As Double = 1#
 Private Const LOGO_HEIGHT_MAIN_CM As Double = 2#
 Private Const LOGO_HEIGHT_HEADER_CM As Double = 0.8#
 Private Const SPIDER_MARKER As String = "SPIDER$$"
-Private Const SPIDER_SERIES_COMPANY As String = "Company"
-Private Const SPIDER_SERIES_CONSULTANT As String = "Consultant"
+Private Const SPIDER_SERIES_COMPANY As String = "Selbstbeurteilung"
+Private Const SPIDER_SERIES_CONSULTANT As String = "Ist-Aufnahme Suva"
 Private Const SPIDER_CHART_TYPE As Long = -4151 ' xlRadarMarkers
 Private Const SPIDER_AXIS_MIN As Double = 0
 Private Const SPIDER_AXIS_MAX As Double = 100
@@ -541,6 +541,17 @@ Public Sub InsertSpiderChart()
     Dim root As Object
     Set root = JsonConverter.ParseJson(jsonText)
 
+    Dim report As Object
+    Set report = GetObject(root, "report")
+    Dim project As Object
+    Dim meta As Object
+    If Not report Is Nothing Then
+        Set project = GetObject(report, "project")
+        If Not project Is Nothing Then
+            Set meta = GetObject(project, "meta")
+        End If
+    End If
+
     Dim spider As Object
     Set spider = GetObject(root, "spider")
     If spider Is Nothing Then
@@ -599,23 +610,31 @@ Public Sub InsertSpiderChart()
     Dim cht As Object
     Set cht = ish.Chart
 
-    ' Build data arrays (avoid SetSourceData type issues)
-    Dim n As Long: n = selected.Count
-    Dim cats() As Variant, comp() As Variant, cons() As Variant
-    ReDim cats(1 To n)
-    ReDim comp(1 To n)
-    ReDim cons(1 To n)
+    ' Use chart data workbook to avoid category/value swap issues
+    cht.ChartData.Activate
+    Dim wbData As Object
+    Set wbData = cht.ChartData.Workbook
+    Dim wsData As Object
+    Set wsData = wbData.Worksheets(1)
+    wsData.Cells.Clear
 
-    Dim idx As Long: idx = 1
+    wsData.Cells(1, 1).Value = "Kapitel"
+    wsData.Cells(1, 2).Value = IIf(Not meta Is Nothing And SafeText(meta, "company") <> "", "Selbstbeurteilung " & SafeText(meta, "company"), SPIDER_SERIES_COMPANY)
+    wsData.Cells(1, 3).Value = SPIDER_SERIES_CONSULTANT
+
+    Dim r As Long: r = 2
     Dim item As Variant
     For Each item In selected
-        cats(idx) = SafeText(item, "id")
-        comp(idx) = CDbl(Val(SafeText(item, "company")))
-        cons(idx) = CDbl(Val(SafeText(item, "consultant")))
-        idx = idx + 1
+        wsData.Cells(r, 1).Value = SafeText(item, "id")
+        wsData.Cells(r, 2).Value = CDbl(Val(SafeText(item, "company")))
+        wsData.Cells(r, 3).Value = CDbl(Val(SafeText(item, "consultant")))
+        r = r + 1
     Next item
 
-    ' Reset series and assign data
+    Dim lastRow As Long
+    lastRow = r - 1
+
+    ' Reset series and bind to worksheet ranges
     On Error Resume Next
     Dim sc As Object
     For Each sc In cht.FullSeriesCollection
@@ -624,14 +643,14 @@ Public Sub InsertSpiderChart()
     On Error GoTo 0
 
     cht.FullSeriesCollection.NewSeries
-    cht.FullSeriesCollection(1).Name = SPIDER_SERIES_COMPANY
-    cht.FullSeriesCollection(1).Values = comp
-    cht.FullSeriesCollection(1).XValues = cats
+    cht.FullSeriesCollection(1).Name = wsData.Cells(1, 2).Value
+    cht.FullSeriesCollection(1).Values = wsData.Range(wsData.Cells(2, 2), wsData.Cells(lastRow, 2))
+    cht.FullSeriesCollection(1).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
 
     cht.FullSeriesCollection.NewSeries
-    cht.FullSeriesCollection(2).Name = SPIDER_SERIES_CONSULTANT
-    cht.FullSeriesCollection(2).Values = cons
-    cht.FullSeriesCollection(2).XValues = cats
+    cht.FullSeriesCollection(2).Name = wsData.Cells(1, 3).Value
+    cht.FullSeriesCollection(2).Values = wsData.Range(wsData.Cells(2, 3), wsData.Cells(lastRow, 3))
+    cht.FullSeriesCollection(2).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
 
     ' Style chart
     cht.HasTitle = False
