@@ -186,6 +186,21 @@
       await loadProjectSidecar();
     };
 
+    const fillMissingTagsFromSeed = async () => {
+      if (state.tagOptions?.report?.length && state.tagOptions?.observations?.length && state.tagOptions?.training?.length) return;
+      const knowledgeBase = await readKnowledgeBase();
+      if (!knowledgeBase?.tags) return;
+      const seedOptions = tagsApi.ensureTagOptions(knowledgeBase.tags);
+      state.tagOptions = {
+        report: state.tagOptions?.report?.length ? state.tagOptions.report : seedOptions.report,
+        observations: state.tagOptions?.observations?.length ? state.tagOptions.observations : seedOptions.observations,
+        training: state.tagOptions?.training?.length ? state.tagOptions.training : seedOptions.training,
+      };
+      if (state.projectDoc) {
+        state.projectDoc.photoTagOptions = structuredClone(state.tagOptions);
+      }
+    };
+
     const loadProjectSidecar = async () => {
       if (!state.projectHandle) return;
       try {
@@ -205,6 +220,8 @@
           state.tagOptions.report = reportOptions;
           state.projectDoc.photoTagOptions.report = reportOptions;
         }
+        await fillMissingTagsFromSeed();
+        normalizeHelpers.ensureObservationRowsFromTags(state.projectDoc, state.tagOptions);
         state.photoRootName = state.projectDoc.photoRoot || "";
         setStatus("Loaded project_sidecar.json");
         debug.logLine("info", "Loaded project_sidecar.json");
@@ -224,6 +241,8 @@
           }
           state.tagOptions = nextOptions;
           state.projectDoc.photoTagOptions = structuredClone(nextOptions);
+          await fillMissingTagsFromSeed();
+          normalizeHelpers.ensureObservationRowsFromTags(state.projectDoc, state.tagOptions);
         } else {
           statusMessage = "Sidecar not found and knowledge base missing.";
           debug.logLine("error", "Knowledge base not found. Tags unavailable.");
