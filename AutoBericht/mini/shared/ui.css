@@ -181,6 +181,8 @@ button.ghost {
   margin: 0 0 10px 0;
   color: #4a4a4a;
   font-size: 0.9rem;
+  display: block;
+  line-height: 1.4;
 }
 
 .modal__actions {
