@@ -308,6 +308,9 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.Rows.Alignment = wdAlignRowLeft
     tbl.Rows.AllowBreakAcrossPages = True
     tbl.Range.ParagraphFormat.Alignment = wdAlignParagraphLeft
+    On Error Resume Next
+    tbl.Rows.WrapAroundText = True ' place table in text-wrapping (floating) mode instead of inline
+    On Error GoTo 0
     LogDebug "ImportChapterTable: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
     On Error Resume Next
     tbl.Style = STYLE_TABLE
@@ -427,6 +430,20 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         tbl.Rows(h).AllowBreakAcrossPages = False
         On Error GoTo 0
     Next h
+
+    ' Re-apply column widths after merges to keep col 3 at the configured width
+    On Error Resume Next
+    tbl.AllowAutoFit = False
+    tbl.PreferredWidthType = wdPreferredWidthPercent
+    tbl.PreferredWidth = 100
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
+    tbl.AutoFitBehavior wdAutoFitFixed
+    On Error GoTo 0
 
     LogDebug "ImportChapterTable: done"
     ResetTableBookmarks startBm, endBm, tbl
