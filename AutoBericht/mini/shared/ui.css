@@ -144,6 +144,10 @@ button.ghost {
   box-shadow: var(--ui-shadow-lg);
 }
 
+.modal__content--wide {
+  width: min(900px, 94vw);
+}
+
 .modal__header {
   display: flex;
   align-items: center;
@@ -178,4 +182,26 @@ button.ghost {
   justify-content: flex-end;
   gap: 8px;
   flex-wrap: wrap;
+}
+
+.spider-table-wrapper {
+  overflow-x: auto;
+}
+
+.spider-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+}
+
+.spider-table th,
+.spider-table td {
+  border: 1px solid #e0d7c8;
+  padding: 6px 8px;
+  text-align: left;
+}
+
+.spider-table input[type="number"] {
+  width: 100%;
+  box-sizing: border-box;
 }

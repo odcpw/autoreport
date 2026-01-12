@@ -135,6 +135,7 @@
     filters: {
       mode: "all",
     },
+    spiderOverrides: {},
     photoIndex: {
       report: new Map(),
       observations: new Map(),

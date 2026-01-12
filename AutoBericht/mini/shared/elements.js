@@ -6,6 +6,7 @@
     importSelfBtn: document.getElementById("import-self"),
     loadSeedsBtn: document.getElementById("load-seeds"),
     saveLogBtn: document.getElementById("save-log"),
+    openSpiderBtn: document.getElementById("open-spider"),
     openSettingsBtn: document.getElementById("open-settings"),
     settingsModal: document.getElementById("settings-modal"),
     settingsBackdrop: document.getElementById("settings-close"),
@@ -36,6 +37,12 @@
     checklistOverlayHint: document.getElementById("checklist-overlay-hint"),
     checklistFiltersEl: document.getElementById("checklist-filters"),
     checklistListEl: document.getElementById("checklist-list"),
+    spiderModal: document.getElementById("spider-modal"),
+    spiderCloseBtn: document.getElementById("spider-close-btn"),
+    spiderCancelBtn: document.getElementById("spider-cancel"),
+    spiderBackdrop: document.getElementById("spider-close"),
+    spiderSaveBtn: document.getElementById("spider-save"),
+    spiderTableBody: document.getElementById("spider-table-body"),
     filterModeEls: Array.from(document.querySelectorAll('input[name="filter-mode"]')),
   });
 

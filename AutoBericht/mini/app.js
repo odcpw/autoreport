@@ -13,6 +13,8 @@
   const ioModule = window.AutoBerichtSidecar || {};
   const renderModule = window.AutoBerichtRender || {};
   const importModule = window.AutoBerichtImportSelf || {};
+  const spiderModule = window.AutoBerichtSpider || {};
+  const spiderUiModule = window.AutoBerichtSpiderUi || {};
   const bindModule = window.AutoBerichtBindEvents || {};
 
   const t = i18n.t || ((key, fallback) => fallback || key);
@@ -61,6 +63,7 @@
       normalizeHelpers,
       seeds,
       renderApi,
+      spiderModule,
     })
     : {
       loadProjectFromFolder: async () => false,
@@ -87,6 +90,7 @@
     if (elements.saveSidecarBtn) elements.saveSidecarBtn.disabled = !enabled;
     if (elements.loadSeedsBtn) elements.loadSeedsBtn.disabled = !enabled;
     if (elements.importSelfBtn) elements.importSelfBtn.disabled = !enabled;
+    if (elements.openSpiderBtn) elements.openSpiderBtn.disabled = !enabled;
   };
 
   const persistHandle = async (handle) => {
@@ -196,6 +200,9 @@
     renderApi.render();
     if (!runtime.dirHandle) {
       await autoLoadSeeds();
+    }
+    if (spiderUiModule.init) {
+      spiderUiModule.init(ctx, { spider: spiderModule, ioApi });
     }
   };
 

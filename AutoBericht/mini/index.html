@@ -21,6 +21,7 @@
         <button id="save-sidecar" disabled>Save sidecar</button>
         <button id="import-self" disabled>Import Selbstbeurteilung</button>
         <button id="load-seeds" disabled>Load seed data</button>
+        <button id="open-spider" class="ghost" disabled>Spider overrides</button>
         <button id="save-log">Save debug log</button>
       </div>
     </header>
@@ -120,6 +121,39 @@
         </div>
       </div>
     </div>
+
+    <div class="modal" id="spider-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="spider-close"></div>
+      <div class="modal__content modal__content--wide" role="dialog" aria-modal="true" aria-labelledby="spider-title">
+        <div class="modal__header">
+          <h3 id="spider-title">Spider Overrides (Kapitelwerte)</h3>
+          <button id="spider-close-btn" type="button" class="modal__close" aria-label="Close spider overrides">×</button>
+        </div>
+        <div class="modal__body">
+          <p class="hint">Basiswerte werden aus Antworten und Gewichten berechnet. Optional kannst du Kapitelwerte überschreiben.</p>
+          <div class="spider-table-wrapper">
+            <table class="spider-table">
+              <thead>
+                <tr>
+                  <th>Kapitel</th>
+                  <th>Company % (berechnet)</th>
+                  <th>Override</th>
+                  <th>Use</th>
+                  <th>Consultant % (berechnet)</th>
+                  <th>Override</th>
+                  <th>Use</th>
+                </tr>
+              </thead>
+              <tbody id="spider-table-body"></tbody>
+            </table>
+          </div>
+        </div>
+        <div class="modal__actions">
+          <button id="spider-save" type="button">Save overrides</button>
+          <button id="spider-cancel" type="button" class="ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
   </div>
 
   <script src="../libs/sheetjs/xlsx.full.min.js"></script>
@@ -130,6 +164,8 @@
   <script src="shared/state.js"></script>
   <script src="shared/normalize.js"></script>
   <script src="shared/seeds.js"></script>
+  <script src="shared/spider.js"></script>
+  <script src="shared/spider-ui.js"></script>
   <script src="shared/io-sidecar.js"></script>
   <script src="shared/import-self.js"></script>
   <script src="shared/render.js"></script>

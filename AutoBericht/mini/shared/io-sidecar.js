@@ -5,6 +5,7 @@
       normalizeHelpers,
       seeds,
       renderApi,
+      spiderModule,
     } = deps;
     const { state, runtime, debug, setStatus } = ctx;
 
@@ -15,11 +16,12 @@
       return null;
     };
 
-    const mergeSidecar = (baseDoc, project) => {
+    const mergeSidecar = (baseDoc, project, spiderData) => {
       const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
       if (!merged.meta) merged.meta = {};
       merged.meta.updatedAt = new Date().toISOString();
       merged.report = { project };
+      if (spiderData) merged.spider = spiderData;
       return merged;
     };
 
@@ -34,6 +36,7 @@
           || structuredClone(stateHelpers.defaultProject);
         state.project = normalizeHelpers.normalizeProject(reportProject, ctx.i18n.setLocale);
         normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+        state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
         renderApi.buildPhotoIndex();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
@@ -49,6 +52,7 @@
           });
           normalizeHelpers.normalizeProject(state.project, ctx.i18n.setLocale);
           normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+          state.spiderOverrides = {};
           state.selectedChapterId = state.project.chapters[0]?.id || "";
           runtime.sidecarDoc = null;
           renderApi.buildPhotoIndex();
@@ -66,6 +70,7 @@
             ctx.i18n.setLocale,
           );
           normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+          state.spiderOverrides = {};
           state.selectedChapterId = "";
           runtime.sidecarDoc = null;
           renderApi.buildPhotoIndex();
@@ -89,7 +94,19 @@
         } catch (err) {
           existing = runtime.sidecarDoc;
         }
-        const payload = mergeSidecar(existing, state.project);
+        let spiderData = null;
+        if (spiderModule?.computeSpider) {
+          try {
+            spiderData = await spiderModule.computeSpider({
+              project: state.project,
+              overrides: state.spiderOverrides || {},
+              dirHandle: runtime.dirHandle,
+            });
+          } catch (err) {
+            debug.logLine("error", `Spider compute failed: ${err.message || err}`);
+          }
+        }
+        const payload = mergeSidecar(existing, state.project, spiderData);
         const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json", { create: true });
         const writable = await handle.createWritable();
         await writable.write(JSON.stringify(payload, null, 2));
