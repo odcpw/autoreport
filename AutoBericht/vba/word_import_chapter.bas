@@ -11,13 +11,15 @@ Private Const STYLE_TABLE As String = "Grid Table Light"
 Private Const STYLE_LIST As String = "List Paragraph"
 Private Const DEBUG_ENABLED As Boolean = True
 Private Const USE_MARKER_TOKENS As Boolean = False
-Private Const LOGO_MARKER As String = "LOGO$$"
-Private Const LOGO_MARKER_MAIN As String = "LOGO_MAIN$$"
-Private Const LOGO_MARKER_HEADER As String = "LOGO_HEADER$$"
+Private Const LOGO_MARKER As String = "LOGO$$"            ' legacy
+Private Const LOGO_MARKER_MAIN As String = "LOGO_MAIN$$"  ' legacy main
+Private Const LOGO_MARKER_HEADER As String = "LOGO_HEADER$$" ' legacy header
+Private Const LOGO_MARKER_BIG As String = "LOGO_BIG$$"
+Private Const LOGO_MARKER_SMALL As String = "LOGO_SMALL$$"
 Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
-Private Const LOGO_HEIGHT_CM As Double = 1#
-Private Const LOGO_HEIGHT_MAIN_CM As Double = 2#
-Private Const LOGO_HEIGHT_HEADER_CM As Double = 0.8#
+Private Const LOGO_HEIGHT_CM As Double = 1#              ' legacy
+Private Const LOGO_HEIGHT_MAIN_CM As Double = 2#         ' big logo
+Private Const LOGO_HEIGHT_HEADER_CM As Double = 0.8#     ' small logo
 Private Const SPIDER_MARKER As String = "SPIDER$$"
 Private Const SPIDER_SERIES_COMPANY As String = "Selbstbeurteilung"
 Private Const SPIDER_SERIES_CONSULTANT As String = "Beurteilung durch Suva"
@@ -28,10 +30,13 @@ Private Const SPIDER_SHOW_LEGEND As Boolean = True
 Private Const SPIDER_LEGEND_POS As Long = -4107 ' xlLegendPositionBottom
 Private Const SPIDER_PROMPT_WHEN_BOTH As Boolean = True
 Private Const SPIDER_PREFER_14 As Boolean = True ' used when no prompt or only one available
+Private Const WD_FORMAT_DOCX As Long = 12
+Private Const TEXT_MARKER_MODERATOR As String = "MOD$$"
+Private Const TEXT_MARKER_CO_MODERATOR As String = "CO$$"
 
 ' === TABLE CONFIG (edit widths as needed) ===
-Private Const COL1_WIDTH_PCT As Long = 38
-Private Const COL2_WIDTH_PCT As Long = 55
+Private Const COL1_WIDTH_PCT As Long = 35
+Private Const COL2_WIDTH_PCT As Long = 58
 Private Const COL3_WIDTH_PCT As Long = 7
 Private Const HEADER_CHECKMARK As String = "✓"
 
@@ -160,7 +165,11 @@ Public Sub ImportChapterDialog()
     Dim chapterId As String
     chapterId = PromptChapterId("Import chapter (0, 1-14, 4.8):")
     If Len(chapterId) = 0 Then Exit Sub
-    ImportChapterTable chapterId, BuildStartBookmark(chapterId), BuildEndBookmark(chapterId)
+    If chapterId = "0" Then
+        ImportChapter0Summary
+    Else
+        ImportChapterTable chapterId, BuildStartBookmark(chapterId), BuildEndBookmark(chapterId)
+    End If
 End Sub
 
 Public Sub ImportChapterAll()
@@ -175,6 +184,7 @@ Public Sub ImportChapterAll()
             ImportChapterTable cid, BuildStartBookmark(cid), BuildEndBookmark(cid)
         End If
     Next i
+    SaveReportAsFromSidecar
 End Sub
 
 Private Function BuildStartBookmark(ByVal chapterId As String) As String
@@ -295,6 +305,9 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
 
     Dim tbl As Table
     Set tbl = ActiveDocument.Tables.Add(insertRng, tableRowCount + 3, 3)
+    tbl.Rows.Alignment = wdAlignRowLeft
+    tbl.Rows.AllowBreakAcrossPages = True
+    tbl.Range.ParagraphFormat.Alignment = wdAlignParagraphLeft
     LogDebug "ImportChapterTable: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
     On Error Resume Next
     tbl.Style = STYLE_TABLE
@@ -313,20 +326,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         .LineWidth = wdLineWidth050pt
     End With
     On Error GoTo 0
-
-    ' Column widths before filling content (percent-based)
-    On Error Resume Next
-    tbl.AllowAutoFit = False
-    tbl.PreferredWidthType = wdPreferredWidthPercent
-    tbl.PreferredWidth = 100
-    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
-    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
-    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
-    On Error GoTo 0
-    tbl.AutoFitBehavior wdAutoFitFixed
 
     ' Header row 1: blank + checkmark (merge later)
     If tbl.Rows(1).Cells.Count < 3 Then
@@ -354,6 +353,20 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.Cell(3, 3).Range.Text = "Prio"
     tbl.Rows(3).Range.Font.Bold = True
     tbl.Cell(3, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
+
+    ' Column widths after headers populated but before any merges
+    On Error Resume Next
+    tbl.AllowAutoFit = False
+    tbl.PreferredWidthType = wdPreferredWidthPercent
+    tbl.PreferredWidth = 100
+    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
+    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
+    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
+    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
+    On Error GoTo 0
+    tbl.AutoFitBehavior wdAutoFitFixed
 
     Dim row As Variant
     Dim targetRow As Long
@@ -419,40 +432,58 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     ResetTableBookmarks startBm, endBm, tbl
 End Sub
 
-Public Sub InsertLogoAtToken()
-    InsertLogoGeneric LOGO_MARKER_MAIN, LOGO_HEIGHT_MAIN_CM, False
-End Sub
-
-Public Sub InsertLogoMain()
-    InsertLogoGeneric LOGO_MARKER_MAIN, LOGO_HEIGHT_MAIN_CM, False
-End Sub
-
-Public Sub InsertLogoHeader()
-    InsertLogoGeneric LOGO_MARKER_HEADER, LOGO_HEIGHT_HEADER_CM, True
-End Sub
-
-Private Sub InsertLogoGeneric(ByVal marker As String, ByVal heightCm As Double, ByVal searchHeaders As Boolean)
+Public Sub InsertLogos()
+    ' Pick a logo once and place at BIG/SMALL markers.
     Dim logoPath As String
     logoPath = PickLogoFile()
     If Len(logoPath) = 0 Then Exit Sub
 
+    Dim insertedBig As Boolean
+    insertedBig = InsertLogoAtMarker(LOGO_MARKER_BIG, logoPath, LOGO_HEIGHT_MAIN_CM, False)
+
+    Dim insertedSmall As Boolean
+    insertedSmall = InsertLogoAtMarker(LOGO_MARKER_SMALL, logoPath, LOGO_HEIGHT_HEADER_CM, True)
+
+    If Not insertedBig And Not insertedSmall Then
+        MsgBox "Keine Logo-Marker gefunden (LOGO_BIG$$ / LOGO_SMALL$$).", vbExclamation
+    End If
+End Sub
+
+' Backward-compatible shims
+Public Sub InsertLogoAtToken()
+    InsertLogos
+End Sub
+
+Public Sub InsertLogoMain()
+    Dim logoPath As String
+    logoPath = PickLogoFile()
+    If Len(logoPath) = 0 Then Exit Sub
+    InsertLogoAtMarker LOGO_MARKER_MAIN, logoPath, LOGO_HEIGHT_MAIN_CM, False
+End Sub
+
+Public Sub InsertLogoHeader()
+    Dim logoPath As String
+    logoPath = PickLogoFile()
+    If Len(logoPath) = 0 Then Exit Sub
+    InsertLogoAtMarker LOGO_MARKER_HEADER, logoPath, LOGO_HEIGHT_HEADER_CM, True
+End Sub
+
+Private Function InsertLogoAtMarker(ByVal marker As String, ByVal logoPath As String, ByVal heightCm As Double, ByVal searchHeaders As Boolean) As Boolean
     Dim markerRange As Range
     Set markerRange = FindMarkerRange(marker)
     If markerRange Is Nothing And searchHeaders Then
         Set markerRange = FindMarkerRangeInHeaders(marker)
     End If
 
-    If markerRange Is Nothing Then
-        MsgBox "Logo token not found: " & marker, vbExclamation
-        Exit Sub
-    End If
+    If markerRange Is Nothing Then Exit Function
 
     markerRange.Text = ""
     Dim inline As InlineShape
     Set inline = markerRange.InlineShapes.AddPicture(FileName:=logoPath, LinkToFile:=False, SaveWithDocument:=True)
     inline.LockAspectRatio = True
     inline.Height = CentimetersToPoints(heightCm)
-End Sub
+    InsertLogoAtMarker = True
+End Function
 
 Public Sub ImportTextFields()
     ' Replace text field markers from sidecar metadata (NAME$$, COMPANY$$, etc.)
@@ -498,6 +529,8 @@ Public Sub ImportTextFields()
     ReplaceTextMarker "COMPANY$$", SafeText(meta, "company")
     ReplaceTextMarker "COMPANY_ID$$", SafeText(meta, "companyId")
     ReplaceTextMarker "AUTHOR$$", SafeText(meta, "author")
+    ReplaceTextMarker TEXT_MARKER_MODERATOR, SafeText(meta, "moderator")
+    ReplaceTextMarker TEXT_MARKER_CO_MODERATOR, SafeText(meta, "coModerator")
 
     ' Format date from ISO to DD.MM.YYYY
     Dim dateValue As String
@@ -632,23 +665,18 @@ Public Sub InsertSpiderChart()
     Dim lastRow As Long
     lastRow = r - 1
 
-    ' Reset series and bind to worksheet ranges
+    ' Bind series to worksheet ranges (series in columns: A=categories, B/C=values)
+    Dim dataRange As Object
+    Set dataRange = wsData.Range(wsData.Cells(1, 1), wsData.Cells(lastRow, 3))
+
+    ' 2 = xlColumns (avoid Excel constants to keep late-binding)
+    cht.SetSourceData Source:=dataRange, PlotBy:=2
+
+    ' Ensure series names follow our desired wording
     On Error Resume Next
-    Dim sc As Object
-    For Each sc In cht.FullSeriesCollection
-        sc.Delete
-    Next sc
+    cht.SeriesCollection(1).Name = wsData.Cells(1, 2).Value
+    cht.SeriesCollection(2).Name = wsData.Cells(1, 3).Value
     On Error GoTo 0
-
-    cht.FullSeriesCollection.NewSeries
-    cht.FullSeriesCollection(1).Name = wsData.Cells(1, 2).Value
-    cht.FullSeriesCollection(1).Values = wsData.Range(wsData.Cells(2, 2), wsData.Cells(lastRow, 2))
-    cht.FullSeriesCollection(1).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
-
-    cht.FullSeriesCollection.NewSeries
-    cht.FullSeriesCollection(2).Name = wsData.Cells(1, 3).Value
-    cht.FullSeriesCollection(2).Values = wsData.Range(wsData.Cells(2, 3), wsData.Cells(lastRow, 3))
-    cht.FullSeriesCollection(2).XValues = wsData.Range(wsData.Cells(2, 1), wsData.Cells(lastRow, 1))
 
     ' Style chart
     cht.HasTitle = False
@@ -659,8 +687,6 @@ Public Sub InsertSpiderChart()
         cht.HasLegend = False
     End If
     On Error Resume Next
-    cht.FullSeriesCollection(1).Name = SPIDER_SERIES_COMPANY
-    cht.FullSeriesCollection(2).Name = SPIDER_SERIES_CONSULTANT
     cht.Axes(XL_AXIS_VALUE).MinimumScale = SPIDER_AXIS_MIN
     cht.Axes(XL_AXIS_VALUE).MaximumScale = SPIDER_AXIS_MAX
     On Error GoTo 0
@@ -726,6 +752,45 @@ Private Function ResolveSidecarPath() As String
     ResolveSidecarPath = fd.SelectedItems(1)
 End Function
 
+Private Sub SaveReportAsFromSidecar()
+    On Error GoTo CleanFail
+    Dim jsonPath As String
+    jsonPath = ResolveSidecarPath()
+    If Len(jsonPath) = 0 Then Exit Sub
+
+    Dim jsonText As String
+    jsonText = ReadAllText(jsonPath)
+    If Len(jsonText) = 0 Then Exit Sub
+
+    Dim root As Object
+    Set root = JsonConverter.ParseJson(jsonText)
+    Dim meta As Object
+    Set meta = GetObject(GetObject(GetObject(root, "report"), "project"), "meta")
+
+    Dim company As String
+    company = SafeText(meta, "company")
+    If Len(company) = 0 Then company = "Unbenannt"
+    company = SanitizeFileName(company)
+
+    Dim folder As String
+    If Len(ActiveDocument.Path) > 0 Then
+        folder = ActiveDocument.Path
+    Else
+        folder = GetFolderFromPath(jsonPath)
+    End If
+    If Len(folder) = 0 Then Exit Sub
+
+    Dim fileName As String
+    fileName = Format(Date, "yyyy-mm-dd") & " " & company & " Ist Aufnahme Bericht.docx"
+    Dim fullPath As String
+    fullPath = folder & Application.PathSeparator & fileName
+
+    ActiveDocument.SaveAs2 FileName:=fullPath, FileFormat:=WD_FORMAT_DOCX, AddToRecentFiles:=False
+    Exit Sub
+CleanFail:
+    ' silent fail; avoid blocking imports
+End Sub
+
 Private Function ReadAllText(ByVal path As String) As String
     Dim text As String
     text = ReadAllTextUtf8(path)
@@ -759,6 +824,25 @@ Private Function ReadAllTextUtf8(ByVal path As String) As String
     Exit Function
 CleanFail:
     ReadAllTextUtf8 = ""
+End Function
+
+Private Function GetFolderFromPath(ByVal path As String) As String
+    Dim pos As Long
+    pos = InStrRev(path, Application.PathSeparator)
+    If pos > 0 Then
+        GetFolderFromPath = Left$(path, pos - 1)
+    End If
+End Function
+
+Private Function SanitizeFileName(ByVal value As String) As String
+    Dim badChars As Variant
+    badChars = Array("\\", "/", ":", "*", "?", """", "<", ">", "|")
+    Dim i As Long
+    SanitizeFileName = value
+    For i = LBound(badChars) To UBound(badChars)
+        SanitizeFileName = Replace$(SanitizeFileName, badChars(i), "_")
+    Next i
+    SanitizeFileName = Trim$(SanitizeFileName)
 End Function
 
 Private Function FileExists(ByVal path As String) As Boolean

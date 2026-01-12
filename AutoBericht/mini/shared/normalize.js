@@ -23,8 +23,15 @@
     if (!project.meta.locale) project.meta.locale = "de-CH";
     if (!project.meta.company) project.meta.company = "";
     if (!project.meta.companyId) project.meta.companyId = "";
-    if (!project.meta.author) project.meta.author = "";
-    if (!project.meta.initials) project.meta.initials = "";
+    if (!project.meta.moderator && project.meta.author) project.meta.moderator = project.meta.author;
+    if (!project.meta.moderator) project.meta.moderator = "";
+    if (!project.meta.moderatorInitials && project.meta.initials) project.meta.moderatorInitials = project.meta.initials;
+    if (!project.meta.moderatorInitials) project.meta.moderatorInitials = "";
+    if (!project.meta.coModerator) project.meta.coModerator = "";
+    if (!project.meta.coModeratorInitials) project.meta.coModeratorInitials = "";
+    // keep legacy fields aligned for backward compatibility
+    project.meta.author = project.meta.moderator;
+    project.meta.initials = project.meta.moderatorInitials;
     if (setLocale) setLocale(project.meta.locale);
   };
 

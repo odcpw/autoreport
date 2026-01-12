@@ -280,7 +280,7 @@ Goal: generate two slide decks from the sidecar JSON.
 
 Inputs:
 - `project_sidecar.json` (report + photo tags)
-- PowerPoint template deck(s) in `<Project>/Templates/`
+- PowerPoint template deck(s) in the project root (no `Templates/` folder)
 
 Outputs:
 - Report presentation (`YYYY-MM-DD_Report_*.pptx`) in the project folder
@@ -289,8 +289,9 @@ Outputs:
 Template (current working file)
 - `test/AutoBericht_slides.pptx` (seed for the layouts below)
 - Expected in projects as:
-  - `<Project>/Templates/Training_D.pptx`
-  - `<Project>/Templates/Training_F.pptx`
+  - `<Project>/Training_D.pptx`
+  - `<Project>/Training_F.pptx`
+  - (the generic PPT export uses `Vorlage AutoBericht.pptx`; rename that file and update `PPT_TEMPLATE` in `AutoBericht/vba/ppt_export.bas` if needed)
 
 ### Layout naming (in the template)
 Report layouts:
@@ -322,7 +323,7 @@ The macro will target standard placeholders by type:
 
 ### Export logic (current implementation)
 1) Training deck export (Word ribbon buttons “VG Seminar D/F”):
-   - Templates: `<project>/Templates/Training_D.pptx` and `Training_F.pptx`.
+   - Templates: `<project>/Training_D.pptx` and `Training_F.pptx`.
    - For each training tag with photos (order: known tags first, then others):
      - Insert a `chapterorange` divider slide titled with the tag.
      - Choose layout by tag name:

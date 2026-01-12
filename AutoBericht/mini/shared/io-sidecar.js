@@ -17,7 +17,7 @@
     };
 
     const mergeSidecar = (baseDoc, project, spiderData) => {
-      const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
+        const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
       if (!merged.meta) merged.meta = {};
       merged.meta.updatedAt = new Date().toISOString();
       merged.report = { project };
@@ -205,8 +205,12 @@
       output.schemaVersion = output.schemaVersion || "1.0";
       output.meta = {
         ...(output.meta || {}),
-        author: state.project.meta.author || "",
-        initials: state.project.meta.initials || "",
+        author: state.project.meta.moderator || state.project.meta.author || "",
+        initials: state.project.meta.moderatorInitials || state.project.meta.initials || "",
+        moderator: state.project.meta.moderator || "",
+        moderatorInitials: state.project.meta.moderatorInitials || "",
+        coModerator: state.project.meta.coModerator || "",
+        coModeratorInitials: state.project.meta.coModeratorInitials || "",
         locale: state.project.meta.locale || "",
         updatedAt: new Date().toISOString(),
       };

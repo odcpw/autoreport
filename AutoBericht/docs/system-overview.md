@@ -18,8 +18,8 @@ minimal Excel/VBA export layer.
            │ optional
            ▼
 ┌──────────────────────┐      reads             ┌────────────────────────┐
-│  Excel/VBA Exporter  │ ─────────────────────▶ │  Word/PPT Templates     │
-│  (thin layer)        │                        │  (corp branding)        │
+│  Excel/VBA Exporter  │ ─────────────────────▶ │  Word/PPT templates     │
+│  (thin layer)        │                        │  (in project root)      │
 └──────────────────────┘                        └────────────────────────┘
            │
            ▼
@@ -35,7 +35,7 @@ minimal Excel/VBA export layer.
   project_sidecar.json      # editor state (canonical)
   project_db.xlsx           # optional readable archive
   self_assessment.xlsx      # customer input (static)
-  photos/                   # raw photos
+  photos/                   # raw photos (import uses photos/raw/pm1, pm2)
   out/                      # Word/PPT/PDF outputs
   cache/                    # optional materialized photo views
 ```

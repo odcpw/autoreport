@@ -5,7 +5,10 @@
       company: "ACME AG",
       companyId: "CH-000000",
       locale: "de-CH",
-      author: "consultant@example.com",
+      moderator: "consultant@example.com",
+      moderatorInitials: "MM",
+      coModerator: "",
+      coModeratorInitials: "",
       createdAt: new Date().toISOString(),
     },
     chapters: [
@@ -200,7 +203,12 @@
 
   const getLibraryFileName = (meta = {}) => {
     const locale = sanitizeFilename(meta.locale || "de-CH");
-    const initials = sanitizeFilename(meta.initials || "");
+    const initials = sanitizeFilename(
+      meta.moderatorInitials
+      || meta.initials
+      || meta.moderator
+      || ""
+    );
     if (initials) return `library_user_${initials}_${locale}.json`;
     return `library_user_${locale}.json`;
   };

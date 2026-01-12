@@ -183,8 +183,11 @@
   };
 
   const ensureResizedFolder = async (projectHandle, getNestedDirectory) => {
-    const photosHandle = await getNestedDirectory(projectHandle, ["Photos"], { create: true });
-    return getNestedDirectory(photosHandle, ["Resized"], { create: true });
+    const photosHandle =
+      (await getNestedDirectory(projectHandle, ["photos"], { create: true }).catch(() => null))
+      || (await getNestedDirectory(projectHandle, ["Photos"], { create: true }));
+    return getNestedDirectory(photosHandle, ["resized"], { create: true }).catch(async () =>
+      getNestedDirectory(photosHandle, ["Resized"], { create: true }));
   };
 
   const fileExists = async (dirHandle, name) => {
@@ -252,7 +255,7 @@
 
     return {
       resizedHandle,
-      photoRootName: "Photos/Resized",
+      photoRootName: "photos/resized",
       count: tasks.length,
     };
   };

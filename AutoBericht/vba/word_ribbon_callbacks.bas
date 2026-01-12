@@ -8,7 +8,6 @@ Option Explicit
 
 Public Sub AB_ImportAll(control As Object)
     On Error GoTo Fail
-    ImportChapter0Summary
     ImportChapterAll
     Exit Sub
 Fail:
@@ -61,7 +60,15 @@ End Sub
 
 Public Sub AB_InsertLogo(control As Object)
     On Error GoTo Fail
-    InsertLogoAtToken
+    InsertLogos
+    Exit Sub
+Fail:
+    MsgBox "Logo insertion failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_InsertLogos(control As Object)
+    On Error GoTo Fail
+    InsertLogos
     Exit Sub
 Fail:
     MsgBox "Logo insertion failed: " & Err.Description, vbExclamation

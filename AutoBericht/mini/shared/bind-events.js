@@ -98,8 +98,10 @@
 
     const openSettings = () => {
       if (!elements.settingsModal) return;
-      elements.settingsAuthorEl.value = state.project.meta?.author || "";
-      elements.settingsInitialsEl.value = state.project.meta?.initials || "";
+      elements.settingsModeratorEl.value = state.project.meta?.moderator || state.project.meta?.author || "";
+      elements.settingsModeratorInitialsEl.value = state.project.meta?.moderatorInitials || state.project.meta?.initials || "";
+      elements.settingsCoModeratorEl.value = state.project.meta?.coModerator || "";
+      elements.settingsCoInitialsEl.value = state.project.meta?.coModeratorInitials || "";
       elements.settingsCompanyEl.value = state.project.meta?.company || "";
       elements.settingsCompanyIdEl.value = state.project.meta?.companyId || "";
       elements.settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
@@ -119,8 +121,12 @@
 
     const saveSettings = () => {
       normalizeHelpers.ensureProjectMeta(state.project, i18n.setLocale);
-      state.project.meta.author = elements.settingsAuthorEl.value.trim();
-      state.project.meta.initials = elements.settingsInitialsEl.value.trim();
+      state.project.meta.moderator = elements.settingsModeratorEl.value.trim();
+      state.project.meta.moderatorInitials = elements.settingsModeratorInitialsEl.value.trim();
+      state.project.meta.coModerator = elements.settingsCoModeratorEl.value.trim();
+      state.project.meta.coModeratorInitials = elements.settingsCoInitialsEl.value.trim();
+      state.project.meta.author = state.project.meta.moderator; // legacy
+      state.project.meta.initials = state.project.meta.moderatorInitials; // legacy
       state.project.meta.company = elements.settingsCompanyEl.value.trim();
       state.project.meta.companyId = elements.settingsCompanyIdEl.value.trim();
       state.project.meta.locale = elements.settingsLocaleEl.value || "de-CH";

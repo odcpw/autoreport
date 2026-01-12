@@ -130,12 +130,12 @@
       }
       if (!rootName) {
         const candidates = [
-          ["Photos", "resized"],
           ["photos", "resized"],
-          ["Photos", "Resized"],
+          ["Photos", "resized"],
           ["photos", "Resized"],
-          ["Photos"],
+          ["Photos", "Resized"],
           ["photos"],
+          ["Photos"],
         ];
         for (const parts of candidates) {
           try {

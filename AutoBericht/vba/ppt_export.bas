@@ -3,8 +3,8 @@ Option Explicit
 
 ' === PPT EXPORT CONFIG ===
 Private Const DEBUG_ENABLED As Boolean = True
-Private Const TEMPLATE_FOLDER As String = "Templates"
-Private Const PPT_TEMPLATE As String = "Vorlage AutoBericht.pptx"
+Private Const TEMPLATE_FOLDER As String = ""   ' templates now live in project root
+Private Const PPT_TEMPLATE As String = "Vorlage AutoBericht.pptx" ' rename here if template changes
 Private Const OUTPUT_TRAINING_BASE As String = "Seminar_Slides"
 Private Const INCLUDE_SEMINAR_SLIDE As Boolean = True
 
@@ -61,7 +61,11 @@ Private Sub ExportTrainingPptInternal(ByVal langSuffix As String)
     Dim projectFolder As String
     projectFolder = GetParentFolder(sidecarPath)
     Dim templatesFolder As String
-    templatesFolder = projectFolder & "\\" & TEMPLATE_FOLDER
+    If Len(TEMPLATE_FOLDER) > 0 Then
+        templatesFolder = projectFolder & "\\" & TEMPLATE_FOLDER
+    Else
+        templatesFolder = projectFolder
+    End If
     Dim templatePath As String
     templatePath = templatesFolder & "\\" & PPT_TEMPLATE
     If Dir(templatePath) = "" Then
