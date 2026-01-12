@@ -442,7 +442,7 @@ Private Function PickLogoFile() As String
 End Function
 
 
-Public Sub ImportChapter0Summary()
+()
     LogDebug "ImportChapter0Summary: start"
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
