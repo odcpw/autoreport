@@ -2,17 +2,20 @@ Attribute VB_Name = "modWordRibbonCallbacks"
 Option Explicit
 
 ' Ribbon callbacks for AutoBericht tab.
+' 8 buttons: Import (3) + Markdown (3) + Export (2)
 
-Public Sub AB_ImportReport(control As Object)
+' === IMPORT GROUP ===
+
+Public Sub AB_ImportAll(control As Object)
     On Error GoTo Fail
     ImportChapter0Summary
     ImportChapterAll
     Exit Sub
 Fail:
-    MsgBox "Import failed: " & Err.Description, vbExclamation
+    MsgBox "Import all failed: " & Err.Description, vbExclamation
 End Sub
 
-Public Sub AB_ImportChapterDialog(control As Object)
+Public Sub AB_ImportChapter(control As Object)
     On Error GoTo Fail
     ImportChapterDialog
     Exit Sub
@@ -20,20 +23,22 @@ Fail:
     MsgBox "Import chapter failed: " & Err.Description, vbExclamation
 End Sub
 
-Public Sub AB_ImportAll(control As Object)
+Public Sub AB_ImportTextMarkers(control As Object)
     On Error GoTo Fail
-    ImportChapterAll
+    ImportTextMarkers
     Exit Sub
 Fail:
-    MsgBox "Import all failed: " & Err.Description, vbExclamation
+    MsgBox "Text markers import failed: " & Err.Description, vbExclamation
 End Sub
 
-Public Sub AB_ConvertMarkdown(control As Object)
+' === MARKDOWN GROUP ===
+
+Public Sub AB_ConvertMarkdownAll(control As Object)
     On Error GoTo Fail
-    ConvertMarkdownInContentControl
+    ConvertMarkdownAll
     Exit Sub
 Fail:
-    MsgBox "Markdown conversion failed: " & Err.Description, vbExclamation
+    MsgBox "Markdown all failed: " & Err.Description, vbExclamation
 End Sub
 
 Public Sub AB_ConvertMarkdownChapter(control As Object)
@@ -44,32 +49,22 @@ Fail:
     MsgBox "Markdown chapter failed: " & Err.Description, vbExclamation
 End Sub
 
-Public Sub AB_ConvertMarkdownAll(control As Object)
+Public Sub AB_ConvertMarkdownSelection(control As Object)
     On Error GoTo Fail
-    ConvertMarkdownAll
+    ConvertMarkdownInSelection
     Exit Sub
 Fail:
-    MsgBox "Markdown all failed: " & Err.Description, vbExclamation
+    MsgBox "Markdown selection failed: " & Err.Description, vbExclamation
 End Sub
 
-Public Sub AB_InsertLogo(control As Object)
-    On Error GoTo Fail
-    InsertLogoAtToken
-    Exit Sub
-Fail:
-    MsgBox "Logo insertion failed: " & Err.Description, vbExclamation
-End Sub
+' === EXPORT GROUP ===
 
-Public Sub AB_ExportPptReport(control As Object)
-    MsgBox "PPT Bericht export not implemented yet.", vbInformation
-End Sub
-
-Public Sub AB_ExportPptTraining(control As Object)
+Public Sub AB_ExportPptTrainingD(control As Object)
     On Error GoTo Fail
     ExportTrainingPptD
     Exit Sub
 Fail:
-    MsgBox "Training export failed: " & Err.Description, vbExclamation
+    MsgBox "Training export (DE) failed: " & Err.Description, vbExclamation
 End Sub
 
 Public Sub AB_ExportPptTrainingF(control As Object)

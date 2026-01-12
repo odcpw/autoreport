@@ -33,13 +33,6 @@ Public Sub ConvertMarkdownInSelection()
     End If
 End Sub
 
-Public Sub ConvertMarkdownInContentControl()
-    LogDebug "ConvertMarkdownInContentControl: start"
-    Dim chapterId As String
-    chapterId = "1"
-    ConvertMarkdownForChapter chapterId
-End Sub
-
 Private Sub ConvertMarkdownWithUnlock(ByVal cc As ContentControl, ByVal rng As Range)
     Dim lockContents As Boolean
     Dim lockControl As Boolean

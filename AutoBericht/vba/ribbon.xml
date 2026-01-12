@@ -2,17 +2,56 @@
   <ribbon>
     <tabs>
       <tab id="tabAutoBericht" label="AutoBericht">
-        <group id="grpAutoBerichtMain" label="AutoBericht">
-          <button id="btnAutoBerichtImportChapter" label="Import chapter…" size="large" imageMso="TableInsert" onAction="AB_ImportChapterDialog" />
-          <button id="btnAutoBerichtImportAll" label="Import all" size="large" imageMso="TableInsertDialog" onAction="AB_ImportAll" />
-          <button id="btnAutoBerichtMarkdownChapter" label="Markdown chapter…" size="large" imageMso="TextToTable" onAction="AB_ConvertMarkdownChapter" />
-          <button id="btnAutoBerichtMarkdownAll" label="Markdown all" size="large" imageMso="TextToTableDialog" onAction="AB_ConvertMarkdownAll" />
-          <button id="btnAutoBerichtLogo" label="Insert logo" size="large" imageMso="PictureInsertFromFile" onAction="AB_InsertLogo" />
+        <!-- IMPORT GROUP -->
+        <group id="grpImport" label="Import">
+          <button id="btnImportAll"
+                  label="Import All"
+                  size="large"
+                  imageMso="TableInsertDialog"
+                  onAction="AB_ImportAll" />
+          <button id="btnImportChapter"
+                  label="Import Chapter…"
+                  size="large"
+                  imageMso="TableInsert"
+                  onAction="AB_ImportChapter" />
+          <button id="btnImportTextMarkers"
+                  label="Text Markers"
+                  size="large"
+                  imageMso="MailMergeInsertFields"
+                  onAction="AB_ImportTextMarkers" />
         </group>
-        <group id="grpAutoBerichtPpt" label="PowerPoint">
-          <button id="btnAutoBerichtPptReport" label="PPT Bericht" size="large" imageMso="SlideNew" onAction="AB_ExportPptReport" />
-          <button id="btnAutoBerichtPptTraining" label="VG Seminar D" size="large" imageMso="Presentation" onAction="AB_ExportPptTraining" />
-          <button id="btnAutoBerichtPptTrainingF" label="VG Seminar F" size="large" imageMso="Presentation" onAction="AB_ExportPptTrainingF" />
+
+        <!-- MARKDOWN GROUP -->
+        <group id="grpMarkdown" label="Markdown">
+          <button id="btnMarkdownAll"
+                  label="Markdown All"
+                  size="large"
+                  imageMso="TextToTableDialog"
+                  onAction="AB_ConvertMarkdownAll" />
+          <button id="btnMarkdownChapter"
+                  label="Markdown Chapter…"
+                  size="large"
+                  imageMso="TextToTable"
+                  onAction="AB_ConvertMarkdownChapter" />
+          <button id="btnMarkdownSelection"
+                  label="Markdown Selection"
+                  size="large"
+                  imageMso="FormatPainter"
+                  onAction="AB_ConvertMarkdownSelection" />
+        </group>
+
+        <!-- EXPORT GROUP -->
+        <group id="grpExport" label="Export">
+          <button id="btnExportTrainingD"
+                  label="Training D"
+                  size="large"
+                  imageMso="PresentationSlideShowFromBeginning"
+                  onAction="AB_ExportPptTrainingD" />
+          <button id="btnExportTrainingF"
+                  label="Training F"
+                  size="large"
+                  imageMso="PresentationSlideShowFromBeginning"
+                  onAction="AB_ExportPptTrainingF" />
         </group>
       </tab>
     </tabs>

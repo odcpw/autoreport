@@ -21,10 +21,6 @@ Private Const COL2_WIDTH_PCT As Long = 55
 Private Const COL3_WIDTH_PCT As Long = 7
 Private Const HEADER_CHECKMARK As String = "✓"
 
-Public Sub ImportChapter1Table()
-    ImportChapterTable "1", "Chapter1_start", "Chapter1_end"
-End Sub
-
 Public Sub ImportChapter0Summary()
     LogDebug "ImportChapter0Summary: start"
     Dim jsonPath As String
@@ -428,6 +424,85 @@ Public Sub InsertLogoAtToken()
     Set inline = markerRange.InlineShapes.AddPicture(FileName:=logoPath, LinkToFile:=False, SaveWithDocument:=True)
     inline.LockAspectRatio = True
     inline.Height = CentimetersToPoints(LOGO_HEIGHT_CM)
+End Sub
+
+Public Sub ImportTextMarkers()
+    ' Replace all TEXT$$ markers from sidecar metadata
+    LogDebug "ImportTextMarkers: start"
+
+    Dim jsonPath As String
+    jsonPath = ResolveSidecarPath()
+    If Len(jsonPath) = 0 Then Exit Sub
+
+    Dim jsonText As String
+    jsonText = ReadAllText(jsonPath)
+    If Len(jsonText) = 0 Then
+        MsgBox "Sidecar JSON is empty.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim root As Object
+    Set root = JsonConverter.ParseJson(jsonText)
+
+    Dim report As Object
+    Set report = GetObject(root, "report")
+    If report Is Nothing Then
+        MsgBox "Missing report section in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim project As Object
+    Set project = GetObject(report, "project")
+    If project Is Nothing Then
+        MsgBox "Missing report.project in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    Dim meta As Object
+    Set meta = GetObject(project, "meta")
+    If meta Is Nothing Then
+        MsgBox "Missing report.project.meta in JSON.", vbExclamation
+        Exit Sub
+    End If
+
+    ' Replace text markers from metadata
+    ReplaceTextMarker "NAME$$", SafeText(meta, "projectName")
+    ReplaceTextMarker "COMPANY$$", SafeText(meta, "company")
+    ReplaceTextMarker "COMPANY_ID$$", SafeText(meta, "companyId")
+    ReplaceTextMarker "AUTHOR$$", SafeText(meta, "author")
+
+    ' Format date from ISO to DD.MM.YYYY
+    Dim dateValue As String
+    dateValue = SafeText(meta, "createdAt")
+    If Len(dateValue) >= 10 Then
+        ' ISO format: YYYY-MM-DD...
+        dateValue = Mid$(dateValue, 9, 2) & "." & Mid$(dateValue, 6, 2) & "." & Mid$(dateValue, 1, 4)
+    End If
+    ReplaceTextMarker "DATE$$", dateValue
+
+    ' Logo marker - prompt for file
+    If Not FindMarkerRange(LOGO_MARKER) Is Nothing Then
+        InsertLogoAtToken
+    End If
+
+    ' Spider chart - stub for now
+    Dim spiderRange As Range
+    Set spiderRange = FindMarkerRange("SPIDER$$")
+    If Not spiderRange Is Nothing Then
+        spiderRange.Text = "[Spider chart - not implemented]"
+    End If
+
+    MsgBox "Text markers replaced.", vbInformation
+    LogDebug "ImportTextMarkers: done"
+End Sub
+
+Private Sub ReplaceTextMarker(ByVal marker As String, ByVal value As String)
+    Dim rng As Range
+    Set rng = FindMarkerRange(marker)
+    If Not rng Is Nothing Then
+        rng.Text = value
+        LogDebug "Replaced " & marker & " with: " & value
+    End If
 End Sub
 
 Private Function PickLogoFile() As String
