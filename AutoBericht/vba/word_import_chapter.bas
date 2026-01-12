@@ -17,6 +17,13 @@ Private Const LOGO_HEIGHT_CM As Double = 1#
 Private Const SPIDER_MARKER As String = "SPIDER$$"
 Private Const SPIDER_SERIES_COMPANY As String = "Company"
 Private Const SPIDER_SERIES_CONSULTANT As String = "Consultant"
+Private Const SPIDER_CHART_TYPE As Long = -4151 ' xlRadarMarkers
+Private Const SPIDER_AXIS_MIN As Double = 0
+Private Const SPIDER_AXIS_MAX As Double = 100
+Private Const SPIDER_SHOW_LEGEND As Boolean = True
+Private Const SPIDER_LEGEND_POS As Long = -4107 ' xlLegendPositionBottom
+Private Const SPIDER_PROMPT_WHEN_BOTH As Boolean = True
+Private Const SPIDER_PREFER_14 As Boolean = True ' used when no prompt or only one available
 
 ' === TABLE CONFIG (edit widths as needed) ===
 Private Const COL1_WIDTH_PCT As Long = 38
@@ -491,8 +498,6 @@ Public Sub InsertSpiderChart()
     ' Insert spider/radar chart at SPIDER$$ marker using sidecar spider data.
     LogDebug "InsertSpiderChart: start"
 
-    Const XL_RADAR_MARKERS As Long = -4151
-    Const XL_LEGEND_BOTTOM As Long = -4107
     Const XL_AXIS_VALUE As Long = 2
 
     Dim spiderRange As Range
@@ -535,13 +540,21 @@ Public Sub InsertSpiderChart()
     Set chapters14 = GetObject(effective, "chapters_1_14")
 
     If Not chapters14 Is Nothing And chapters14.Count > 0 And Not chapters11 Is Nothing And chapters11.Count > 0 Then
-        Dim choice As VbMsgBoxResult
-        choice = MsgBox("Use spider for chapters 1–14? (Yes = 1–14, No = 1–11)", vbYesNoCancel + vbQuestion, "Choose spider range")
-        If choice = vbCancel Then Exit Sub
-        If choice = vbYes Then
-            Set selected = chapters14
+        If SPIDER_PROMPT_WHEN_BOTH Then
+            Dim choice As VbMsgBoxResult
+            choice = MsgBox("Use spider for chapters 1–14? (Yes = 1–14, No = 1–11)", vbYesNoCancel + vbQuestion, "Choose spider range")
+            If choice = vbCancel Then Exit Sub
+            If choice = vbYes Then
+                Set selected = chapters14
+            Else
+                Set selected = chapters11
+            End If
         Else
-            Set selected = chapters11
+            If SPIDER_PREFER_14 Then
+                Set selected = chapters14
+            Else
+                Set selected = chapters11
+            End If
         End If
     ElseIf Not chapters14 Is Nothing And chapters14.Count > 0 Then
         Set selected = chapters14
@@ -552,12 +565,17 @@ Public Sub InsertSpiderChart()
         Exit Sub
     End If
 
+    If Not IsValidSpiderSeries(selected) Then
+        MsgBox "Spider data is invalid or empty.", vbExclamation
+        Exit Sub
+    End If
+
     ' Clear marker text
     spiderRange.Text = ""
 
     ' Insert radar chart
     Dim ish As InlineShape
-    Set ish = spiderRange.InlineShapes.AddChart(Type:=XL_RADAR_MARKERS, Range:=spiderRange)
+    Set ish = spiderRange.InlineShapes.AddChart(Type:=SPIDER_CHART_TYPE, Range:=spiderRange)
     Dim cht As Object
     Set cht = ish.Chart
 
@@ -592,17 +610,39 @@ Public Sub InsertSpiderChart()
 
     ' Style chart
     cht.HasTitle = False
-    cht.Legend.Position = XL_LEGEND_BOTTOM
+    cht.Legend.IncludeInLayout = SPIDER_SHOW_LEGEND
+    If SPIDER_SHOW_LEGEND Then
+        cht.Legend.Position = SPIDER_LEGEND_POS
+    Else
+        cht.HasLegend = False
+    End If
     On Error Resume Next
     cht.FullSeriesCollection(1).Name = SPIDER_SERIES_COMPANY
     cht.FullSeriesCollection(2).Name = SPIDER_SERIES_CONSULTANT
-    cht.Axes(XL_AXIS_VALUE).MinimumScale = 0
-    cht.Axes(XL_AXIS_VALUE).MaximumScale = 100
+    cht.Axes(XL_AXIS_VALUE).MinimumScale = SPIDER_AXIS_MIN
+    cht.Axes(XL_AXIS_VALUE).MaximumScale = SPIDER_AXIS_MAX
     On Error GoTo 0
 
     MsgBox "Spider chart inserted.", vbInformation
     LogDebug "InsertSpiderChart: done"
 End Sub
+
+Private Function IsValidSpiderSeries(ByVal seriesData As Object) As Boolean
+    On Error GoTo Fail
+    If seriesData Is Nothing Then Exit Function
+    If seriesData.Count = 0 Then Exit Function
+    Dim item As Variant
+    For Each item In seriesData
+        If Not IsObject(item) Then Exit Function
+        If Not item.Exists("id") Then Exit Function
+        If Not item.Exists("company") Then Exit Function
+        If Not item.Exists("consultant") Then Exit Function
+    Next item
+    IsValidSpiderSeries = True
+    Exit Function
+Fail:
+    IsValidSpiderSeries = False
+End Function
 
 Private Sub ReplaceTextMarker(ByVal marker As String, ByVal value As String)
     Dim rng As Range
