@@ -357,7 +357,7 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.Rows(3).Range.Font.Bold = True
     tbl.Cell(3, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
 
-    ' Column widths after headers populated but before any merges
+    ' Column widths after headers populated but before any merges (percent-based)
     On Error Resume Next
     tbl.AllowAutoFit = False
     tbl.PreferredWidthType = wdPreferredWidthPercent
@@ -429,19 +429,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         tbl.Rows(h).AllowBreakAcrossPages = False
         On Error GoTo 0
     Next h
-
-    ' Re-apply column widths after merges to keep col 3 at the configured width
-    On Error Resume Next
-    tbl.AllowAutoFit = False
-    tbl.PreferredWidthType = wdPreferredWidthPercent
-    tbl.PreferredWidth = 100
-    tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
-    tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
-    tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
-    On Error GoTo 0
 
     LogDebug "ImportChapterTable: done"
     ResetTableBookmarks startBm, endBm, tbl
