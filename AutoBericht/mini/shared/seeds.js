@@ -190,12 +190,39 @@
       chapter.rows = withSections;
     });
 
-    if (!chaptersById.has("4.8")) {
-      chapters.push({
+    // Inject 4.8 Beobachtungen rows from tag list if none exist
+    const obsTags = knowledgeBase?.tags?.observations || [];
+    const obsChapterExisting = chapters.find((c) => c.id === "4.8");
+    const needObsRows = !obsChapterExisting || (obsChapterExisting.rows || []).length === 0;
+    if (needObsRows && obsTags.length) {
+      const obsRows = obsTags.map((tag, idx) => ({
+        id: `4.8.${idx + 1}`,
+        type: "field_observation",
+        sectionId: "4.8",
+        sectionLabel: "4.8 Beobachtungen",
+        titleOverride: tag.label || tag.value || `4.8.${idx + 1}`,
+        master: null,
+        customer: { answer: null, remark: "", items: [] },
+        workstate: {
+          selectedLevel: 1,
+          includeFinding: true,
+          includeRecommendation: true,
+          done: false,
+          useFindingOverride: true,
+          findingOverride: tag.label || tag.value || "Beobachtung",
+          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
+          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+        },
+      }));
+      const obsChapter = obsChapterExisting || {
         id: "4.8",
         title: { de: "Beobachtungen" },
         rows: [],
-      });
+      };
+      obsChapter.rows = obsRows;
+      if (!obsChapterExisting) {
+        chapters.push(obsChapter);
+      }
       chapters.sort((a, b) => compareIdSegments(a.id, b.id));
     }
 
