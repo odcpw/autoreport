@@ -19,16 +19,7 @@
             ASR model
             <select id="asr-model">
               <option value="Xenova/whisper-tiny">Xenova/whisper-tiny (multilingual)</option>
-              <option value="Xenova/whisper-tiny" data-dtype="fp32">Xenova/whisper-tiny (fp32)</option>
               <option value="Xenova/whisper-base">Xenova/whisper-base (multilingual)</option>
-              <option value="Xenova/whisper-base" data-dtype="fp32">Xenova/whisper-base (fp32)</option>
-            </select>
-          </label>
-          <label>
-            ASR mode
-            <select id="asr-mode">
-              <option value="batch">Batch (on release)</option>
-              <option value="stream">Streaming (chunked)</option>
             </select>
           </label>
           <button id="load-lib" type="button">Load ASR</button>
@@ -50,54 +41,11 @@
           Cleaned output
           <textarea id="cleaned" rows="10" placeholder="Cleaned text will appear here..."></textarea>
         </label>
-        <label class="field">
-          EKAS 10 chapters
-          <textarea id="structured" rows="12" placeholder="Structured output will appear here..."></textarea>
-        </label>
-      </section>
-
-      <section class="panel">
-        <header class="panel-header">
-          <h2>Notes Scanner (Webcam)</h2>
-          <p>Capture a handwritten page, then transcribe and structure it into the EKAS chapters.</p>
-        </header>
-        <div class="notes-grid">
-          <div class="notes-camera">
-            <div class="notes-media">
-              <video id="notes-video" playsinline muted></video>
-              <img id="notes-preview" alt="Captured note preview" />
-            </div>
-            <div class="controls">
-              <button id="notes-start-camera" type="button">Start camera</button>
-              <button id="notes-capture" type="button" disabled>Capture photo</button>
-              <button id="notes-stop-camera" type="button" disabled>Stop camera</button>
-            </div>
-            <label>
-              Or choose image
-              <input id="notes-file" type="file" accept="image/*" />
-            </label>
-            <button id="notes-run" type="button">Transcribe + Structure</button>
-            <span id="notes-status" class="status">Awaiting capture.</span>
-          </div>
-          <div class="notes-output">
-            <label class="field">
-              Notes transcription
-              <textarea id="notes-transcript" rows="8" placeholder="Transcription output..."></textarea>
-            </label>
-            <label class="field">
-              EKAS 10 chapters
-              <textarea id="notes-structured" rows="12" placeholder="Structured output..."></textarea>
-            </label>
-          </div>
-        </div>
       </section>
 
       <section class="panel">
         <details>
           <summary>Log</summary>
-          <div class="log-actions">
-            <button id="copy-log" type="button">Copy log</button>
-          </div>
           <pre id="log" class="log"></pre>
         </details>
       </section>

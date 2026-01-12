@@ -105,13 +105,7 @@
     } catch (err) {
       // ignore
     }
-    if (file.lastModifiedDate instanceof Date && !Number.isNaN(file.lastModifiedDate.valueOf())) {
-      return file.lastModifiedDate;
-    }
-    if (Number.isFinite(file.lastModified)) {
-      return new Date(file.lastModified);
-    }
-    return new Date();
+    return new Date(file.lastModified);
   };
 
   const formatTimestamp = (date) => {
@@ -144,7 +138,9 @@
   const findRawFolder = async (projectHandle, getNestedDirectory) => {
     const candidates = [
       ["Photos", "raw"],
+      ["Photos", "Raw"],
       ["photos", "raw"],
+      ["photos", "Raw"],
     ];
     for (const parts of candidates) {
       try {
@@ -188,7 +184,7 @@
 
   const ensureResizedFolder = async (projectHandle, getNestedDirectory) => {
     const photosHandle = await getNestedDirectory(projectHandle, ["Photos"], { create: true });
-    return getNestedDirectory(photosHandle, ["resized"], { create: true });
+    return getNestedDirectory(photosHandle, ["Resized"], { create: true });
   };
 
   const fileExists = async (dirHandle, name) => {
@@ -217,7 +213,7 @@
 
     const raw = await findRawFolder(projectHandle, getNestedDirectory);
     if (!raw) {
-      setStatus?.("Missing Photos/raw. Expected Photos/raw/abc folders.");
+      setStatus?.("Missing Photos/raw. Expected Photos/raw/ABC folders.");
       return null;
     }
     const tasks = await collectRawTasks(raw.handle, isImageFile);
@@ -230,13 +226,12 @@
     let completed = 0;
 
     for (const task of tasks) {
-      const ownerCode = String(task.owner || "").toLowerCase();
       const timestamp = formatTimestamp(await getPhotoTimestamp(task.file));
-      const counterKey = `${timestamp}_${ownerCode}`;
+      const counterKey = `${timestamp}_${task.owner}`;
       let counter = counters.get(counterKey) || 1;
       let filename = "";
       while (true) {
-        filename = `${timestamp}-${ownerCode}-${padSequence(counter)}.jpg`;
+        filename = `${timestamp}_${task.owner}_${padSequence(counter)}.jpg`;
         if (!(await fileExists(resizedHandle, filename))) break;
         counter += 1;
       }
@@ -257,98 +252,12 @@
 
     return {
       resizedHandle,
-      photoRootName: "Photos/resized",
+      photoRootName: "Photos/Resized",
       count: tasks.length,
-    };
-  };
-
-  const sanitizeFolderName = (value) => {
-    const cleaned = String(value || "")
-      .replace(/[\\\/:*?"<>|]/g, "-")
-      .replace(/\s+/g, " ")
-      .trim();
-    return cleaned || "untitled";
-  };
-
-  const resolveUniqueName = async (dirHandle, baseName) => {
-    if (!(await fileExists(dirHandle, baseName))) return baseName;
-    const match = /^(.*?)(\.[^.]+)?$/.exec(baseName);
-    const stem = match?.[1] || baseName;
-    const ext = match?.[2] || "";
-    let counter = 1;
-    while (true) {
-      const candidate = `${stem}-${String(counter).padStart(2, "0")}${ext}`;
-      if (!(await fileExists(dirHandle, candidate))) return candidate;
-      counter += 1;
-    }
-  };
-
-  const copyFileToHandle = async (dirHandle, name, file) => {
-    const handle = await dirHandle.getFileHandle(name, { create: true });
-    const writable = await handle.createWritable();
-    await writable.write(file);
-    await writable.close();
-  };
-
-  const exportTaggedPhotos = async (context) => {
-    const {
-      projectHandle,
-      getNestedDirectory,
-      setStatus,
-      photos,
-    } = context || {};
-
-    if (!projectHandle) {
-      setStatus?.("Open project folder first.");
-      return null;
-    }
-    if (!photos || !photos.length) {
-      setStatus?.("No photos loaded to export.");
-      return null;
-    }
-
-    const photosHandle = await getNestedDirectory(projectHandle, ["Photos"], { create: true });
-    const exportHandle = await getNestedDirectory(photosHandle, ["export"], { create: true });
-    const unsortedHandle = await getNestedDirectory(exportHandle, ["unsorted"], { create: true });
-    let completed = 0;
-
-    for (const photo of photos) {
-      if (!photo?.file) {
-        completed += 1;
-        continue;
-      }
-      const tags = photo?.tags || {};
-      const groups = ["report", "observations", "training"];
-      const hasTags = groups.some((group) => Array.isArray(tags[group]) && tags[group].length > 0);
-      const sourceName = photo?.file?.name || photo?.path?.split("/").pop() || "photo.jpg";
-      if (!hasTags) {
-        const filename = await resolveUniqueName(unsortedHandle, sourceName);
-        await copyFileToHandle(unsortedHandle, filename, photo.file);
-      } else {
-        for (const group of groups) {
-          const values = Array.isArray(tags[group]) ? tags[group] : [];
-          for (const value of values) {
-            if (!value) continue;
-            const groupHandle = await getNestedDirectory(exportHandle, [group], { create: true });
-            const tagHandle = await getNestedDirectory(groupHandle, [sanitizeFolderName(value)], { create: true });
-            const filename = await resolveUniqueName(tagHandle, sourceName);
-            await copyFileToHandle(tagHandle, filename, photo.file);
-          }
-        }
-      }
-      completed += 1;
-      const pct = Math.round((completed / photos.length) * 100);
-      setStatus?.(`Exporting photos ${completed}/${photos.length} (${pct}%)`);
-    }
-
-    return {
-      exportRootName: "Photos/export",
-      count: photos.length,
     };
   };
 
   window.AutoBerichtPhotoImport = {
     importRawPhotos,
-    exportTaggedPhotos,
   };
 })();
