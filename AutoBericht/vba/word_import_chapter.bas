@@ -599,34 +599,39 @@ Public Sub InsertSpiderChart()
     Dim cht As Object
     Set cht = ish.Chart
 
-    ' Activate chart data workbook
-    cht.ChartData.Activate
-    Dim wbData As Object
-    Set wbData = cht.ChartData.Workbook
-    Dim wsData As Object
-    Set wsData = wbData.Worksheets(1)
-    wsData.Cells.Clear
+    ' Build data arrays (avoid SetSourceData type issues)
+    Dim n As Long: n = selected.Count
+    Dim cats() As Variant, comp() As Variant, cons() As Variant
+    ReDim cats(1 To n)
+    ReDim comp(1 To n)
+    ReDim cons(1 To n)
 
-    ' Headers
-    wsData.Cells(1, 1).Value = "Kapitel"
-    wsData.Cells(1, 2).Value = SPIDER_SERIES_COMPANY
-    wsData.Cells(1, 3).Value = SPIDER_SERIES_CONSULTANT
-
-    ' Data rows
-    Dim r As Long: r = 2
+    Dim idx As Long: idx = 1
     Dim item As Variant
     For Each item In selected
-        wsData.Cells(r, 1).Value = SafeText(item, "id")
-        wsData.Cells(r, 2).Value = CDbl(Val(SafeText(item, "company")))
-        wsData.Cells(r, 3).Value = CDbl(Val(SafeText(item, "consultant")))
-        r = r + 1
+        cats(idx) = SafeText(item, "id")
+        comp(idx) = CDbl(Val(SafeText(item, "company")))
+        cons(idx) = CDbl(Val(SafeText(item, "consultant")))
+        idx = idx + 1
     Next item
 
-    Dim lastRow As Long
-    lastRow = r - 1
-    Dim dataRange As Object
-    Set dataRange = wsData.Range(wsData.Cells(1, 1), wsData.Cells(lastRow, 3))
-    cht.SetSourceData Source:=dataRange
+    ' Reset series and assign data
+    On Error Resume Next
+    Dim sc As Object
+    For Each sc In cht.FullSeriesCollection
+        sc.Delete
+    Next sc
+    On Error GoTo 0
+
+    cht.FullSeriesCollection.NewSeries
+    cht.FullSeriesCollection(1).Name = SPIDER_SERIES_COMPANY
+    cht.FullSeriesCollection(1).Values = comp
+    cht.FullSeriesCollection(1).XValues = cats
+
+    cht.FullSeriesCollection.NewSeries
+    cht.FullSeriesCollection(2).Name = SPIDER_SERIES_CONSULTANT
+    cht.FullSeriesCollection(2).Values = cons
+    cht.FullSeriesCollection(2).XValues = cats
 
     ' Style chart
     cht.HasTitle = False
