@@ -107,6 +107,11 @@
     });
 
     const chapters = deriveChapters(weights);
+    const round5 = (value) => {
+      const v = Number(value) || 0;
+      return Math.round(v / 5) * 5;
+    };
+
     const build = (predicate) => chapters
       .filter(predicate)
       .map((ch) => {
@@ -117,8 +122,8 @@
         return {
           id: String(ch.id),
           weightSum: denom,
-          company: Math.round(comp * 100) / 100, // keep two decimals
-          consultant: Math.round(cons * 100) / 100,
+          company: round5(comp),
+          consultant: round5(cons),
         };
       });
 
