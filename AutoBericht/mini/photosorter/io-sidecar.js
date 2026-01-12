@@ -68,32 +68,57 @@
     };
 
     const readKnowledgeBase = async () => {
-      if (!state.projectHandle) return null;
-      try {
-        const libraryHandle = await findLibraryFileHandle();
-        if (libraryHandle) {
-          const file = await libraryHandle.getFile();
-          const parsed = JSON.parse(await file.text());
-          if (isValidKnowledgeBase(parsed)) return parsed;
-          debug.logLine("error", "User library is missing knowledge base schema.");
-          return null;
+      // 1) User library in project root
+      if (state.projectHandle) {
+        try {
+          const libraryHandle = await findLibraryFileHandle();
+          if (libraryHandle) {
+            const file = await libraryHandle.getFile();
+            const parsed = JSON.parse(await file.text());
+            if (isValidKnowledgeBase(parsed)) return parsed;
+            debug.logLine("error", "User library is missing knowledge base schema.");
+          }
+        } catch (err) {
+          // ignore and try seed
         }
-      } catch (err) {
-        // Ignore and try seed.
       }
+
+      // 2) Bundled seed inside project (preferred)
       const seedCandidates = [
         "knowledge_base_de.json",
         "knowledge_base_fr.json",
         "knowledge_base_it.json",
       ];
       for (const filename of seedCandidates) {
-        try {
-          const parsed = await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
-          if (isValidKnowledgeBase(parsed)) return parsed;
-        } catch (err) {
-          // try next
+        if (state.projectHandle) {
+          try {
+            const parsed = await readJsonFromPath(state.projectHandle, ["AutoBericht", "data", "seed", filename]);
+            if (isValidKnowledgeBase(parsed)) return parsed;
+          } catch (err) {
+            // try next
+          }
         }
       }
+
+      // 3) Bundled seed next to the app (fallback if project lacks AutoBericht/)
+      try {
+        const baseUrl = new URL(window.location.href);
+        const tryPaths = [
+          "../data/seed/knowledge_base_de.json",
+          "../data/seed/knowledge_base_fr.json",
+          "../data/seed/knowledge_base_it.json",
+        ];
+        for (const rel of tryPaths) {
+          const url = new URL(rel, baseUrl);
+          const res = await fetch(url.toString());
+          if (!res.ok) continue;
+          const parsed = await res.json();
+          if (isValidKnowledgeBase(parsed)) return parsed;
+        }
+      } catch (err) {
+        debug.logLine("error", `Failed to load bundled seed via fetch: ${err.message || err}`);
+      }
+
       return null;
     };
 
