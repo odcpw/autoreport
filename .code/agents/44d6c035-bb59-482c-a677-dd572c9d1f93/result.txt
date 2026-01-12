@@ -1,0 +1,16 @@
+I'll generate the Italian negative findings for chapter 7 chunk3B (IDs 7.3.3–7.3.5) using manual phrasing only.
+
+Based on the context provided, here are the findings:
+
+**7.3.3**: I dipendenti non sanno come comportarsi in caso d'incendio.
+
+**7.3.4**: Non si svolgono delle esercitazioni.
+
+**7.3.5**: All'ultima esercitazione non hanno preso parte tutti i dipendenti.
+
+---
+
+**Skill reflection:**
+- **Skills used**: None (direct response based on pattern recognition)
+- **Skills missing**: A skill for managing multilingual compliance findings with template-based generation would be useful for this type of systematic translation/adaptation work
+- **Needed improvements**: Consider creating a skill that handles compliance question transformation (positive → negative, handling conditional clauses, maintaining idiomatic phrasing across languages)

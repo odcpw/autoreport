@@ -35,6 +35,7 @@ const visionStatusEl = byId("vision-status");
 const visionPreviewEl = byId("vision-preview");
 const visionOutputEl = byId("vision-output");
 
+const copyLogBtn = byId("copy-log");
 const downloadLogBtn = byId("download-log");
 
 const logEl = byId("log");
@@ -530,6 +531,37 @@ async function downloadLog() {
   a.click();
   URL.revokeObjectURL(url);
   log("Downloaded log via browser fallback.");
+}
+
+async function copyLogToClipboard() {
+  const content = logEl.textContent || "";
+  if (!content) {
+    log("Log is empty; nothing to copy.");
+    return;
+  }
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(content);
+      log("Copied log to clipboard.");
+      return;
+    } catch (err) {
+      log(`Clipboard copy failed: ${err.message}`);
+    }
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = content;
+  textarea.style.position = "fixed";
+  textarea.style.left = "-9999px";
+  document.body.appendChild(textarea);
+  textarea.select();
+  try {
+    const ok = document.execCommand("copy");
+    log(ok ? "Copied log to clipboard." : "Clipboard copy failed.");
+  } catch (err) {
+    log(`Clipboard copy failed: ${err.message}`);
+  } finally {
+    document.body.removeChild(textarea);
+  }
 }
 
 function resolveOrtModelConfig(modelId) {
@@ -1412,180 +1444,202 @@ async function runOrtVision(modelId, file) {
   }
 }
 
-async function runOrtChat(modelId, file, question) {
+async function runLiquidImagePrompt({
+  modelId,
+  file,
+  img,
+  question,
+  maxNewTokens = 64,
+  minSummaryChars = 120,
+  statusEl,
+}) {
   await ensureOrtLoaded();
   const config = resolveOrtModelConfig(modelId);
   if (!config) {
-    setStatus(visionStatusEl, `Unknown LiquidAI model config for ${modelId}`);
-    return;
+    throw new Error(`Unknown LiquidAI model config for ${modelId}`);
   }
-  if (!file) {
-    setStatus(visionStatusEl, "Pick an image file first.");
-    return;
-  }
-  if (!question) {
-    setStatus(visionStatusEl, "Enter a question first.");
-    return;
+  if (!file && !img) {
+    throw new Error("Pick an image file first.");
   }
   if (!window.ort) {
-    setStatus(visionStatusEl, "onnxruntime-web not loaded (AI/vendor/ort-1.23.2/ort.webgpu.min.js missing).");
-    return;
+    throw new Error("onnxruntime-web not loaded (AI/vendor/ort-1.23.2/ort.webgpu.min.js missing).");
   }
   if (!state.lib) {
-    setStatus(visionStatusEl, "Load Transformers.js first (needed for tokenizer).");
-    return;
+    throw new Error("Load Transformers.js first (needed for tokenizer).");
   }
 
   const base = getLocalModelBase(modelId);
-  const providers = resolveOrtProvider();
-  const img = await loadImageFromFile(file);
-  visionPreviewEl.src = img.src;
+  const providers = await resolveOrtProviderForModel(modelId, config);
+  const resolvedImg = img || (await loadImageFromFile(file));
 
-  try {
-    setStatus(visionStatusEl, "Loading tokenizer + processor ...");
-    const tokenizer = await getTokenizer(modelId);
-    const processor = await getProcessor(modelId);
-    const configJson = await getModelConfig(modelId);
-    const eosTokenId = configJson?.text_config?.eos_token_id ?? configJson?.eos_token_id ?? null;
-    const imageTokenId =
-      configJson?.image_token_id ??
-      configJson?.image_token_index ??
-      (typeof tokenizer.convert_tokens_to_ids === "function" ? tokenizer.convert_tokens_to_ids("<image>") : null);
+  if (statusEl) {
+    setStatus(statusEl, "Loading tokenizer + processor ...");
+  }
+  const tokenizer = await getTokenizer(modelId);
+  const processor = await getProcessor(modelId);
+  const configJson = await getModelConfig(modelId);
+  const eosTokenId = configJson?.text_config?.eos_token_id ?? configJson?.eos_token_id ?? null;
+  const imageTokenId =
+    configJson?.image_token_id ??
+    configJson?.image_token_index ??
+    (typeof tokenizer.convert_tokens_to_ids === "function" ? tokenizer.convert_tokens_to_ids("<image>") : null);
 
-    setStatus(visionStatusEl, "Encoding prompt + image ...");
-    const prompt = await buildLiquidPrompt(tokenizer, modelId, question);
-    const processed = await runLiquidProcessor(processor, img, prompt);
+  if (statusEl) {
+    setStatus(statusEl, "Encoding prompt + image ...");
+  }
+  const prompt = await buildLiquidPrompt(tokenizer, modelId, question);
+  const processed = await runLiquidProcessor(processor, resolvedImg, prompt);
 
-    setStatus(visionStatusEl, "Loading ONNX sessions ...");
-    const embedTokenSession = await loadOrtSession(`${base}${config.embedTokens}`, providers);
-    const embedImageSession = await loadOrtSession(`${base}${config.embedImages}`, providers);
-    const decoderSession = await loadOrtSession(`${base}${config.decoder}`, providers);
+  if (statusEl) {
+    setStatus(statusEl, "Loading ONNX sessions ...");
+  }
+  const embedTokenSession = await loadOrtSession(`${base}${config.embedTokens}`, providers);
+  const embedImageSession = await loadOrtSession(`${base}${config.embedImages}`, providers);
+  const decoderSession = await loadOrtSession(`${base}${config.decoder}`, providers);
 
-    setStatus(visionStatusEl, "Embedding image + tokens ...");
-    const imageInputs = buildLiquidImageInputs(
-      embedImageSession.inputMetadata,
-      embedImageSession.inputNames,
-      processed
-    );
-    const imageMetaNames =
-      embedImageSession.inputMetadata instanceof Map
-        ? Array.from(embedImageSession.inputMetadata.keys())
-        : Object.keys(embedImageSession.inputMetadata || {});
-    const imageInputNames = Array.isArray(embedImageSession.inputNames) ? embedImageSession.inputNames : [];
-    log(`LiquidAI image meta inputs: ${imageMetaNames.join(", ") || "(none)"}`);
-    if (imageInputNames.length) {
-      log(`LiquidAI image inputNames: ${imageInputNames.join(", ")}`);
-    }
-    log(`LiquidAI image feeds: ${Object.keys(imageInputs).join(", ") || "(none)"}`);
-    const imageResult = await embedImageSession.run(imageInputs);
-    const imageEmbedding = Object.values(imageResult)[0];
-    const numImageTokens = imageEmbedding?.dims?.length === 2 ? imageEmbedding.dims[0] : imageEmbedding?.dims?.[1];
-    const tokensPerImage = numImageTokens ? [numImageTokens] : [];
+  if (statusEl) {
+    setStatus(statusEl, "Embedding image + tokens ...");
+  }
+  const imageInputs = buildLiquidImageInputs(
+    embedImageSession.inputMetadata,
+    embedImageSession.inputNames,
+    processed
+  );
+  const imageMetaNames =
+    embedImageSession.inputMetadata instanceof Map
+      ? Array.from(embedImageSession.inputMetadata.keys())
+      : Object.keys(embedImageSession.inputMetadata || {});
+  const imageInputNames = Array.isArray(embedImageSession.inputNames) ? embedImageSession.inputNames : [];
+  log(`LiquidAI image meta inputs: ${imageMetaNames.join(", ") || "(none)"}`);
+  if (imageInputNames.length) {
+    log(`LiquidAI image inputNames: ${imageInputNames.join(", ")}`);
+  }
+  log(`LiquidAI image feeds: ${Object.keys(imageInputs).join(", ") || "(none)"}`);
+  const imageResult = await embedImageSession.run(imageInputs);
+  const imageEmbedding = Object.values(imageResult)[0];
+  const numImageTokens = imageEmbedding?.dims?.length === 2 ? imageEmbedding.dims[0] : imageEmbedding?.dims?.[1];
+  const tokensPerImage = numImageTokens ? [numImageTokens] : [];
 
-    const imageStartTokenId = resolveTokenId(tokenizer, "<|image_start|>");
-    const imageEndTokenId = resolveTokenId(tokenizer, "<|image_end|>");
-    const promptIdsRaw = (await tokenizeQuestion(tokenizer, prompt)).map((value) => Number(value));
-    const promptIds = expandImageTokens(
-      promptIdsRaw,
-      tokensPerImage,
-      imageTokenId,
-      imageStartTokenId,
-      imageEndTokenId
-    );
+  const imageStartTokenId = resolveTokenId(tokenizer, "<|image_start|>");
+  const imageEndTokenId = resolveTokenId(tokenizer, "<|image_end|>");
+  const promptIdsRaw = (await tokenizeQuestion(tokenizer, prompt)).map((value) => Number(value));
+  const promptIds = expandImageTokens(
+    promptIdsRaw,
+    tokensPerImage,
+    imageTokenId,
+    imageStartTokenId,
+    imageEndTokenId
+  );
 
-    const attentionMask = buildAttentionMaskFromLength(promptIds.length);
-    const positionIds = buildPositionIdsFromLength(promptIds.length);
-    const tokenInputs = buildLiquidTokenInputs(
-      embedTokenSession.inputMetadata,
-      embedTokenSession.inputNames,
-      promptIds,
-      attentionMask,
-      positionIds
-    );
-    const tokenMetaNames =
-      embedTokenSession.inputMetadata instanceof Map
-        ? Array.from(embedTokenSession.inputMetadata.keys())
-        : Object.keys(embedTokenSession.inputMetadata || {});
-    const tokenInputNames = Array.isArray(embedTokenSession.inputNames) ? embedTokenSession.inputNames : [];
-    log(`LiquidAI token meta inputs: ${tokenMetaNames.join(", ") || "(none)"}`);
-    if (tokenInputNames.length) {
-      log(`LiquidAI token inputNames: ${tokenInputNames.join(", ")}`);
-    }
-    log(`LiquidAI token feeds: ${Object.keys(tokenInputs).join(", ") || "(none)"}`);
-    const tokenResult = await embedTokenSession.run(tokenInputs);
-    const tokenEmbedding = Object.values(tokenResult)[0];
+  const attentionMask = buildAttentionMaskFromLength(promptIds.length);
+  const positionIds = buildPositionIdsFromLength(promptIds.length);
+  const tokenInputs = buildLiquidTokenInputs(
+    embedTokenSession.inputMetadata,
+    embedTokenSession.inputNames,
+    promptIds,
+    attentionMask,
+    positionIds
+  );
+  const tokenMetaNames =
+    embedTokenSession.inputMetadata instanceof Map
+      ? Array.from(embedTokenSession.inputMetadata.keys())
+      : Object.keys(embedTokenSession.inputMetadata || {});
+  const tokenInputNames = Array.isArray(embedTokenSession.inputNames) ? embedTokenSession.inputNames : [];
+  log(`LiquidAI token meta inputs: ${tokenMetaNames.join(", ") || "(none)"}`);
+  if (tokenInputNames.length) {
+    log(`LiquidAI token inputNames: ${tokenInputNames.join(", ")}`);
+  }
+  log(`LiquidAI token feeds: ${Object.keys(tokenInputs).join(", ") || "(none)"}`);
+  const tokenResult = await embedTokenSession.run(tokenInputs);
+  const tokenEmbedding = Object.values(tokenResult)[0];
 
-    if (imageTokenId !== null) {
-      mergeLiquidEmbeds(tokenEmbedding, imageEmbedding, promptIds, imageTokenId);
-    } else {
-      log("LiquidAI: image token id missing; image embeddings not merged.");
-    }
+  if (imageTokenId !== null) {
+    mergeLiquidEmbeds(tokenEmbedding, imageEmbedding, promptIds, imageTokenId);
+  } else {
+    log("LiquidAI: image token id missing; image embeddings not merged.");
+  }
 
-    const maxNewTokens = 64;
-    const minSummaryChars = 120;
-    const generated = [];
-    let cache = initLiquidCache(decoderSession, configJson);
-    let currentEmbeds = tokenEmbedding;
+  const generated = [];
+  let cache = initLiquidCache(decoderSession, configJson);
+  let currentEmbeds = tokenEmbedding;
 
-    setStatus(visionStatusEl, "Generating (greedy) ...");
-    const start = performance.now();
-    for (let step = 0; step < maxNewTokens; step += 1) {
-      const allIds = [...promptIds, ...generated];
-      const attnMask = buildAttentionMaskFromLength(allIds.length);
-      const posIds = buildPositionIdsFromLength(allIds.length);
-      const attnTensor = new window.ort.Tensor("int64", attnMask, [1, attnMask.length]);
-      const posTensor = new window.ort.Tensor("int64", posIds, [1, posIds.length]);
+  if (statusEl) {
+    setStatus(statusEl, "Generating (greedy) ...");
+  }
+  const start = performance.now();
+  for (let step = 0; step < maxNewTokens; step += 1) {
+    const allIds = [...promptIds, ...generated];
+    const attnMask = buildAttentionMaskFromLength(allIds.length);
+    const posIds = buildPositionIdsFromLength(allIds.length);
+    const attnTensor = new window.ort.Tensor("int64", attnMask, [1, attnMask.length]);
+    const posTensor = new window.ort.Tensor("int64", posIds, [1, posIds.length]);
 
-      const decoderInputs = buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, posTensor, cache);
-      if (step === 0) {
-        const decoderMetaNames =
-          decoderSession.inputMetadata instanceof Map
-            ? Array.from(decoderSession.inputMetadata.keys())
-            : Object.keys(decoderSession.inputMetadata || {});
-        const decoderInputNames = Array.isArray(decoderSession.inputNames) ? decoderSession.inputNames : [];
-        log(`LiquidAI decoder meta inputs: ${decoderMetaNames.join(", ") || "(none)"}`);
-        if (decoderInputNames.length) {
-          log(`LiquidAI decoder inputNames: ${decoderInputNames.join(", ")}`);
-        }
-        log(`LiquidAI decoder feeds: ${Object.keys(decoderInputs).join(", ") || "(none)"}`);
+    const decoderInputs = buildLiquidDecoderInputs(decoderSession, currentEmbeds, attnTensor, posTensor, cache);
+    if (step === 0) {
+      const decoderMetaNames =
+        decoderSession.inputMetadata instanceof Map
+          ? Array.from(decoderSession.inputMetadata.keys())
+          : Object.keys(decoderSession.inputMetadata || {});
+      const decoderInputNames = Array.isArray(decoderSession.inputNames) ? decoderSession.inputNames : [];
+      log(`LiquidAI decoder meta inputs: ${decoderMetaNames.join(", ") || "(none)"}`);
+      if (decoderInputNames.length) {
+        log(`LiquidAI decoder inputNames: ${decoderInputNames.join(", ")}`);
       }
+      log(`LiquidAI decoder feeds: ${Object.keys(decoderInputs).join(", ") || "(none)"}`);
+    }
 
-      const result = await decoderSession.run(decoderInputs);
-      updateLiquidCache(cache, result);
-      const logitsTensor = resolveLogitsOutput(result);
-      if (!logitsTensor) throw new Error("Decoder did not return logits.");
-      const nextId = argmaxLogits(logitsTensor);
-      generated.push(nextId);
-      if (eosTokenId !== null && nextId === eosTokenId) break;
+    const result = await decoderSession.run(decoderInputs);
+    updateLiquidCache(cache, result);
+    const logitsTensor = resolveLogitsOutput(result);
+    if (!logitsTensor) throw new Error("Decoder did not return logits.");
+    const nextId = argmaxLogits(logitsTensor);
+    generated.push(nextId);
+    if (eosTokenId !== null && nextId === eosTokenId) break;
+
+    if (minSummaryChars != null) {
       const decodedSoFar = decodeTokens(tokenizer, generated);
       if (decodedSoFar.length >= minSummaryChars && /[.!?]\s*$/.test(decodedSoFar)) {
         break;
       }
-
-      const nextTokenInputs = buildLiquidTokenInputs(
-        embedTokenSession.inputMetadata,
-        embedTokenSession.inputNames,
-        [nextId]
-      );
-      const nextTokenResult = await embedTokenSession.run(nextTokenInputs);
-      currentEmbeds = Object.values(nextTokenResult)[0];
     }
-    const elapsed = (performance.now() - start).toFixed(0);
-    const decoded = decodeTokens(tokenizer, generated);
 
-    visionOutputEl.textContent = JSON.stringify(
-      {
-        modelId,
-        providers,
-        question,
-        prompt,
-        generatedTokenIds: generated,
-        answer: decoded,
-        elapsedMs: elapsed,
-      },
-      null,
-      2
+    const nextTokenInputs = buildLiquidTokenInputs(
+      embedTokenSession.inputMetadata,
+      embedTokenSession.inputNames,
+      [nextId]
     );
+    const nextTokenResult = await embedTokenSession.run(nextTokenInputs);
+    currentEmbeds = Object.values(nextTokenResult)[0];
+  }
+  const elapsed = (performance.now() - start).toFixed(0);
+  const decoded = decodeTokens(tokenizer, generated);
+
+  return {
+    modelId,
+    providers,
+    question,
+    prompt,
+    generatedTokenIds: generated,
+    answer: decoded,
+    elapsedMs: elapsed,
+    image: resolvedImg,
+  };
+}
+
+async function runOrtChat(modelId, file, question) {
+  try {
+    const result = await runLiquidImagePrompt({
+      modelId,
+      file,
+      question,
+      maxNewTokens: 64,
+      minSummaryChars: 120,
+      statusEl: visionStatusEl,
+    });
+    if (visionPreviewEl && result.image?.src) {
+      visionPreviewEl.src = result.image.src;
+    }
+    visionOutputEl.textContent = JSON.stringify(result, null, 2);
     setStatus(visionStatusEl, "LiquidAI chat complete.");
   } catch (err) {
     log(err?.stack || String(err));
@@ -1726,6 +1780,12 @@ askVisionBtn.addEventListener("click", () => {
   }
   runOrtChat(modelId, file, question);
 });
+
+if (copyLogBtn) {
+  copyLogBtn.addEventListener("click", () => {
+    copyLogToClipboard();
+  });
+}
 
 downloadLogBtn.addEventListener("click", () => {
   downloadLog();

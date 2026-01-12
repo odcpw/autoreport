@@ -1,0 +1,47 @@
+Based on the grep output I found earlier, I have all the questions I need. Let me now create concise French negative findings for each base ID, aggregating the sub-questions where appropriate. I'll draft these findings to be manual, negative responses without "Si oui" clauses.
+
+Here are the French negative findings for chapters 13-14:
+
+## Chapter 13: GSE (Gestion de la santé en entreprise)
+
+**13.2** → Il n'existe pas de concept GSE comprenant des buts définis, une approche et un agenda, une communication adaptée aux groupes cibles, ni un cadre budgétaire pour les projets GSE.
+
+**13.6** → L'entreprise n'incite pas les collaborateurs à se former sur les thèmes suivants : activité physique et sport, nutrition et gestion du poids, stratégies contre le stress et le burnout, gestion des contraintes organisationnelles particulières (travail en équipe, travail de nuit), équilibre travail/loisir, sommeil et repos, ou prévention des dépendances.
+
+**13.7** → L'entreprise n'encourage pas la formation en management axée sur la GSE, ne dispose pas de locaux dédiés à la GSE (pièces de repos, espaces de détente, douches), les places de travail ne sont pas conçues selon les principes ergonomiques, les collaborateurs ne sont pas instruits sur des thèmes comme porter juste ou se tenir correctement, les nouveaux collaborateurs ne sont pas sensibilisés à la GSE, il n'y a pas de formation continue orientée compétences sociales et développement personnel, l'ambiance de travail n'est pas favorisée par une bonne gestion des séances ou des événements sociaux, la collaboration entre niveaux hiérarchiques n'est pas encouragée, le job sharing n'est pas proposé, et il n'existe pas de service de médiation neutre pour les conflits ou collaborateurs en difficulté.
+
+## Chapter 14: Extension pour ISO 45001
+
+**14.1.1** → Les parties intéressées (autorités, fournisseurs, organisations de travailleurs, visiteurs, grand public, clients, médias, ONG) qui sont concernées par le système de gestion de la sécurité et de la santé ne sont pas identifiées.
+
+**14.1.2** → Les besoins et attentes pertinents des travailleurs et des autres parties intéressées n'ont pas été définis.
+
+**14.1.3** → Les besoins et attentes pertinents ne sont pas évalués ni surveillés.
+
+**14.2.1** → Les informations documentées ne sont pas conservées pour garantir que le processus se déroule comme prévu (enregistrements, preuves de modifications, rapports, journaux).
+
+**14.3.1** → Aucune procédure d'identification des risques et opportunités n'est établie pour l'organisation.
+
+**14.3.2** → Les risques et opportunités SST considérés ne sont pas documentés, maintenus ou conservés.
+
+**14.4.1** → Les informations sur les modifications des obligations légales et autres exigences ne sont pas présentées de manière à permettre leur divulgation documentée et vérifiable.
+
+**14.5.1** → Les informations documentées requises pour le SM-SST ne sont pas disponibles (domaine d'application, politique et objectifs SST, bases légales, compétences, risques et opportunités SST, informations créées pour le fonctionnement, preuves des résultats).
+
+**14.5.2** → Lors de la création et de l'actualisation des informations documentées, aucune identification et description raisonnable n'est assurée (titre, date, auteur, numéro de référence, version).
+
+**14.5.3** → Aucun processus n'est défini pour la gestion des informations documentées (création, classement, classification, autorisation, distribution, application, révision, retrait, dépôt, élimination).
+
+**14.6.1** → L'organisation ne garantit pas que les fonctions et processus externalisés qui affectent le SM-SST sont contrôlés.
+
+**14.7.1** → Les processus de surveillance, de mesure, d'analyse et d'évaluation des performances SST ne sont pas établis, mis en œuvre ou maintenus.
+
+**14.7.2** → Les processus nécessaires pour l'évaluation du respect des obligations légales et autres exigences ne sont pas définis, mis en œuvre ou maintenus.
+
+**14.7.3** → Les auditeurs ne sont pas formés pour effectuer des audits de système.
+
+**14.7.4** → Les audits internes n'ont pas établi que les exigences d'ISO 45001 sont remplies.
+
+---
+
+**Summary**: 18 negative findings covering all requested library IDs (13.2, 13.6, 13.7, and 14.1.1–14.7.4), with sub-parts aggregated for base IDs 13.2, 13.6, and 13.7 as requested. All findings are concise, in French, and formulated as negative statements without "Si oui" clauses.

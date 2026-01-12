@@ -1,0 +1,41 @@
+Perfect. Now I'll draft concise French negative findings for each Chapter 5 ID, matching the German structure but with direct, natural French phrasing (no "Si oui" followups, no algorithmic phrasing):
+
+**Chapter 5 French Findings:**
+
+- **5.1.1**: L'entreprise n'a pas réglé le recours à des médecins du travail et autres spécialistes de la sécurité au travail (ni par solution interne, solution de branche, solution de groupe d'entreprises, solution modèle ou autre solution).
+
+- **5.2.1**: Les dangers concernant la sécurité et la santé des travailleurs ne sont pas identifiés et documentés.
+
+- **5.2.2**: L'identification des dangers ne couvre pas tous les domaines pertinents (moyens de travail, processus, activités, postes de travail, entreprises externes, produits, substances dangereuses, etc.).
+
+- **5.2.3**: L'identification des dangers n'est pas régulièrement vérifiée et adaptée aux changements dans l'entreprise.
+
+- **5.2.4**: Il n'existe aucune personne ou service responsable de l'identification systématique des dangers dans l'entreprise.
+
+- **5.2.5**: Les collaborateurs ne sont pas impliqués dans l'identification des dangers.
+
+- **5.2.7**: Les résultats de l'identification des dangers ne sont pas pris en compte lors de la définition des objectifs en matière de sécurité et de protection de la santé.
+
+- **5.3.1**: L'entreprise ne réalise aucune évaluation des risques.
+
+- **5.3.2**: Les évaluations des risques ne sont pas effectuées dans toutes les situations pertinentes (nouveaux processus, modifications, absence de règles de l'art).
+
+- **5.3.3**: L'évaluation des risques n'est pas régulièrement vérifiée et adaptée aux changements.
+
+- **5.3.4**: Il n'existe aucune personne ou service responsable de l'évaluation systématique des risques.
+
+- **5.3.5**: Les collaborateurs ne sont pas impliqués dans l'évaluation des risques.
+
+- **5.3.6**: Les résultats des évaluations des risques ne sont pas documentés.
+
+- **5.3.7**: Les résultats de l'évaluation des risques ne sont pas pris en compte lors de la définition des objectifs.
+
+- **5.4.1**: Il n'existe aucune directive imposant la déclaration des événements (accidents, maladies, dommages matériels, quasi-accidents, etc.) dans un délai déterminé.
+
+- **5.4.3**: Aucun service n'est désigné pour collecter et analyser toutes les déclarations d'accidents.
+
+- **5.4.4**: Aucune procédure n'est définie et formalisée par écrit pour l'enquête sur les événements indésirables.
+
+- **5.4.5**: Les différents types d'événements ne sont pas régulièrement et systématiquement examinés (uniquement les accidents professionnels, mais pas les quasi-accidents, dommages matériels, etc.).
+
+- **5.4.6**: Les accidents sont clos pour l'entreprise après leur déclaration à la Suva.

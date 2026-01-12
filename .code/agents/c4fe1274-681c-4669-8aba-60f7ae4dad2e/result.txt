@@ -1,0 +1,17 @@
+I'll generate French negative findings for Chapter 8, chunk 1 (IDs 8.1.1–8.2.1) following the manual phrasing approach with no algorithmic negation.
+
+```json
+{
+  "8.1.1": "L'information et la consultation des collaborateurs ne sont pas réglementées par la loi sur la participation.",
+  "8.1.2": "Aucun type de représentation des travailleurs n'existe dans l'entreprise.",
+  "8.1.3": "L'information complète et en temps utile des collaborateurs ou représentants n'est pas garantie.",
+  "8.1.4": "Les droits de participation spécifiques en matière de sécurité et santé ne sont pas garantis.",
+  "8.1.5": "Les représentants des collaborateurs ne sont pas soutenus par l'employeur.",
+  "8.2.1": "Le système de propositions et d'améliorations n'est pas institutionnalisé."
+}
+```
+
+**Skill reflection:**
+- Skills used: None (direct manual translation task)
+- Skills missing: A `french-findings-generator` skill could be useful for standardizing negative finding patterns across chapters
+- Needed improvements: Could create a skill that maintains consistent French negative phrasing patterns and validates against the question structure

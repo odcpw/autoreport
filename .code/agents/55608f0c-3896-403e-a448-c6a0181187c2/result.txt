@@ -1,0 +1,9 @@
+Based on the German findings I found in the library_master.json file, I'll now generate the French negative findings for Chapter 6, chunk B (IDs 6.1.5–6.2.2) following the manual phrasing instructions provided:
+
+**6.1.5** → Vérifiez-vous l'efficacité des mesures prises?
+
+**6.1.6** → Les effets des mesures prises et mises en œuvre sont-ils pris en considération lors de la définition des objectifs en matière de sécurité et de protection de la santé?
+
+**6.2.1** → Programmes de sécurité menés au cours des deux dernières années? Sécurité au travail / sécurité loisirs / promotion de la santé.
+
+**6.2.2** → Programmes spécifiques (Échafaudages sûrs, Presses sécurisées, STOP manipulation dispositifs, trébucher.ch, Amiante, Maintenance, Apprentissage en toute sécurité, autres).

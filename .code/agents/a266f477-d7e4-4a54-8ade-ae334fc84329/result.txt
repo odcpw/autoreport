@@ -1,0 +1,9 @@
+Based on the German findings I found in library_master.json and the Italian questions provided in the context, I'll draft the Italian negative findings for Chapter 6 chunk A (IDs 6.1.1–6.1.4):
+
+**6.1.1** → Dopo aver individuato un pericolo non si adotta in ogni caso un provvedimento.
+
+**6.1.2** → Le misure di sicurezza non vengono adottate in base a determinate strategie (mancano obiettivi chiari, mezzi e metodi definiti).
+
+**6.1.3** → Diversi soggetti non partecipano alla ricerca delle misure (manca il coinvolgimento di superiori, dipendenti, addetti alla sicurezza, soggetti dell'organizzazione della sicurezza).
+
+**6.1.4** → Le misure da adottare non hanno tutte un termine e il loro rispetto non è controllato.

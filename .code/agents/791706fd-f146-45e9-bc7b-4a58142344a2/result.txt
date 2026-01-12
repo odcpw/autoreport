@@ -1,0 +1,16 @@
+I'll generate the Italian negative findings for Chapter 9, chunk 1 (IDs 9.1.1–9.2.3), using the manual phrasing approach without "Non è vero che" or "Se sì".
+
+```json
+{
+  "9.1.1": "I dipendenti non possono ripartirsi il lavoro autonomamente.",
+  "9.1.2": "I dipendenti non possono interrompere il lavoro senza conseguenze negative.",
+  "9.1.3": "I dipendenti non possono mettersi d'accordo ogni qualvolta sia necessario.",
+  "9.1.4": "Non ci sono dubbi frequenti su chi è competente di cosa.",
+  "9.1.5": "Non ci sono frequenti disguidi (scambi, sviste, dimenticanze).",
+  "9.1.6": "Non ci sono attività monotone, poco interessanti o poco qualificanti.",
+  "9.1.7": "Non si potrebbe migliorare ampliando attività o cambiando mansione.",
+  "9.2.1": "Non ci sono lamentele frequenti di stanchezza, mal di testa, disturbi del sonno o intestinali.",
+  "9.2.2": "Non ci sono lamentele per lavoro monotono o carico unilaterale.",
+  "9.2.3": "Non ci sono lamentele su scadenze pressanti, ritmo frenetico, eccesso di lavoro o responsabilità."
+}
+```

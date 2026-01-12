@@ -1,0 +1,43 @@
+Perfect! Here is the complete list of Italian Chapter 5 negative findings matching all 19 German Chapter 5 IDs from library_master.json:
+
+**Italian Chapter 5 Negative Findings (id → finding)**
+
+**5.1.1**: Il ricorso ai medici del lavoro e agli altri specialisti della sicurezza sul lavoro non è disciplinato (né tramite soluzione interna, soluzione settoriale, soluzione per gruppi di aziende, soluzione modello, né altra soluzione).
+
+**5.2.1**: I pericoli per la sicurezza e la salute dei lavoratori non sono identificati e documentati.
+
+**5.2.2**: L'individuazione dei pericoli non copre tutti gli aspetti rilevanti (attrezzature di lavoro, processi, attività, posti di lavoro, aziende terze, prodotti, sostanze nocive, ecc.).
+
+**5.2.3**: L'individuazione dei pericoli non viene verificata regolarmente e adeguata ai cambiamenti avvenuti in azienda.
+
+**5.2.4**: In azienda manca una persona o un ufficio responsabile dell'individuazione sistematica dei pericoli.
+
+**5.2.5**: I dipendenti non partecipano all'individuazione dei pericoli.
+
+**5.2.7**: I risultati dell'individuazione dei pericoli non vengono considerati nel definire gli obiettivi di sicurezza e tutela della salute.
+
+**5.3.1**: In azienda non si svolge alcuna valutazione dei rischi.
+
+**5.3.2**: La valutazione dei rischi non viene svolta in tutte le situazioni rilevanti (nuovi processi, modifiche, assenza o carenza delle regole della tecnica).
+
+**5.3.3**: La valutazione dei rischi non viene verificata regolarmente e adeguata ai cambiamenti avvenuti in azienda.
+
+**5.3.4**: Manca una persona o un ufficio responsabile della valutazione sistematica dei rischi.
+
+**5.3.5**: I dipendenti non partecipano alla valutazione dei rischi.
+
+**5.3.6**: I risultati della valutazione dei rischi non sono documentati.
+
+**5.3.7**: I risultati della valutazione dei rischi non vengono considerati nel definire gli obiettivi in materia di sicurezza e tutela della salute.
+
+**5.4.1**: Manca una direttiva che preveda la notifica degli eventi (infortuni, malattie, danni materiali, quasi-infortuni, ecc.) entro una determinata scadenza.
+
+**5.4.3**: Nessun ufficio è designato per raccogliere e analizzare tutte le notifiche d'infortunio.
+
+**5.4.4**: Manca una procedura definita e messa per iscritto per l'esame degli eventi inattesi.
+
+**5.4.5**: I diversi tipi di eventi non vengono esaminati regolarmente e sistematicamente (solo gli infortuni professionali, ma non i quasi-infortuni, i danni materiali, ecc.).
+
+**5.4.6**: Gli eventi infortunistici sono considerati liquidati dopo la notifica alla Suva.
+
+All findings have been manually phrased (no algorithmic negation), "Se sì" clauses have been dropped, and the list matches all 19 German Chapter 5 IDs from library_master.json.

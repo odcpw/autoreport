@@ -1,0 +1,17 @@
+Perfect! Now I have all the Italian questions for the specified IDs. Let me draft concise negative findings aggregating the subparts for each base ID, removing any "Se sì" clauses:
+
+## Italian Negative Findings (Chapters 11–12)
+
+**11.2** → I dati riferiti a infortuni e malattie con rispettivi giorni di assenza non vengono registrati, analizzati, valutati né comunicati.
+
+**11.7** → I colloqui di rientro non sono tenuti dai quadri né dopo assenze impreviste di lunga durata né dopo ogni assenza imprevista.
+
+**11.13** → Nelle loro attività di assistenza e reinserimento, i quadri non ricevono sostegno dalla divisione delle risorse umane né da altre unità organizzative.
+
+**12.6** → Gli infortuni nel tempo libero non vengono registrati, analizzati, valutati né comunicati.
+
+**12.11** → Non si sono svolti progetti né sono state adottate misure in azienda per promuovere la sicurezza nel tempo libero, inclusi i rischi di inciampare e cadere, sport con la palla, sport invernali, casa e giardino.
+
+---
+
+**Summary**: Five negative findings covering all requested library IDs (11.2, 11.7, 11.13, 12.6, 12.11), each aggregating all subparts (a–d/f) into concise Italian statements. All "Se sì" clauses have been removed.

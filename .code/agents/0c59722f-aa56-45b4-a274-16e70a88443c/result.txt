@@ -1,0 +1,34 @@
+Perfect! Now I have the German findings for Chapter 10, chunk 1 (IDs 10.1.1–10.2.1). Let me draft the Italian negative findings following the manual phrasing rules (no "Non è vero che", no "Se sì") based on the Italian questions from the context.
+
+## Italian Negative Findings - Chapter 10 Chunk 1 (10.1.1–10.2.1)
+
+```
+10.1.1: L'azienda non dispone di un piano di controllo o sorveglianza riguardante la sicurezza e la salute dei collaboratori.
+
+10.1.2: L'azienda non svolge audit di sicurezza regolari.
+
+10.1.3: La frequenza degli audit di sicurezza non è definita.
+
+10.1.4: I contenuti e la tabella di marcia degli audit di sicurezza non vengono preparati in anticipo.
+
+10.1.5: I superiori non sono formati sull'esecuzione e sulla valutazione degli audit di sicurezza.
+
+10.1.6: Le procedure di audit non sono mirate alla struttura dei rischi e alle condizioni operative dell'azienda.
+
+10.1.7: Durante gli audit di sicurezza non vengono utilizzati strumenti ausiliari come parole chiave, liste di controllo o moduli.
+
+10.1.8: Le osservazioni e le misure adottate non vengono documentate per iscritto.
+
+10.1.9: Le osservazioni non vengono integrate nel sistema di sicurezza aziendale.
+
+10.2.1: L'azienda non tiene statistiche su diversi tipi di eventi (infortuni professionali e malattie professionali, infortuni non professionali, malattia, danni materiali, disservizi, giorni di assenza, quasi-infortuni).
+```
+
+---
+
+**Notes:**
+- All findings use direct negative statements without "Non è vero che" constructions
+- Manual phrasing matches the Italian question structure from the context
+- ID 10.1.3 aggregates the sub-questions (a–e) into the base frequency definition
+- ID 10.2.1 aggregates all event types (a–g) from the sub-questions into a comprehensive statistics finding
+- No "Se sì" conditional phrasing included

@@ -1,0 +1,55 @@
+Based on the German findings I found, I'll now draft the French negative findings for Chapter 9 chunk2 (IDs 9.2.4–9.9.1). Following the manual phrasing style and the questions provided:
+
+**9.2.4**: Insatisfaction diffuse sans raison valable (plaintes permanentes)?
+
+**FR finding**: Il existe une insatisfaction diffuse sans raison valable (plaintes permanentes).
+
+---
+
+**9.2.5**: Conflits entre employés / divisions / supérieurs-subordonnés / supérieurs?
+
+**FR finding**: Il existe des conflits humains entre collaborateurs, services ou niveaux hiérarchiques.
+
+---
+
+**9.2.6**: Une procédure de gestion des conflits est-elle appliquée?
+
+**FR finding**: Aucune procédure documentée de résolution des conflits n'est appliquée.
+
+---
+
+**9.3.1**: Contraintes physiques aux postes (efforts cardio, musculo-squelettiques, bruit, vibrations, chaleur/froid, poussières, fumées, gaz, radiations, odeurs, éclairage/visibilité, etc.)
+
+**FR finding**: Différentes contraintes physiques se manifestent aux postes de travail (travail physique pénible, postures contraintes, port de charges, bruit, vibrations, chaleur/froid, poussières, etc.).
+
+---
+
+**9.4.1**: Contraintes psychiques (compétences peu claires, informations contradictoires, tensions sociales, surcharge, stress, etc.)
+
+**FR finding**: Des contraintes psychiques se manifestent aux postes de travail (responsabilités peu claires, lacunes managériales, tensions sociales, surcharge, stress).
+
+---
+
+**9.5.1**: Comment sont définis les horaires de travail (quotidien/hebdomadaire/annuel)?
+
+**FR finding**: Les horaires de travail ne sont pas clairement définis (temps de travail journalier, hebdomadaire, annuel).
+
+---
+
+**9.9.1**: Facteurs amplifiant le comportement à risque (productivité à tout prix, valorisation des "Rambos", dénigrement du comportement sûr, etc.)?
+
+**FR finding**: Il existe des facteurs cachés qui renforcent les comportements à risque.
+
+---
+
+## Output (id → finding):
+
+```
+9.2.4 → Il existe une insatisfaction diffuse sans raison valable (plaintes permanentes).
+9.2.5 → Il existe des conflits humains entre collaborateurs, services ou niveaux hiérarchiques.
+9.2.6 → Aucune procédure documentée de résolution des conflits n'est appliquée.
+9.3.1 → Différentes contraintes physiques se manifestent aux postes de travail (travail physique pénible, postures contraintes, port de charges, bruit, vibrations, chaleur/froid, poussières, etc.).
+9.4.1 → Des contraintes psychiques se manifestent aux postes de travail (responsabilités peu claires, lacunes managériales, tensions sociales, surcharge, stress).
+9.5.1 → Les horaires de travail ne sont pas clairement définis (temps de travail journalier, hebdomadaire, annuel).
+9.9.1 → Il existe des facteurs cachés qui renforcent les comportements à risque.
+```

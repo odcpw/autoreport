@@ -1,0 +1,98 @@
+Excellent! Now I have all the French questions for Chapter 4. Now I need to draft negative findings in French that mirror the German structure. Let me create the complete list of French negative findings:
+
+Based on the German findings from library_master.json and the French questions from the Excel file, here are the French Chapter 4 negative findings:
+
+## French Chapter 4 Negative Findings
+
+**4.1 Fiches d'information, directives et listes de contrôle**
+
+**4.1.1** → Les feuillets d'information et instructions de travail déterminants pour la sécurité et la santé ne sont pas disponibles dans l'entreprise.
+
+**4.1.2** → Les listes de contrôle de la Suva et de la solution par branche ne sont pas utilisées.
+
+**4.1.3** → Le booklet «Règles vitales» de la Suva n'est pas utilisé dans l'entreprise.
+
+**4.1.4** → Les destinataires ne disposent pas des feuillets d'information et instructions de travail pertinents ou n'y ont pas accès.
+
+**4.1.5** → Aucune directive interne concernant la sécurité au travail et la protection de la santé n'est rédigée ni utilisée en complément des feuillets d'information officiels.
+
+**4.1.6** → Les collaborateurs concernés ne sont pas impliqués dans l'élaboration des directives internes.
+
+**4.1.7** → La mise à jour permanente des feuillets d'information, instructions de travail et directives internes n'est pas garantie.
+
+**4.2 Protection individuelle: besoins**
+
+**4.2.1** → Les équipements de protection individuelle nécessaires compte tenu des risques ne sont pas définis (absence de recensement systématique des EPI requis par poste).
+
+**4.3 Protection individuelle: utilisation et acceptation**
+
+**4.3.1** → Les collaborateurs concernés ne sont pas associés au choix des équipements de protection individuelle.
+
+**4.3.2** → Aucune instruction écrite interne concernant l'utilisation des équipements de protection individuelle n'existe.
+
+**4.3.3** → Les supérieurs hiérarchiques ne montrent pas l'exemple dans le port des équipements de protection individuelle.
+
+**4.3.4** → Les collaborateurs ne sont pas informés des risques inhérents à leur poste de travail et des mesures de sécurité correspondantes.
+
+**4.3.5** → Les collaborateurs ne sont pas instruits sur l'utilisation correcte et l'entretien des équipements de protection individuelle.
+
+**4.3.6** → L'utilisation correcte des équipements de protection individuelle n'est pas contrôlée ni imposée.
+
+**4.3.7** → Certains postes de travail ou activités présentent une acceptation insatisfaisante des moyens de protection.
+
+**4.4 Fonctionnement normal et particulier**
+
+**4.4.1** → Les instructions des fabricants et fournisseurs concernant le fonctionnement normal et particulier des installations, machines et appareils ne sont pas respectées.
+
+**4.4.2** → Aucune instruction interne concernant le fonctionnement normal et particulier des installations, machines et appareils n'existe.
+
+**4.4.3** → Le rapport entre accidents en fonctionnement normal et en fonctionnement particulier n'est pas connu.
+
+**4.5 Maintenance des équipements de travail**
+
+**4.5.1** → L'entreprise ne dispose pas d'unité d'organisation spécifique chargée de la maintenance des équipements de travail.
+
+**4.5.2** → Aucun collaborateur ne reçoit de formation à la maintenance dispensée par les fabricants ou fournisseurs d'équipements de travail.
+
+**4.5.3** → Aucune instruction interne concernant la maintenance des équipements de travail n'existe.
+
+**4.5.4** → Les instructions des fabricants ou les directives internes concernant la maintenance ne sont pas respectées.
+
+**4.5.5** → Les travaux de maintenance ne sont pas planifiés ni discutés avec les collaborateurs concernés.
+
+**4.5.6** → L'autorisation d'exploiter les équipements après maintenance ne suit pas de règles de sécurité déterminées.
+
+**4.6 Maintenance des bâtiments et installations**
+
+**4.6.1** → L'entreprise ne dispose pas d'unité d'organisation spécifique chargée de la maintenance des bâtiments et installations.
+
+**4.6.2** → Les risques liés à la maintenance des bâtiments n'ont pas été identifiés ni documentés.
+
+**4.6.3** → Aucune directive ni règle de sécurité concernant la maintenance des bâtiments et installations n'existe.
+
+**4.6.4** → Les collaborateurs ne reçoivent pas de formation ni d'instruction à la maintenance des bâtiments et installations.
+
+**4.7 Acquisition et mise en service**
+
+**4.7.1** → Les aspects de sécurité technique ne sont pas pris en compte lors de l'acquisition d'équipements de travail.
+
+**4.7.2** → Aucune liste de contrôle ni disposition ne sont utilisés pour vérifier les aspects de sécurité technique lors de l'acquisition.
+
+**4.7.3** → La sécurité des équipements de travail, installations, matériaux et substances dangereuses n'est pas vérifiée avant leur utilisation.
+
+**4.7.4** → La vérification des équipements de travail avant utilisation n'est pas documentée.
+
+**4.7.5** → Les données de sécurité, rapports d'essai, certificats, etc. ne sont pas exigés des fournisseurs dès l'offre.
+
+**4.7.6** → Aucune déclaration de conformité ni notice d'utilisation pour les machines neuves ou déclaration d'incorporation et notice de montage pour les machines incomplètes ne sont exigées des fournisseurs.
+
+**4.7.7** → Les déclarations de conformité ne sont pas contrôlées quant à leur intégralité ni archivées.
+
+---
+
+**Notes:**
+- All findings are in concise negative form
+- "Si oui" clauses removed
+- Terminology aligned with Swiss French safety standards (Suva, EPI, etc.)
+- Letter-suffix IDs (4.2.1.a-z) map to the single finding 4.2.1 as per German structure
+- Phrasing mirrors the German negative form while respecting French syntax

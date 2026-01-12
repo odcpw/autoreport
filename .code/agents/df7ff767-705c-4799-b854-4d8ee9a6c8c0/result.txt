@@ -1,0 +1,21 @@
+Here are the Italian Chapter 5 negative findings, drafted based on the questions from `test/Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx` and mapped to the authoritative IDs from `library_master.json`.
+
+5.1.1 -> Il ricorso ai medici del lavoro e agli altri specialisti della sicurezza sul lavoro non è regolamentato.
+5.2.1 -> I pericoli per la sicurezza e la salute dei lavoratori non sono stati identificati e documentati.
+5.2.2 -> L'individuazione dei pericoli non copre tutti gli ambiti rilevanti (attrezzature, processi, attività, posti di lavoro, prodotti, sostanze).
+5.2.3 -> L'individuazione dei pericoli non viene verificata regolarmente né adeguata ai cambiamenti aziendali.
+5.2.4 -> Non è stata designata una persona o un servizio responsabile per l'individuazione sistematica dei pericoli.
+5.2.5 -> I dipendenti non partecipano all'individuazione dei pericoli.
+5.2.7 -> I risultati dell'individuazione dei pericoli non sono presi in considerazione nella definizione degli obiettivi di sicurezza e tutela della salute.
+5.3.1 -> In azienda non viene svolta una valutazione dei rischi.
+5.3.2 -> La valutazione dei rischi non viene svolta in tutte le situazioni rilevanti (nuovi processi, modifiche, mancanza di regole tecniche).
+5.3.3 -> La valutazione dei rischi non viene verificata regolarmente né adeguata ai cambiamenti aziendali.
+5.3.4 -> Non è stata designata una persona o un servizio responsabile per la valutazione sistematica dei rischi.
+5.3.5 -> I dipendenti non partecipano alla valutazione dei rischi.
+5.3.6 -> I risultati della valutazione dei rischi non sono documentati.
+5.3.7 -> I risultati della valutazione dei rischi non sono presi in considerazione nella definizione degli obiettivi di sicurezza e tutela della salute.
+5.4.1 -> Non esiste una direttiva per la notifica tempestiva degli eventi (infortuni, malattie, danni materiali, quasi-infortuni).
+5.4.3 -> Non è stato designato un ufficio responsabile della raccolta e dell'analisi delle notifiche d'infortunio.
+5.4.4 -> Non è stata stabilita né documentata una procedura per l'esame degli eventi inattesi.
+5.4.5 -> I diversi tipi di eventi (infortuni, quasi-infortuni, danni materiali) non vengono esaminati regolarmente e sistematicamente.
+5.4.6 -> Gli infortuni vengono considerati liquidati dopo la notifica alla Suva, senza ulteriori analisi interne.

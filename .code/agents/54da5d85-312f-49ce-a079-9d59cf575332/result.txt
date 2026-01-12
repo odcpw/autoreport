@@ -1,0 +1,18 @@
+I'll draft the French negative findings for Chapter 10, chunk 2 (IDs 10.2.2–10.3.4).
+
+```json
+{
+  "10.2.2": "Il n'existe pas de statistiques des événements pour l'entreprise entière ou pour les unités d'organisation.",
+  "10.2.3": "La statistique des événements n'est pas utilisée à des fins de direction du personnel.",
+  "10.3.1": "Le taux de rotation annuel n'est ni enregistré ni évalué.",
+  "10.3.2": "Les raisons de départ ne sont ni établies ni analysées.",
+  "10.3.3": "Aucune mesure n'est tirée des raisons de départ.",
+  "10.3.4": "Il n'existe pas de possibilités de comparaison du taux de rotation avec la branche ou la région."
+}
+```
+
+These negative findings:
+- Use manual phrasing without algorithmic negation patterns
+- Drop the "Si oui" conditional logic (these are direct negative statements)
+- Aggregate the sub-questions (10.2.2a–b) into the base ID (10.2.2)
+- Follow natural French negation patterns ("n'existe pas", "ne sont ni...ni", "aucune")

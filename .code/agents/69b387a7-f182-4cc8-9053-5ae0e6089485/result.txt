@@ -1,0 +1,77 @@
+## Italian Chapter 3 Negative Findings (Complete List)
+
+Here are all 46 Italian Chapter 3 findings matching the German ID structure from library_master.json:
+
+**3.1 - Selezione del personale**
+- **3.1.1** → L'azienda non dispone di criteri specifici per la selezione del personale.
+- **3.1.2** → Nella selezione del personale non si tiene conto di aspetti della sicurezza e della salute.
+- **3.1.3** → Nella selezione del personale non si svolgono test di idoneità.
+- **3.1.4** → Non si verifica la comprensione della lingua parlata in azienda e questo aspetto non è determinante nella selezione del personale.
+- **3.1.5** → Avere un comportamento sicuro non è oggetto del contratto di lavoro per i dipendenti con un posto fisso.
+- **3.1.6** → Avere un comportamento sicuro non è oggetto dei contratti di lavoro con i lavoratori part-time, con gli stagionali o gli ausiliari.
+
+**3.2 - Introduzione**
+- **3.2.1** → L'azienda non dispone di un programma di introduzione standardizzato per i dipendenti neo-assunti, interinali o trasferiti.
+- **3.2.2** → Per documentare l'introduzione non si usano liste di controllo o parole chiave.
+- **3.2.3** → La sicurezza e la tutela della salute non sono parte integrante dell'introduzione per i dipendenti neo-assunti, interinali o trasferiti.
+- **3.2.4** → Documentazione in materia di sicurezza e tutela della salute non sono messi a disposizione dei dipendenti neo-assunti, interinali o trasferiti.
+- **3.2.5** → Durante il periodo di prova mostrare un comportamento conforme alla sicurezza non è uno dei criteri di valutazione.
+
+**3.3 - Promozione del personale**
+- **3.3.1** → I profili richiesti e le prestazioni dei lavoratori non si verificano periodicamente e sistematicamente.
+- **3.3.2** → Non si tiene conto della sicurezza e della tutela della salute nell'identificare le lacune a livello di qualifica e di bisogni formativi.
+- **3.3.3** → L'azienda non ha un piano per la promozione del personale.
+- **3.3.4** → La sicurezza e la promozione della salute non sono aspetti chiave del piano di promozione del personale.
+- **3.3.5** → Non si svolge un controllo specifico per ogni dipendente sulla formazione, sulle attività di aggiornamento e su altre misure di promozione del personale.
+
+**3.4 - Corsi di addestramento**
+- **3.4.1** → L'azienda non offre al personale programmi e corsi di addestramento.
+- **3.4.2** → La sicurezza e la tutela della salute non sono parte integrante dei corsi di addestramento.
+- **3.4.3** → L'azienda non ricorre ai corsi di addestramento di associazioni esterne.
+- **3.4.4** → Le proposte di formazione offerte da enti esterni non riguardano la sicurezza e la tutela della salute.
+
+**3.5 - Formazione sul posto di lavoro**
+- **3.5.1** → In azienda non si impara sul posto di lavoro e questa tendenza non viene incoraggiata.
+- **3.5.2** → Infortuni, quasi-infortuni e altri eventi indesiderati non vengono usati come insegnamento per adottare misure concrete e colmare le lacune a livello formativo.
+- **3.5.3** → I superiori non sono stati istruiti nella metodica della formazione sul posto di lavoro.
+- **3.5.4** → I superiori e i dipendenti non vengono istruiti in caso di introduzione o modifica delle attrezzature di lavoro.
+- **3.5.5** → I superiori e i dipendenti non vengono istruiti in caso di introduzione di nuovi processi di lavoro o in caso di modifica degli stessi.
+- **3.5.6** → I superiori e i dipendenti non vengono istruiti sulla presenza di nuovi materiali di lavoro.
+
+**3.6 - Valutazione del personale**
+- **3.6.1** → L'azienda non dispone di un sistema di valutazione del personale.
+- **3.6.2** → La condotta di sicurezza dei capi non fa parte della valutazione.
+- **3.6.3** → Una competenza insufficiente a livello dirigenziale in materia di sicurezza non ha conseguenze.
+- **3.6.4** → Per le promozioni la condotta di sicurezza non è un criterio cruciale.
+- **3.6.5** → Un comportamento sicuro non fa parte della valutazione del personale.
+- **3.6.6** → Il mancato rispetto della sicurezza non ha conseguenze.
+
+**3.7 - Informazione e comunicazione**
+- **3.7.1** → L'azienda non dispone di un programma per l'informazione e la comunicazione.
+- **3.7.2** → Nella vostra azienda non ci sono regolamenti o particolari consuetudini in materia di informazione e comunicazione.
+- **3.7.3** → Nella vostra azienda non c'è una persona o un ufficio che si occupa prevalentemente di informazione e comunicazione.
+
+**3.8 - Supporti informativi**
+- **3.8.1** → Diversi supporti informativi non vengono utilizzati dall'azienda nell'ambito della sicurezza e della tutela della salute (nessun colloquio, riunione, istruzione, comunicazione scritta, media digitali ecc.).
+
+**3.9 - Colloqui**
+- **3.9.1** → La sicurezza e la promozione della salute non sono argomenti che vengono dibattuti durante i colloqui aziendali ed extra-aziendali.
+- **3.9.2** → Quando si parla di sicurezza e promozione della salute non si definiscono obiettivi di sicurezza e non si adottano provvedimenti.
+
+**3.10 - Ditte esterne**
+- **3.10.1** → (Contesto: si richiede la frequenza del ricorso a ditte esterne - non è possibile una constatazione negativa)
+- **3.10.2** → Le ditte esterne non vengono informate sui pericoli e sui requisiti di sicurezza imposti nella vostra azienda.
+- **3.10.3** → Il rispetto delle prescrizioni di sicurezza non è sancito nei contratti d'opera stipulati con le ditte esterne.
+- **3.10.4** → Il rispetto delle prescrizioni di sicurezza nelle ditte esterne non è oggetto di un controllo sistematico.
+- **3.10.5** → Non si impone il rispetto delle prescrizioni di sicurezza nelle ditte esterne.
+- **3.10.6** → L'azienda non è disposta ad annullare un contratto d'opera con le ditte che non rispettano le prescrizioni di sicurezza.
+- **3.10.7** → Il comportamento nei confronti della sicurezza e della tutela della salute delle ditte esterne non è tenuto in considerazione nella valutazione del fornitore.
+- **3.10.8** → L'azienda non offre corsi di formazione per il personale delle ditte esterne.
+
+---
+
+**Summary:**
+- ✅ All 46 IDs from German library_master.json Chapter 3 covered
+- ✅ Concise negative phrasing (no "Se sì" clauses removed)
+- ✅ Based on Italian questions from XLS sheet
+- ✅ Letter-suffix IDs (3.2.1.a/b/c, 3.2.3.a/b/c, etc.) consolidated into single base IDs matching German structure

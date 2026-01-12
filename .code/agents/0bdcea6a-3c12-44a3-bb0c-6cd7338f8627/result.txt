@@ -1,0 +1,15 @@
+Based on the context provided and the German findings I've reviewed, here are the Italian negative findings for Chapter 6 chunk B (IDs 6.1.5–6.2.2):
+
+## Italian Negative Findings - Chapter 6 Chunk B
+
+**6.1.5** → L'efficacia delle misure adottate non viene verificata.
+
+**6.1.6** → Al momento di definire nuovi obiettivi in materia di sicurezza e tutela della salute non si tiene conto delle possibili conseguenze delle misure adottate.
+
+**6.2.1** → Negli ultimi due anni non sono stati condotti né pianificati programmi per la sicurezza sul lavoro, la sicurezza nel tempo libero o la promozione della salute.
+
+**6.2.2** → Non sono stati utilizzati programmi specifici della Suva (Ponteggi sicuri, Presse sicure, STOP alla manipolazione dei dispositivi di protezione, inciampare.ch, Amianto, Manutenzione, Tirocinio in sicurezza, ecc.).
+
+---
+
+These findings are drafted according to the Italian question phrasing you provided and follow the manual phrasing style (avoiding "Non è vero che" constructions and "Se sì" phrases).
