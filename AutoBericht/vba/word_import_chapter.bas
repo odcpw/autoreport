@@ -151,7 +151,6 @@ Public Sub ImportChapter0Summary()
     listRange.ListFormat.ListTemplate.ListLevels(1).NumberStyle = wdListNumberStyleUppercaseLetter
     On Error GoTo 0
 
-    MsgBox "Chapter 0 summary imported.", vbInformation
     LogDebug "ImportChapter0Summary: done"
 End Sub
 
@@ -187,15 +186,15 @@ Private Function BuildEndBookmark(ByVal chapterId As String) As String
 End Function
 
 Private Function PromptChapterId(ByVal prompt As String) As String
-    Dim input As String
-    input = InputBox(prompt, "Choose chapter", "1")
-    input = Trim$(input)
-    If Len(input) = 0 Then Exit Function
-    If Not IsValidChapterId(input) Then
-        MsgBox "Invalid chapter ID: " & input, vbExclamation
+    Dim userChoice As String
+    userChoice = InputBox(prompt, "Choose chapter", "1")
+    userChoice = Trim$(userChoice)
+    If Len(userChoice) = 0 Then Exit Function
+    If Not IsValidChapterId(userChoice) Then
+        MsgBox "Invalid chapter ID: " & userChoice, vbExclamation
         Exit Function
     End If
-    PromptChapterId = input
+    PromptChapterId = userChoice
 End Function
 
 Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
@@ -416,7 +415,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         On Error GoTo 0
     Next h
 
-    MsgBox "Chapter " & chapterId & " imported.", vbInformation
     LogDebug "ImportChapterTable: done"
     ResetTableBookmarks startBm, endBm, tbl
 End Sub
