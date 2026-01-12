@@ -99,18 +99,11 @@ RecommendationLibrary (per engineer)
 - bullets (variant phrasing)
 - last_used
 
-## 8. UX Requirements (Photo Sorter)
+## 8. UX Notes (Photo Sorter)
 
-- Target screen: 1920×1080 @ 125% scaling (≈1536×864 effective).
-- Entire workflow must fit on one screen: no page scrolling.
-- No internal scrollbars in tag panes (Report / Observations / Training).
-- Photo preview and tagging controls must be visible simultaneously.
-- Tag buttons should be uniform width, dense grid, and single-click.
-- Button labels may be abbreviated to fit; full text shown on hover (tooltip).
-- Provide two layout variants:
-  - **Stacked panels** (all three panes visible at once).
-  - **Tabbed panels** (1/2/3 keys to switch panes).
-- User can toggle between the two layouts inside the UI.
+- Implemented layout: single-page, scroll-free tagging workflow sized for 1920×1080 @125%.
+- Tag panes use uniform buttons with tooltips; photo preview and tagging controls stay visible.
+- Two-layout toggle is NOT used; current design keeps one layout (decision: single layout sufficient).
 
 ## 9. Proposed Architecture (Policy-Safe)
 
@@ -176,10 +169,9 @@ project_sidecar.json (canonical state)
   project_sidecar.json      # editor state (canonical)
   project_db.xlsx           # optional readable archive (future)
   Inputs/                   # customer inputs (self-assessment + docs)
-  Photos/                   # raw photos (root = unsorted)
+  photos/                   # raw photos (pm1/pm2), resized, export
   Outputs/                  # Word/PPT/PDF outputs
   Photos/export/            # materialized tag folders (current export)
-  Photos/_views/            # optional; future variant for disk browsing
 ```
 
 Access:
@@ -275,7 +267,7 @@ Benefits
 - Templates can be updated independently by corporate design.
 - Chapter tables: inserted at 100% width with percent-based columns (35/58/7) set before any merges; table wrapping enabled (WrapAroundText). Header merges happen after sizing, and we avoid AutoFit-to-contents to keep column 3 stable.
 
-## 11b. PowerPoint Export (Draft)
+## 11b. PowerPoint Export
 
 Goal: generate two slide decks from the sidecar JSON.
 
@@ -284,7 +276,7 @@ Inputs:
 - PowerPoint template deck(s) in the project root (no `Templates/` folder)
 
 Outputs:
-- Report presentation (`YYYY-MM-DD_Report_*.pptx`) in the project folder
+- Report presentation: not implemented (reserved).
 - Training deck (`YYYY-MM-DD_Seminar_Slides_D/F.pptx`) in the project folder
 
 Template (current working file)
@@ -354,7 +346,7 @@ Seed and library resolution (fresh projects):
   `AutoBericht/data/seed/knowledge_base_*.json` (single source of defaults: tags, structure, content).
 - If neither exists, the app reports an error (no hidden fallbacks).
 
-### 12a. Current Sidecar Schema (as implemented)
+### 12a. Current Sidecar Schema (as implemented; stored in project folder)
 
 ```
 project_sidecar.json
