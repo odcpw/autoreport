@@ -185,6 +185,13 @@ button.ghost {
   line-height: 1.4;
 }
 
+.spider-hint {
+  margin-bottom: 8px;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
 .modal__actions {
   display: flex;
   justify-content: flex-end;
