@@ -4,8 +4,7 @@ Option Explicit
 ' === PPT EXPORT CONFIG ===
 Private Const DEBUG_ENABLED As Boolean = True
 Private Const TEMPLATE_FOLDER As String = "Templates"
-Private Const TRAINING_TEMPLATE_D As String = "Training_D.pptx"
-Private Const TRAINING_TEMPLATE_F As String = "Training_F.pptx"
+Private Const PPT_TEMPLATE As String = "Vorlage AutoBericht.pptx"
 Private Const OUTPUT_TRAINING_BASE As String = "Seminar_Slides"
 Private Const INCLUDE_SEMINAR_SLIDE As Boolean = True
 
@@ -19,14 +18,14 @@ Private Const MSO_PLACEHOLDER As Long = 14
 Private Const MSO_SHAPE_PICTURE As Long = 13
 
 Public Sub ExportTrainingPptD()
-    ExportTrainingPptInternal "D", TRAINING_TEMPLATE_D
+    ExportTrainingPptInternal "D"
 End Sub
 
 Public Sub ExportTrainingPptF()
-    ExportTrainingPptInternal "F", TRAINING_TEMPLATE_F
+    ExportTrainingPptInternal "F"
 End Sub
 
-Private Sub ExportTrainingPptInternal(ByVal langSuffix As String, ByVal templateFile As String)
+Private Sub ExportTrainingPptInternal(ByVal langSuffix As String)
     LogDebug "ExportTrainingPpt: start (" & langSuffix & ")"
     Dim sidecarPath As String
     sidecarPath = ResolveSidecarPathPpt()
@@ -53,7 +52,7 @@ Private Sub ExportTrainingPptInternal(ByVal langSuffix As String, ByVal template
     Dim templatesFolder As String
     templatesFolder = projectFolder & "\\" & TEMPLATE_FOLDER
     Dim templatePath As String
-    templatePath = templatesFolder & "\\" & templateFile
+    templatePath = templatesFolder & "\\" & PPT_TEMPLATE
     If Dir(templatePath) = "" Then
         MsgBox "Training template not found: " & templatePath, vbExclamation
         Exit Sub
