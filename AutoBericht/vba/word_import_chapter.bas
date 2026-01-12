@@ -820,39 +820,33 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
 End Function
 
 Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String, ByVal markerText As String) As Range
-
     Dim bmStart As Bookmark
     Dim bmEnd As Bookmark
     Set bmStart = FindBookmark(startName)
     Set bmEnd = FindBookmark(endName)
     If bmStart Is Nothing Or bmEnd Is Nothing Then Exit Function
 
-    Dim startPara As Paragraph
-    Set startPara = bmStart.Range.Paragraphs(1)
-
+    ' Clear existing content between bookmarks (including prior tables)
     Dim clearRange As Range
     Set clearRange = ActiveDocument.Range(bmStart.Range.End, bmEnd.Range.Start)
     ClearRangeSafe clearRange
 
+    ' Create a clean insertion point just after the start bookmark
     Dim insertRange As Range
     Set insertRange = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
-    insertRange.InsertAfter vbCr & vbCr & vbCr
+    insertRange.Collapse wdCollapseEnd
+    insertRange.InsertParagraphAfter
+    insertRange.Collapse wdCollapseEnd
 
-    Dim firstBlank As Paragraph
-    Set firstBlank = startPara.Next
-    If firstBlank Is Nothing Then
-        Set ResolveBookmarkInsertRange = ActiveDocument.Range(bmStart.Range.End, bmStart.Range.End)
-        Exit Function
+    ' If we're inside a table, move out to the next paragraph to avoid nested tables
+    If insertRange.Information(wdWithInTable) Then
+        insertRange = insertRange.Paragraphs(1).Range
+        insertRange.Collapse wdCollapseEnd
+        insertRange.InsertParagraphAfter
+        insertRange.Collapse wdCollapseEnd
     End If
 
-    Dim middleBlank As Paragraph
-    Set middleBlank = firstBlank.Next
-    If middleBlank Is Nothing Then
-        Set ResolveBookmarkInsertRange = firstBlank.Range
-        Exit Function
-    End If
-
-    Set ResolveBookmarkInsertRange = middleBlank.Range
+    Set ResolveBookmarkInsertRange = insertRange
 End Function
 
 Private Function FindMarkerRange(ByVal markerText As String) As Range
