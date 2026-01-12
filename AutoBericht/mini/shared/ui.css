@@ -177,6 +177,12 @@ button.ghost {
   gap: 12px;
 }
 
+.modal .hint {
+  margin: 0 0 10px 0;
+  color: #4a4a4a;
+  font-size: 0.9rem;
+}
+
 .modal__actions {
   display: flex;
   justify-content: flex-end;
@@ -199,6 +205,10 @@ button.ghost {
   border: 1px solid #e0d7c8;
   padding: 6px 8px;
   text-align: left;
+}
+
+.spider-table tbody tr:nth-child(even) {
+  background: #faf5ee;
 }
 
 .spider-table input[type="number"] {
