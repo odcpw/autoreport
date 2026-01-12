@@ -5,7 +5,7 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 ## Minimal structure
 - Add a folder at zip root: `customUI/`.
 - Place the ribbon markup in `customUI/customUI.xml`.
-- Root element must use namespace `http://schemas.microsoft.com/office/2006/01/customui` and exactly one `<customUI>` part is allowed per package.
+- Root element must use namespace `http://schemas.microsoft.com/office/2006/01/customui` and exactly one `<customUI>` part is allowed per package. All controls must sit inside a `<group>` which sits inside a `<tab>` under `<ribbon>`; you cannot place controls or separators directly under `<tab>`. citeturn0search0
 - Relationship in `_rels/.rels` (root rels) pointing to the part:
   ```xml
   <Relationship
@@ -20,6 +20,7 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
             ContentType="application/vnd.ms-office.customui+xml"/>
   ```
   Ensure only one Override for this part to avoid duplicate‑part corruption.
+- If you need Backstage (2007/10) features use `customUI2` with namespace `http://schemas.microsoft.com/office/2007/10/customui`; only one of customUI/customUI2 is honored, with customUI2 taking precedence. citeturn0search1
 
 ## Common corruption causes
 - Multiple `customUI/customUI.xml` entries or duplicate Overrides in `[Content_Types].xml`.
@@ -31,6 +32,7 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 ## Vertical separators
 - Allowed only inside a `<group>`: `<separator id="sep1"/>`.
 - Not allowed directly under `<tab>` or `<ribbon>`; doing so breaks XML validation and triggers repair.
+- All controls on a tab must be inside a `<group>`; separator is a valid child of `<group>` along with buttons, menus, etc. citeturn0search0
 
 ## Recommended embedding workflow
 1) Open the DOCM/PPTM with the “Office Custom UI Editor” or an OPC‑aware zip tool.
@@ -44,4 +46,3 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - Ribbon XML lives in `AutoBericht/vba/ribbon.xml`.
 - Templates now reside in `ProjectTemplate/` root (`Vorlage IST-Aufnahme-Bericht d.V01.docm`, `Vorlage AutoBericht.pptx`).
 - If a repair prompt reappears, re‑embed the ribbon using the steps above to eliminate duplicate overrides/relationships left by manual zip edits.
-
