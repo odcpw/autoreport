@@ -53,6 +53,9 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - Added in-group separators in Markdown and Export groups; separators are only valid inside `<group>`.
 - Deduped `customUI/customUI.xml` inside `ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm` and ensured a single override + relationship (2006/01 schema).
 - Keep using the 2006/01 namespace/part. If you add `customUI14.xml`, switch namespace to `http://schemas.microsoft.com/office/2009/07/customui` and add the correct root relationship.
+- Post-fix verification (2026-01-12): the DOCM must physically contain `customUI/customUI.xml` in the zip. A missing part (even with correct override/relationship) hides the tab. Quick check:
+  - `python - <<'PY'\nimport zipfile\nz=zipfile.ZipFile('ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm')\nprint([n for n in z.namelist() if 'customui' in n.lower()])\nPY`
+  - Expect: `['customUI/customUI.xml']`. If empty, re-add the part from `AutoBericht/vba/ribbon.xml` and ensure only one override + one relationship remain.
 
 ## Field guide (from “don’t get burned” note)
 - Match namespace to part: `customUI` → 2006/01; `customUI14` → 2009/07.

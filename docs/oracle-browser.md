@@ -25,6 +25,7 @@ bunx @steipete/oracle \
 - Swap `--prompt/--file` with your request + repo globs. Keep prompts concise; long, code‑fenced messages can trip the ChatGPT prompt-commit check.
 - Keep `ORACLE_HOME_DIR="$PWD/.oracle"` and `--browser-chrome-path "$PWD/tools/oracle-chrome.sh"` to avoid sandbox and permission errors.
 - If you need manual paste instead, use `--render --copy --engine browser` (no automation) or switch to API mode with `OPENAI_API_KEY` set.
+- Long/slow runs: add `--timeout 3600 --browser-timeout 3600s --browser-input-timeout 3600s` and use a 3–5 word slug (Oracle enforces it) to let GPT‑5.2 Pro finish 30–60 minute sessions.
 
 ## Troubleshooting
 - `ECONNREFUSED 127.0.0.1:9222`: Chrome failed to start; ensure the wrapper script is executable and on the given path. You can dry-run Chrome with `tools/oracle-chrome.sh --remote-debugging-port=9222 about:blank`.
