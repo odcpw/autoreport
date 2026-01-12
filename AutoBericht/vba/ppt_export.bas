@@ -16,6 +16,7 @@ Private Const LAYOUT_PICTURE As String = "picture"
 
 Private Const PP_PLACEHOLDER_PICTURE As Long = 18 ' fallback magic number
 Private Const MSO_PLACEHOLDER As Long = 14
+Private Const MSO_SHAPE_PICTURE As Long = 13
 
 Public Sub ExportTrainingPptD()
     ExportTrainingPptInternal "D", TRAINING_TEMPLATE_D
@@ -239,13 +240,33 @@ Private Sub InsertPictureSlot(ByVal slide As Object, ByVal filePath As String, B
             If shape.PlaceholderFormat.Type = PP_PLACEHOLDER_PICTURE Or shape.Type = PP_PLACEHOLDER_PICTURE Then
                 slot = slot + 1
                 If slot = slotIndex Then
-                    shape.Fill.UserPicture filePath
+                    InsertPictureIntoBounds slide, shape, filePath
                     Exit Sub
                 End If
             End If
         End If
         On Error GoTo 0
     Next shape
+End Sub
+
+Private Sub InsertPictureIntoBounds(ByVal slide As Object, ByVal placeholder As Object, ByVal filePath As String)
+    Dim l As Single, t As Single, w As Single, h As Single
+    l = placeholder.Left: t = placeholder.Top: w = placeholder.Width: h = placeholder.Height
+    Dim pic As Object
+    Set pic = slide.Shapes.AddPicture(filePath, msoFalse, msoTrue, l, t, w, h)
+    On Error Resume Next
+    pic.LockAspectRatio = msoTrue
+    If pic.Height = 0 Or pic.Width = 0 Then GoTo Done
+    Dim scale As Double
+    scale = w / pic.Width
+    If (pic.Height * scale) > h Then scale = h / pic.Height
+    pic.Width = pic.Width * scale
+    pic.Height = pic.Height * scale
+    pic.Left = l + (w - pic.Width) / 2
+    pic.Top = t + (h - pic.Height) / 2
+Done:
+    placeholder.Delete
+    On Error GoTo 0
 End Sub
 
 Private Function CountPictureSlots(ByVal layout As Object) As Long
