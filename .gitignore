@@ -43,3 +43,7 @@ AutoBericht/experiments/models/**/onnx/*.onnx_data
 
 # Large local model binaries (AI bundle)
 AutoBericht/AI/
+
+# Internal agent scratch
+.code/
+
