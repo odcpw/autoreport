@@ -369,7 +369,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
     tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
     On Error GoTo 0
-    tbl.AutoFitBehavior wdAutoFitFixed
 
     Dim row As Variant
     Dim targetRow As Long
@@ -442,7 +441,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
     tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
     tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
-    tbl.AutoFitBehavior wdAutoFitFixed
     On Error GoTo 0
 
     LogDebug "ImportChapterTable: done"
