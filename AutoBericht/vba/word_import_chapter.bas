@@ -12,8 +12,12 @@ Private Const STYLE_LIST As String = "List Paragraph"
 Private Const DEBUG_ENABLED As Boolean = True
 Private Const USE_MARKER_TOKENS As Boolean = False
 Private Const LOGO_MARKER As String = "LOGO$$"
+Private Const LOGO_MARKER_MAIN As String = "LOGO_MAIN$$"
+Private Const LOGO_MARKER_HEADER As String = "LOGO_HEADER$$"
 Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
 Private Const LOGO_HEIGHT_CM As Double = 1#
+Private Const LOGO_HEIGHT_MAIN_CM As Double = 2#
+Private Const LOGO_HEIGHT_HEADER_CM As Double = 0.8#
 Private Const SPIDER_MARKER As String = "SPIDER$$"
 Private Const SPIDER_SERIES_COMPANY As String = "Company"
 Private Const SPIDER_SERIES_CONSULTANT As String = "Consultant"
@@ -418,14 +422,30 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
 End Sub
 
 Public Sub InsertLogoAtToken()
+    InsertLogoGeneric LOGO_MARKER_MAIN, LOGO_HEIGHT_MAIN_CM, False
+End Sub
+
+Public Sub InsertLogoMain()
+    InsertLogoGeneric LOGO_MARKER_MAIN, LOGO_HEIGHT_MAIN_CM, False
+End Sub
+
+Public Sub InsertLogoHeader()
+    InsertLogoGeneric LOGO_MARKER_HEADER, LOGO_HEIGHT_HEADER_CM, True
+End Sub
+
+Private Sub InsertLogoGeneric(ByVal marker As String, ByVal heightCm As Double, ByVal searchHeaders As Boolean)
     Dim logoPath As String
     logoPath = PickLogoFile()
     If Len(logoPath) = 0 Then Exit Sub
 
     Dim markerRange As Range
-    Set markerRange = FindMarkerRange(LOGO_MARKER)
+    Set markerRange = FindMarkerRange(marker)
+    If markerRange Is Nothing And searchHeaders Then
+        Set markerRange = FindMarkerRangeInHeaders(marker)
+    End If
+
     If markerRange Is Nothing Then
-        MsgBox "Logo token not found: " & LOGO_MARKER, vbExclamation
+        MsgBox "Logo token not found: " & marker, vbExclamation
         Exit Sub
     End If
 
@@ -433,7 +453,7 @@ Public Sub InsertLogoAtToken()
     Dim inline As InlineShape
     Set inline = markerRange.InlineShapes.AddPicture(FileName:=logoPath, LinkToFile:=False, SaveWithDocument:=True)
     inline.LockAspectRatio = True
-    inline.Height = CentimetersToPoints(LOGO_HEIGHT_CM)
+    inline.Height = CentimetersToPoints(heightCm)
 End Sub
 
 Public Sub ImportTextFields()
@@ -823,6 +843,27 @@ Private Function FindMarkerRange(ByVal markerText As String) As Range
             Set FindMarkerRange = rng
         End If
     End With
+End Function
+
+Private Function FindMarkerRangeInHeaders(ByVal markerText As String) As Range
+    Dim sec As Section
+    Dim hdr As HeaderFooter
+    For Each sec In ActiveDocument.Sections
+        For Each hdr In sec.Headers
+            Dim rng As Range
+            Set rng = hdr.Range.Duplicate
+            With rng.Find
+                .Text = markerText
+                .Forward = True
+                .Wrap = wdFindStop
+                .MatchWildcards = False
+                If .Execute Then
+                    Set FindMarkerRangeInHeaders = rng
+                    Exit Function
+                End If
+            End With
+        Next hdr
+    Next sec
 End Function
 
 Private Sub ResetTableBookmarks(ByVal startName As String, ByVal endName As String, ByVal tbl As Table)

@@ -47,6 +47,16 @@
                   size="large"
                   imageMso="PictureInsertFromFile"
                   onAction="AB_InsertLogo" />
+          <button id="btnInsertLogoMain"
+                  label="Logo Main"
+                  size="normal"
+                  imageMso="PictureInsert"
+                  onAction="AB_InsertLogoMain" />
+          <button id="btnInsertLogoHeader"
+                  label="Logo Header"
+                  size="normal"
+                  imageMso="HeaderInsert"
+                  onAction="AB_InsertLogoHeader" />
           <button id="btnInsertSpider"
                   label="Insert Spider"
                   size="large"

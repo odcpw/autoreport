@@ -67,6 +67,22 @@ Fail:
     MsgBox "Logo insertion failed: " & Err.Description, vbExclamation
 End Sub
 
+Public Sub AB_InsertLogoMain(control As Object)
+    On Error GoTo Fail
+    InsertLogoMain
+    Exit Sub
+Fail:
+    MsgBox "Main logo insertion failed: " & Err.Description, vbExclamation
+End Sub
+
+Public Sub AB_InsertLogoHeader(control As Object)
+    On Error GoTo Fail
+    InsertLogoHeader
+    Exit Sub
+Fail:
+    MsgBox "Header logo insertion failed: " & Err.Description, vbExclamation
+End Sub
+
 Public Sub AB_InsertSpider(control As Object)
     On Error GoTo Fail
     InsertSpiderChart
