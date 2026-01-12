@@ -41,6 +41,43 @@
     return project;
   };
 
+  const ensureObservationRowsFromTags = (project, tagOptions) => {
+    if (!project?.chapters) return project;
+    const chapter = project.chapters.find((c) => c.id === "4.8");
+    if (!chapter) return project;
+    const existingIds = new Set((chapter.rows || []).map((r) => String(r.id || "")));
+    const obsTags = tagOptions?.observations || [];
+    const newRows = [];
+    obsTags.forEach((tag, index) => {
+      const rowId = `4.8.${index + 1}`;
+      if (existingIds.has(rowId)) return;
+      newRows.push({
+        id: rowId,
+        type: "field_observation",
+        sectionId: "4.8",
+        sectionLabel: "4.8 Beobachtungen",
+        titleOverride: tag.label || tag.value || rowId,
+        master: null,
+        customer: { answer: null, remark: "", items: [] },
+        workstate: {
+          selectedLevel: 1,
+          includeFinding: true,
+          includeRecommendation: true,
+          done: false,
+          useFindingOverride: true,
+          findingOverride: tag.label || tag.value || "Beobachtung",
+          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
+          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+        },
+      });
+    });
+    if (newRows.length) {
+      chapter.rows = [...(chapter.rows || []), ...newRows];
+      chapter.rows.sort((a, b) => compareIdSegments(a.id, b.id));
+    }
+    return project;
+  };
+
   const ensureManagementSummaryChapter = (project) => {
     if (!project?.chapters) return project;
     const hasSummary = project.chapters.some((chapter) => chapter.id === "0");
