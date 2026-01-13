@@ -27,7 +27,7 @@
           <button id="btnMarkdownChapter"
                   label="Markdown Chapter…"
                   size="large"
-                  imageMso="PasteSpecial"
+                  imageMso="Paste"
                   onAction="AB_ConvertMarkdownChapter" />
           <separator id="sepMarkdown1" />
           <button id="btnMarkdownSelection"
