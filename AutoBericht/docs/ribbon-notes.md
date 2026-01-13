@@ -48,14 +48,28 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - If a repair prompt reappears, re-embed the ribbon using the steps above to eliminate duplicate overrides/relationships left by manual zip edits.
  - Jan 2026: fixed DOCM `_rels/.rels` target from `/customUI/customUI.xml` to `customUI/customUI.xml` (leading slash caused repair prompt).
 
-## 2026-01 refresh (what works now)
-- Replaced PowerPoint-only `imageMso` ids with Word-safe icons: `FileOpen`, `TextToTableDialog`, `FormatPainter`, `MailMergeInsertFields`, `PictureInsertFromFile`, `ChartRadar`, `FileSaveAsPdfOrXps`.
-- Added in-group separators in Markdown and Export groups; separators are only valid inside `<group>`.
-- Deduped `customUI/customUI.xml` inside `ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm` and ensured a single override + relationship (2006/01 schema).
-- Keep using the 2006/01 namespace/part. If you add `customUI14.xml`, switch namespace to `http://schemas.microsoft.com/office/2009/07/customui` and add the correct root relationship.
-- Post-fix verification (2026-01-12): the DOCM must physically contain `customUI/customUI.xml` in the zip. A missing part (even with correct override/relationship) hides the tab. Quick check:
-  - `python - <<'PY'\nimport zipfile\nz=zipfile.ZipFile('ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm')\nprint([n for n in z.namelist() if 'customui' in n.lower()])\nPY`
-  - Expect: `['customUI/customUI.xml']`. If empty, re-add the part from `AutoBericht/vba/ribbon.xml` and ensure only one override + one relationship remain.
+## 2026-01 working baseline (keep this wiring)
+- Working file uses `customUI/customUI.xml` (2006/01 namespace) and a root relationship with **Target="/customUI/customUI.xml"** (leading slash).
+- Working file **does not** include a `[Content_Types].xml` Override for `/customUI/customUI.xml`. (Word still loads the ribbon.)
+- Minimal, valid XML with a single group and two buttons renders reliably.
+
+## Preflight checks (quick + reliable)
+Run before shipping:
+```bash
+python - <<'PY'
+import zipfile
+p='ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm'
+z=zipfile.ZipFile(p)
+names=[n for n in z.namelist() if 'customui' in n.lower()]
+print('customUI parts:', names)
+print('root rels target:', 'customUI' in z.read('_rels/.rels').decode('utf-8'))
+print('customUI xml snippet:', z.read('customUI/customUI.xml').decode('utf-8')[:120])
+PY
+```
+Expect:
+- `customUI/customUI.xml` present exactly once.
+- `_rels/.rels` contains `Target="/customUI/customUI.xml"`.
+- `customUI/customUI.xml` root namespace is `http://schemas.microsoft.com/office/2006/01/customui`.
 
 ## Field guide (from “don’t get burned” note)
 - Match namespace to part: `customUI` → 2006/01; `customUI14` → 2009/07.
@@ -63,13 +77,6 @@ Use this to avoid the “found unreadable content, repair?” prompt when adding
 - Validate XML: unique ids, escaped `&`, controls live inside a `<group>`.
 - Restart Word fully when testing; UI state can cache.
 
-## Preflight script (foolproof)
-Run before shipping any ribbon change:
-```bash
-python tools/check-ribbon.py  # defaults to ProjectTemplate/Vorlage IST-Aufnahme-Bericht d.V01.docm
-# or python tools/check-ribbon.py path/to/file.docm
-```
-Checks: customUI part exists once, single content-type override, single root relationship to `customUI/customUI.xml` (no leading slash), no duplicate ui/extensibility rels in `word/_rels/document.xml.rels`, namespace = 2006/01. Fails (exit 1) if any issue is found.
 
 ## 2026-01 refresh (what works now)
 - Replaced PowerPoint-only `imageMso` ids with Word-safe icons: `FileOpen`, `TextToTableDialog`, `FormatPainter`, `MailMergeInsertFields`, `PictureInsertFromFile`, `ChartRadar`, `FileSaveAsPdfOrXps`.

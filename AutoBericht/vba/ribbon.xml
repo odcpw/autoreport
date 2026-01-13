@@ -22,12 +22,12 @@
           <button id="btnMarkdownAll"
                   label="Markdown All"
                   size="large"
-                  imageMso="TextToTableDialog"
+                  imageMso="Paste"
                   onAction="AB_ConvertMarkdownAll" />
           <button id="btnMarkdownChapter"
                   label="Markdown Chapter…"
                   size="large"
-                  imageMso="TextToTableDialog"
+                  imageMso="PasteSpecial"
                   onAction="AB_ConvertMarkdownChapter" />
           <separator id="sepMarkdown1" />
           <button id="btnMarkdownSelection"
@@ -42,7 +42,7 @@
           <button id="btnTextFields"
                   label="Text Markers"
                   size="large"
-                  imageMso="MailMergeInsertFields"
+                  imageMso="TextBoxInsert"
                   onAction="AB_ImportTextFields" />
           <button id="btnInsertLogo"
                   label="Insert Logos"
@@ -52,7 +52,7 @@
           <button id="btnInsertSpider"
                   label="Insert Spider"
                   size="large"
-                  imageMso="ChartRadar"
+                  imageMso="InsertChart"
                   onAction="AB_InsertSpider" />
         </group>
 
