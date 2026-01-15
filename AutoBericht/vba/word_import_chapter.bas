@@ -3,42 +3,7 @@ Option Explicit
 
 ' Requires JsonConverter.bas (VBA-JSON) in the Word project.
 
-' === STYLE CONFIG (edit these to match your template) ===
-Private Const STYLE_BODY As String = "Normal"
-Private Const STYLE_SECTION As String = "Heading 2"
-Private Const STYLE_FINDING As String = "Heading 3"
-Private Const STYLE_TABLE As String = "Grid Table Light"
-Private Const STYLE_LIST As String = "List Paragraph"
-Private Const DEBUG_ENABLED As Boolean = True
-Private Const USE_MARKER_TOKENS As Boolean = False
-Private Const LOGO_MARKER As String = "LOGO$$"            ' legacy
-Private Const LOGO_MARKER_MAIN As String = "LOGO_MAIN$$"  ' legacy main
-Private Const LOGO_MARKER_HEADER As String = "LOGO_HEADER$$" ' legacy header
-Private Const LOGO_MARKER_BIG As String = "LOGO_BIG$$"
-Private Const LOGO_MARKER_SMALL As String = "LOGO_SMALL$$"
-Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
-Private Const LOGO_HEIGHT_CM As Double = 1#              ' legacy
-Private Const LOGO_HEIGHT_MAIN_CM As Double = 2#         ' big logo
-Private Const LOGO_HEIGHT_HEADER_CM As Double = 0.8#     ' small logo
-Private Const SPIDER_MARKER As String = "SPIDER$$"
-Private Const SPIDER_SERIES_COMPANY As String = "Selbstbeurteilung"
-Private Const SPIDER_SERIES_CONSULTANT As String = "Beurteilung durch Suva"
-Private Const SPIDER_CHART_TYPE As Long = -4151 ' xlRadarMarkers
-Private Const SPIDER_AXIS_MIN As Double = 0
-Private Const SPIDER_AXIS_MAX As Double = 100
-Private Const SPIDER_SHOW_LEGEND As Boolean = True
-Private Const SPIDER_LEGEND_POS As Long = -4107 ' xlLegendPositionBottom
-Private Const SPIDER_PROMPT_WHEN_BOTH As Boolean = True
-Private Const SPIDER_PREFER_14 As Boolean = True ' used when no prompt or only one available
-Private Const WD_FORMAT_DOCX As Long = 12
-Private Const TEXT_MARKER_MODERATOR As String = "MOD$$"
-Private Const TEXT_MARKER_CO_MODERATOR As String = "CO$$"
-
-' === TABLE CONFIG (edit widths as needed) ===
-Private Const COL1_WIDTH_PCT As Long = 35
-Private Const COL2_WIDTH_PCT As Long = 58
-Private Const COL3_WIDTH_PCT As Long = 7
-Private Const HEADER_CHECKMARK As String = "✓"
+' Config constants live in modAutoBerichtConfig.
 
 Public Sub ImportChapter0Summary()
     LogDebug "ImportChapter0Summary: start"
@@ -131,7 +96,7 @@ Public Sub ImportChapter0Summary()
                     Set lineRange = writer.Duplicate
                     lineRange.Text = summaryText
                     On Error Resume Next
-                    lineRange.Style = STYLE_BODY
+                    lineRange.Style = AB_STYLE_BODY
                     On Error GoTo 0
                     writer.SetRange lineRange.End, lineRange.End
                     wrote = True
@@ -163,7 +128,7 @@ End Sub
 
 Public Sub ImportChapterDialog()
     Dim chapterId As String
-    chapterId = PromptChapterId("Import chapter (0, 1-14, 4.8):")
+    chapterId = PromptChapterId(AB_PROMPT_IMPORT_CHAPTER)
     If Len(chapterId) = 0 Then Exit Sub
     If chapterId = "0" Then
         ImportChapter0Summary
@@ -174,7 +139,7 @@ End Sub
 
 Public Sub ImportChapterAll()
     Dim ids() As String
-    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    ids = Split(AB_DEFAULT_CHAPTER_IDS, ",")
     Dim i As Long
     ImportChapter0Summary
     For i = LBound(ids) To UBound(ids)
@@ -197,7 +162,7 @@ End Function
 
 Private Function PromptChapterId(ByVal prompt As String) As String
     Dim userChoice As String
-    userChoice = InputBox(prompt, "Choose chapter", "1")
+    userChoice = InputBox(prompt, AB_PROMPT_CHOOSE_CHAPTER_TITLE, AB_PROMPT_CHAPTER_DEFAULT)
     userChoice = Trim$(userChoice)
     If Len(userChoice) = 0 Then Exit Function
     If Not IsValidChapterId(userChoice) Then
@@ -209,7 +174,7 @@ End Function
 
 Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
     Dim ids() As String
-    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    ids = Split(AB_DEFAULT_CHAPTER_IDS, ",")
     Dim i As Long
     For i = LBound(ids) To UBound(ids)
         If Trim$(ids(i)) = Trim$(chapterId) Then
@@ -313,7 +278,7 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     On Error GoTo 0
     LogDebug "ImportChapterTable: table created cols=" & tbl.Columns.Count & " row1cells=" & tbl.Rows(1).Cells.Count
     On Error Resume Next
-    tbl.Style = STYLE_TABLE
+    tbl.Style = AB_STYLE_TABLE
     On Error GoTo 0
     tbl.Borders.Enable = True
     If tbl.Columns.Count < 3 Then
@@ -337,7 +302,7 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     End If
     tbl.Cell(1, 1).Range.Text = ""
     tbl.Cell(1, 2).Range.Text = ""
-    tbl.Cell(1, 3).Range.Text = HEADER_CHECKMARK
+    tbl.Cell(1, 3).Range.Text = AB_TABLE_HEADER_CHECKMARK
     tbl.Cell(1, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
 
     ' Header row 2: title (merge later)
@@ -345,15 +310,15 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         MsgBox "Table header row 2 has fewer than 3 cells.", vbExclamation
         Exit Sub
     End If
-    tbl.Cell(2, 1).Range.Text = "Systempunkte mit Verbesserungspotenzial"
+    tbl.Cell(2, 1).Range.Text = AB_TABLE_HEADER_TITLE
     tbl.Cell(2, 2).Range.Text = ""
     tbl.Cell(2, 3).Range.Text = ""
     tbl.Cell(2, 1).Range.Font.Bold = True
 
     ' Header row 3: column labels
-    tbl.Cell(3, 1).Range.Text = "Ist-Zustand"
-    tbl.Cell(3, 2).Range.Text = "Lösungsansätze"
-    tbl.Cell(3, 3).Range.Text = "Prio"
+    tbl.Cell(3, 1).Range.Text = AB_TABLE_HEADER_COL1
+    tbl.Cell(3, 2).Range.Text = AB_TABLE_HEADER_COL2
+    tbl.Cell(3, 3).Range.Text = AB_TABLE_HEADER_COL3
     tbl.Rows(3).Range.Font.Bold = True
     tbl.Cell(3, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
 
@@ -363,11 +328,11 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     tbl.PreferredWidthType = wdPreferredWidthPercent
     tbl.PreferredWidth = 100
     tbl.Columns(1).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(1).PreferredWidth = COL1_WIDTH_PCT
+    tbl.Columns(1).PreferredWidth = AB_TABLE_COL1_WIDTH_PCT
     tbl.Columns(2).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(2).PreferredWidth = COL2_WIDTH_PCT
+    tbl.Columns(2).PreferredWidth = AB_TABLE_COL2_WIDTH_PCT
     tbl.Columns(3).PreferredWidthType = wdPreferredWidthPercent
-    tbl.Columns(3).PreferredWidth = COL3_WIDTH_PCT
+    tbl.Columns(3).PreferredWidth = AB_TABLE_COL3_WIDTH_PCT
     On Error GoTo 0
 
     Dim row As Variant
@@ -389,11 +354,11 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         ElseIf IsIncludedRow(row) Then
             LogDebug "Finding row: " & ResolveDisplayId(row, renumberMap)
             tbl.Cell(targetRow, 1).Range.Text = BuildFindingHeading(row, renumberMap)
-            tbl.Cell(targetRow, 1).Range.Style = STYLE_FINDING
+            tbl.Cell(targetRow, 1).Range.Style = AB_STYLE_FINDING
             tbl.Cell(targetRow, 2).Range.Text = ResolveRecommendation(row)
-            tbl.Cell(targetRow, 2).Range.Style = STYLE_BODY
+            tbl.Cell(targetRow, 2).Range.Style = AB_STYLE_BODY
             tbl.Cell(targetRow, 3).Range.Text = ""
-            tbl.Cell(targetRow, 3).Range.Style = STYLE_BODY
+            tbl.Cell(targetRow, 3).Range.Style = AB_STYLE_BODY
             tbl.Cell(targetRow, 3).Range.Font.Bold = True
             tbl.Cell(targetRow, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
             targetRow = targetRow + 1
@@ -413,7 +378,7 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
         tbl.Cell(CLng(idx), 1).Merge tbl.Cell(CLng(idx), 3)
         On Error GoTo 0
         On Error Resume Next
-        tbl.Cell(CLng(idx), 1).Range.Style = STYLE_SECTION
+        tbl.Cell(CLng(idx), 1).Range.Style = AB_STYLE_SECTION
         On Error GoTo 0
     Next idx
 
@@ -441,33 +406,14 @@ Public Sub InsertLogos()
     If Len(logoPath) = 0 Then Exit Sub
 
     Dim insertedBig As Boolean
-    insertedBig = InsertLogoAtMarker(LOGO_MARKER_BIG, logoPath, LOGO_HEIGHT_MAIN_CM, False)
+    insertedBig = InsertLogoAtMarker(AB_LOGO_MARKER_BIG, logoPath, AB_LOGO_HEIGHT_MAIN_CM, False)
 
     Dim insertedSmall As Boolean
-    insertedSmall = InsertLogoAtMarker(LOGO_MARKER_SMALL, logoPath, LOGO_HEIGHT_HEADER_CM, True)
+    insertedSmall = InsertLogoAtMarker(AB_LOGO_MARKER_SMALL, logoPath, AB_LOGO_HEIGHT_HEADER_CM, True)
 
     If Not insertedBig And Not insertedSmall Then
-        MsgBox "Keine Logo-Marker gefunden (LOGO_BIG$$ / LOGO_SMALL$$).", vbExclamation
+        MsgBox "Keine Logo-Marker gefunden (" & AB_LOGO_MARKER_BIG & " / " & AB_LOGO_MARKER_SMALL & ").", vbExclamation
     End If
-End Sub
-
-' Backward-compatible shims
-Public Sub InsertLogoAtToken()
-    InsertLogos
-End Sub
-
-Public Sub InsertLogoMain()
-    Dim logoPath As String
-    logoPath = PickLogoFile()
-    If Len(logoPath) = 0 Then Exit Sub
-    InsertLogoAtMarker LOGO_MARKER_MAIN, logoPath, LOGO_HEIGHT_MAIN_CM, False
-End Sub
-
-Public Sub InsertLogoHeader()
-    Dim logoPath As String
-    logoPath = PickLogoFile()
-    If Len(logoPath) = 0 Then Exit Sub
-    InsertLogoAtMarker LOGO_MARKER_HEADER, logoPath, LOGO_HEIGHT_HEADER_CM, True
 End Sub
 
 Private Function InsertLogoAtMarker(ByVal marker As String, ByVal logoPath As String, ByVal heightCm As Double, ByVal searchHeaders As Boolean) As Boolean
@@ -527,12 +473,12 @@ Public Sub ImportTextFields()
     End If
 
     ' Replace text markers from metadata
-    ReplaceTextMarker "NAME$$", SafeText(meta, "projectName")
-    ReplaceTextMarker "COMPANY$$", SafeText(meta, "company")
-    ReplaceTextMarker "COMPANY_ID$$", SafeText(meta, "companyId")
-    ReplaceTextMarker "AUTHOR$$", SafeText(meta, "author")
-    ReplaceTextMarker TEXT_MARKER_MODERATOR, SafeText(meta, "moderator")
-    ReplaceTextMarker TEXT_MARKER_CO_MODERATOR, SafeText(meta, "coModerator")
+    ReplaceTextMarker AB_TEXT_MARKER_NAME, SafeText(meta, "projectName")
+    ReplaceTextMarker AB_TEXT_MARKER_COMPANY, SafeText(meta, "company")
+    ReplaceTextMarker AB_TEXT_MARKER_COMPANY_ID, SafeText(meta, "companyId")
+    ReplaceTextMarker AB_TEXT_MARKER_AUTHOR, SafeText(meta, "author")
+    ReplaceTextMarker AB_TEXT_MARKER_MODERATOR, SafeText(meta, "moderator")
+    ReplaceTextMarker AB_TEXT_MARKER_CO_MODERATOR, SafeText(meta, "coModerator")
 
     ' Format date from ISO to DD.MM.YYYY
     Dim dateValue As String
@@ -541,7 +487,7 @@ Public Sub ImportTextFields()
         ' ISO format: YYYY-MM-DD...
         dateValue = Mid$(dateValue, 9, 2) & "." & Mid$(dateValue, 6, 2) & "." & Mid$(dateValue, 1, 4)
     End If
-    ReplaceTextMarker "DATE$$", dateValue
+    ReplaceTextMarker AB_TEXT_MARKER_DATE, dateValue
 
     MsgBox "Text fields replaced.", vbInformation
     LogDebug "ImportTextFields: done"
@@ -554,9 +500,9 @@ Public Sub InsertSpiderChart()
     Const XL_AXIS_VALUE As Long = 2
 
     Dim spiderRange As Range
-    Set spiderRange = FindMarkerRange(SPIDER_MARKER)
+    Set spiderRange = FindMarkerRange(AB_SPIDER_MARKER)
     If spiderRange Is Nothing Then
-        MsgBox "Spider marker (" & SPIDER_MARKER & ") not found in document.", vbExclamation
+        MsgBox "Spider marker (" & AB_SPIDER_MARKER & ") not found in document.", vbExclamation
         Exit Sub
     End If
 
@@ -604,7 +550,7 @@ Public Sub InsertSpiderChart()
     Set chapters14 = GetObject(effective, "chapters_1_14")
 
     If Not chapters14 Is Nothing And chapters14.Count > 0 And Not chapters11 Is Nothing And chapters11.Count > 0 Then
-        If SPIDER_PROMPT_WHEN_BOTH Then
+        If AB_SPIDER_PROMPT_WHEN_BOTH Then
             Dim choice As VbMsgBoxResult
             choice = MsgBox("Use spider for chapters 1–14? (Yes = 1–14, No = 1–11)", vbYesNoCancel + vbQuestion, "Choose spider range")
             If choice = vbCancel Then Exit Sub
@@ -614,7 +560,7 @@ Public Sub InsertSpiderChart()
                 Set selected = chapters11
             End If
         Else
-            If SPIDER_PREFER_14 Then
+            If AB_SPIDER_PREFER_14 Then
                 Set selected = chapters14
             Else
                 Set selected = chapters11
@@ -639,7 +585,7 @@ Public Sub InsertSpiderChart()
 
     ' Insert radar chart
     Dim ish As InlineShape
-    Set ish = spiderRange.InlineShapes.AddChart(Type:=SPIDER_CHART_TYPE, Range:=spiderRange)
+    Set ish = spiderRange.InlineShapes.AddChart(Type:=AB_SPIDER_CHART_TYPE, Range:=spiderRange)
     Dim cht As Object
     Set cht = ish.Chart
 
@@ -652,8 +598,8 @@ Public Sub InsertSpiderChart()
     wsData.Cells.Clear
 
     wsData.Cells(1, 1).Value = "Kapitel"
-    wsData.Cells(1, 2).Value = IIf(Not meta Is Nothing And SafeText(meta, "company") <> "", "Selbstbeurteilung " & SafeText(meta, "company"), SPIDER_SERIES_COMPANY)
-    wsData.Cells(1, 3).Value = SPIDER_SERIES_CONSULTANT
+    wsData.Cells(1, 2).Value = IIf(Not meta Is Nothing And SafeText(meta, "company") <> "", "Selbstbeurteilung " & SafeText(meta, "company"), AB_SPIDER_SERIES_COMPANY)
+    wsData.Cells(1, 3).Value = AB_SPIDER_SERIES_CONSULTANT
 
     Dim r As Long: r = 2
     Dim item As Variant
@@ -694,15 +640,15 @@ Public Sub InsertSpiderChart()
 
     ' Style chart
     cht.HasTitle = False
-    cht.Legend.IncludeInLayout = SPIDER_SHOW_LEGEND
-    If SPIDER_SHOW_LEGEND Then
-        cht.Legend.Position = SPIDER_LEGEND_POS
+    cht.Legend.IncludeInLayout = AB_SPIDER_SHOW_LEGEND
+    If AB_SPIDER_SHOW_LEGEND Then
+        cht.Legend.Position = AB_SPIDER_LEGEND_POS
     Else
         cht.HasLegend = False
     End If
     On Error Resume Next
-    cht.Axes(XL_AXIS_VALUE).MinimumScale = SPIDER_AXIS_MIN
-    cht.Axes(XL_AXIS_VALUE).MaximumScale = SPIDER_AXIS_MAX
+    cht.Axes(XL_AXIS_VALUE).MinimumScale = AB_SPIDER_AXIS_MIN
+    cht.Axes(XL_AXIS_VALUE).MaximumScale = AB_SPIDER_AXIS_MAX
     On Error GoTo 0
 
     MsgBox "Spider chart inserted.", vbInformation
@@ -749,7 +695,7 @@ End Function
 Private Function ResolveSidecarPath() As String
     Dim defaultPath As String
     If Len(ActiveDocument.Path) > 0 Then
-        defaultPath = ActiveDocument.Path & "\\project_sidecar.json"
+        defaultPath = ActiveDocument.Path & "\\" & AB_SIDECAR_FILENAME
         If FileExists(defaultPath) Then
             ResolveSidecarPath = defaultPath
             Exit Function
@@ -758,7 +704,7 @@ Private Function ResolveSidecarPath() As String
 
     Dim fd As FileDialog
     Set fd = Application.FileDialog(msoFileDialogFilePicker)
-    fd.Title = "Select project_sidecar.json"
+    fd.Title = AB_SIDECAR_DIALOG_TITLE
     fd.Filters.Clear
     fd.Filters.Add "JSON", "*.json"
     fd.AllowMultiSelect = False
@@ -799,7 +745,7 @@ Private Sub SaveReportAsFromSidecar()
     Dim fullPath As String
     fullPath = folder & Application.PathSeparator & fileName
 
-    ActiveDocument.SaveAs2 FileName:=fullPath, FileFormat:=WD_FORMAT_DOCX, AddToRecentFiles:=False
+    ActiveDocument.SaveAs2 FileName:=fullPath, FileFormat:=AB_WD_FORMAT_DOCX, AddToRecentFiles:=False
     Exit Sub
 CleanFail:
     ' silent fail; avoid blocking imports
@@ -996,7 +942,7 @@ Private Sub ResetTableBookmarks(ByVal startName As String, ByVal endName As Stri
 End Sub
 
 Private Sub LogDebug(ByVal message As String)
-    If Not DEBUG_ENABLED Then Exit Sub
+    If Not AB_DEBUG_WORD_IMPORT Then Exit Sub
     Debug.Print Format$(Now, "hh:nn:ss") & " | " & message
 End Sub
 

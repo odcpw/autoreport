@@ -1,6 +1,6 @@
 # AutoBericht System
 
-> Automated safety culture reporting system combining Excel VBA and an offline web UI
+> Automated safety culture reporting system combining Word VBA and an offline web UI
 
 ## Overview
 
@@ -26,7 +26,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 │             ▲                    │                             │
 │             │ optional           ▼                             │
 │        ┌──────────────┐   ┌──────────────┐                      │
-│        │  SheetJS DB  │   │ Excel/VBA    │                      │
+│        │  SheetJS DB  │   │ Word/VBA    │                      │
 │        │ project_db   │   │ (thin export)│                      │
 │        └──────────────┘   └──────────────┘                      │
 │                                                               │
@@ -37,7 +37,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 - **Browser-first editing** with sidecar JSON stored in the project folder.
 - **Offline, policy-safe** workflow (no flags, no installs).
-- **Thin Excel/VBA export layer** for Word/PPT templates (optional).
+- **Thin Word/VBA export layer** for Word/PPT templates (optional).
 - **File System Access API** preferred for direct folder writes.
 
 ## Quick Start
@@ -126,7 +126,7 @@ autoreport/
 
 ## Tech Stack
 
-### Excel VBA
+### Word VBA
 - **Purpose**: Data import, structured sheet management, macro synchronization
 - **Key Libraries**: VBA-JSON, Microsoft Scripting Runtime
 - **Entry Point**: `modMacroSync.RefreshProjectMacros`

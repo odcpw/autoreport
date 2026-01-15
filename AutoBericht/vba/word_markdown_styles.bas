@@ -6,19 +6,7 @@ Option Explicit
 ' - **bold** and *italic* toggles within a line
 ' - Blank lines become paragraph breaks
 
-' === STYLE CONFIG (edit these to match your template) ===
-' Use custom style names if possible (same names across DE/FR/IT templates).
-' Leave blank to use built-in styles via wdStyle* constants (language-safe).
-Private Const STYLE_BODY As String = "Normal"
-Private Const STYLE_BULLET As String = "List Paragraph"
-Private Const STYLE_SKIP_HEADING2 As String = "Heading 2"
-Private Const STYLE_SKIP_HEADING3 As String = "Heading 3"
-' Optional character styles for markdown emphasis. Leave blank to use direct bold/italic.
-Private Const STYLE_BOLD As String = ""
-Private Const STYLE_ITALIC As String = ""
-Private Const STYLE_BOLDITALIC As String = ""
-Private Const DEBUG_ENABLED As Boolean = True
-Private Const DEFAULT_CHAPTER_IDS As String = "0,1,2,3,4,4.8,5,6,7,8,9,10,11,12,13,14"
+' Config constants live in modAutoBerichtConfig.
 
 Public Sub ConvertMarkdownInSelection()
     LogDebug "ConvertMarkdownInSelection: start"
@@ -63,14 +51,14 @@ End Sub
 
 Public Sub ConvertMarkdownChapterDialog()
     Dim chapterId As String
-    chapterId = PromptChapterId("Markdown for chapter (0, 1-14, 4.8):")
+    chapterId = PromptChapterId(AB_PROMPT_MARKDOWN_CHAPTER)
     If Len(chapterId) = 0 Then Exit Sub
     ConvertMarkdownForChapter chapterId
 End Sub
 
 Public Sub ConvertMarkdownAll()
     Dim ids() As String
-    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    ids = Split(AB_DEFAULT_CHAPTER_IDS, ",")
     Dim i As Long
     For i = LBound(ids) To UBound(ids)
         ConvertMarkdownForChapter Trim$(ids(i))
@@ -101,7 +89,7 @@ End Sub
 
 Private Function PromptChapterId(ByVal prompt As String) As String
     Dim input As String
-    input = InputBox(prompt, "Choose chapter", "1")
+    input = InputBox(prompt, AB_PROMPT_CHOOSE_CHAPTER_TITLE, AB_PROMPT_CHAPTER_DEFAULT)
     input = Trim$(input)
     If Len(input) = 0 Then Exit Function
     If Not IsValidChapterId(input) Then
@@ -113,7 +101,7 @@ End Function
 
 Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
     Dim ids() As String
-    ids = Split(DEFAULT_CHAPTER_IDS, ",")
+    ids = Split(AB_DEFAULT_CHAPTER_IDS, ",")
     Dim i As Long
     For i = LBound(ids) To UBound(ids)
         If Trim$(ids(i)) = Trim$(chapterId) Then
@@ -129,7 +117,7 @@ Private Sub ConvertMarkdownCell(ByVal cell As Cell)
     If cell.ColumnIndex <> 2 Then Exit Sub
     Dim firstStyle As String
     firstStyle = CStr(cell.Range.Paragraphs(1).Style)
-    If firstStyle = STYLE_SKIP_HEADING2 Or firstStyle = STYLE_SKIP_HEADING3 Then Exit Sub
+    If firstStyle = AB_STYLE_SKIP_HEADING2 Or firstStyle = AB_STYLE_SKIP_HEADING3 Then Exit Sub
     On Error GoTo 0
     Dim cellRange As Range
     Set cellRange = cell.Range
@@ -260,12 +248,12 @@ End Sub
 
 Private Sub ApplyEmphasis(ByVal rng As Range, ByVal boldOn As Boolean, ByVal italicOn As Boolean)
     On Error Resume Next
-    If boldOn And italicOn And Len(STYLE_BOLDITALIC) > 0 Then
-        rng.Style = STYLE_BOLDITALIC
-    ElseIf boldOn And Len(STYLE_BOLD) > 0 Then
-        rng.Style = STYLE_BOLD
-    ElseIf italicOn And Len(STYLE_ITALIC) > 0 Then
-        rng.Style = STYLE_ITALIC
+    If boldOn And italicOn And Len(AB_STYLE_BOLDITALIC) > 0 Then
+        rng.Style = AB_STYLE_BOLDITALIC
+    ElseIf boldOn And Len(AB_STYLE_BOLD) > 0 Then
+        rng.Style = AB_STYLE_BOLD
+    ElseIf italicOn And Len(AB_STYLE_ITALIC) > 0 Then
+        rng.Style = AB_STYLE_ITALIC
     Else
         rng.Font.Bold = IIf(boldOn, True, False)
         rng.Font.Italic = IIf(italicOn, True, False)
@@ -280,10 +268,10 @@ Private Sub ApplyLineStyle(ByVal rng As Range, ByVal lineStart As Long, ByVal as
     If lineRange.Paragraphs.Count = 0 Then Exit Sub
     If asBullet Then
         lineRange.ListFormat.ApplyBulletDefault
-        ApplyParagraphStyle lineRange, STYLE_BULLET, wdStyleListBullet
+        ApplyParagraphStyle lineRange, AB_STYLE_BULLET, wdStyleListBullet
     Else
         lineRange.ListFormat.RemoveNumbers NumberType:=wdNumberParagraph
-        ApplyParagraphStyle lineRange, STYLE_BODY, wdStyleNormal
+        ApplyParagraphStyle lineRange, AB_STYLE_BODY, wdStyleNormal
     End If
     lineRange.ParagraphFormat.SpaceAfter = 0
 End Sub
@@ -299,6 +287,6 @@ Private Sub NormalizeRangeForCell(ByVal rng As Range)
 End Sub
 
 Private Sub LogDebug(ByVal message As String)
-    If Not DEBUG_ENABLED Then Exit Sub
+    If Not AB_DEBUG_MARKDOWN Then Exit Sub
     Debug.Print Format$(Now, "hh:nn:ss") & " | " & message
 End Sub

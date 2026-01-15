@@ -1,5 +1,0 @@
-[2026-01-06T05:16:14.327Z] WARN: Seed auto-load skipped: Failed to fetch /data/seed/selbstbeurteilung_ids.json
-[2026-01-06T05:16:14.386Z] INFO: Restored project folder: github
-[2026-01-06T05:16:14.386Z] INFO: Restored project folder: github
-[2026-01-06T05:16:20.375Z] INFO: Loaded project_sidecar.json
-[2026-01-06T05:16:20.375Z] INFO: Loaded project_sidecar.json

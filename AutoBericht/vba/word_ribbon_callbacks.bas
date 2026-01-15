@@ -76,7 +76,7 @@ End Sub
 
 Public Sub AB_InsertLogoMain(control As Object)
     On Error GoTo Fail
-    InsertLogoMain
+    InsertLogos
     Exit Sub
 Fail:
     MsgBox "Main logo insertion failed: " & Err.Description, vbExclamation
@@ -84,7 +84,7 @@ End Sub
 
 Public Sub AB_InsertLogoHeader(control As Object)
     On Error GoTo Fail
-    InsertLogoHeader
+    InsertLogos
     Exit Sub
 Fail:
     MsgBox "Header logo insertion failed: " & Err.Description, vbExclamation

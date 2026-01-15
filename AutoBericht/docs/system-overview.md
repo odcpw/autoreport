@@ -1,7 +1,7 @@
 # AutoBericht System Overview (Redesign)
 
 This overview documents the **current redesign**: browser-first editing with a
-minimal Excel/VBA export layer.
+minimal Word/VBA export layer.
 
 ## High-Level Architecture
 
@@ -18,7 +18,7 @@ minimal Excel/VBA export layer.
            │ optional
            ▼
 ┌──────────────────────┐      reads             ┌────────────────────────┐
-│  Excel/VBA Exporter  │ ─────────────────────▶ │  Word/PPT templates     │
+│  Word/VBA Exporter  │ ─────────────────────▶ │  Word/PPT templates     │
 │  (thin layer)        │                        │  (in project root)      │
 └──────────────────────┘                        └────────────────────────┘
            │
@@ -53,7 +53,7 @@ project_sidecar.json (canonical state)
           │
           ├── Optional: write project_db.xlsx (human-readable)
           │
-          └── Excel/VBA export → Word/PPT/PDF outputs
+          └── Word/VBA export → Word/PPT/PDF outputs
 ```
 
 ## Responsibilities
@@ -64,9 +64,9 @@ project_sidecar.json (canonical state)
   - Photo tagging (virtual tags).
   - Sidecar load/save.
 
-- **Excel/VBA** (thin layer)
-  - Import sidecar for archive.
-  - Export Word/PPT/PDF using corporate templates.
+- **Word/VBA** (thin layer)
+  - Read sidecar/export JSON for report generation.
+  - Export Word/PPT/PDF using Word template macros.
   - Optional photo folder materialization.
 
 ## Why This Split
