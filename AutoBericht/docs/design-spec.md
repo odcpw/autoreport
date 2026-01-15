@@ -119,7 +119,7 @@ One project folder:
 
 Responsibilities:
 - Browser editor: edit report content, tag photos, autosave to sidecar JSON.
-- Excel macros: import sidecar -> update Excel -> generate Word/PPT/PDF.
+- Word template macros: read sidecar/export JSON -> generate Word/PPT/PDF.
 - Templates: updated centrally; exports use latest templates.
 
 ### 9a. System Diagram
@@ -137,7 +137,7 @@ Responsibilities:
            │ optional
            ▼
 ┌──────────────────────┐     reads sidecar     ┌────────────────────────┐
-│  Excel/VBA Exporter  │ ───────────────────▶  │  Word/PPT Templates     │
+│  Word/VBA Exporter  │ ───────────────────▶  │  Word/PPT Templates     │
 │  (thin layer)        │                       │  (corp branding)        │
 └──────────────────────┘                       └────────────────────────┘
            │
@@ -273,60 +273,99 @@ Goal: generate two slide decks from the sidecar JSON.
 
 Inputs:
 - `project_sidecar.json` (report + photo tags)
-- PowerPoint template deck(s) in the project root (no `Templates/` folder)
+- PowerPoint templates in the project root (or `<Project>/<Templates>/` when
+  `AB_PPT_TEMPLATE_FOLDER` is set in the VBA config)
+- Active Word report (used to capture chapter screenshots)
 
 Outputs:
-- Report presentation: not implemented (reserved).
+- Report presentation (`YYYY-MM-DD_Bericht_Besprechung.pptx`)
 - Training deck (`YYYY-MM-DD_Seminar_Slides_D/F.pptx`) in the project folder
 
 Template (current working file)
-- `test/AutoBericht_slides.pptx` (seed for the layouts below)
-- Expected in projects as:
-  - `<Project>/Training_D.pptx`
-  - `<Project>/Training_F.pptx`
-  - (the generic PPT export uses `Vorlage AutoBericht.pptx`; rename that file and update `PPT_TEMPLATE` in `AutoBericht/vba/ppt_export.bas` if needed)
+- Report deck template: `<Project>/Vorlage AutoBericht.pptx`
+  (`AB_PPT_REPORT_TEMPLATE` in `AutoBericht/vba/autobericht_config.bas`)
+- Training decks: `<Project>/Training_D.pptx` and `<Project>/Training_F.pptx`
+- Seed file: `test/AutoBericht_slides.pptx` (layout reference)
 
 ### Layout naming (in the template)
 Report layouts:
-- `chapterorange` (chapter divider)
-- `titleandtext`
-- `titleandpicture`
-- `textandpicture`
-- `4pictures`
-- `6pictures`
-- `8pictures`
+- `report_title`
+- `report_chapter_separator`
+- `report_chapter_screenshot`
+- `report_section_text`
+- `report_section_photo_3`
+- `report_section_photo_6`
+- `report_section_48_separator`
+- `report_section_48_text_photo_3`
+- `report_section_48_text_photo_6`
 
-Training layouts (German `*_d`):
-- `seminar_d` (title slide)
-- `unterlassen_d`
-- `dulden_d`
-- `handeln_d`
+Training layouts:
+- `chapterorange` (tag divider)
 - `picture` (for Iceberg / Pyramide / STOP / SOS)
-- `verhindern_d`
-- `audit_d`
-- `risikobeurteilung_d`
-- `aviva_d`
-- `vorbild_d`
+- German `*_d`:
+  - `seminar_d` (title slide)
+  - `unterlassen_d`
+  - `dulden_d`
+  - `handeln_d`
+  - `verhindern_d`
+  - `audit_d`
+  - `risikobeurteilung_d`
+  - `aviva_d`
+  - `vorbild_d`
+- French `*_f`: same names with `_f`
 
 ### Placeholder expectations
-The macro will target standard placeholders by type:
+The macro targets standard placeholders by type:
 - `title` for slide title
-- `body` for text
-- `pic` for image slots (1/4/6/8)
+- `body` (largest non-title text box) for text
+- `pic` for image slots (3/6 grids and screenshot)
 
 ### Export logic (current implementation)
-1) Training deck export (Word ribbon buttons “VG Seminar D/F”):
+1) Report deck export (Word ribbon “Bericht Besprechung”):
+   - Template: `AB_PPT_REPORT_TEMPLATE` (default `Vorlage AutoBericht.pptx`).
+   - Output: `<project>/<yyyy-mm-dd>_Bericht_Besprechung.pptx`.
+   - Optional title slide: uses `report_title` and `meta.projectName` /
+     `meta.company` (fallback: "Report").
+   - Chapter 0:
+     - Separator slide titled “Management Summary”.
+     - Recommendation slides: 3 per slide (blank line between), no screenshot.
+   - Chapters 1..:
+     - Separator slide titled `1. <chapter title>`.
+     - Screenshot slide of the first page of the chapter from Word
+       (bookmark `Chapter<id>_start`, dots replaced with `_`).
+     - For each section (1.1 level):
+       - Text slides (`report_section_text`) with 3 findings per slide.
+         Each line: `1.2.1 Finding text` (renumbered IDs).
+       - Photo slides (`report_section_photo_3` or `_6`) with photos tagged
+         to the section id.
+   - Renumbering: only included findings count; numbering is re-packed within
+     each chapter and used in slide titles and finding lines.
+   - Chapter 4.8 (field observations):
+     - Display section number is `4.<next>` where `<next>` is the number of
+       sections in chapter 4 after renumbering + 1 (e.g., if 4.3 is missing,
+       4.8 becomes 4.7).
+     - Separator slide uses `report_section_48_separator`.
+     - Each observation row becomes a slide titled `4.x.y <tag label>` with
+       text + photos (`report_section_48_text_photo_3` or `_6`).
+     - Additional photos spill to photo-only slides
+       (`report_section_photo_3/6`) with the same title; no text.
+
+2) Training deck export (Word ribbon buttons “VG Seminar D/F”):
    - Templates: `<project>/Training_D.pptx` and `Training_F.pptx`.
    - For each training tag with photos (order: known tags first, then others):
      - Insert a `chapterorange` divider slide titled with the tag.
      - Choose layout by tag name:
-       - `unterlassen`, `dulden`, `handeln`, `vorbild`, `audit`, `risikobeurteilung`, `aviva`, `verhindern` → `<tag>_d` or `<tag>_f`
-       - `iceberg`, `pyramide`, `stop`, `sos`, `stgb art. 230`, unknown → `picture`
-     - Count picture placeholders in the layout; batch photos into that many slots per slide (e.g., AVIVA with 6 placeholders packs up to 6 per slide).
-     - Fill the tag name into the title placeholder if present; drop photos into picture placeholders in order.
-   - Optional seminar title slide: uses `seminar_d` if present and enabled in VBA config.
+       - `unterlassen`, `dulden`, `handeln`, `vorbild`, `audit`,
+         `risikobeurteilung`, `aviva`, `verhindern` → `<tag>_d` or `<tag>_f`
+       - `iceberg`, `pyramide`, `stop`, `sos`, `stgb art. 230`, unknown →
+         `picture`
+     - Count picture placeholders in the layout; batch photos into that many
+       slots per slide (e.g., AVIVA with 6 placeholders packs up to 6 per slide).
+     - Fill the tag name into the title placeholder if present; drop photos
+       into picture placeholders in order.
+   - Optional seminar title slide: uses `seminar_d` if present and enabled in
+     VBA config.
    - Output: `<project>/<yyyy-mm-dd>_Seminar_Slides_D.pptx` (or `_F`).
-2) Report deck: not implemented yet (reserved button).
 
 ### Training tag alignment
 Training tag names in the knowledge base must match the layout mapping above (case-insensitive).
