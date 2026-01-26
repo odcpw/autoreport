@@ -131,7 +131,7 @@ button[disabled] {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
   flex: 1;
   min-height: 0;
 }
@@ -172,8 +172,7 @@ button[disabled] {
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  height: 34vh;
-  min-height: 260px;
+  height: clamp(320px, 52vh, 640px);
   position: relative;
 }
 
@@ -182,10 +181,11 @@ button[disabled] {
 }
 
 .viewer__image img {
-  max-width: 100%;
-  max-height: 100%;
+  width: 100%;
+  height: 100%;
   border-radius: 10px;
   object-fit: contain;
+  display: block;
 }
 
 .viewer__filename {
