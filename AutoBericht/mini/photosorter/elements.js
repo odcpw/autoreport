@@ -34,6 +34,8 @@
     prevBtn: document.getElementById("prev-photo"),
     nextBtn: document.getElementById("next-photo"),
     notesEl: document.getElementById("photo-notes"),
+    layoutEl: document.querySelector(".layout"),
+    layoutSplitterEl: document.getElementById("layout-splitter"),
     panels: {
       report: document.getElementById("panel-report"),
       observations: document.getElementById("panel-observations"),

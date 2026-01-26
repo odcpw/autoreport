@@ -12,7 +12,7 @@ body {
 
 body {
   margin: 0;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .app {
@@ -131,7 +131,8 @@ button[disabled] {
 
 .layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+  --viewer-width: 1.4fr;
+  grid-template-columns: minmax(320px, var(--viewer-width)) 8px minmax(280px, 1fr);
   flex: 1;
   min-height: 0;
 }
@@ -167,12 +168,16 @@ button[disabled] {
   background: #fff;
   border-radius: 12px;
   border: 1px solid #efe5dc;
-  padding: 8px;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
-  height: clamp(320px, 52vh, 640px);
+  height: 52vh;
+  min-height: 320px;
+  max-height: 70vh;
+  resize: vertical;
+  overflow: hidden;
   position: relative;
 }
 
@@ -183,9 +188,32 @@ button[disabled] {
 .viewer__image img {
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: inherit;
   object-fit: contain;
   display: block;
+}
+
+.layout-splitter {
+  width: 8px;
+  cursor: col-resize;
+  position: relative;
+  background: transparent;
+}
+
+.layout-splitter::before {
+  content: "";
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 50%;
+  width: 2px;
+  border-radius: 2px;
+  background: #e0d6c9;
+  transform: translateX(-50%);
+}
+
+.layout-splitter:hover {
+  background: #f3ede5;
 }
 
 .viewer__filename {
@@ -523,5 +551,9 @@ body.layout-stacked .panel p {
   .sidebar {
     border-left: none;
     border-top: 1px solid #e5e0d7;
+  }
+
+  .layout-splitter {
+    display: none;
   }
 }

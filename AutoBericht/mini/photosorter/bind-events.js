@@ -283,6 +283,37 @@
       });
     }
 
+    if (elements.layoutEl && elements.layoutSplitterEl) {
+      let dragStartX = 0;
+      let dragStartWidth = 0;
+      const minWidth = 320;
+      const maxRatio = 0.75;
+
+      const onMove = (event) => {
+        const rect = elements.layoutEl.getBoundingClientRect();
+        const delta = event.clientX - dragStartX;
+        const maxWidth = rect.width * maxRatio;
+        const next = Math.min(Math.max(dragStartWidth + delta, minWidth), maxWidth);
+        elements.layoutEl.style.setProperty("--viewer-width", `${next}px`);
+      };
+
+      const stopDrag = () => {
+        document.removeEventListener("pointermove", onMove);
+        document.removeEventListener("pointerup", stopDrag);
+        document.body.style.userSelect = "";
+      };
+
+      elements.layoutSplitterEl.addEventListener("pointerdown", (event) => {
+        event.preventDefault();
+        const viewerRect = elements.layoutEl.querySelector(".viewer")?.getBoundingClientRect();
+        dragStartWidth = viewerRect?.width || elements.layoutEl.clientWidth * 0.6;
+        dragStartX = event.clientX;
+        document.body.style.userSelect = "none";
+        document.addEventListener("pointermove", onMove);
+        document.addEventListener("pointerup", stopDrag);
+      });
+    }
+
     if (elements.prevBtn) {
       elements.prevBtn.addEventListener("click", () => {
         const filtered = photosApi.getFilteredPhotos();
