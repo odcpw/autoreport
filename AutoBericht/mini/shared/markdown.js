@@ -36,7 +36,7 @@
           inList = true;
         }
         const item = trimmed.slice(2);
-        parts.push(`<li>${formatInlineMarkdown(item)}</li>`);
+        parts.push(`<li>${formatInlineMarkdown(escapeHtml(item))}</li>`);
         return;
       }
       if (trimmed === "") {

@@ -2,6 +2,11 @@
   const stateHelpers = window.AutoBerichtState || {};
   const normalizeHelpers = window.AutoBerichtNormalize || {};
   const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => 0);
+  const toText = stateHelpers.toText || ((value) => {
+    if (Array.isArray(value)) return value.join("\n");
+    if (value == null) return "";
+    return String(value);
+  });
 
   const resolveLocaleKey = (locale) => {
     const base = String(locale || "de-CH").toLowerCase();
@@ -162,10 +167,10 @@
           includeFinding: true,
           includeRecommendation: true,
           done: false,
-          useFindingOverride: false,
-          findingOverride: "",
-          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+          findingText: toText(master?.finding),
+          recommendationText: toText(master?.recommendation),
+          libraryAction: "off",
+          libraryHash: "",
         },
       });
       chaptersById.set(chapterId, chapter);
@@ -211,10 +216,10 @@
           includeFinding: true,
           includeRecommendation: true,
           done: false,
-          useFindingOverride: true,
-          findingOverride: OBS_FINDING_TEXT,
-          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+          findingText: OBS_FINDING_TEXT,
+          recommendationText: "",
+          libraryAction: "off",
+          libraryHash: "",
         },
       }));
       obsChapter = obsChapterExisting || {

@@ -1,6 +1,11 @@
 (() => {
   const stateHelpers = window.AutoBerichtState || {};
   const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => 0);
+  const toText = stateHelpers.toText || ((value) => {
+    if (Array.isArray(value)) return value.join("\n");
+    if (value == null) return "";
+    return String(value);
+  });
   const OBS_FINDING_TEXT = "Folgende unsichere Situationen wurden beobachtet:";
 
   const ensureWorkstateDefaults = (row) => {
@@ -10,12 +15,18 @@
     if (ws.includeFinding == null) ws.includeFinding = true;
     if (ws.includeRecommendation == null) ws.includeRecommendation = true;
     if (ws.done == null) ws.done = false;
-    if (!ws.useFindingOverride) ws.useFindingOverride = false;
-    if (!ws.findingOverride) ws.findingOverride = "";
-    ws.useLevelOverride = ws.useLevelOverride || { "1": false, "2": false, "3": false, "4": false };
-    ws.levelOverrides = ws.levelOverrides || { "1": "", "2": "", "3": "", "4": "" };
-    ws.libraryActions = ws.libraryActions || { "1": "off", "2": "off", "3": "off", "4": "off" };
-    ws.libraryHashes = ws.libraryHashes || { "1": "", "2": "", "3": "", "4": "" };
+    if (ws.findingText == null) {
+      if (row.type === "field_observation") {
+        ws.findingText = OBS_FINDING_TEXT;
+      } else {
+        ws.findingText = toText(row.master?.finding);
+      }
+    }
+    if (ws.recommendationText == null) {
+      ws.recommendationText = toText(row.master?.recommendation);
+    }
+    if (!ws.libraryAction) ws.libraryAction = "off";
+    if (ws.libraryHash == null) ws.libraryHash = "";
   };
 
   const ensureProjectMeta = (project, setLocale) => {
@@ -72,10 +83,10 @@
           includeFinding: true,
           includeRecommendation: true,
           done: false,
-          useFindingOverride: true,
-          findingOverride: OBS_FINDING_TEXT,
-          useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-          levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+          findingText: OBS_FINDING_TEXT,
+          recommendationText: "",
+          libraryAction: "off",
+          libraryHash: "",
         },
       });
     });
@@ -112,12 +123,7 @@
           titleOverride: "",
           master: {
             finding: "",
-            levels: {
-              "1": "",
-              "2": "",
-              "3": "",
-              "4": "",
-            },
+            recommendation: "",
           },
           customer: {
             answer: null,
@@ -129,10 +135,10 @@
             includeFinding: true,
             includeRecommendation: true,
             done: false,
-            useFindingOverride: true,
-            findingOverride: "",
-            useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-            levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+            findingText: "",
+            recommendationText: "",
+            libraryAction: "off",
+            libraryHash: "",
           },
         })),
       });
@@ -169,19 +175,14 @@
       .sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
   };
 
-  const buildObservationRow = (tag) => ({
-    id: `4.8:${slugifyTag(tag)}`,
+  const buildObservationRow = (tag, idOverride = "") => ({
+    id: idOverride || `4.8:${slugifyTag(tag)}`,
     type: "field_observation",
     tag,
     titleOverride: tag,
     master: {
       finding: OBS_FINDING_TEXT,
-      levels: {
-        "1": "",
-        "2": "",
-        "3": "",
-        "4": "",
-      },
+      recommendation: "",
     },
     customer: {
       answer: null,
@@ -193,12 +194,23 @@
       includeFinding: true,
       includeRecommendation: true,
       done: false,
-      useFindingOverride: true,
-      findingOverride: OBS_FINDING_TEXT,
-      useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-      levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+      findingText: OBS_FINDING_TEXT,
+      recommendationText: "",
+      libraryAction: "off",
+      libraryHash: "",
     },
   });
+
+  const getNextObservationIndex = (rows = []) => {
+    let max = 0;
+    rows.forEach((row) => {
+      const match = /^4\.8\.(\d+)$/.exec(String(row?.id || ""));
+      if (!match) return;
+      const value = Number(match[1]);
+      if (Number.isFinite(value)) max = Math.max(max, value);
+    });
+    return max + 1;
+  };
 
   const syncObservationChapterRows = (project, doc) => {
     if (!project?.chapters) return;
@@ -208,6 +220,7 @@
     if (!tags.length) return;
 
     const existingRows = (chapter.rows || []).filter((row) => row.kind !== "section");
+    let nextIndex = getNextObservationIndex(existingRows);
     const byTag = new Map();
     existingRows.forEach((row) => {
       const tag = row.tag || row.titleOverride;
@@ -224,7 +237,9 @@
         existing.titleOverride = tag;
         return existing;
       }
-      return buildObservationRow(tag);
+      const rowId = `4.8.${nextIndex}`;
+      nextIndex += 1;
+      return buildObservationRow(tag, rowId);
     });
 
     if (!chapter.meta) chapter.meta = {};

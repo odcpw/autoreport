@@ -9,7 +9,6 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 ## Redesign Status (2026)
 
 - The minimal editor in `AutoBericht/mini/` is the current direction.
-- The legacy MVP UI now lives in `AutoBericht/legacy/` (reference only).
 - See `AutoBericht/docs/design-spec.md` for the interview-based spec.
 
 ### System Components
@@ -51,7 +50,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 
 2. **Edit Content**
    - Start the offline UI with `AutoBericht/start-autobericht.cmd` (opens the minimal editor)
-   - Open the project folder and load `project_sidecar.json`
+   - Open the project folder (sidecar loads or is created automatically)
    - Edit findings and recommendations by chapter
    - Save the sidecar back to the project folder
 
@@ -71,11 +70,11 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    ```
 
 2. **VBA Development**
-   - Install VBA modules from `/legacy/macros/` folder
-   - See legacy docs in `legacy/docs/guides/vba-workflow.md`
+   - VBA modules live in `AutoBericht/vba/`
+   - See `AutoBericht/docs/ribbon-notes.md` for template notes
 
 3. **Web UI Development**
-   - Open `AutoBericht/mini/index.html` (current) or `AutoBericht/legacy/index.html` (legacy)
+   - Open `AutoBericht/mini/index.html` (current)
    - Libraries bundled in `AutoBericht/libs/`
    - See [AutoBericht README](AutoBericht/README.md)
 
@@ -92,34 +91,28 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 | [System Architecture](AutoBericht/docs/system-overview.md) | Current redesign architecture |
 | [Design Spec](AutoBericht/docs/design-spec.md) | Interview-based requirements |
 | [Workflow](AutoBericht/docs/workflow.md) | Minimal editor workflow |
-| [VBA Modules Reference](legacy/macros/README.md) | VBA module documentation (legacy export layer) |
-
-Legacy documentation is archived under `legacy/docs/`.
+| [Project Template](AutoBericht/docs/project-template.md) | Recommended project folder layout |
+| [Ribbon Notes](AutoBericht/docs/ribbon-notes.md) | Notes on Word ribbon + template setup |
 
 ## Project Structure
 
 ```
 autoreport/
-├── .beads/                     # Beads task tracker (issues.jsonl)
-├── AGENTS.md                   # Agent playbook for this repo
 ├── README.md                    # You are here
 ├── AutoBericht/start-autobericht.cmd   # Windows launcher for the web UI
 ├── AutoBericht/start-autobericht.ps1   # PowerShell launcher for the web UI
 ├── sync-autobericht.ps1         # Macro sync helper
-├── docs/                        # Documentation
-│   ├── INDEX.md                # Documentation roadmap (current)
-│   ├── STATUS.md               # Current state vs target
-│   └── (canonical docs live in AutoBericht/docs/)
-├── legacy/                      # Legacy UI + docs archive
-│   ├── docs/                   # Legacy documentation
-│   └── macros/                 # Legacy VBA modules (.bas, .cls, .frm)
-│       └── README.md           # VBA module overview
-├── AutoBericht/                 # Offline web UI
+├── STATUS.md                    # Current state vs target
+├── docs/                        # Research / prompts / tooling notes
+│   └── research_recommendations
+├── AutoBericht/                 # Offline web UI + docs
 │   ├── index.html              # Entry point
-│   ├── css/                    # Styles
-│   ├── js/                     # JavaScript modules
-│   ├── libs/                   # Third-party libraries
-│   └── assets/                 # Images, icons
+│   ├── mini/                   # Minimal editor (current)
+│   ├── vba/                    # Word/PPT VBA export modules
+│   ├── data/                   # Seeds, checklists, weights
+│   ├── libs/                   # Bundled third-party libraries (SheetJS)
+│   └── docs/                   # Canonical redesign documentation
+├── ProjectTemplate/             # Sample project folder (templates + structure)
 └── tools/                       # Local tooling scripts
     └── serve-autobericht.ps1    # Local server (offline-only)
 ```
@@ -129,11 +122,11 @@ autoreport/
 ### Word VBA
 - **Purpose**: Data import, structured sheet management, macro synchronization
 - **Key Libraries**: VBA-JSON, Microsoft Scripting Runtime
-- **Entry Point**: `modMacroSync.RefreshProjectMacros`
+- **Modules**: `AutoBericht/vba/`
 
 ### HTML/JavaScript
 - **Purpose**: Offline editing interface
-- **Key Libraries**: markdown-it, CodeMirror, Paged.js, PptxGenJS, SheetJS
+- **Key Libraries**: SheetJS (bundled in `AutoBericht/libs/`)
 - **Entry Point**: `AutoBericht/mini/index.html` (current) or `AutoBericht/index.html` (landing)
 
 ## Data Flow
@@ -145,10 +138,10 @@ Word/Excel Sources
    VBA Import ──────────────┐
        │                    │
        ▼                    ▼
-Structured Sheets      project.json
+Structured Sheets      project_sidecar.json
        │                    │
        ▼                    ▼
-   VBA Export          Web UI Load
+   VBA Export          Web UI Load (project_sidecar.json)
        │                    │
        │◀───────────────────┘
        │
@@ -157,12 +150,12 @@ Structured Sheets      project.json
 ```
 
 1. **Import**: VBA reads Word/Excel sources, populates structured sheets
-2. **Edit**: Web UI loads `project.json` or Excel file directly
-3. **Export**: Generate reports and update `project.json`
+2. **Edit**: Web UI loads `project_sidecar.json` and edits content
+3. **Export**: Generate reports and update `project_sidecar.json`
 
 **See**: [Design Spec](AutoBericht/docs/design-spec.md)
 
-**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `AutoBericht/docs/design-spec.md` and `docs/STATUS.md`). Legacy `project.json` docs are archived in `legacy/docs/architecture/data-model.md`.
+**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `AutoBericht/docs/design-spec.md` and `STATUS.md`).
 
 ## Contributing
 
@@ -175,7 +168,7 @@ This is a private corporate project. For development guidelines:
 ## Support
 
 - **Issues**: Check documentation first, then consult team
-- **VBA Help**: See `legacy/docs/guides/vba-workflow.md`
+- **VBA Help**: See `AutoBericht/docs/ribbon-notes.md` or `AutoBericht/vba/`
 - **Web UI Help**: See [AutoBericht README](AutoBericht/README.md)
 
 ## License

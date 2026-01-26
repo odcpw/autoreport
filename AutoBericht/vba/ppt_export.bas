@@ -1023,8 +1023,8 @@ Private Function ResolveFinding(ByVal row As Object) As String
 
     Set ws = GetObject(row, "workstate")
     If Not ws Is Nothing Then
-        If GetBool(ws, "useFindingOverride") Then
-            ResolveFinding = SafeText(ws, "findingOverride")
+        If ws.Exists("findingText") Then
+            ResolveFinding = SafeText(ws, "findingText")
             Exit Function
         End If
     End If
@@ -1036,13 +1036,8 @@ Private Function ResolveFinding(ByVal row As Object) As String
 End Function
 
 Private Function ResolveRecommendation(ByVal row As Object) As String
-    Dim levelKey As String
     Dim ws As Object
-    Dim overrides As Object
     Dim master As Object
-    Dim levels As Object
-
-    levelKey = "1"
 
     Set ws = GetObject(row, "workstate")
     If Not ws Is Nothing Then
@@ -1052,28 +1047,17 @@ Private Function ResolveRecommendation(ByVal row As Object) As String
                 Exit Function
             End If
         End If
-        If ws.Exists("selectedLevel") Then
-            levelKey = CStr(ws("selectedLevel"))
-        End If
-        If ws.Exists("useLevelOverride") Then
-            Set overrides = GetObject(ws, "levelOverrides")
-            If Not overrides Is Nothing Then
-                If GetBoolFromDict(ws("useLevelOverride"), levelKey) Then
-                    ResolveRecommendation = ToPlainText(overrides(levelKey))
-                    Exit Function
-                End If
-            End If
+        If ws.Exists("recommendationText") Then
+            ResolveRecommendation = SafeText(ws, "recommendationText")
+            Exit Function
         End If
     End If
 
     Set master = GetObject(row, "master")
     If Not master Is Nothing Then
-        Set levels = GetObject(master, "levels")
-        If Not levels Is Nothing Then
-            If levels.Exists(levelKey) Then
-                ResolveRecommendation = ToPlainText(levels(levelKey))
-                Exit Function
-            End If
+        If master.Exists("recommendation") Then
+            ResolveRecommendation = ToPlainText(master("recommendation"))
+            Exit Function
         End If
     End If
 End Function

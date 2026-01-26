@@ -24,9 +24,11 @@ This guide describes the minimal, folder-first workflow.
    start-autobericht.cmd
    ```
 2. Open **Open Project Folder**.
-3. Click **Load sidecar** (if missing, a template is loaded).
-4. Edit by chapter (findings and recommendations).
-5. Click **Save sidecar** to persist updates.
+3. The app loads `project_sidecar.json` if present; otherwise it initializes from a
+   user library or seed and writes a new sidecar automatically.
+4. Fill in project settings when prompted (moderator, company, locale).
+5. Edit by chapter (findings and recommendations).
+6. Click **Save sidecar** to persist updates (autosave runs in the background).
 
 ## Troubleshooting
 

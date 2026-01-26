@@ -361,6 +361,15 @@ def build_coverage(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str
 
 def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]], coverage: dict[str, object]):
     timestamp = datetime.now(timezone.utc).isoformat(timespec="seconds")
+
+    def join_levels(levels: dict[str, list[str]]) -> str:
+        parts: list[str] = []
+        for key in ("1", "2", "3", "4"):
+            lines = [line.strip() for line in levels.get(key, []) if line.strip()]
+            if lines:
+                parts.append("\n".join(lines))
+        return "\n\n".join(parts)
+
     output = {
         "meta": {
             "source": OPUS_DOCX.name,
@@ -371,13 +380,13 @@ def write_outputs(entries: list[OpusEntry], selbst_ids: dict[str, dict[str, str]
                 "id": e.id,
                 "groupId": e.group_id,
                 "finding": e.finding,
-                "levels": e.levels,
+                "recommendation": join_levels(e.levels),
                 "children": [
                     {
                         "idRange": child.id_range,
                         "ids": child.ids,
                         "finding": child.finding,
-                        "levels": child.levels,
+                        "recommendation": join_levels(child.levels),
                     }
                     for child in e.children
                 ]

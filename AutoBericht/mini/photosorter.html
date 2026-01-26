@@ -20,11 +20,9 @@
           <button type="button" data-layout="tabs">Tabs (1/2/3)</button>
         </div>
         <button id="pick-project">Open Project Folder</button>
-        <button id="load-sidecar" disabled>Reload sidecar</button>
         <button id="pick-photos" disabled>Import Photos</button>
         <button id="save-sidecar" disabled>Save tags</button>
         <button id="open-settings">Edit tags</button>
-        <button id="save-log">Save debug log</button>
       </div>
     </header>
 
@@ -39,6 +37,7 @@
           <div class="viewer__meta" id="photo-meta">No photos loaded</div>
           <div class="viewer__controls">
             <button id="filter-toggle" class="ghost" disabled>Show Unsorted</button>
+            <button id="count-toggle" class="ghost" disabled>Show counts</button>
             <button id="prev-photo" disabled>Prev (A)</button>
             <button id="next-photo" disabled>Next (D)</button>
           </div>
@@ -108,6 +107,38 @@
             </div>
             <div class="settings-tags__list" id="obs-tag-list"></div>
           </section>
+          <div class="modal__actions settings-actions">
+            <button id="load-sidecar" type="button" class="ghost" disabled>Reload sidecar</button>
+            <button id="save-log" type="button" class="ghost">Save debug log</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="first-run-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
+        <div class="modal__header">
+          <h2 id="first-run-title">Select project folder</h2>
+        </div>
+        <div class="modal__body">
+          <p>Pick the project folder to start. This folder will store the project_sidecar.json file.</p>
+          <div class="modal__actions">
+            <button id="first-run-pick" type="button">Open Project Folder</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="library-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="library-title">
+        <div class="modal__header">
+          <h2 id="library-title">Choose a library</h2>
+        </div>
+        <div class="modal__body">
+          <p>Multiple library files were found. Pick the one that matches this project.</p>
+          <div class="library-list" id="library-list"></div>
         </div>
       </div>
     </div>
@@ -115,6 +146,9 @@
 
   <script src="../shared/debug-log.js"></script>
   <script src="shared/i18n.js"></script>
+  <script src="shared/state.js"></script>
+  <script src="shared/normalize.js"></script>
+  <script src="shared/seeds.js"></script>
   <script src="shared/fs-handle.js"></script>
   <script src="shared/photo-import.js"></script>
   <script src="photosorter/state.js"></script>

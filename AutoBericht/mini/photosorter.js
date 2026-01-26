@@ -24,6 +24,9 @@
     ? stateHelpers.createState(config.layoutMode)
     : { layoutMode: "stacked", photos: [], tagFilters: { report: "", observations: "", training: "" } };
   const runtime = stateHelpers.createRuntime ? stateHelpers.createRuntime() : { autosaveTimer: null, saveQueue: Promise.resolve(), renderTimer: null };
+  if (window.localStorage) {
+    state.showTagCounts = window.localStorage.getItem("photosorterShowCounts") === "1";
+  }
 
   const setStatus = (message) => {
     if (elements.statusTextEl) {
@@ -147,8 +150,24 @@
     renderApi.updateLayoutToggle?.();
     renderApi.setActivePanel?.(state.activePanel);
     bindApi.ensureFsAccess?.();
-    await ioApi.restoreLastHandle?.();
     actions.enableActions();
+    if (!state.projectHandle && !config.demoPhotosMode) {
+      const restored = await (async () => {
+        if (!ctx.fs?.loadHandle || !ctx.fs?.requestHandlePermission) return false;
+        const saved = await ctx.fs.loadHandle();
+        if (!saved) return false;
+        const granted = await ctx.fs.requestHandlePermission(saved);
+        if (!granted) return false;
+        state.projectHandle = saved;
+        actions.enableActions();
+        await ioApi.loadProjectSidecar();
+        return true;
+      })();
+      if (!restored) {
+        bindApi.setFirstRunVisible?.(true);
+        setStatus("Select a project folder to start.");
+      }
+    }
 
     if (config.demoPhotosMode) {
       photosApi.loadDemoPhotos?.().catch((err) => {

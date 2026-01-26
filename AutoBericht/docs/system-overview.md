@@ -46,7 +46,7 @@ minimal Word/VBA export layer.
 Self-assessment + photos
           │
           ▼
-Minimal Editor (edit findings, levels, tags)
+Minimal Editor (edit findings, recommendations, levels, tags)
           │
           ▼
 project_sidecar.json (canonical state)
@@ -60,7 +60,7 @@ project_sidecar.json (canonical state)
 
 - **Browser editor**
   - Chapter-based editing.
-  - Recommendation level selection and overrides.
+  - Recommendation text editing + scoring level selection.
   - Photo tagging (virtual tags).
   - Sidecar load/save.
 

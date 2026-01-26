@@ -9,6 +9,9 @@
         if (elements.pickProjectBtn) {
           elements.pickProjectBtn.disabled = true;
         }
+        if (elements.firstRunPickBtn) {
+          elements.firstRunPickBtn.disabled = true;
+        }
         return false;
       }
       return true;
@@ -21,6 +24,7 @@
       if (elements.pickPhotosBtn) elements.pickPhotosBtn.disabled = !hasProject;
       if (elements.saveSidecarBtn) elements.saveSidecarBtn.disabled = !hasProject;
       if (elements.filterToggleBtn) elements.filterToggleBtn.disabled = state.photos.length === 0;
+      if (elements.countToggleBtn) elements.countToggleBtn.disabled = !hasProject;
       if (elements.prevBtn) elements.prevBtn.disabled = !hasVisiblePhotos;
       if (elements.nextBtn) elements.nextBtn.disabled = !hasVisiblePhotos;
       if (elements.importActionBtn) elements.importActionBtn.disabled = !hasProject;
@@ -33,6 +37,17 @@
       elements.settingsModal.classList.add("is-open");
       elements.settingsModal.setAttribute("aria-hidden", "false");
       renderApi.renderObservationTagList();
+    };
+
+    const setFirstRunVisible = (visible) => {
+      if (!elements.firstRunModal) return;
+      if (visible) {
+        elements.firstRunModal.classList.add("is-open");
+        elements.firstRunModal.setAttribute("aria-hidden", "false");
+      } else {
+        elements.firstRunModal.classList.remove("is-open");
+        elements.firstRunModal.setAttribute("aria-hidden", "true");
+      }
     };
 
     const closeSettings = () => {
@@ -88,20 +103,28 @@
       });
     });
 
-    if (elements.pickProjectBtn) {
-      elements.pickProjectBtn.addEventListener("click", async () => {
-        if (!ensureFsAccess()) return;
-        try {
-          state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
-          await ioApi.persistHandle(state.projectHandle);
-          setStatus(`Project folder: ${state.projectHandle.name}`);
-          await ioApi.loadProjectSidecar();
-          setStatus(`Project folder: ${state.projectHandle.name}`);
-        } catch (err) {
-          setStatus(`Project pick canceled: ${err.message}`);
+    const pickProjectFolder = async () => {
+      if (!ensureFsAccess()) return;
+      try {
+        state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        if (ctx.fs?.saveHandle) {
+          await ctx.fs.saveHandle(state.projectHandle);
         }
-        enableActions();
-      });
+        setStatus(`Project folder: ${state.projectHandle.name}`);
+        setFirstRunVisible(false);
+        await ioApi.loadProjectSidecar();
+        setStatus(`Project folder: ${state.projectHandle.name}`);
+      } catch (err) {
+        setStatus(`Project pick canceled: ${err.message}`);
+      }
+      enableActions();
+    };
+
+    if (elements.pickProjectBtn) {
+      elements.pickProjectBtn.addEventListener("click", pickProjectFolder);
+    }
+    if (elements.firstRunPickBtn) {
+      elements.firstRunPickBtn.addEventListener("click", pickProjectFolder);
     }
 
     if (elements.loadSidecarBtn) {
@@ -249,6 +272,17 @@
       });
     }
 
+    if (elements.countToggleBtn) {
+      elements.countToggleBtn.addEventListener("click", () => {
+        state.showTagCounts = !state.showTagCounts;
+        if (window.localStorage) {
+          window.localStorage.setItem("photosorterShowCounts", state.showTagCounts ? "1" : "0");
+        }
+        renderApi.renderPanels();
+        renderApi.renderAll();
+      });
+    }
+
     if (elements.prevBtn) {
       elements.prevBtn.addEventListener("click", () => {
         const filtered = photosApi.getFilteredPhotos();
@@ -325,6 +359,7 @@
     return {
       ensureFsAccess,
       enableActions,
+      setFirstRunVisible,
     };
   };
 

@@ -38,6 +38,17 @@
     debug.logLine("info", message);
   };
 
+  const setFirstRunVisible = (visible) => {
+    if (!elements.firstRunModal) return;
+    if (visible) {
+      elements.firstRunModal.classList.add("is-open");
+      elements.firstRunModal.setAttribute("aria-hidden", "false");
+    } else {
+      elements.firstRunModal.classList.remove("is-open");
+      elements.firstRunModal.setAttribute("aria-hidden", "true");
+    }
+  };
+
   const ctx = {
     elements,
     state,
@@ -66,7 +77,7 @@
       spiderModule,
     })
     : {
-      loadProjectFromFolder: async () => false,
+      loadProjectFromFolder: async () => ({ ok: false, source: "none" }),
       saveSidecar: async () => {},
       generateLibrary: async () => {},
     };
@@ -79,6 +90,7 @@
     if (!window.showDirectoryPicker) {
       setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
       if (elements.pickFolderBtn) elements.pickFolderBtn.disabled = true;
+      if (elements.firstRunPickBtn) elements.firstRunPickBtn.disabled = true;
       return false;
     }
     return true;
@@ -93,64 +105,6 @@
     if (elements.openSpiderBtn) elements.openSpiderBtn.disabled = !enabled;
   };
 
-  const persistHandle = async (handle) => {
-    try {
-      await ctx.fs.saveHandle(handle);
-    } catch (err) {
-      debug.logLine("warn", `Failed to persist folder handle: ${err.message || err}`);
-    }
-  };
-
-  const loadPersistedHandle = async () => {
-    try {
-      return await ctx.fs.loadHandle();
-    } catch (err) {
-      return null;
-    }
-  };
-
-  const ensureHandlePermission = async (handle) => {
-    try {
-      return await ctx.fs.requestHandlePermission(handle);
-    } catch (err) {
-      return false;
-    }
-  };
-
-  const restoreLastHandle = async () => {
-    if (!window.showDirectoryPicker) return;
-    const handle = await loadPersistedHandle();
-    if (!handle) return;
-    const ok = await ensureHandlePermission(handle);
-    if (!ok) return;
-    runtime.dirHandle = handle;
-    enableActions();
-    setStatus(`Restored project folder: ${runtime.dirHandle.name}`);
-    debug.logLine("info", `Restored project folder: ${runtime.dirHandle.name}`);
-    await ioApi.loadProjectFromFolder();
-  };
-
-  const autoLoadSeeds = async () => {
-    if (window.location.protocol !== "http:" && window.location.protocol !== "https:") {
-      debug.logLine("info", "Seed auto-load skipped (not on http)." );
-      return false;
-    }
-    try {
-      state.project = await seeds.loadSeedsForProject({
-        dirHandle: runtime.dirHandle,
-        getLibraryFileName: () => stateHelpers.getLibraryFileName(state.project.meta || {}),
-      });
-      normalizeHelpers.normalizeProject(state.project, setLocale);
-      state.selectedChapterId = state.project.chapters[0]?.id || "";
-      renderApi.render();
-      setStatus("Loaded seed data.");
-      debug.logLine("info", "Auto-loaded seed data.");
-      return true;
-    } catch (err) {
-      debug.logLine("warn", `Seed auto-load skipped: ${err.message}`);
-      return false;
-    }
-  };
 
   const scheduleAutosave = () => {
     if (!runtime.dirHandle) return;
@@ -189,17 +143,32 @@
       importSelfHandler,
       ensureFsAccess,
       enableActions,
-      persistHandle,
       flushAutosave,
+      setFirstRunVisible,
     });
   }
 
+  const restoreHandle = async () => {
+    if (!ctx.fs?.loadHandle || !ctx.fs?.requestHandlePermission) return false;
+    const saved = await ctx.fs.loadHandle();
+    if (!saved) return false;
+    const granted = await ctx.fs.requestHandlePermission(saved);
+    if (!granted) return false;
+    runtime.dirHandle = saved;
+    enableActions();
+    await ioApi.loadProjectFromFolder();
+    return true;
+  };
+
   const init = async () => {
     ensureFsAccess();
-    await restoreLastHandle();
     renderApi.render();
     if (!runtime.dirHandle) {
-      await autoLoadSeeds();
+      const restored = await restoreHandle();
+      if (!restored) {
+        setFirstRunVisible(true);
+        setStatus("Select a project folder to start.");
+      }
     }
     if (spiderUiModule.init) {
       spiderUiModule.init(ctx, { spider: spiderModule, ioApi });

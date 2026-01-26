@@ -9,32 +9,54 @@
       importSelfHandler,
       ensureFsAccess,
       enableActions,
-      persistHandle,
       flushAutosave,
+      setFirstRunVisible,
     } = deps;
     const { elements, state, runtime, debug, setStatus, i18n } = ctx;
 
-    if (elements.pickFolderBtn) {
-      elements.pickFolderBtn.addEventListener("click", async () => {
-        if (!ensureFsAccess()) return;
-        try {
-          runtime.dirHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
-          await persistHandle(runtime.dirHandle);
-          enableActions();
-          setStatus(`Selected folder: ${runtime.dirHandle.name}`);
-          debug.logLine("info", `Selected folder: ${runtime.dirHandle.name}`);
-          await ioApi.loadProjectFromFolder();
-        } catch (err) {
-          setStatus(`Folder pick canceled or failed: ${err.message}`);
-          debug.logLine("warn", `Folder pick canceled or failed: ${err.message}`);
+    const maybeOpenSettings = (result) => {
+      if (result && result.source && result.source !== "sidecar") {
+        openSettings();
+      }
+    };
+
+    const pickProjectFolder = async () => {
+      if (!ensureFsAccess()) return;
+      try {
+        runtime.dirHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        if (ctx.fs?.saveHandle) {
+          await ctx.fs.saveHandle(runtime.dirHandle);
         }
-      });
+        enableActions();
+        setStatus(`Selected folder: ${runtime.dirHandle.name}`);
+        debug.logLine("info", `Selected folder: ${runtime.dirHandle.name}`);
+        if (setFirstRunVisible) setFirstRunVisible(false);
+        const result = await ioApi.loadProjectFromFolder();
+        if (result?.ok) {
+          maybeOpenSettings(result);
+        } else if (setFirstRunVisible) {
+          setFirstRunVisible(true);
+        }
+      } catch (err) {
+        setStatus(`Folder pick canceled or failed: ${err.message}`);
+        debug.logLine("warn", `Folder pick canceled or failed: ${err.message}`);
+      }
+    };
+
+    if (elements.pickFolderBtn) {
+      elements.pickFolderBtn.addEventListener("click", pickProjectFolder);
+    }
+    if (elements.firstRunPickBtn) {
+      elements.firstRunPickBtn.addEventListener("click", pickProjectFolder);
     }
 
     if (elements.loadSidecarBtn) {
       elements.loadSidecarBtn.addEventListener("click", async () => {
         if (!runtime.dirHandle) return;
-        await ioApi.loadProjectFromFolder();
+        const result = await ioApi.loadProjectFromFolder();
+        if (result?.ok) {
+          maybeOpenSettings(result);
+        }
       });
     }
 
@@ -119,7 +141,7 @@
       elements.settingsModal.setAttribute("aria-hidden", "true");
     };
 
-    const saveSettings = () => {
+    const saveSettings = async () => {
       normalizeHelpers.ensureProjectMeta(state.project, i18n.setLocale);
       state.project.meta.moderator = elements.settingsModeratorEl.value.trim();
       state.project.meta.moderatorInitials = elements.settingsModeratorInitialsEl.value.trim();
@@ -133,7 +155,17 @@
       if (elements.settingsLibraryHintEl) {
         elements.settingsLibraryHintEl.textContent = `Library file: ${stateHelpers.getLibraryFileName(state.project.meta)} (timestamped backup on generate).`;
       }
-      setStatus("Settings saved (remember to save sidecar).");
+      if (runtime.dirHandle) {
+        try {
+          await ioApi.saveSidecar();
+          setStatus("Settings saved.");
+        } catch (err) {
+          setStatus(`Settings saved, but sidecar save failed: ${err.message}`);
+          debug.logLine("error", `Sidecar save failed: ${err.message || err}`);
+        }
+      } else {
+        setStatus("Settings saved (remember to save sidecar).");
+      }
     };
 
     if (elements.openSettingsBtn) {

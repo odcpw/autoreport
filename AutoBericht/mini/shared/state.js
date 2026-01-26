@@ -22,12 +22,12 @@
             titleOverride: "Unternehmensleitbild",
             master: {
               finding: "Das Unternehmen verfuegt nicht ueber ein Leitbild.",
-              levels: {
-                "1": "Eine Sicherheitscharta als ersten Schritt etablieren.",
-                "2": "Die vorhandenen Werte in die Fuhrung integrieren.",
-                "3": "Die dokumentierte Charta verbreiten und leben.",
-                "4": "Die Charta als aktives Fuehrungsinstrument nutzen.",
-              },
+              recommendation: [
+                "Eine Sicherheitscharta als ersten Schritt etablieren.",
+                "Die vorhandenen Werte in die Fuhrung integrieren.",
+                "Die dokumentierte Charta verbreiten und leben.",
+                "Die Charta als aktives Fuehrungsinstrument nutzen.",
+              ].join("\n\n"),
             },
             customer: {
               answer: 1,
@@ -45,10 +45,15 @@
               includeFinding: true,
               includeRecommendation: true,
               done: false,
-              useFindingOverride: false,
-              findingOverride: "",
-              useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-              levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+              findingText: "Das Unternehmen verfuegt nicht ueber ein Leitbild.",
+              recommendationText: [
+                "Eine Sicherheitscharta als ersten Schritt etablieren.",
+                "Die vorhandenen Werte in die Fuhrung integrieren.",
+                "Die dokumentierte Charta verbreiten und leben.",
+                "Die Charta als aktives Fuehrungsinstrument nutzen.",
+              ].join("\n\n"),
+              libraryAction: "off",
+              libraryHash: "",
             },
           },
           {
@@ -57,12 +62,12 @@
             titleOverride: "Strategie",
             master: {
               finding: "Es fehlt eine dokumentierte Sicherheitsstrategie.",
-              levels: {
-                "1": "Strategie-Grundsaetze definieren.",
-                "2": "Strategie in Ziele uebersetzen.",
-                "3": "Strategie regelmaessig pruefen.",
-                "4": "Strategie in allen Bereichen verankern.",
-              },
+              recommendation: [
+                "Strategie-Grundsaetze definieren.",
+                "Strategie in Ziele uebersetzen.",
+                "Strategie regelmaessig pruefen.",
+                "Strategie in allen Bereichen verankern.",
+              ].join("\n\n"),
             },
             customer: {
               answer: 0,
@@ -80,10 +85,15 @@
               includeFinding: true,
               includeRecommendation: true,
               done: true,
-              useFindingOverride: true,
-              findingOverride: "Eine Strategie besteht, wird aber nicht aktiv kommuniziert.",
-              useLevelOverride: { "1": false, "2": true, "3": false, "4": false },
-              levelOverrides: { "1": "", "2": "Strategie sichtbar machen.", "3": "", "4": "" },
+              findingText: "Es fehlt eine dokumentierte Sicherheitsstrategie.",
+              recommendationText: [
+                "Strategie-Grundsaetze definieren.",
+                "Strategie in Ziele uebersetzen.",
+                "Strategie regelmaessig pruefen.",
+                "Strategie in allen Bereichen verankern.",
+              ].join("\n\n"),
+              libraryAction: "off",
+              libraryHash: "",
             },
           },
         ],
@@ -98,12 +108,12 @@
             titleOverride: "Regale",
             master: {
               finding: "Regale sind nicht gegen Kippen gesichert.",
-              levels: {
-                "1": "Regale sichern und Sichtkontrolle definieren.",
-                "2": "Regalinspektionen regelmaessig durchfuehren.",
-                "3": "Sicherheitschecks dokumentieren.",
-                "4": "Regalmanagement im Sicherheitsprogramm verankern.",
-              },
+              recommendation: [
+                "Regale sichern und Sichtkontrolle definieren.",
+                "Regalinspektionen regelmaessig durchfuehren.",
+                "Sicherheitschecks dokumentieren.",
+                "Regalmanagement im Sicherheitsprogramm verankern.",
+              ].join("\n\n"),
             },
             customer: {
               answer: 0,
@@ -121,10 +131,15 @@
               includeFinding: true,
               includeRecommendation: true,
               done: false,
-              useFindingOverride: false,
-              findingOverride: "",
-              useLevelOverride: { "1": false, "2": false, "3": false, "4": false },
-              levelOverrides: { "1": "", "2": "", "3": "", "4": "" },
+              findingText: "Regale sind nicht gegen Kippen gesichert.",
+              recommendationText: [
+                "Regale sichern und Sichtkontrolle definieren.",
+                "Regalinspektionen regelmaessig durchfuehren.",
+                "Sicherheitschecks dokumentieren.",
+                "Regalmanagement im Sicherheitsprogramm verankern.",
+              ].join("\n\n"),
+              libraryAction: "off",
+              libraryHash: "",
             },
           },
         ],
@@ -157,6 +172,7 @@
       fallback: false,
       industryFilter: "",
       categoryFilter: "",
+      searchQuery: "",
     },
   });
 
@@ -245,18 +261,13 @@
   };
 
   const getFindingText = (row) => {
-    const ws = row.workstate;
-    if (ws.useFindingOverride && ws.findingOverride) return ws.findingOverride;
-    return toText(row.master?.finding);
+    const ws = row.workstate || {};
+    return toText(ws.findingText);
   };
 
-  const getRecommendationText = (row, level) => {
-    const ws = row.workstate;
-    const levelKey = String(level);
-    if (ws.useLevelOverride?.[levelKey] && ws.levelOverrides?.[levelKey]) {
-      return ws.levelOverrides[levelKey];
-    }
-    return toText(row.master?.levels?.[levelKey]);
+  const getRecommendationText = (row) => {
+    const ws = row.workstate || {};
+    return toText(ws.recommendationText);
   };
 
   const getAnswerState = (row) => {

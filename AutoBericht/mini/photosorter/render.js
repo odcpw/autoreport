@@ -68,6 +68,24 @@
       }
     };
 
+    const buildTagCounts = () => {
+      const counts = {
+        report: new Map(),
+        observations: new Map(),
+        training: new Map(),
+      };
+      state.photos.forEach((photo) => {
+        ["report", "observations", "training"].forEach((group) => {
+          (photo.tags?.[group] || []).forEach((tag) => {
+            const key = String(tag || "").trim();
+            if (!key) return;
+            counts[group].set(key, (counts[group].get(key) || 0) + 1);
+          });
+        });
+      });
+      return counts;
+    };
+
     const renderViewer = () => {
       const current = photosApi.getCurrentPhoto();
       if (!current) {
@@ -162,6 +180,12 @@
       const { chapters, rest } = config.splitChapters
         ? tagsApi.splitChapterOptions(filteredOptions)
         : { chapters: [], rest: filteredOptions };
+      const counts = config.counts || new Map();
+      const formatLabel = (option) => {
+        if (!state.showTagCounts) return option.label;
+        const count = counts.get(option.value) || 0;
+        return `(${count}) ${option.label}`;
+      };
 
       if (config.splitChapters) {
         const chapterRow = document.createElement("div");
@@ -170,8 +194,9 @@
           const button = document.createElement("button");
           button.type = "button";
           button.className = "tag-button tag-button--chapter";
-          button.textContent = option.label;
-          button.title = option.label;
+          const labelText = formatLabel(option);
+          button.textContent = labelText;
+          button.title = labelText;
           if (selected.has(option.value)) {
             button.classList.add("active");
           }
@@ -190,8 +215,9 @@
         const button = document.createElement("button");
         button.type = "button";
         button.className = "tag-button";
-        button.textContent = option.label;
-        button.title = option.label;
+        const labelText = formatLabel(option);
+        button.textContent = labelText;
+        button.title = labelText;
         if (selected.has(option.value)) {
           button.classList.add("active");
         }
@@ -205,24 +231,28 @@
     };
 
     const renderPanels = () => {
+      const counts = buildTagCounts();
       renderTagPanel("report", {
         title: "Bericht",
         description: "Kapitel & Unterkapitel (1.x / 1.2 / 4.8 etc.)",
         filter: state.tagFilters.report,
         splitChapters: true,
         allowAdd: false,
+        counts: counts.report,
       });
       renderTagPanel("observations", {
         title: "4.8 Beobachtungen",
         description: "Diese Tags werden als Kapitel 4.8 im Bericht verwendet.",
         filter: state.tagFilters.observations,
         allowAdd: true,
+        counts: counts.observations,
       });
       renderTagPanel("training", {
         title: "Training",
         description: "Seminar-/Schulungskategorien.",
         filter: state.tagFilters.training,
         allowAdd: false,
+        counts: counts.training,
       });
     };
 
@@ -233,6 +263,11 @@
       }
       if (elements.filterToggleBtn) {
         elements.filterToggleBtn.textContent = state.filterMode === "all" ? "Show Unsorted" : "Show All";
+      }
+      if (elements.countToggleBtn) {
+        elements.countToggleBtn.textContent = state.showTagCounts ? "Hide counts" : "Show counts";
+        elements.countToggleBtn.classList.toggle("active", state.showTagCounts);
+        elements.countToggleBtn.setAttribute("aria-pressed", String(state.showTagCounts));
       }
       renderViewer();
       renderPanels();

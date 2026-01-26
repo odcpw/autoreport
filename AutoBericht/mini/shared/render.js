@@ -23,12 +23,24 @@
       checklistOverlayHint,
       checklistFiltersEl,
       checklistListEl,
+      checklistSearchEl,
     } = elements;
 
     let scheduleAutosave = () => {};
 
     const setScheduleAutosave = (fn) => {
       scheduleAutosave = typeof fn === "function" ? fn : () => {};
+    };
+
+    const autosizeTextarea = (textarea) => {
+      if (!textarea) return;
+      const minHeight = 120;
+      const maxHeight = 360;
+      textarea.style.height = "auto";
+      const scroll = textarea.scrollHeight || minHeight;
+      const nextHeight = Math.max(minHeight, Math.min(maxHeight, scroll));
+      textarea.style.height = `${nextHeight}px`;
+      textarea.style.overflowY = scroll > maxHeight ? "auto" : "hidden";
     };
 
     const buildPhotoIndex = () => {
@@ -388,6 +400,7 @@
       state.checklistOverlay = { ...state.checklistOverlay, ...source };
       const activeIndustry = state.checklistOverlay.industryFilter || "";
       const activeCategory = state.checklistOverlay.categoryFilter || "";
+      const searchQuery = normalizeChecklistText(state.checklistOverlay.searchQuery || "");
       const items = Array.isArray(source.items) ? source.items : [];
       const filteredItems = items.filter((item) => {
         if (activeCategory) {
@@ -395,6 +408,10 @@
         }
         if (activeIndustry) {
           if (!item.industries?.includes(activeIndustry)) return false;
+        }
+        if (searchQuery) {
+          const title = normalizeChecklistText(formatChecklistTitle(item));
+          if (!title.includes(searchQuery)) return false;
         }
         return true;
       });
@@ -407,6 +424,23 @@
       if (checklistOverlayHint) {
         const hint = t("checklist_overlay_hint", "Click ⧉ to copy “Siehe auch: … [link]”.");
         checklistOverlayHint.textContent = hint;
+      }
+      if (checklistSearchEl) {
+        if (!checklistSearchEl.dataset.bound) {
+          checklistSearchEl.addEventListener("input", () => {
+            state.checklistOverlay.searchQuery = checklistSearchEl.value || "";
+            renderChecklistOverlay();
+          });
+          checklistSearchEl.addEventListener("keydown", (event) => {
+            if (event.key !== "Escape") return;
+            if (!checklistSearchEl.value) return;
+            checklistSearchEl.value = "";
+            state.checklistOverlay.searchQuery = "";
+            renderChecklistOverlay();
+          });
+          checklistSearchEl.dataset.bound = "1";
+        }
+        checklistSearchEl.value = state.checklistOverlay.searchQuery || "";
       }
       if (checklistFiltersEl) {
         checklistFiltersEl.innerHTML = "";
@@ -792,14 +826,6 @@
       findingLabel.textContent = "Finding";
       findingLabel.appendChild(createMarkdownHint());
 
-      const findingToggle = createToggle("Override", ws.useFindingOverride, (checked) => {
-        ws.useFindingOverride = checked;
-        if (ws.useFindingOverride && !ws.findingOverride) {
-          ws.findingOverride = stateHelpers.toText(row.master?.finding);
-        }
-        scheduleAutosave();
-        renderRows();
-      });
       const includeToggle = createToggle("Include", ws.includeFinding, (checked) => {
         ws.includeFinding = checked;
         scheduleAutosave();
@@ -813,17 +839,17 @@
 
       const findingControls = document.createElement("div");
       findingControls.className = "field-controls";
-      findingControls.appendChild(findingToggle);
       findingControls.appendChild(includeToggle);
       findingControls.appendChild(doneToggle);
 
       const findingArea = document.createElement("textarea");
       findingArea.value = stateHelpers.getFindingText(row);
-      findingArea.disabled = !ws.useFindingOverride;
       findingArea.addEventListener("input", () => {
-        ws.findingOverride = findingArea.value;
+        ws.findingText = findingArea.value;
         scheduleAutosave();
+        autosizeTextarea(findingArea);
       });
+      requestAnimationFrame(() => autosizeTextarea(findingArea));
 
       findingHeader.appendChild(findingLabel);
       findingHeader.appendChild(findingControls);
@@ -861,20 +887,9 @@
         levelGroup.appendChild(label);
       });
 
-      const levelKey = String(ws.selectedLevel);
-      const overrideToggle = createToggle("Override", !!ws.useLevelOverride?.[levelKey], (checked) => {
-        ws.useLevelOverride[levelKey] = checked;
-        if (ws.useLevelOverride[levelKey] && !ws.levelOverrides[levelKey]) {
-          ws.levelOverrides[levelKey] = stateHelpers.toText(row.master?.levels?.[levelKey]);
-        }
-        scheduleAutosave();
-        renderRows();
-      });
-
       const recControls = document.createElement("div");
       recControls.className = "field-controls";
       recControls.appendChild(levelGroup);
-      recControls.appendChild(overrideToggle);
 
       const libraryGroup = document.createElement("div");
       libraryGroup.className = "library-group";
@@ -890,55 +905,53 @@
         const button = document.createElement("button");
         button.type = "button";
         button.textContent = option.label;
-        if ((ws.libraryActions?.[levelKey] || "off") === option.key) {
+        if ((ws.libraryAction || "off") === option.key) {
           button.classList.add("is-active");
         }
         button.addEventListener("click", () => {
-          ws.libraryActions[levelKey] = option.key;
+          ws.libraryAction = option.key;
           scheduleAutosave();
           renderRows();
         });
         libraryGroup.appendChild(button);
       });
 
-      const levelOverrideInput = document.createElement("textarea");
-      const levelText = stateHelpers.getRecommendationText(row, levelKey);
-      levelOverrideInput.value = levelText;
-      levelOverrideInput.disabled = !ws.useLevelOverride[levelKey];
-      levelOverrideInput.addEventListener("input", () => {
-        ws.levelOverrides[levelKey] = levelOverrideInput.value;
+      const recommendationInput = document.createElement("textarea");
+      const recommendationText = stateHelpers.getRecommendationText(row);
+      recommendationInput.value = recommendationText;
+      recommendationInput.addEventListener("input", () => {
+        ws.recommendationText = recommendationInput.value;
         scheduleAutosave();
+        autosizeTextarea(recommendationInput);
       });
+      requestAnimationFrame(() => autosizeTextarea(recommendationInput));
 
       recHeader.appendChild(recLabel);
       recHeader.appendChild(recControls);
       recHeader.appendChild(libraryGroup);
       recField.appendChild(recHeader);
-      recField.appendChild(levelOverrideInput);
+      recField.appendChild(recommendationInput);
       return recField;
     };
 
     const createPreviewPanel = (row, ws, previewBtn) => {
       const preview = document.createElement("div");
       preview.className = "row-preview";
-      const findingText = ws.useFindingOverride ? ws.findingOverride : row.master?.finding;
-      const levelKey = String(ws.selectedLevel);
-      const recommendation = ws.useLevelOverride?.[levelKey]
-        ? ws.levelOverrides?.[levelKey]
-        : row.master?.levels?.[levelKey];
+      const findingText = stateHelpers.getFindingText(row);
+      const recommendation = stateHelpers.getRecommendationText(row);
 
       const findingCol = document.createElement("div");
       findingCol.className = "row-preview__col";
       findingCol.innerHTML = [
         `<strong>${escapeHtml(t("preview_finding", "Finding"))}</strong>`,
-        `<p>${markdownToHtml(findingText || "")}</p>`,
+        `${markdownToHtml(findingText || "")}`,
       ].join("\n");
 
       const recCol = document.createElement("div");
       recCol.className = "row-preview__col";
       recCol.innerHTML = [
         `<strong>${escapeHtml(t("preview_recommendation", "Recommendation"))}</strong>`,
-        `<p>${markdownToHtml(recommendation || "")}</p>`,
+        `${markdownToHtml(recommendation || "")}`,
       ].join("\n");
 
       preview.appendChild(findingCol);
@@ -980,10 +993,14 @@
       const card = document.createElement("div");
       card.className = "row-card";
       const score = stateHelpers.calculateScore(row);
-      const photoTag = row.sectionId || row.id;
+      const isObservationRow = row.type === "field_observation";
+      const photoKind = isObservationRow ? "observations" : "report";
+      const photoTag = isObservationRow
+        ? (row.tag || row.titleOverride || row.id)
+        : (row.sectionId || row.id);
       const showPhotoPill = row.type !== "summary" && !options.hidePhotoPill;
       const headerPayload = createRowHeader(row, score, {
-        photoPill: showPhotoPill ? createPhotoPill(photoTag) : null,
+        photoPill: showPhotoPill ? createPhotoPill(photoTag, photoKind) : null,
         reorderControls: options.reorderControls,
         displayId: options.displayId,
       });

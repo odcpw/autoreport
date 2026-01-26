@@ -136,9 +136,11 @@ body {
 .row-meta {
   flex: 1 1 auto;
   min-width: 0;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  white-space: normal;
+  overflow: visible;
+  text-overflow: clip;
+  overflow-wrap: anywhere;
+  line-height: 1.35;
 }
 
 .row-header__right {
@@ -557,6 +559,21 @@ textarea[disabled] {
 .checklist-overlay__hint {
   font-size: 0.85rem;
   color: #6c7780;
+}
+
+.checklist-search {
+  display: flex;
+  align-items: center;
+}
+
+.checklist-search input {
+  width: 100%;
+  border-radius: 10px;
+  border: 1px solid #d7d0c7;
+  padding: 8px 10px;
+  font-size: 0.9rem;
+  font-family: "Segoe UI", system-ui, sans-serif;
+  background: #fff;
 }
 
 .checklist-overlay__filters {

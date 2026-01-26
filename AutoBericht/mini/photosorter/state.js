@@ -111,6 +111,7 @@
     layoutMode,
     currentPhotoUrl: "",
     currentPhotoToken: 0,
+    showTagCounts: false,
   });
 
   const createRuntime = () => ({

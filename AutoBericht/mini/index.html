@@ -17,12 +17,7 @@
       <div class="actions">
         <button id="open-settings" class="ghost" title="Settings">⚙</button>
         <button id="pick-folder">Open Project Folder</button>
-        <button id="load-sidecar" disabled>Load sidecar</button>
         <button id="save-sidecar" disabled>Save sidecar</button>
-        <button id="import-self" disabled>Import Selbstbeurteilung</button>
-        <button id="load-seeds" disabled>Load seed data</button>
-        <button id="open-spider" disabled>Edit Spider</button>
-        <button id="save-log">Save debug log</button>
       </div>
     </header>
 
@@ -90,6 +85,11 @@
             </label>
             <div class="settings-hint" id="settings-library-hint"></div>
           </div>
+          <div class="modal__actions settings-actions">
+            <button id="import-self" type="button" disabled>Import Selbstbeurteilung</button>
+            <button id="open-spider" type="button" class="ghost" disabled>Edit Spider</button>
+            <button id="save-log" type="button" class="ghost">Save debug log</button>
+          </div>
           <div class="modal__actions">
             <button id="generate-library" type="button">Generate / Update Library</button>
             <button id="save-settings" type="button" class="ghost">Save settings</button>
@@ -124,6 +124,9 @@
         </div>
         <div class="checklist-overlay__body">
           <div class="checklist-overlay__hint" id="checklist-overlay-hint"></div>
+          <div class="checklist-search">
+            <input id="checklist-search" type="search" placeholder="Search checklists..." aria-label="Search checklists" />
+          </div>
           <div class="checklist-overlay__filters" id="checklist-filters"></div>
           <div class="checklist-overlay__list" id="checklist-list"></div>
         </div>
@@ -159,6 +162,34 @@
         <div class="modal__actions">
           <button id="spider-save" type="button">Save overrides</button>
           <button id="spider-cancel" type="button" class="ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="first-run-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
+        <div class="modal__header">
+          <h3 id="first-run-title">Select project folder</h3>
+        </div>
+        <div class="modal__body">
+          <p>Pick the project folder to start. This folder will store the project_sidecar.json file.</p>
+          <div class="modal__actions">
+            <button id="first-run-pick" type="button">Open Project Folder</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="library-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="library-title">
+        <div class="modal__header">
+          <h3 id="library-title">Choose a library</h3>
+        </div>
+        <div class="modal__body">
+          <p>Multiple library files were found. Pick the one that matches this project.</p>
+          <div class="library-list" id="library-list"></div>
         </div>
       </div>
     </div>

@@ -19,6 +19,13 @@ This document tracks the **redesign** direction (2026).
 - I18n scaffold added (markdown tooltip wired; locale set from project meta).
 - Shared debug log exporter is available across UI pages.
 - File System Access + SheetJS spike exists in `AutoBericht/experiments/`.
+- Seed recommendation guidance locked in `docs/research_recommendations/seed_prompt_template_v4.md` (natural prose, standalone paragraphs).
+- Chapter 1 recommendations generated via Claude (one finding at a time) and written to `docs/research_recommendations/chapter1_recommendations_v5.md`.
+- Chapter 1 recommendations applied to `AutoBericht/data/seed/knowledge_base_de.json` (library entries 1.1.1–1.5.7 updated).
+- Chapters 2–14 recommendations generated via Claude and applied to `AutoBericht/data/seed/knowledge_base_de.json` (QA pass enforces 4 paragraphs, 6–9 sentences per paragraph).
+- Chapter 11 recommendations generated in DE and applied to `AutoBericht/data/seed/knowledge_base_de.json` (4 paragraphs, 6–9 sentences each).
+- FR-CH translation completed and applied to `AutoBericht/data/seed/knowledge_base_fr.json` (library aligned to DE; 261 entries).
+- IT-CH translation completed and applied to `AutoBericht/data/seed/knowledge_base_it.json` (library aligned to DE; 261 entries).
 
 ## Target End-to-End Flow
 
@@ -35,3 +42,4 @@ This document tracks the **redesign** direction (2026).
 - [ ] Meta token replacement in Word (company, companyId, author, etc.).
 - [ ] Spider/radar data export (per‑chapter scores).
 - [x] No File System Access fallback (removed by design).
+- [ ] Continue progressive seed updates for chapters 2–14 using the v4 prompt.

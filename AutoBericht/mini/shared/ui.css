@@ -199,6 +199,36 @@ button.ghost {
   flex-wrap: wrap;
 }
 
+.settings-actions {
+  justify-content: flex-start;
+}
+
+.settings-section {
+  display: grid;
+  gap: 8px;
+}
+
+.settings-section h3 {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+.settings-section p {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #5b6670;
+}
+
+.library-list {
+  display: grid;
+  gap: 8px;
+}
+
+.library-list button {
+  text-align: left;
+  justify-content: flex-start;
+}
+
 .spider-table-wrapper {
   overflow-x: auto;
 }

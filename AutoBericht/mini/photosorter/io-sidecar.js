@@ -1,7 +1,9 @@
 (() => {
   const init = (ctx, deps) => {
-    const { state, runtime, setStatus, debug } = ctx;
+    const { state, runtime, setStatus, debug, elements } = ctx;
     const { tagsApi, photosApi, i18n } = deps;
+    const seeds = window.AutoBerichtSeeds || {};
+    const normalizeHelpers = window.AutoBerichtNormalize || {};
 
     const createEmptyProjectDoc = () => ({
       meta: {
@@ -49,15 +51,54 @@
       return JSON.parse(await file.text());
     };
 
-    const findLibraryFileHandle = async () => {
-      if (!state.projectHandle?.entries) return null;
+    const isLibraryFileName = (name) => (
+      typeof name === "string"
+      && name.startsWith("library_user_")
+      && name.endsWith(".json")
+      && !/_\d{4}-\d{2}-\d{2}/.test(name)
+    );
+
+    const listLibraryFiles = async () => {
+      if (!state.projectHandle?.entries) return [];
+      const matches = [];
       for await (const [name, handle] of state.projectHandle.entries()) {
         if (handle.kind !== "file") continue;
-        if (!name.startsWith("library_user_") || !name.endsWith(".json")) continue;
-        if (/_\d{4}-\d{2}-\d{2}/.test(name)) continue;
-        return handle;
+        if (!isLibraryFileName(name)) continue;
+        matches.push({ name, handle });
       }
-      return null;
+      matches.sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+      return matches;
+    };
+
+    const setLibraryModalVisible = (visible) => {
+      if (!elements?.libraryModal) return;
+      if (visible) {
+        elements.libraryModal.classList.add("is-open");
+        elements.libraryModal.setAttribute("aria-hidden", "false");
+      } else {
+        elements.libraryModal.classList.remove("is-open");
+        elements.libraryModal.setAttribute("aria-hidden", "true");
+      }
+    };
+
+    const pickLibraryFile = async (options) => {
+      if (!options?.length) return null;
+      if (options.length === 1) return options[0];
+      if (!elements?.libraryListEl) return options[0];
+      return new Promise((resolve) => {
+        elements.libraryListEl.innerHTML = "";
+        options.forEach((option) => {
+          const button = document.createElement("button");
+          button.type = "button";
+          button.textContent = option.name;
+          button.addEventListener("click", () => {
+            setLibraryModalVisible(false);
+            resolve(option);
+          });
+          elements.libraryListEl.appendChild(button);
+        });
+        setLibraryModalVisible(true);
+      });
     };
 
     const isValidKnowledgeBase = (data) => {
@@ -71,12 +112,15 @@
       // 1) User library in project root
       if (state.projectHandle) {
         try {
-          const libraryHandle = await findLibraryFileHandle();
-          if (libraryHandle) {
-            const file = await libraryHandle.getFile();
-            const parsed = JSON.parse(await file.text());
-            if (isValidKnowledgeBase(parsed)) return parsed;
-            debug.logLine("error", "User library is missing knowledge base schema.");
+          const options = await listLibraryFiles();
+          if (options.length) {
+            const picked = await pickLibraryFile(options);
+            if (picked) {
+              const file = await picked.handle.getFile();
+              const parsed = JSON.parse(await file.text());
+              if (isValidKnowledgeBase(parsed)) return parsed;
+              debug.logLine("error", "User library is missing knowledge base schema.");
+            }
           }
         } catch (err) {
           // ignore and try seed
@@ -150,42 +194,6 @@
       }
     };
 
-    const persistHandle = async (handle) => {
-      try {
-        await ctx.fs.saveHandle(handle);
-      } catch (err) {
-        debug.logLine("warn", `Failed to persist folder handle: ${err.message || err}`);
-      }
-    };
-
-    const loadPersistedHandle = async () => {
-      try {
-        return await ctx.fs.loadHandle();
-      } catch (err) {
-        return null;
-      }
-    };
-
-    const ensureHandlePermission = async (handle) => {
-      try {
-        return await ctx.fs.requestHandlePermission(handle);
-      } catch (err) {
-        return false;
-      }
-    };
-
-    const restoreLastHandle = async () => {
-      if (!window.showDirectoryPicker) return;
-      const handle = await loadPersistedHandle();
-      if (!handle) return;
-      const ok = await ensureHandlePermission(handle);
-      if (!ok) return;
-      state.projectHandle = handle;
-      setStatus(`Restored project folder: ${state.projectHandle.name}`);
-      debug.logLine("info", `Restored project folder: ${state.projectHandle.name}`);
-      await loadProjectSidecar();
-    };
-
     const fillMissingTagsFromSeed = async () => {
       if (state.tagOptions?.report?.length && state.tagOptions?.observations?.length && state.tagOptions?.training?.length) return;
       const knowledgeBase = await readKnowledgeBase();
@@ -229,6 +237,7 @@
         state.projectDoc = createEmptyProjectDoc();
         state.tagOptions = tagsApi.EMPTY_TAG_OPTIONS;
         const knowledgeBase = await readKnowledgeBase();
+        let reportProject = null;
         let statusMessage = "Sidecar not found; starting fresh.";
         if (knowledgeBase) {
           const nextOptions = tagsApi.ensureTagOptions(knowledgeBase.tags || {});
@@ -241,13 +250,25 @@
           state.tagOptions = nextOptions;
           state.projectDoc.photoTagOptions = structuredClone(nextOptions);
           await fillMissingTagsFromSeed();
+          if (seeds.buildProjectFromKnowledgeBase && normalizeHelpers.normalizeProject) {
+            try {
+              reportProject = seeds.buildProjectFromKnowledgeBase(knowledgeBase);
+              reportProject = normalizeHelpers.normalizeProject(reportProject, i18n.setLocale);
+            } catch (projectErr) {
+              debug.logLine("error", `Failed to build report project: ${projectErr.message || projectErr}`);
+            }
+          }
         } else {
           statusMessage = "Sidecar not found and knowledge base missing.";
           debug.logLine("error", "Knowledge base not found. Tags unavailable.");
         }
+        if (reportProject) {
+          state.sidecarDoc = { report: { project: reportProject } };
+        }
         state.photoRootName = "";
         setStatus(statusMessage);
         debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+        await saveProjectSidecar();
       }
       await setDefaultPhotoHandle();
       const didScan = await photosApi.maybeAutoScan();
@@ -273,6 +294,11 @@
           const existingText = await existingFile.text();
           existing = JSON.parse(existingText);
         } catch (err) {
+          if (err && err.name === "SyntaxError") {
+            setStatus("project_sidecar.json is corrupted. Fix it before saving.");
+            debug.logLine("error", `Sidecar parse failed: ${err.message || err}`);
+            return;
+          }
           existing = state.sidecarDoc;
         }
         const sidecar = existing && typeof existing === "object" ? structuredClone(existing) : {};
@@ -317,10 +343,6 @@
       getNestedDirectory,
       getDirectoryFromPath,
       setDefaultPhotoHandle,
-      persistHandle,
-      loadPersistedHandle,
-      ensureHandlePermission,
-      restoreLastHandle,
       loadProjectSidecar,
       saveProjectSidecar,
       scheduleAutosave,
