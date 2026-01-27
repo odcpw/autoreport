@@ -1044,11 +1044,13 @@
       renderChapterTitle(chapter);
       let rows = chapter.rows || [];
       let displayIds = new Map();
-      if (chapter.id === "4.8") {
+      if (chapter.id === "4.8" || chapter.id === "0") {
         rows = normalizeHelpers.orderObservationRows(chapter);
-        rows.forEach((row, index) => {
-          displayIds.set(row.id, `4.8.${index + 1}`);
-        });
+        if (chapter.id === "4.8") {
+          rows.forEach((row, index) => {
+            displayIds.set(row.id, `4.8.${index + 1}`);
+          });
+        }
       }
 
       rows.forEach((row) => {
@@ -1057,7 +1059,8 @@
           return;
         }
         const displayId = displayIds.get(row.id);
-        const reorderControls = chapter.id === "4.8" ? createReorderControls(chapter, row) : null;
+        const allowReorder = chapter.id === "4.8" || chapter.id === "0";
+        const reorderControls = allowReorder ? createReorderControls(chapter, row) : null;
         const card = createRowCard(row, { chapter, displayId, reorderControls });
         if (card) rowsEl.appendChild(card);
       });

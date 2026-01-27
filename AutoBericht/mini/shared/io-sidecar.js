@@ -16,11 +16,31 @@
       return null;
     };
 
+    const reorderChapterRows = (project, chapterId) => {
+      if (!project?.chapters) return;
+      const chapter = project.chapters.find((item) => item.id === chapterId);
+      if (!chapter || !Array.isArray(chapter.meta?.order)) return;
+      const rows = (chapter.rows || []).filter((row) => row.kind !== "section");
+      const byId = new Map(rows.map((row) => [row.id, row]));
+      const ordered = [];
+      chapter.meta.order.forEach((id) => {
+        const match = byId.get(id);
+        if (match) ordered.push(match);
+      });
+      rows.forEach((row) => {
+        if (!ordered.includes(row)) ordered.push(row);
+      });
+      chapter.rows = ordered;
+    };
+
     const mergeSidecar = (baseDoc, project, spiderData) => {
       const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
       if (!merged.meta) merged.meta = {};
       merged.meta.updatedAt = new Date().toISOString();
-      merged.report = { project };
+      const projectCopy = structuredClone(project);
+      reorderChapterRows(projectCopy, "0");
+      reorderChapterRows(projectCopy, "4.8");
+      merged.report = { project: projectCopy };
       if (spiderData) merged.spider = spiderData;
       return merged;
     };
@@ -344,6 +364,58 @@
       output.library.entries = Array.from(entriesMap.values());
       output.tags = output.tags || { report: [], observations: [], training: [] };
 
+      const applySummaryOrder = () => {
+        const chapter = state.project.chapters.find((item) => item.id === "0");
+        if (!chapter || !Array.isArray(output.structure?.items)) return;
+        const order = chapter.meta?.order;
+        if (!Array.isArray(order) || !order.length) return;
+        const items = output.structure.items;
+        const summaryItems = items.filter((item) => {
+          const id = String(item?.id || "");
+          const chapterId = String(item?.chapter || "");
+          return id.startsWith("0.") || chapterId === "0";
+        });
+        const otherItems = items.filter((item) => !summaryItems.includes(item));
+        const byId = new Map(summaryItems.map((item) => [String(item.id || ""), item]));
+        const ordered = [];
+        order.forEach((id) => {
+          const item = byId.get(String(id));
+          if (item && !ordered.includes(item)) ordered.push(item);
+        });
+        summaryItems.forEach((item) => {
+          if (!ordered.includes(item)) ordered.push(item);
+        });
+        output.structure.items = [...ordered, ...otherItems];
+      };
+
+      const applyObservationTagOrder = () => {
+        const chapter = state.project.chapters.find((item) => item.id === "4.8");
+        if (!chapter || !Array.isArray(output.tags?.observations)) return;
+        const order = chapter.meta?.order;
+        if (!Array.isArray(order) || !order.length) return;
+        const tags = output.tags.observations;
+        const byKey = new Map();
+        tags.forEach((tag) => {
+          const value = String(tag?.value || tag?.label || "").trim();
+          const label = String(tag?.label || tag?.value || "").trim();
+          if (value) byKey.set(value, tag);
+          if (label) byKey.set(label, tag);
+        });
+        const ordered = [];
+        order.forEach((rowId) => {
+          const row = (chapter.rows || []).find((r) => r.id === rowId);
+          if (!row) return;
+          const key = String(row.tag || row.titleOverride || "").trim();
+          if (!key) return;
+          const tag = byKey.get(key);
+          if (tag && !ordered.includes(tag)) ordered.push(tag);
+        });
+        tags.forEach((tag) => {
+          if (!ordered.includes(tag)) ordered.push(tag);
+        });
+        output.tags.observations = ordered;
+      };
+
       let latestSidecar = runtime.sidecarDoc;
       try {
         const existingHandle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
@@ -359,6 +431,9 @@
         output.tags.observations = normalizedTags.observations || output.tags.observations || [];
         output.tags.training = normalizedTags.training || output.tags.training || [];
       }
+
+      applySummaryOrder();
+      applyObservationTagOrder();
 
       await saveLibraryFile(output, timestamp);
       await saveSidecar();

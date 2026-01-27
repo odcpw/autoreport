@@ -58,12 +58,9 @@ Public Sub ImportChapter0Summary()
     End If
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkInsertRange("Chapter0_start", "Chapter0_end", "")
+    Set insertRng = ResolveChapterMarkerRange("0")
     If insertRng Is Nothing Then
-        Set insertRng = ResolveInsertRange("Chapter0")
-    End If
-    If insertRng Is Nothing Then
-        MsgBox "Bookmark range 'Chapter0_start'/'Chapter0_end' not found.", vbExclamation
+        InsertMissingChapterTextBox "0"
         Exit Sub
     End If
     LogDebug "ImportChapter0Summary: insert range " & insertRng.Start & "-" & insertRng.End
@@ -133,7 +130,7 @@ Public Sub ImportChapterDialog()
     If chapterId = "0" Then
         ImportChapter0Summary
     Else
-        ImportChapterTable chapterId, BuildStartBookmark(chapterId), BuildEndBookmark(chapterId)
+        ImportChapterTable chapterId
     End If
 End Sub
 
@@ -146,19 +143,11 @@ Public Sub ImportChapterAll()
         Dim cid As String
         cid = Trim$(ids(i))
         If cid <> "0" Then
-            ImportChapterTable cid, BuildStartBookmark(cid), BuildEndBookmark(cid)
+            ImportChapterTable cid
         End If
     Next i
     SaveReportAsFromSidecar
 End Sub
-
-Private Function BuildStartBookmark(ByVal chapterId As String) As String
-    BuildStartBookmark = Replace$("Chapter" & chapterId & "_start", ".", "_")
-End Function
-
-Private Function BuildEndBookmark(ByVal chapterId As String) As String
-    BuildEndBookmark = Replace$("Chapter" & chapterId & "_end", ".", "_")
-End Function
 
 Private Function PromptChapterId(ByVal prompt As String) As String
     Dim userChoice As String
@@ -184,7 +173,7 @@ Private Function IsValidChapterId(ByVal chapterId As String) As Boolean
     Next i
 End Function
 
-Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As String, ByVal endBm As String)
+Private Sub ImportChapterTable(ByVal chapterId As String)
     LogDebug "ImportChapterTable: start " & chapterId
     Dim jsonPath As String
     jsonPath = ResolveSidecarPath()
@@ -234,12 +223,9 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     LogDebug "ImportChapterTable: chapterId=" & chapterId
 
     Dim insertRng As Range
-    Set insertRng = ResolveBookmarkInsertRange(startBm, endBm, "")
+    Set insertRng = ResolveChapterMarkerRange(chapterId)
     If insertRng Is Nothing Then
-        Set insertRng = ResolveInsertRange(Replace$("Chapter" & chapterId, ".", "_"))
-    End If
-    If insertRng Is Nothing Then
-        MsgBox "Bookmark range '" & startBm & "' / '" & endBm & "' not found.", vbExclamation
+        InsertMissingChapterTextBox chapterId
         Exit Sub
     End If
     LogDebug "ImportChapterTable: insert range " & insertRng.Start & "-" & insertRng.End
@@ -396,7 +382,6 @@ Private Sub ImportChapterTable(ByVal chapterId As String, ByVal startBm As Strin
     Next h
 
     LogDebug "ImportChapterTable: done"
-    ResetTableBookmarks startBm, endBm, tbl
 End Sub
 
 Public Sub InsertLogos()
@@ -860,6 +845,50 @@ Private Function ResolveInsertRange(ByVal anchorName As String) As Range
     Set targetPara = blankPara.Next
     Set ResolveInsertRange = targetPara.Range
 End Function
+
+Private Function ResolveChapterMarkerRange(ByVal chapterId As String) As Range
+    Dim marker As String
+    marker = "CHAPTER" & chapterId & "$$"
+    Dim markerRange As Range
+    Set markerRange = FindMarkerRange(marker)
+    If markerRange Is Nothing Then Exit Function
+
+    markerRange.Text = ""
+    markerRange.Collapse wdCollapseStart
+
+    If markerRange.Information(wdWithInTable) Then
+        markerRange = markerRange.Paragraphs(1).Range
+        markerRange.Collapse wdCollapseEnd
+        markerRange.InsertParagraphAfter
+        markerRange.Collapse wdCollapseEnd
+    End If
+
+    Set ResolveChapterMarkerRange = markerRange
+End Function
+
+Private Sub InsertMissingChapterTextBox(ByVal chapterId As String)
+    Static missingCount As Long
+    missingCount = missingCount + 1
+
+    Dim msg As String
+    msg = "Chapter " & chapterId & " is missing (CHAPTER" & chapterId & "$$)."
+
+    Dim leftPos As Single
+    Dim topPos As Single
+    leftPos = 20
+    topPos = 20 + (missingCount - 1) * 36
+
+    Dim shp As Shape
+    Set shp = ActiveDocument.Shapes.AddTextbox(msoTextOrientationHorizontal, leftPos, topPos, 420, 24)
+    With shp.TextFrame.TextRange
+        .Text = msg
+        .Font.Size = 10
+        .Font.Bold = True
+        .Font.Color = RGB(180, 60, 40)
+    End With
+    shp.Fill.ForeColor.RGB = RGB(255, 240, 235)
+    shp.Line.ForeColor.RGB = RGB(200, 120, 90)
+End Sub
 
 Private Function ResolveBookmarkInsertRange(ByVal startName As String, ByVal endName As String, ByVal markerText As String) As Range
     Dim bmStart As Bookmark

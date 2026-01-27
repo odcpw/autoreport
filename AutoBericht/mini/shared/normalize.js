@@ -115,34 +115,55 @@
     if (!project?.chapters) return project;
     const hasSummary = project.chapters.some((chapter) => chapter.id === "0");
     if (!hasSummary) {
+      const rows = Array.from({ length: 8 }).map((_, index) => ({
+        id: `0.${index + 1}`,
+        type: "summary",
+        titleOverride: "",
+        master: {
+          finding: "",
+          recommendation: "",
+        },
+        customer: {
+          answer: null,
+          remark: "",
+          items: [],
+        },
+        workstate: {
+          selectedLevel: 1,
+          includeFinding: true,
+          includeRecommendation: true,
+          done: false,
+          findingText: "",
+          recommendationText: "",
+          libraryAction: "off",
+          libraryHash: "",
+        },
+      }));
       project.chapters.unshift({
         id: "0",
         title: { de: "Management Summary" },
-        rows: Array.from({ length: 8 }).map((_, index) => ({
-          id: `0.${index + 1}`,
-          type: "summary",
-          titleOverride: "",
-          master: {
-            finding: "",
-            recommendation: "",
-          },
-          customer: {
-            answer: null,
-            remark: "",
-            items: [],
-          },
-          workstate: {
-            selectedLevel: 1,
-            includeFinding: true,
-            includeRecommendation: true,
-            done: false,
-            findingText: "",
-            recommendationText: "",
-            libraryAction: "off",
-            libraryHash: "",
-          },
-        })),
+        rows,
+        meta: {
+          order: rows.map((row) => row.id),
+        },
       });
+    }
+    const summaryChapter = project.chapters.find((chapter) => chapter.id === "0");
+    if (summaryChapter) {
+      summaryChapter.meta = summaryChapter.meta || {};
+      if (!Array.isArray(summaryChapter.meta.order)) {
+        summaryChapter.meta.order = (summaryChapter.rows || [])
+          .filter((row) => row.kind !== "section")
+          .map((row) => row.id);
+      } else {
+        const order = summaryChapter.meta.order
+          .filter((id) => (summaryChapter.rows || []).some((row) => row.id === id));
+        (summaryChapter.rows || []).forEach((row) => {
+          if (row.kind === "section") return;
+          if (!order.includes(row.id)) order.push(row.id);
+        });
+        summaryChapter.meta.order = order;
+      }
     }
     project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
     return project;
