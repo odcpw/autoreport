@@ -198,6 +198,7 @@
             getNestedDirectory: ioApi.getNestedDirectory,
             setStatus,
             photos: state.photos,
+            tagOptions: state.tagOptions,
           });
           if (result?.count !== undefined) {
             const copyCount = result.copyCount;

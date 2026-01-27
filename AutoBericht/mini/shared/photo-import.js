@@ -385,6 +385,7 @@
       projectHandle,
       setStatus,
       photos,
+      tagOptions,
     } = context || {};
     if (!projectHandle) throw new Error("Project folder is missing.");
     if (!Array.isArray(photos) || !photos.length) {
@@ -392,9 +393,25 @@
     }
 
     setStatus?.("Preparing export...");
+    const labelMap = new Map();
+    const addOptionsToLabelMap = (options = []) => {
+      options.forEach((opt) => {
+        if (!opt) return;
+        const value = String(opt.value || opt.label || "").trim();
+        const label = String(opt.label || opt.value || "").trim();
+        if (!value || !label) return;
+        if (!labelMap.has(value)) labelMap.set(value, label);
+      });
+    };
+    addOptionsToLabelMap(tagOptions?.report);
+    addOptionsToLabelMap(tagOptions?.observations);
+    addOptionsToLabelMap(tagOptions?.training);
+
     const tagMap = new Map();
     const addPhotoToTag = (tag, photo) => {
-      const key = String(tag || "").trim();
+      const raw = String(tag || "").trim();
+      if (!raw) return;
+      const key = labelMap.get(raw) || raw;
       if (!key) return;
       if (!tagMap.has(key)) tagMap.set(key, []);
       tagMap.get(key).push(photo);
