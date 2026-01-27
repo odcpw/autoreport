@@ -216,6 +216,80 @@
     }
   };
 
+  const sanitizeFolderName = (value) => {
+    const cleaned = String(value || "")
+      .trim()
+      .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "_")
+      .replace(/[.\s]+$/g, "");
+    return cleaned || "tag";
+  };
+
+  const ensureUniqueFileName = async (dirHandle, fileName) => {
+    if (!(await fileExists(dirHandle, fileName))) return fileName;
+    const dot = fileName.lastIndexOf(".");
+    const stem = dot === -1 ? fileName : fileName.slice(0, dot);
+    const ext = dot === -1 ? "" : fileName.slice(dot);
+    let counter = 1;
+    while (counter < 1000) {
+      const nextName = `${stem}-${counter}${ext}`;
+      if (!(await fileExists(dirHandle, nextName))) return nextName;
+      counter += 1;
+    }
+    return `${stem}-${Date.now()}${ext}`;
+  };
+
+  const getPhotoFile = async (photo) => {
+    if (!photo) return null;
+    if (photo.file) return photo.file;
+    if (photo.fileHandle) return photo.fileHandle.getFile();
+    return null;
+  };
+
+  const getPhotoFileName = (photo) => {
+    if (!photo) return "photo.jpg";
+    if (photo.file?.name) return photo.file.name;
+    if (photo.fileHandle?.name) return photo.fileHandle.name;
+    if (photo.path) {
+      const parts = String(photo.path).split("/");
+      return parts[parts.length - 1] || "photo.jpg";
+    }
+    return "photo.jpg";
+  };
+
+  const findPhotosRoot = async (projectHandle) => {
+    try {
+      const handle = await projectHandle.getDirectoryHandle("photos");
+      return { handle, name: "photos" };
+    } catch (err) {
+      // ignore
+    }
+    try {
+      const handle = await projectHandle.getDirectoryHandle("Photos");
+      return { handle, name: "Photos" };
+    } catch (err) {
+      // ignore
+    }
+    const handle = await projectHandle.getDirectoryHandle("photos", { create: true });
+    return { handle, name: "photos" };
+  };
+
+  const findExportRoot = async (photosHandle) => {
+    try {
+      const handle = await photosHandle.getDirectoryHandle("export");
+      return { handle, name: "export" };
+    } catch (err) {
+      // ignore
+    }
+    try {
+      const handle = await photosHandle.getDirectoryHandle("Export");
+      return { handle, name: "Export" };
+    } catch (err) {
+      // ignore
+    }
+    const handle = await photosHandle.getDirectoryHandle("export", { create: true });
+    return { handle, name: "export" };
+  };
+
   const importRawPhotos = async (context) => {
     const {
       projectHandle,
@@ -281,7 +355,70 @@
     };
   };
 
+  const exportTaggedPhotos = async (context) => {
+    const {
+      projectHandle,
+      setStatus,
+      photos,
+    } = context || {};
+    if (!projectHandle) throw new Error("Project folder is missing.");
+    if (!Array.isArray(photos) || !photos.length) {
+      return { count: 0, exportRootName: "Photos/export" };
+    }
+
+    setStatus?.("Preparing export...");
+    const tagMap = new Map();
+    const addPhotoToTag = (tag, photo) => {
+      const key = String(tag || "").trim();
+      if (!key) return;
+      if (!tagMap.has(key)) tagMap.set(key, []);
+      tagMap.get(key).push(photo);
+    };
+
+    photos.forEach((photo) => {
+      const tags = photo?.tags || {};
+      const list = new Set([
+        ...(tags.report || []),
+        ...(tags.observations || []),
+        ...(tags.training || []),
+      ].map((tag) => String(tag || "").trim()).filter(Boolean));
+      if (!list.size) {
+        addPhotoToTag("unsorted", photo);
+      } else {
+        list.forEach((tag) => addPhotoToTag(tag, photo));
+      }
+    });
+
+    const { handle: photosHandle, name: photosName } = await findPhotosRoot(projectHandle);
+    const { handle: exportHandle, name: exportName } = await findExportRoot(photosHandle);
+    const exportRootName = `${photosName}/${exportName}`;
+
+    let total = 0;
+    for (const items of tagMap.values()) total += items.length;
+    let completed = 0;
+
+    for (const [tag, items] of tagMap.entries()) {
+      const folderName = sanitizeFolderName(tag);
+      const tagHandle = await exportHandle.getDirectoryHandle(folderName, { create: true });
+      for (const photo of items) {
+        const file = await getPhotoFile(photo);
+        if (!file) continue;
+        const rawName = getPhotoFileName(photo);
+        const safeName = await ensureUniqueFileName(tagHandle, rawName);
+        const target = await tagHandle.getFileHandle(safeName, { create: true });
+        const writable = await target.createWritable();
+        await writable.write(file);
+        await writable.close();
+        completed += 1;
+        setStatus?.(`Exporting photos ${completed}/${total}`);
+      }
+    }
+
+    return { count: completed, exportRootName };
+  };
+
   window.AutoBerichtPhotoImport = {
     importRawPhotos,
+    exportTaggedPhotos,
   };
 })();
