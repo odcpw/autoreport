@@ -229,6 +229,21 @@
       return runtime.saveQueue;
     };
 
+    const backupSidecar = async () => {
+      if (!runtime.dirHandle) return;
+      await saveSidecar();
+      const payload = runtime.sidecarDoc;
+      if (!payload) return;
+      const backupDir = await runtime.dirHandle.getDirectoryHandle("backup", { create: true });
+      const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
+      const filename = `project_sidecar_${timestamp}.json`;
+      const handle = await backupDir.getFileHandle(filename, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(JSON.stringify(payload, null, 2));
+      await writable.close();
+      debug.logLine("info", `Auto-backup saved: backup/${filename}`);
+    };
+
     const loadLibraryFile = async () => {
       if (!runtime.dirHandle) return null;
       const filename = stateHelpers.getLibraryFileName(state.project.meta || {});
@@ -360,6 +375,7 @@
       mergeSidecar,
       loadProjectFromFolder,
       saveSidecar,
+      backupSidecar,
       loadLibraryFile,
       saveLibraryFile,
       generateLibrary,

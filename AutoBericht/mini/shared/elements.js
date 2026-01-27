@@ -20,6 +20,7 @@
     settingsCompanyEl: document.getElementById("settings-company"),
     settingsCompanyIdEl: document.getElementById("settings-companyid"),
     settingsLocaleEl: document.getElementById("settings-locale"),
+    settingsBackupMinutesEl: document.getElementById("settings-backup-minutes"),
     settingsLibraryHintEl: document.getElementById("settings-library-hint"),
     statusEl: document.getElementById("status"),
     chapterListEl: document.getElementById("chapter-list"),

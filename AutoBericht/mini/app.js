@@ -29,6 +29,7 @@
     sidecarDoc: null,
     autosaveTimer: null,
     saveQueue: Promise.resolve(),
+    backupTimer: null,
   };
 
   const setStatus = (message) => {
@@ -105,6 +106,28 @@
     if (elements.openSpiderBtn) elements.openSpiderBtn.disabled = !enabled;
   };
 
+  const setAutoBackupMinutes = (minutes) => {
+    const value = Number(minutes);
+    const intervalMinutes = Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 30;
+    if (runtime.backupTimer) {
+      clearInterval(runtime.backupTimer);
+      runtime.backupTimer = null;
+    }
+    if (!runtime.dirHandle || intervalMinutes <= 0 || !ioApi.backupSidecar) return;
+    runtime.backupTimer = setInterval(async () => {
+      try {
+        await ioApi.backupSidecar();
+      } catch (err) {
+        debug.logLine("error", `Auto-backup failed: ${err.message || err}`);
+      }
+    }, intervalMinutes * 60 * 1000);
+  };
+
+  const applyAutoBackup = () => {
+    const minutes = state.project?.meta?.autobackupMinutes;
+    setAutoBackupMinutes(Number.isFinite(Number(minutes)) ? Number(minutes) : 30);
+  };
+
 
   const scheduleAutosave = () => {
     if (!runtime.dirHandle) return;
@@ -145,6 +168,7 @@
       enableActions,
       flushAutosave,
       setFirstRunVisible,
+      applyAutoBackup,
     });
   }
 
@@ -157,6 +181,7 @@
     runtime.dirHandle = saved;
     enableActions();
     await ioApi.loadProjectFromFolder();
+    applyAutoBackup();
     return true;
   };
 

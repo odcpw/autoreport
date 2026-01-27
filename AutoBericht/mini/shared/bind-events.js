@@ -11,6 +11,7 @@
       enableActions,
       flushAutosave,
       setFirstRunVisible,
+      applyAutoBackup,
     } = deps;
     const { elements, state, runtime, debug, setStatus, i18n } = ctx;
 
@@ -34,6 +35,7 @@
         const result = await ioApi.loadProjectFromFolder();
         if (result?.ok) {
           maybeOpenSettings(result);
+          if (applyAutoBackup) applyAutoBackup();
         } else if (setFirstRunVisible) {
           setFirstRunVisible(true);
         }
@@ -56,6 +58,7 @@
         const result = await ioApi.loadProjectFromFolder();
         if (result?.ok) {
           maybeOpenSettings(result);
+          if (applyAutoBackup) applyAutoBackup();
         }
       });
     }
@@ -127,6 +130,10 @@
       elements.settingsCompanyEl.value = state.project.meta?.company || "";
       elements.settingsCompanyIdEl.value = state.project.meta?.companyId || "";
       elements.settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
+      if (elements.settingsBackupMinutesEl) {
+        const minutes = Number(state.project.meta?.autobackupMinutes);
+        elements.settingsBackupMinutesEl.value = Number.isFinite(minutes) ? String(minutes) : "30";
+      }
       const libraryName = stateHelpers.getLibraryFileName(state.project.meta || {});
       if (elements.settingsLibraryHintEl) {
         elements.settingsLibraryHintEl.textContent = `Library file: ${libraryName} (timestamped backup on generate).`;
@@ -152,9 +159,15 @@
       state.project.meta.company = elements.settingsCompanyEl.value.trim();
       state.project.meta.companyId = elements.settingsCompanyIdEl.value.trim();
       state.project.meta.locale = elements.settingsLocaleEl.value || "de-CH";
+      if (elements.settingsBackupMinutesEl) {
+        const raw = Number(elements.settingsBackupMinutesEl.value);
+        const minutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
+        state.project.meta.autobackupMinutes = minutes;
+      }
       if (elements.settingsLibraryHintEl) {
         elements.settingsLibraryHintEl.textContent = `Library file: ${stateHelpers.getLibraryFileName(state.project.meta)} (timestamped backup on generate).`;
       }
+      if (applyAutoBackup) applyAutoBackup();
       if (runtime.dirHandle) {
         try {
           await ioApi.saveSidecar();

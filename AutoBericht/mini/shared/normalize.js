@@ -40,6 +40,7 @@
     if (!project.meta.moderatorInitials) project.meta.moderatorInitials = "";
     if (!project.meta.coModerator) project.meta.coModerator = "";
     if (!project.meta.coModeratorInitials) project.meta.coModeratorInitials = "";
+    if (project.meta.autobackupMinutes == null) project.meta.autobackupMinutes = 30;
     // keep legacy fields aligned for backward compatibility
     project.meta.author = project.meta.moderator;
     project.meta.initials = project.meta.moderatorInitials;
