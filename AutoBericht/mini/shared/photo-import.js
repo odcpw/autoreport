@@ -119,6 +119,23 @@
 
   const padSequence = (value) => String(value).padStart(4, "0");
 
+  const hasExistingResizedFiles = async (resizedHandle, isImageFile) => {
+    if (!resizedHandle?.values) return false;
+    for await (const entry of resizedHandle.values()) {
+      if (entry.kind !== "file") continue;
+      if (!isImageFile || isImageFile(entry.name)) return true;
+    }
+    return false;
+  };
+
+  const sortTasksByOwnerAndName = (tasks) => {
+    return tasks.sort((a, b) => {
+      const ownerCmp = String(a.owner).localeCompare(String(b.owner), "de", { numeric: true });
+      if (ownerCmp !== 0) return ownerCmp;
+      return String(a.file?.name || "").localeCompare(String(b.file?.name || ""), "de", { numeric: true });
+    });
+  };
+
   const resizePhoto = async (file, maxSize, quality) => {
     const image = await createImageBitmap(file);
     const longSide = Math.max(image.width, image.height);
@@ -225,20 +242,24 @@
       return null;
     }
     const resizedHandle = await ensureResizedFolder(projectHandle, getNestedDirectory);
+    if (await hasExistingResizedFiles(resizedHandle, isImageFile)) {
+      setStatus?.("Photos/resized is not empty. Clear it before importing to avoid breaking tags.");
+      return null;
+    }
     const counters = new Map();
     let completed = 0;
 
-    for (const task of tasks) {
+    const orderedTasks = sortTasksByOwnerAndName(tasks);
+    for (const task of orderedTasks) {
       const timestamp = formatTimestamp(await getPhotoTimestamp(task.file));
-      const counterKey = `${timestamp}_${task.owner}`;
-      let counter = counters.get(counterKey) || 1;
+      let counter = (counters.get(task.owner) || 0) + 1;
       let filename = "";
       while (true) {
         filename = `${timestamp}_${task.owner}_${padSequence(counter)}.jpg`;
         if (!(await fileExists(resizedHandle, filename))) break;
         counter += 1;
       }
-      counters.set(counterKey, counter + 1);
+      counters.set(task.owner, counter);
       const blob = await resizePhoto(task.file, resizeMax, resizeQuality);
       if (!blob) {
         throw new Error(`Failed to resize ${task.file.name}`);

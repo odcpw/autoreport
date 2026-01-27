@@ -817,7 +817,7 @@
       return wrapper;
     };
 
-    const createFindingField = (row, ws) => {
+    const createFindingField = (row, ws, onChange) => {
       const findingField = document.createElement("div");
       findingField.className = "field";
       const findingHeader = document.createElement("div");
@@ -848,6 +848,7 @@
         ws.findingText = findingArea.value;
         scheduleAutosave();
         autosizeTextarea(findingArea);
+        if (onChange) onChange();
       });
       requestAnimationFrame(() => autosizeTextarea(findingArea));
 
@@ -858,7 +859,7 @@
       return findingField;
     };
 
-    const createRecommendationField = (row, ws) => {
+    const createRecommendationField = (row, ws, onChange) => {
       const recField = document.createElement("div");
       recField.className = "field";
       const recHeader = document.createElement("div");
@@ -923,6 +924,7 @@
         ws.recommendationText = recommendationInput.value;
         scheduleAutosave();
         autosizeTextarea(recommendationInput);
+        if (onChange) onChange();
       });
       requestAnimationFrame(() => autosizeTextarea(recommendationInput));
 
@@ -934,30 +936,34 @@
       return recField;
     };
 
-    const createPreviewPanel = (row, ws, previewBtn) => {
+    const createPreviewPanel = (row, previewBtn) => {
       const preview = document.createElement("div");
       preview.className = "row-preview";
-      const findingText = stateHelpers.getFindingText(row);
-      const recommendation = stateHelpers.getRecommendationText(row);
 
       const findingCol = document.createElement("div");
       findingCol.className = "row-preview__col";
-      findingCol.innerHTML = [
-        `<strong>${escapeHtml(t("preview_finding", "Finding"))}</strong>`,
-        `${markdownToHtml(findingText || "")}`,
-      ].join("\n");
 
       const recCol = document.createElement("div");
       recCol.className = "row-preview__col";
-      recCol.innerHTML = [
-        `<strong>${escapeHtml(t("preview_recommendation", "Recommendation"))}</strong>`,
-        `${markdownToHtml(recommendation || "")}`,
-      ].join("\n");
 
       preview.appendChild(findingCol);
       preview.appendChild(recCol);
 
+      const renderPreview = () => {
+        const findingText = stateHelpers.getFindingText(row);
+        const recommendation = stateHelpers.getRecommendationText(row);
+        findingCol.innerHTML = [
+          `<strong>${escapeHtml(t("preview_finding", "Finding"))}</strong>`,
+          `${markdownToHtml(findingText || "")}`,
+        ].join("\n");
+        recCol.innerHTML = [
+          `<strong>${escapeHtml(t("preview_recommendation", "Recommendation"))}</strong>`,
+          `${markdownToHtml(recommendation || "")}`,
+        ].join("\n");
+      };
+
       const showPreview = () => {
+        renderPreview();
         preview.classList.add("is-visible");
       };
       const hidePreview = () => {
@@ -971,7 +977,12 @@
           showPreview();
         }
       });
-      return preview;
+      renderPreview();
+      return {
+        preview,
+        renderPreview,
+        isVisible: () => preview.classList.contains("is-visible"),
+      };
     };
 
     const shouldFilterRow = (row, ws) => {
@@ -1011,12 +1022,18 @@
       if (selfDetails) {
         card.appendChild(selfDetails);
       }
+      const previewPanel = createPreviewPanel(row, headerPayload.previewBtn);
+      const onChange = () => {
+        if (previewPanel.isVisible()) {
+          previewPanel.renderPreview();
+        }
+      };
       const rowBody = document.createElement("div");
       rowBody.className = "row-body";
-      rowBody.appendChild(createFindingField(row, ws));
-      rowBody.appendChild(createRecommendationField(row, ws));
+      rowBody.appendChild(createFindingField(row, ws, onChange));
+      rowBody.appendChild(createRecommendationField(row, ws, onChange));
       card.appendChild(rowBody);
-      card.appendChild(createPreviewPanel(row, ws, headerPayload.previewBtn));
+      card.appendChild(previewPanel.preview);
       return card;
     };
 

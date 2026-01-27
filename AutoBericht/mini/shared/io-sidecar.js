@@ -347,7 +347,11 @@
 
       await saveLibraryFile(output, timestamp);
       await saveSidecar();
-      setStatus(`Library updated (${applied} changes).`);
+      if (applied === 0) {
+        setStatus("Library updated (0 changes). Set Library to Append/Replace to include rows.");
+      } else {
+        setStatus(`Library updated (${applied} changes).`);
+      }
       debug.logLine("info", `Library updated (${applied} changes).`);
     };
 
