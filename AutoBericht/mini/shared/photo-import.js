@@ -238,10 +238,35 @@
     return `${stem}-${Date.now()}${ext}`;
   };
 
-  const getPhotoFile = async (photo) => {
+  const getFileHandleFromPath = async (projectHandle, path) => {
+    const parts = String(path || "")
+      .split("/")
+      .map((part) => part.trim())
+      .filter(Boolean);
+    if (!parts.length) return null;
+    let current = projectHandle;
+    for (let i = 0; i < parts.length - 1; i += 1) {
+      current = await current.getDirectoryHandle(parts[i]);
+    }
+    return current.getFileHandle(parts[parts.length - 1]);
+  };
+
+  const getPhotoFile = async (photo, projectHandle) => {
     if (!photo) return null;
-    if (photo.file) return photo.file;
-    if (photo.fileHandle) return photo.fileHandle.getFile();
+    try {
+      if (photo.file) return photo.file;
+      if (photo.fileHandle) return await photo.fileHandle.getFile();
+    } catch (err) {
+      // fall through to path lookup
+    }
+    if (projectHandle && photo.path) {
+      try {
+        const handle = await getFileHandleFromPath(projectHandle, photo.path);
+        if (handle) return await handle.getFile();
+      } catch (err) {
+        // ignore
+      }
+    }
     return null;
   };
 
@@ -375,7 +400,16 @@
       tagMap.get(key).push(photo);
     };
 
+    const isExportPath = (path) => {
+      const parts = String(path || "")
+        .split("/")
+        .map((part) => part.trim().toLowerCase())
+        .filter(Boolean);
+      return parts.includes("export");
+    };
+
     photos.forEach((photo) => {
+      if (isExportPath(photo?.path)) return;
       const tags = photo?.tags || {};
       const list = new Set([
         ...(tags.report || []),
@@ -393,15 +427,27 @@
     const { handle: exportHandle, name: exportName } = await findExportRoot(photosHandle);
     const exportRootName = `${photosName}/${exportName}`;
 
+    const uniquePhotos = new Set();
     let total = 0;
-    for (const items of tagMap.values()) total += items.length;
+    for (const items of tagMap.values()) {
+      total += items.length;
+      items.forEach((photo) => {
+        if (photo?.path) {
+          uniquePhotos.add(photo.path);
+        } else if (photo?.file?.name) {
+          uniquePhotos.add(photo.file.name);
+        } else if (photo?.fileHandle?.name) {
+          uniquePhotos.add(photo.fileHandle.name);
+        }
+      });
+    }
     let completed = 0;
 
     for (const [tag, items] of tagMap.entries()) {
       const folderName = sanitizeFolderName(tag);
       const tagHandle = await exportHandle.getDirectoryHandle(folderName, { create: true });
       for (const photo of items) {
-        const file = await getPhotoFile(photo);
+        const file = await getPhotoFile(photo, projectHandle);
         if (!file) continue;
         const rawName = getPhotoFileName(photo);
         const safeName = await ensureUniqueFileName(tagHandle, rawName);
@@ -414,7 +460,7 @@
       }
     }
 
-    return { count: completed, exportRootName };
+    return { count: uniquePhotos.size, copyCount: completed, exportRootName };
   };
 
   window.AutoBerichtPhotoImport = {

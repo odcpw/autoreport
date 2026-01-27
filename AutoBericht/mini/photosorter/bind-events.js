@@ -199,8 +199,12 @@
             setStatus,
             photos: state.photos,
           });
-          if (result?.count) {
-            setStatus(`Exported ${result.count} photos to ${result.exportRootName}`);
+          if (result?.count !== undefined) {
+            const copyCount = result.copyCount;
+            const label = copyCount && copyCount !== result.count
+              ? `${copyCount} copies (${result.count} photos)`
+              : `${result.count} photos`;
+            setStatus(`Exported ${label} to ${result.exportRootName}`);
           }
         } catch (err) {
           setStatus(`Export failed: ${err.message}`);
