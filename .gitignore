@@ -47,3 +47,9 @@ AutoBericht/AI/
 
 # Internal agent scratch
 .code/
+
+# Local-only development folders (do not publish)
+/Project_Test/
+/test/
+/tools/
+/sources/
