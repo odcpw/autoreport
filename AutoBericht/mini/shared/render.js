@@ -27,6 +27,13 @@
       chapterPreviewModal,
       chapterPreviewTitle,
       chapterPreviewBody,
+      observationsOrganizeModal,
+      observationsOrganizeSearchEl,
+      observationsOrganizeFiltersEl,
+      observationsOrganizeSortsEl,
+      observationsOrganizeStatusEl,
+      observationsOrganizeListEl,
+      observationsOrganizeApplyBtn,
     } = elements;
 
     let scheduleAutosave = () => {};
@@ -595,6 +602,386 @@
       checklistOverlayEl.setAttribute("aria-hidden", "true");
     };
 
+    const OBS_FILTER_OPTIONS = [
+      { key: "all", label: t("obs_filter_all", "All") },
+      { key: "with-photos", label: t("obs_filter_with_photos", "With Photos") },
+      { key: "no-photos", label: t("obs_filter_no_photos", "No Photos") },
+    ];
+
+    const OBS_SORT_OPTIONS = [
+      { key: "manual", label: t("obs_sort_manual", "Manual") },
+      { key: "count-desc", label: t("obs_sort_count_desc", "Count ↓") },
+      { key: "count-asc", label: t("obs_sort_count_asc", "Count ↑") },
+      { key: "alpha-asc", label: t("obs_sort_alpha_asc", "A-Z") },
+      { key: "alpha-desc", label: t("obs_sort_alpha_desc", "Z-A") },
+    ];
+
+    const observationsOrganizer = {
+      chapterId: "4.8",
+      baseOrder: [],
+      draftOrder: [],
+      filterMode: "all",
+      sortMode: "manual",
+      searchQuery: "",
+      draggingId: "",
+    };
+
+    const getChapterById = (chapterId) => (
+      (state.project?.chapters || []).find((chapter) => String(chapter?.id || "") === String(chapterId || ""))
+    );
+
+    const getObservationChapter = () => getChapterById("4.8");
+
+    const getObservationRows = (chapter) => {
+      if (!chapter) return [];
+      const ordered = normalizeHelpers.orderObservationRows(chapter);
+      return ordered.filter((row) => String(row?.kind || "").toLowerCase() !== "section");
+    };
+
+    const getObservationTagLabel = (row) => (
+      String(row?.tag || row?.titleOverride || row?.id || "").trim()
+    );
+
+    const getObservationPhotoCount = (row) => {
+      const tag = getObservationTagLabel(row);
+      if (!tag) return 0;
+      return getPhotosForTag(tag, "observations").length;
+    };
+
+    const normalizeOrganizerOrder = (order, rowMap) => {
+      const seen = new Set();
+      const normalized = [];
+      order.forEach((rowId) => {
+        const key = String(rowId || "");
+        if (!key || seen.has(key) || !rowMap.has(key)) return;
+        seen.add(key);
+        normalized.push(key);
+      });
+      rowMap.forEach((_, rowId) => {
+        if (seen.has(rowId)) return;
+        seen.add(rowId);
+        normalized.push(rowId);
+      });
+      return normalized;
+    };
+
+    const getObservationRowMap = () => {
+      const chapter = getObservationChapter();
+      const rowMap = new Map();
+      getObservationRows(chapter).forEach((row) => {
+        rowMap.set(String(row.id || ""), row);
+      });
+      return rowMap;
+    };
+
+    const compareText = (left, right) => String(left || "").localeCompare(String(right || ""), "de", { numeric: true, sensitivity: "base" });
+
+    const getSortedObservationIds = (sortMode = observationsOrganizer.sortMode) => {
+      const rowMap = getObservationRowMap();
+      const manualOrder = normalizeOrganizerOrder(observationsOrganizer.draftOrder, rowMap);
+      if (sortMode === "manual") return manualOrder;
+      const entries = manualOrder.map((rowId) => {
+        const row = rowMap.get(rowId);
+        return {
+          rowId,
+          title: getObservationTagLabel(row),
+          count: getObservationPhotoCount(row),
+        };
+      });
+      entries.sort((a, b) => {
+        if (sortMode === "count-desc") {
+          if (b.count !== a.count) return b.count - a.count;
+          const byTitle = compareText(a.title, b.title);
+          if (byTitle !== 0) return byTitle;
+          return compareText(a.rowId, b.rowId);
+        }
+        if (sortMode === "count-asc") {
+          if (a.count !== b.count) return a.count - b.count;
+          const byTitle = compareText(a.title, b.title);
+          if (byTitle !== 0) return byTitle;
+          return compareText(a.rowId, b.rowId);
+        }
+        if (sortMode === "alpha-desc") {
+          const byTitle = compareText(b.title, a.title);
+          if (byTitle !== 0) return byTitle;
+          return compareText(b.rowId, a.rowId);
+        }
+        const byTitle = compareText(a.title, b.title);
+        if (byTitle !== 0) return byTitle;
+        return compareText(a.rowId, b.rowId);
+      });
+      return entries.map((entry) => entry.rowId);
+    };
+
+    const getOrganizerApplyOrder = () => getSortedObservationIds(observationsOrganizer.sortMode);
+
+    const arraysEqual = (left, right) => {
+      if (left.length !== right.length) return false;
+      for (let i = 0; i < left.length; i += 1) {
+        if (left[i] !== right[i]) return false;
+      }
+      return true;
+    };
+
+    const hasObservationOrganizerChanges = () => {
+      const nextOrder = getOrganizerApplyOrder();
+      return !arraysEqual(nextOrder, observationsOrganizer.baseOrder);
+    };
+
+    const canManualReorderInOrganizer = () => (
+      observationsOrganizer.sortMode === "manual"
+      && observationsOrganizer.filterMode === "all"
+      && !String(observationsOrganizer.searchQuery || "").trim()
+    );
+
+    const moveObservationDraftRelative = (rowId, delta) => {
+      const key = String(rowId || "");
+      if (!key) return false;
+      const current = [...observationsOrganizer.draftOrder];
+      const index = current.indexOf(key);
+      if (index === -1) return false;
+      const next = index + delta;
+      if (next < 0 || next >= current.length) return false;
+      [current[index], current[next]] = [current[next], current[index]];
+      observationsOrganizer.draftOrder = current;
+      return true;
+    };
+
+    const moveObservationDraftBefore = (sourceId, targetId) => {
+      const source = String(sourceId || "");
+      const target = String(targetId || "");
+      if (!source || !target || source === target) return false;
+      const current = [...observationsOrganizer.draftOrder];
+      const sourceIdx = current.indexOf(source);
+      const targetIdx = current.indexOf(target);
+      if (sourceIdx === -1 || targetIdx === -1) return false;
+      current.splice(sourceIdx, 1);
+      const nextTargetIdx = current.indexOf(target);
+      current.splice(nextTargetIdx, 0, source);
+      observationsOrganizer.draftOrder = current;
+      return true;
+    };
+
+    const renderObservationsOrganizer = () => {
+      if (!observationsOrganizeModal || !observationsOrganizeListEl || !observationsOrganizeStatusEl) return;
+      const chapter = getObservationChapter();
+      if (!chapter) return;
+      const rowMap = getObservationRowMap();
+      observationsOrganizer.draftOrder = normalizeOrganizerOrder(observationsOrganizer.draftOrder, rowMap);
+      const orderedIds = getSortedObservationIds(observationsOrganizer.sortMode);
+      const rows = orderedIds.map((rowId) => ({
+        rowId,
+        row: rowMap.get(rowId),
+      })).filter((item) => !!item.row);
+
+      const filterMode = observationsOrganizer.filterMode || "all";
+      const searchNorm = String(observationsOrganizer.searchQuery || "").trim().toLowerCase();
+
+      const totalCount = rows.length;
+      const withPhotosCount = rows.filter((item) => getObservationPhotoCount(item.row) > 0).length;
+      const noPhotosCount = totalCount - withPhotosCount;
+
+      if (observationsOrganizeFiltersEl) {
+        observationsOrganizeFiltersEl.innerHTML = "";
+        OBS_FILTER_OPTIONS.forEach((option) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "organizer-pill";
+          if (filterMode === option.key) btn.classList.add("is-active");
+          const count = option.key === "with-photos"
+            ? withPhotosCount
+            : option.key === "no-photos"
+              ? noPhotosCount
+              : totalCount;
+          btn.textContent = `${option.label} ${count}`;
+          btn.addEventListener("click", () => {
+            observationsOrganizer.filterMode = option.key;
+            renderObservationsOrganizer();
+          });
+          observationsOrganizeFiltersEl.appendChild(btn);
+        });
+      }
+
+      if (observationsOrganizeSortsEl) {
+        observationsOrganizeSortsEl.innerHTML = "";
+        OBS_SORT_OPTIONS.forEach((option) => {
+          const btn = document.createElement("button");
+          btn.type = "button";
+          btn.className = "organizer-pill";
+          if (observationsOrganizer.sortMode === option.key) btn.classList.add("is-active");
+          btn.textContent = option.label;
+          btn.addEventListener("click", () => {
+            observationsOrganizer.sortMode = option.key;
+            renderObservationsOrganizer();
+          });
+          observationsOrganizeSortsEl.appendChild(btn);
+        });
+      }
+
+      const filteredRows = rows.filter((item) => {
+        const count = getObservationPhotoCount(item.row);
+        if (filterMode === "with-photos" && count <= 0) return false;
+        if (filterMode === "no-photos" && count > 0) return false;
+        if (searchNorm) {
+          const hay = getObservationTagLabel(item.row).toLowerCase();
+          if (!hay.includes(searchNorm)) return false;
+        }
+        return true;
+      });
+
+      const canReorder = canManualReorderInOrganizer();
+      observationsOrganizeListEl.innerHTML = "";
+      const listFragment = document.createDocumentFragment();
+
+      filteredRows.forEach((item) => {
+        const { rowId, row } = item;
+        const label = getObservationTagLabel(row) || rowId;
+        const photoCount = getObservationPhotoCount(row);
+        const draftIndex = observationsOrganizer.draftOrder.indexOf(rowId);
+
+        const entry = document.createElement("div");
+        entry.className = "organizer-row";
+        if (canReorder) {
+          entry.draggable = true;
+          entry.addEventListener("dragstart", () => {
+            observationsOrganizer.draggingId = rowId;
+            entry.classList.add("is-dragging");
+          });
+          entry.addEventListener("dragend", () => {
+            observationsOrganizer.draggingId = "";
+            entry.classList.remove("is-dragging");
+          });
+          entry.addEventListener("dragover", (event) => {
+            event.preventDefault();
+            entry.classList.add("is-drag-over");
+          });
+          entry.addEventListener("dragleave", () => {
+            entry.classList.remove("is-drag-over");
+          });
+          entry.addEventListener("drop", (event) => {
+            event.preventDefault();
+            entry.classList.remove("is-drag-over");
+            if (!observationsOrganizer.draggingId) return;
+            if (moveObservationDraftBefore(observationsOrganizer.draggingId, rowId)) {
+              observationsOrganizer.draggingId = "";
+              renderObservationsOrganizer();
+            }
+          });
+        }
+
+        const dragHandle = document.createElement("button");
+        dragHandle.type = "button";
+        dragHandle.className = "organizer-drag";
+        dragHandle.textContent = "↕";
+        dragHandle.disabled = !canReorder;
+        dragHandle.title = canReorder
+          ? t("obs_drag_title", "Drag to reorder")
+          : t("obs_drag_disabled_title", "Enable Manual + All + empty search to reorder");
+
+        const title = document.createElement("div");
+        title.className = "organizer-title";
+        title.textContent = label;
+
+        const count = document.createElement("span");
+        count.className = "organizer-count";
+        count.textContent = `${photoCount}`;
+        count.title = `${photoCount} photos`;
+
+        const actions = document.createElement("div");
+        actions.className = "organizer-actions";
+        const up = document.createElement("button");
+        up.type = "button";
+        up.className = "ghost";
+        up.textContent = "▲";
+        up.disabled = !canReorder || draftIndex <= 0;
+        up.addEventListener("click", () => {
+          if (moveObservationDraftRelative(rowId, -1)) renderObservationsOrganizer();
+        });
+        const down = document.createElement("button");
+        down.type = "button";
+        down.className = "ghost";
+        down.textContent = "▼";
+        down.disabled = !canReorder || draftIndex === -1 || draftIndex >= observationsOrganizer.draftOrder.length - 1;
+        down.addEventListener("click", () => {
+          if (moveObservationDraftRelative(rowId, 1)) renderObservationsOrganizer();
+        });
+        actions.appendChild(up);
+        actions.appendChild(down);
+
+        entry.appendChild(dragHandle);
+        entry.appendChild(title);
+        entry.appendChild(count);
+        entry.appendChild(actions);
+        listFragment.appendChild(entry);
+      });
+
+      observationsOrganizeListEl.appendChild(listFragment);
+
+      const pending = hasObservationOrganizerChanges();
+      const visibilityText = `${t("obs_showing", "Showing")} ${filteredRows.length} / ${totalCount}`;
+      const pendingText = pending
+        ? t("obs_pending", "Pending changes")
+        : t("obs_no_pending", "No pending changes");
+      const reorderHint = canReorder
+        ? t("obs_reorder_ready", "Reorder enabled")
+        : t("obs_reorder_limited", "Reorder requires Manual + All + empty search");
+      observationsOrganizeStatusEl.textContent = `${visibilityText} • ${pendingText} • ${reorderHint}`;
+      if (observationsOrganizeApplyBtn) {
+        observationsOrganizeApplyBtn.disabled = !pending;
+      }
+      if (observationsOrganizeSearchEl && observationsOrganizeSearchEl.value !== observationsOrganizer.searchQuery) {
+        observationsOrganizeSearchEl.value = observationsOrganizer.searchQuery;
+      }
+    };
+
+    const openObservationsOrganizer = (chapter) => {
+      const targetChapter = chapter && chapter.id === "4.8" ? chapter : getObservationChapter();
+      if (!observationsOrganizeModal || !targetChapter) return;
+      const rows = getObservationRows(targetChapter);
+      const baseOrder = rows.map((row) => String(row.id || ""));
+      observationsOrganizer.baseOrder = [...baseOrder];
+      observationsOrganizer.draftOrder = [...baseOrder];
+      observationsOrganizer.filterMode = "all";
+      observationsOrganizer.sortMode = "manual";
+      observationsOrganizer.searchQuery = "";
+      observationsOrganizer.draggingId = "";
+      renderObservationsOrganizer();
+      observationsOrganizeModal.classList.add("is-open");
+      observationsOrganizeModal.setAttribute("aria-hidden", "false");
+      if (observationsOrganizeSearchEl) observationsOrganizeSearchEl.focus();
+    };
+
+    const closeObservationsOrganizer = () => {
+      if (!observationsOrganizeModal) return;
+      observationsOrganizeModal.classList.remove("is-open");
+      observationsOrganizeModal.setAttribute("aria-hidden", "true");
+    };
+
+    const resetObservationsOrganizer = () => {
+      observationsOrganizer.draftOrder = [...observationsOrganizer.baseOrder];
+      observationsOrganizer.filterMode = "all";
+      observationsOrganizer.sortMode = "manual";
+      observationsOrganizer.searchQuery = "";
+      observationsOrganizer.draggingId = "";
+      renderObservationsOrganizer();
+    };
+
+    const setObservationsOrganizerSearch = (value) => {
+      observationsOrganizer.searchQuery = String(value || "");
+      renderObservationsOrganizer();
+    };
+
+    const applyObservationsOrganizer = () => {
+      const chapter = getObservationChapter();
+      if (!chapter) return;
+      const nextOrder = getOrganizerApplyOrder();
+      chapter.meta = chapter.meta || {};
+      chapter.meta.order = [...nextOrder];
+      scheduleAutosave();
+      renderRows();
+      closeObservationsOrganizer();
+    };
+
     const PREVIEW_COL1_WIDTH = 35;
     const PREVIEW_COL2_WIDTH = 58;
     const PREVIEW_COL3_WIDTH = 7;
@@ -790,13 +1177,13 @@
         id.textContent = entry.id || "";
         const findingText = document.createElement("div");
         findingText.className = "chapter-preview-text";
-        findingText.textContent = entry.finding || "";
+        findingText.innerHTML = markdownToHtml(entry.finding || "");
         finding.appendChild(id);
         finding.appendChild(findingText);
 
         const recommendation = document.createElement("td");
         recommendation.className = "chapter-preview-text";
-        recommendation.textContent = entry.recommendation || "";
+        recommendation.innerHTML = markdownToHtml(entry.recommendation || "");
 
         const prio = document.createElement("td");
         prio.className = "chapter-preview-table__prio";
@@ -899,6 +1286,18 @@
       });
       chapterTitleEl.appendChild(chapterPreviewBtn);
       if (chapter.id === "4.8") {
+        const organizeBtn = document.createElement("button");
+        organizeBtn.type = "button";
+        organizeBtn.className = "checklist-pill";
+        const organizeLabel = t("obs_organize_button", "Organize 4.8");
+        organizeBtn.textContent = `↕ ${organizeLabel}`;
+        organizeBtn.title = organizeLabel;
+        organizeBtn.setAttribute("aria-label", organizeLabel);
+        organizeBtn.addEventListener("click", () => {
+          openObservationsOrganizer(chapter);
+        });
+        chapterTitleEl.appendChild(organizeBtn);
+
         const checklistBtn = document.createElement("button");
         checklistBtn.type = "button";
         checklistBtn.className = "checklist-pill";
@@ -1354,6 +1753,10 @@
         const card = createRowCard(row, { chapter, displayId, reorderControls });
         if (card) rowsEl.appendChild(card);
       });
+
+      if (observationsOrganizeModal?.classList.contains("is-open")) {
+        renderObservationsOrganizer();
+      }
     };
 
     const render = () => {
@@ -1369,6 +1772,11 @@
       stepPhotoOverlay,
       openChecklistOverlay,
       closeChecklistOverlay,
+      openObservationsOrganizer,
+      closeObservationsOrganizer,
+      resetObservationsOrganizer,
+      applyObservationsOrganizer,
+      setObservationsOrganizerSearch,
       openChapterPreview,
       closeChapterPreview,
       renderChapterList,

@@ -249,6 +249,38 @@
         renderApi.closeChapterPreview();
       });
     }
+    if (elements.observationsOrganizeBackdrop) {
+      elements.observationsOrganizeBackdrop.addEventListener("click", () => {
+        if (renderApi.closeObservationsOrganizer) renderApi.closeObservationsOrganizer();
+      });
+    }
+    if (elements.observationsOrganizeCloseBtn) {
+      elements.observationsOrganizeCloseBtn.addEventListener("click", () => {
+        if (renderApi.closeObservationsOrganizer) renderApi.closeObservationsOrganizer();
+      });
+    }
+    if (elements.observationsOrganizeCancelBtn) {
+      elements.observationsOrganizeCancelBtn.addEventListener("click", () => {
+        if (renderApi.closeObservationsOrganizer) renderApi.closeObservationsOrganizer();
+      });
+    }
+    if (elements.observationsOrganizeResetBtn) {
+      elements.observationsOrganizeResetBtn.addEventListener("click", () => {
+        if (renderApi.resetObservationsOrganizer) renderApi.resetObservationsOrganizer();
+      });
+    }
+    if (elements.observationsOrganizeApplyBtn) {
+      elements.observationsOrganizeApplyBtn.addEventListener("click", () => {
+        if (renderApi.applyObservationsOrganizer) renderApi.applyObservationsOrganizer();
+      });
+    }
+    if (elements.observationsOrganizeSearchEl) {
+      elements.observationsOrganizeSearchEl.addEventListener("input", () => {
+        if (renderApi.setObservationsOrganizerSearch) {
+          renderApi.setObservationsOrganizerSearch(elements.observationsOrganizeSearchEl.value || "");
+        }
+      });
+    }
     document.addEventListener("keydown", (event) => {
       if (!elements.photoOverlayEl || !elements.photoOverlayEl.classList.contains("is-open")) return;
       if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
@@ -263,6 +295,10 @@
     document.addEventListener("keydown", (event) => {
       if (!elements.chapterPreviewModal || !elements.chapterPreviewModal.classList.contains("is-open")) return;
       if (event.key === "Escape") renderApi.closeChapterPreview();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (!elements.observationsOrganizeModal || !elements.observationsOrganizeModal.classList.contains("is-open")) return;
+      if (event.key === "Escape" && renderApi.closeObservationsOrganizer) renderApi.closeObservationsOrganizer();
     });
 
     window.addEventListener("visibilitychange", () => {

@@ -195,6 +195,32 @@
       </div>
     </div>
 
+    <div class="modal" id="observations-organize-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="observations-organize-close"></div>
+      <div class="modal__content modal__content--wide observations-organize__content" role="dialog" aria-modal="true" aria-labelledby="observations-organize-title">
+        <div class="modal__header">
+          <h3 id="observations-organize-title">Organize 4.8</h3>
+          <button id="observations-organize-close-btn" type="button" class="modal__close" aria-label="Close organizer">×</button>
+        </div>
+        <div class="modal__body observations-organize__body">
+          <div class="observations-organize__search">
+            <input id="observations-organize-search" type="search" placeholder="Search tags..." aria-label="Search observation tags" />
+          </div>
+          <div class="observations-organize__pills">
+            <div class="observations-organize__pill-group" id="observations-organize-filters"></div>
+            <div class="observations-organize__pill-group" id="observations-organize-sorts"></div>
+          </div>
+          <div class="observations-organize__status" id="observations-organize-status"></div>
+          <div class="observations-organize__list" id="observations-organize-list"></div>
+        </div>
+        <div class="modal__actions observations-organize__actions">
+          <button id="observations-organize-apply" type="button">Apply</button>
+          <button id="observations-organize-reset" type="button" class="ghost">Reset</button>
+          <button id="observations-organize-cancel" type="button" class="ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+
     <div class="modal" id="first-run-modal" aria-hidden="true">
       <div class="modal__backdrop"></div>
       <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
