@@ -1102,6 +1102,7 @@
         output.push({
           kind: "finding",
           id: rowMap.get(rowId) || rowId,
+          title: String(row?.titleOverride || "").trim(),
           finding: resolveFindingText(row),
           recommendation: resolveRecommendationText(row),
         });
@@ -1174,7 +1175,7 @@
         const finding = document.createElement("td");
         const id = document.createElement("div");
         id.className = "chapter-preview-id";
-        id.textContent = entry.id || "";
+        id.textContent = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
         const findingText = document.createElement("div");
         findingText.className = "chapter-preview-text";
         findingText.innerHTML = markdownToHtml(entry.finding || "");
