@@ -1229,7 +1229,7 @@
     const renderChapterPreview = (chapter) => {
       if (!chapterPreviewBody || !chapterPreviewTitle) return;
       chapterPreviewBody.innerHTML = "";
-      const chapterLabel = stateHelpers.formatChapterLabel(chapter);
+      const chapterLabel = stateHelpers.formatChapterLabel(chapter, state.project?.meta?.locale);
       chapterPreviewTitle.textContent = t("chapter_preview_title", "Word Export Preview");
       const subtitle = document.createElement("div");
       subtitle.className = "chapter-preview-subtitle";
@@ -1260,14 +1260,584 @@
       chapterPreviewModal.setAttribute("aria-hidden", "true");
     };
 
+    const PROJECT_VIEW_ID = "__project__";
+
+    const formatIsoDate = (value) => {
+      const raw = String(value || "");
+      if (raw.length < 10) return "";
+      const y = raw.slice(0, 4);
+      const m = raw.slice(5, 7);
+      const d = raw.slice(8, 10);
+      if (!/^\d{4}$/.test(y) || !/^\d{2}$/.test(m) || !/^\d{2}$/.test(d)) return raw;
+      return `${d}.${m}.${y}`;
+    };
+
+    const parseSpiderRowOverrides = (tableBody) => {
+      const next = {};
+      if (!tableBody) return next;
+      tableBody.querySelectorAll("tr").forEach((tr) => {
+        const id = tr.querySelector("input[data-id]")?.dataset.id;
+        if (!id) return;
+        const companyVal = tr.querySelector('input[data-field="company"]')?.value;
+        const consultantVal = tr.querySelector('input[data-field="consultant"]')?.value;
+        const useCompany = tr.querySelector('input[data-field="useCompany"]')?.checked || false;
+        const useConsultant = tr.querySelector('input[data-field="useConsultant"]')?.checked || false;
+        const company = companyVal === "" ? null : Number(companyVal);
+        const consultant = consultantVal === "" ? null : Number(consultantVal);
+        next[id] = {
+          useCompany,
+          useConsultant,
+          company: Number.isFinite(company) ? company : null,
+          consultant: Number.isFinite(consultant) ? consultant : null,
+        };
+      });
+      return next;
+    };
+
+    const drawSpiderCanvas = (canvas, rows, companyLabel = "Company") => {
+      if (!canvas) return;
+      const logicalWidth = 760;
+      const logicalHeight = 500;
+      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
+      canvas.style.width = `${logicalWidth}px`;
+      canvas.style.height = `${logicalHeight}px`;
+      canvas.width = Math.round(logicalWidth * dpr);
+      canvas.height = Math.round(logicalHeight * dpr);
+      const ctx2d = canvas.getContext("2d");
+      if (!ctx2d) return;
+      ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
+      const spiderRows = Array.isArray(rows) ? rows : [];
+      const labels = spiderRows.map((row) => String(row?.displayLabel || row?.label || row?.id || ""));
+      const companyValues = spiderRows.map((row) => Number(row?.company || 0));
+      const consultantValues = spiderRows.map((row) => Number(row?.consultant || 0));
+      const width = logicalWidth;
+      const height = logicalHeight;
+      ctx2d.clearRect(0, 0, width, height);
+      ctx2d.fillStyle = "#fff";
+      ctx2d.fillRect(0, 0, width, height);
+
+      const cx = Math.round(width * 0.5);
+      const cy = Math.round(height * 0.46);
+      const radius = Math.round(Math.min(width, height) * 0.31);
+      const steps = 5;
+      const maxValue = 100;
+      const count = labels.length || 1;
+
+      const wrapLabel = (text, maxWidth, maxLines) => {
+        const words = String(text || "").trim().split(/\s+/).filter(Boolean);
+        if (!words.length) return [""];
+        const lines = [];
+        let current = "";
+        words.forEach((word) => {
+          const candidate = current ? `${current} ${word}` : word;
+          if (!current || ctx2d.measureText(candidate).width <= maxWidth) {
+            current = candidate;
+          } else {
+            lines.push(current);
+            current = word;
+          }
+        });
+        if (current) lines.push(current);
+        if (lines.length <= maxLines) return lines;
+        const trimmed = lines.slice(0, maxLines);
+        let last = trimmed[maxLines - 1];
+        while (last.length > 1 && ctx2d.measureText(`${last}…`).width > maxWidth) {
+          last = last.slice(0, -1);
+        }
+        trimmed[maxLines - 1] = `${last}…`;
+        return trimmed;
+      };
+
+      ctx2d.strokeStyle = "#d9d5ce";
+      ctx2d.lineWidth = 1;
+      for (let ring = 1; ring <= steps; ring += 1) {
+        const r = (radius * ring) / steps;
+        ctx2d.beginPath();
+        for (let i = 0; i < count; i += 1) {
+          const angle = (-Math.PI / 2) + (Math.PI * 2 * i) / count;
+          const x = cx + Math.cos(angle) * r;
+          const y = cy + Math.sin(angle) * r;
+          if (i === 0) ctx2d.moveTo(x, y);
+          else ctx2d.lineTo(x, y);
+        }
+        ctx2d.closePath();
+        ctx2d.stroke();
+      }
+
+      ctx2d.strokeStyle = "#c4beb4";
+      labels.forEach((label, index) => {
+        const angle = (-Math.PI / 2) + (Math.PI * 2 * index) / count;
+        const x = cx + Math.cos(angle) * radius;
+        const y = cy + Math.sin(angle) * radius;
+        ctx2d.beginPath();
+        ctx2d.moveTo(cx, cy);
+        ctx2d.lineTo(x, y);
+        ctx2d.stroke();
+
+        const textX = cx + Math.cos(angle) * (radius + 16);
+        const textY = cy + Math.sin(angle) * (radius + 16);
+        ctx2d.fillStyle = "#4b5563";
+        ctx2d.font = "14px system-ui, -apple-system, Segoe UI, sans-serif";
+        const horizontal = Math.cos(angle);
+        const align = horizontal > 0.2 ? "left" : horizontal < -0.2 ? "right" : "center";
+        ctx2d.textAlign = align;
+        ctx2d.textBaseline = "top";
+        const maxWidth = align === "center" ? 260 : 220;
+        const lines = wrapLabel(label, maxWidth, 2);
+        let xLabel = textX;
+        if (align === "left") xLabel = Math.min(xLabel, width - maxWidth - 10);
+        if (align === "right") xLabel = Math.max(xLabel, maxWidth + 10);
+        if (align === "center") xLabel = Math.max(maxWidth * 0.5 + 10, Math.min(width - (maxWidth * 0.5) - 10, xLabel));
+        if (/^\s*4\./.test(label)) xLabel += 10;
+        const lineHeight = 16;
+        const topNudge = index === 0 ? -14 : 0;
+        const startY = textY - ((lines.length - 1) * lineHeight * 0.5) + topNudge;
+        lines.forEach((line, lineIndex) => {
+          ctx2d.fillText(line, xLabel, startY + (lineIndex * lineHeight));
+        });
+      });
+
+      const drawPolygon = (values, stroke, fill) => {
+        ctx2d.beginPath();
+        values.forEach((value, index) => {
+          const pct = Math.max(0, Math.min(maxValue, Number(value || 0))) / maxValue;
+          const angle = (-Math.PI / 2) + (Math.PI * 2 * index) / count;
+          const x = cx + Math.cos(angle) * radius * pct;
+          const y = cy + Math.sin(angle) * radius * pct;
+          if (index === 0) ctx2d.moveTo(x, y);
+          else ctx2d.lineTo(x, y);
+        });
+        ctx2d.closePath();
+        ctx2d.fillStyle = fill;
+        ctx2d.strokeStyle = stroke;
+        ctx2d.lineWidth = 2;
+        ctx2d.fill();
+        ctx2d.stroke();
+      };
+
+      drawPolygon(companyValues, "#2563eb", "rgba(37,99,235,0.14)");
+      drawPolygon(consultantValues, "#dc2626", "rgba(220,38,38,0.11)");
+
+      const legendTopY = height - 52;
+      const legendLineHeight = 18;
+      const legendColumnMaxWidth = 220;
+      const markerWidth = 16;
+      const markerTextGap = 8;
+      const legendGap = 36;
+
+      ctx2d.textAlign = "left";
+      ctx2d.textBaseline = "top";
+      ctx2d.font = "17px system-ui, -apple-system, Segoe UI, sans-serif";
+
+      const leftLegendLines = wrapLabel(companyLabel || "Company", legendColumnMaxWidth, 2);
+      const rightLegendLines = wrapLabel("Suva", legendColumnMaxWidth, 2);
+      const leftTextWidth = leftLegendLines.reduce((max, line) => Math.max(max, ctx2d.measureText(line).width), 0);
+      const rightTextWidth = rightLegendLines.reduce((max, line) => Math.max(max, ctx2d.measureText(line).width), 0);
+      const leftBlockWidth = markerWidth + markerTextGap + leftTextWidth;
+      const rightBlockWidth = markerWidth + markerTextGap + rightTextWidth;
+      const totalLegendWidth = leftBlockWidth + legendGap + rightBlockWidth;
+      const leftMarkerX = Math.round((width - totalLegendWidth) * 0.5);
+      const rightMarkerX = leftMarkerX + leftBlockWidth + legendGap;
+      const markerY = legendTopY + 8;
+      const leftTextX = leftMarkerX + markerWidth + markerTextGap;
+      const rightTextX = rightMarkerX + markerWidth + markerTextGap;
+
+      ctx2d.fillStyle = "#2563eb";
+      ctx2d.fillRect(leftMarkerX, markerY, markerWidth, 3);
+      leftLegendLines.forEach((line, lineIndex) => {
+        ctx2d.fillText(line, leftTextX, legendTopY + (lineIndex * legendLineHeight));
+      });
+
+      ctx2d.fillStyle = "#dc2626";
+      ctx2d.fillRect(rightMarkerX, markerY, markerWidth, 3);
+      rightLegendLines.forEach((line, lineIndex) => {
+        ctx2d.fillText(line, rightTextX, legendTopY + (lineIndex * legendLineHeight));
+      });
+    };
+
+    const renderProjectPage = () => {
+      rowsEl.innerHTML = "";
+      normalizeHelpers.ensureProjectMeta(state.project, ctx.i18n.setLocale);
+      const meta = state.project.meta || {};
+      const page = document.createElement("section");
+      page.className = "project-page";
+
+      const toolsCard = document.createElement("div");
+      toolsCard.className = "project-card";
+      const toolsTitle = document.createElement("h4");
+      toolsTitle.textContent = t("project_tools_title", "Tools");
+      toolsCard.appendChild(toolsTitle);
+      const toolsActions = document.createElement("div");
+      toolsActions.className = "project-page__actions";
+      const saveBtn = document.createElement("button");
+      saveBtn.type = "button";
+      saveBtn.textContent = t("project_save_sidecar", "Save sidecar");
+      saveBtn.addEventListener("click", () => {
+        scheduleAutosave();
+        setStatus(t("project_save_queued", "Save queued (autosave)."));
+      });
+      const exportBtn = document.createElement("button");
+      exportBtn.type = "button";
+      exportBtn.className = "ghost";
+      exportBtn.textContent = t("project_export_no_vba", "Word Export (No VBA)");
+      exportBtn.addEventListener("click", async () => {
+        if (!runtime.dirHandle) {
+          setStatus(t("project_open_folder_first", "Open project folder first."));
+          return;
+        }
+        const exporter = window.AutoBerichtWordExport || {};
+        if (!exporter.exportReportDocx) {
+          setStatus(t("project_export_missing", "No-VBA exporter not available."));
+          return;
+        }
+        exportBtn.disabled = true;
+        const previous = exportBtn.textContent;
+        exportBtn.textContent = t("project_export_running", "Exporting ...");
+        try {
+          const result = await exporter.exportReportDocx({
+            project: state.project,
+            sidecarDoc: runtime.sidecarDoc,
+            projectHandle: runtime.dirHandle,
+            spiderOverrides: state.spiderOverrides || {},
+            computeSpider: window.AutoBerichtSpider?.computeSpider,
+            compareIdSegments: stateHelpers.compareIdSegments,
+            toText: stateHelpers.toText,
+            markdownToHtml,
+          });
+          if (result?.savedAs) {
+            setStatus(`Exported ${result.savedAs}`);
+          } else {
+            setStatus(t("project_export_done", "Export complete."));
+          }
+        } catch (err) {
+          setStatus(`Export failed: ${err.message || err}`);
+          debug.logLine("error", `No-VBA export failed: ${err.message || err}`);
+        } finally {
+          exportBtn.disabled = false;
+          exportBtn.textContent = previous;
+        }
+      });
+      const importSelfBtn = document.createElement("button");
+      importSelfBtn.type = "button";
+      importSelfBtn.textContent = t("project_tool_import_self", "Import Selbstbeurteilung");
+      importSelfBtn.addEventListener("click", () => {
+        if (elements.importSelfBtn) {
+          elements.importSelfBtn.click();
+        } else {
+          setStatus("Import tool is not available.");
+        }
+      });
+      const generateLibraryBtn = document.createElement("button");
+      generateLibraryBtn.type = "button";
+      generateLibraryBtn.className = "ghost";
+      generateLibraryBtn.textContent = t("project_tool_library", "Generate / Update Library");
+      generateLibraryBtn.addEventListener("click", () => {
+        if (elements.generateLibraryBtn) {
+          elements.generateLibraryBtn.click();
+        } else {
+          setStatus("Library tool is not available.");
+        }
+      });
+      const saveLogBtn = document.createElement("button");
+      saveLogBtn.type = "button";
+      saveLogBtn.className = "ghost";
+      saveLogBtn.textContent = t("project_tool_log", "Save debug log");
+      saveLogBtn.addEventListener("click", () => {
+        if (elements.saveLogBtn) {
+          elements.saveLogBtn.click();
+        } else {
+          setStatus("Log tool is not available.");
+        }
+      });
+      toolsActions.appendChild(saveBtn);
+      toolsActions.appendChild(exportBtn);
+      toolsActions.appendChild(importSelfBtn);
+      toolsActions.appendChild(generateLibraryBtn);
+      toolsActions.appendChild(saveLogBtn);
+      toolsCard.appendChild(toolsActions);
+      page.appendChild(toolsCard);
+
+      const formCard = document.createElement("div");
+      formCard.className = "project-card";
+      const formTitle = document.createElement("h4");
+      formTitle.textContent = t("project_meta_title", "Project Metadata");
+      formCard.appendChild(formTitle);
+      const formGrid = document.createElement("div");
+      formGrid.className = "project-meta-grid";
+
+      const createMetaField = (labelText, value, onInput, options = {}) => {
+        const label = document.createElement("label");
+        label.className = "project-meta-field";
+        const span = document.createElement("span");
+        span.textContent = labelText;
+        label.appendChild(span);
+        const input = options.select ? document.createElement("select") : document.createElement("input");
+        if (options.select) {
+          (options.items || []).forEach((item) => {
+            const option = document.createElement("option");
+            option.value = item.value;
+            option.textContent = item.label;
+            input.appendChild(option);
+          });
+          input.value = value;
+        } else {
+          input.type = options.type || "text";
+          input.value = value;
+          if (options.placeholder) input.placeholder = options.placeholder;
+          if (options.min != null) input.min = String(options.min);
+          if (options.step != null) input.step = String(options.step);
+        }
+        input.addEventListener("input", () => onInput(input.value));
+        if (options.select) {
+          input.addEventListener("change", () => onInput(input.value));
+        }
+        label.appendChild(input);
+        return label;
+      };
+
+      formGrid.appendChild(createMetaField(t("project_meta_moderator", "Moderator"), meta.moderator || "", (value) => {
+        meta.moderator = String(value || "").trim();
+        meta.author = meta.moderator;
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_moderator_initials", "Moderator initials"), meta.moderatorInitials || "", (value) => {
+        meta.moderatorInitials = String(value || "").trim();
+        meta.initials = meta.moderatorInitials;
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_co_moderator", "Co-moderator"), meta.coModerator || "", (value) => {
+        meta.coModerator = String(value || "").trim();
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_co_initials", "Co-moderator initials"), meta.coModeratorInitials || "", (value) => {
+        meta.coModeratorInitials = String(value || "").trim();
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_company", "Company"), meta.company || "", (value) => {
+        meta.company = String(value || "").trim();
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_companyid", "Company ID"), meta.companyId || "", (value) => {
+        meta.companyId = String(value || "").trim();
+        scheduleAutosave();
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "de-CH", (value) => {
+        meta.locale = value || "de-CH";
+        ctx.i18n.setLocale(meta.locale);
+        scheduleAutosave();
+      }, {
+        select: true,
+        items: [
+          { value: "de-CH", label: "DE" },
+          { value: "fr-CH", label: "FR" },
+          { value: "it-CH", label: "IT" },
+        ],
+      }));
+      formGrid.appendChild(createMetaField(t("project_meta_backup", "Auto-backup (minutes)"), String(meta.autobackupMinutes ?? 30), (value) => {
+        const raw = Number(value);
+        meta.autobackupMinutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
+        scheduleAutosave();
+      }, { type: "number", min: 0, step: 1 }));
+      formCard.appendChild(formGrid);
+
+      const created = document.createElement("div");
+      created.className = "project-meta-created";
+      created.textContent = `${t("project_meta_created", "Created")}: ${formatIsoDate(meta.createdAt) || "—"}`;
+      formCard.appendChild(created);
+      page.appendChild(formCard);
+
+      const logoCard = document.createElement("div");
+      logoCard.className = "project-card";
+      const logoTitle = document.createElement("h4");
+      logoTitle.textContent = t("project_logo_title", "Logo Assets");
+      logoCard.appendChild(logoTitle);
+      const logoHint = document.createElement("p");
+      logoHint.className = "project-card__hint";
+      logoHint.textContent = t("project_logo_hint", "Place logo.png/logo.jpg in Inputs, then click to pick the logo file manually. The app writes Outputs/logo-large.png and Outputs/logo-small.png.");
+      logoCard.appendChild(logoHint);
+      const logoPaths = document.createElement("div");
+      logoPaths.className = "project-logo-paths";
+      const renderLogoPaths = () => {
+        const large = String(meta.logoLargePath || "Outputs/logo-large.png");
+        const small = String(meta.logoSmallPath || "Outputs/logo-small.png");
+        logoPaths.textContent = `Large: ${large}  |  Small: ${small}`;
+      };
+      renderLogoPaths();
+      logoCard.appendChild(logoPaths);
+      const logoActions = document.createElement("div");
+      logoActions.className = "project-page__actions";
+      const logoBtn = document.createElement("button");
+      logoBtn.type = "button";
+      logoBtn.className = "ghost";
+      logoBtn.textContent = t("project_logo_import", "Import + Resize Logo");
+      logoBtn.addEventListener("click", async () => {
+        if (!runtime.dirHandle) {
+          setStatus(t("project_open_folder_first", "Open project folder first."));
+          return;
+        }
+        const exporter = window.AutoBerichtWordExport || {};
+        if (!exporter.prepareLogosForProject) {
+          setStatus(t("project_logo_missing", "Logo pipeline not available."));
+          return;
+        }
+        logoBtn.disabled = true;
+        const prev = logoBtn.textContent;
+        logoBtn.textContent = t("project_logo_processing", "Processing ...");
+        try {
+          const result = await exporter.prepareLogosForProject({
+            projectHandle: runtime.dirHandle,
+            meta,
+          });
+          meta.logoLargePath = result.logoLargePath;
+          meta.logoSmallPath = result.logoSmallPath;
+          renderLogoPaths();
+          scheduleAutosave();
+          setStatus(t("project_logo_done", "Logo assets prepared."));
+        } catch (err) {
+          setStatus(`Logo processing failed: ${err.message || err}`);
+          debug.logLine("error", `Logo processing failed: ${err.message || err}`);
+        } finally {
+          logoBtn.disabled = false;
+          logoBtn.textContent = prev;
+        }
+      });
+      logoActions.appendChild(logoBtn);
+      logoCard.appendChild(logoActions);
+      page.appendChild(logoCard);
+
+      const spiderCard = document.createElement("div");
+      spiderCard.className = "project-card";
+      const spiderTitle = document.createElement("h4");
+      spiderTitle.textContent = t("project_spider_title", "Spider Editor");
+      spiderCard.appendChild(spiderTitle);
+      const spiderHint = document.createElement("p");
+      spiderHint.className = "project-card__hint";
+      spiderHint.textContent = t("project_spider_hint", "Adjust chapter overrides and preview the live spider chart.");
+      spiderCard.appendChild(spiderHint);
+      const canvas = document.createElement("canvas");
+      canvas.className = "project-spider-canvas";
+      canvas.width = 980;
+      canvas.height = 560;
+      spiderCard.appendChild(canvas);
+      const spiderTableWrap = document.createElement("div");
+      spiderTableWrap.className = "spider-table-wrapper";
+      const spiderTable = document.createElement("table");
+      spiderTable.className = "spider-table";
+      const getCompanyLegendLabel = () => String(meta.company || "").trim() || "Company";
+      const getSpiderDisplayLabel = (row) => {
+        const chapterId = String(row?.id || "");
+        const chapter = (state.project?.chapters || []).find((item) => String(item?.id || "") === chapterId);
+        if (!chapter) return chapterId;
+        return stateHelpers.formatChapterLabel(chapter, state.project?.meta?.locale);
+      };
+      spiderTable.innerHTML = [
+        "<thead><tr>",
+        "<th>Kapitel</th>",
+        `<th>${escapeHtml(getCompanyLegendLabel())} %</th>`,
+        "<th>Override</th>",
+        "<th>Use</th>",
+        "<th>Suva %</th>",
+        "<th>Override</th>",
+        "<th>Use</th>",
+        "</tr></thead>",
+      ].join("");
+      const spiderBody = document.createElement("tbody");
+      spiderTable.appendChild(spiderBody);
+      spiderTableWrap.appendChild(spiderTable);
+      spiderCard.appendChild(spiderTableWrap);
+      const spiderActions = document.createElement("div");
+      spiderActions.className = "project-page__actions";
+      const applySpiderBtn = document.createElement("button");
+      applySpiderBtn.type = "button";
+      applySpiderBtn.textContent = t("project_spider_apply", "Apply Spider Overrides");
+      const recalcSpiderBtn = document.createElement("button");
+      recalcSpiderBtn.type = "button";
+      recalcSpiderBtn.className = "ghost";
+      recalcSpiderBtn.textContent = t("project_spider_recalc", "Recalculate");
+      spiderActions.appendChild(applySpiderBtn);
+      spiderActions.appendChild(recalcSpiderBtn);
+      spiderCard.appendChild(spiderActions);
+
+      const renderSpider = async () => {
+        const spider = window.AutoBerichtSpider || {};
+        if (!spider.computeSpider) {
+          const row = document.createElement("tr");
+          row.innerHTML = "<td colspan=\"7\">Spider module unavailable.</td>";
+          spiderBody.innerHTML = "";
+          spiderBody.appendChild(row);
+          return;
+        }
+        spiderBody.innerHTML = "";
+        try {
+          const spiderData = await spider.computeSpider({
+            project: state.project,
+            overrides: state.spiderOverrides || {},
+            dirHandle: runtime.dirHandle,
+          });
+          const rows = spiderData.effective?.chapters_1_11 || [];
+          const baseline = spiderData.baseline?.chapters_1_11 || [];
+          const baselineMap = new Map(baseline.map((item) => [item.id, item]));
+          const displayRows = rows.map((row) => ({
+            ...row,
+            displayLabel: getSpiderDisplayLabel(row),
+          }));
+          displayRows.forEach((row) => {
+            const base = baselineMap.get(row.id) || row;
+            const ov = state.spiderOverrides?.[row.id] || {};
+            const tr = document.createElement("tr");
+            tr.innerHTML = [
+              `<td>${escapeHtml(row.displayLabel || row.id)}</td>`,
+              `<td>${Number(base.company || 0).toFixed(1)}%</td>`,
+              `<td><input type="number" step="0.1" min="0" max="100" data-field="company" data-id="${row.id}" value="${Number.isFinite(ov.company) ? ov.company : ""}"></td>`,
+              `<td><input type="checkbox" data-field="useCompany" data-id="${row.id}" ${ov.useCompany ? "checked" : ""}></td>`,
+              `<td>${Number(base.consultant || 0).toFixed(1)}%</td>`,
+              `<td><input type="number" step="0.1" min="0" max="100" data-field="consultant" data-id="${row.id}" value="${Number.isFinite(ov.consultant) ? ov.consultant : ""}"></td>`,
+              `<td><input type="checkbox" data-field="useConsultant" data-id="${row.id}" ${ov.useConsultant ? "checked" : ""}></td>`,
+            ].join("");
+            spiderBody.appendChild(tr);
+          });
+          drawSpiderCanvas(canvas, displayRows, getCompanyLegendLabel());
+        } catch (err) {
+          const row = document.createElement("tr");
+          row.innerHTML = `<td colspan="7">Spider failed: ${escapeHtml(err.message || String(err))}</td>`;
+          spiderBody.appendChild(row);
+          debug.logLine("error", `Project spider failed: ${err.message || err}`);
+        }
+      };
+
+      applySpiderBtn.addEventListener("click", async () => {
+        state.spiderOverrides = parseSpiderRowOverrides(spiderBody);
+        scheduleAutosave();
+        setStatus(t("project_spider_saved", "Spider overrides saved."));
+        await renderSpider();
+      });
+      recalcSpiderBtn.addEventListener("click", async () => {
+        await renderSpider();
+      });
+
+      page.appendChild(spiderCard);
+      rowsEl.appendChild(page);
+      renderSpider().catch(() => {});
+    };
+
     const renderChapterList = () => {
       chapterListEl.innerHTML = "";
+      if (elements.sidebarProjectBtn) {
+        if (!elements.sidebarProjectBtn.dataset.bound) {
+          elements.sidebarProjectBtn.addEventListener("click", () => {
+            state.selectedChapterId = PROJECT_VIEW_ID;
+            render();
+          });
+          elements.sidebarProjectBtn.dataset.bound = "1";
+        }
+        elements.sidebarProjectBtn.classList.toggle("active", state.selectedChapterId === PROJECT_VIEW_ID);
+      }
       const orderedChapters = [...state.project.chapters].sort((a, b) =>
         stateHelpers.compareIdSegments(a.id, b.id),
       );
       orderedChapters.forEach((chapter) => {
         const button = document.createElement("button");
-        const buttonLabel = stateHelpers.formatChapterLabel(chapter);
+        const buttonLabel = stateHelpers.formatChapterLabel(chapter, state.project?.meta?.locale);
         button.textContent = buttonLabel;
         button.title = buttonLabel;
         button.className = chapter.id === state.selectedChapterId ? "active" : "";
@@ -1295,11 +1865,15 @@
 
     const renderChapterTitle = (chapter) => {
       chapterTitleEl.innerHTML = "";
+      const isProjectView = chapter.id === PROJECT_VIEW_ID;
       const title = document.createElement("span");
-      title.textContent = stateHelpers.formatChapterLabel(chapter);
+      title.textContent = isProjectView
+        ? t("project_page_nav", "Project")
+        : stateHelpers.formatChapterLabel(chapter, state.project?.meta?.locale);
       const pill = createPhotoPill(chapter.id);
       if (pill) chapterTitleEl.appendChild(pill);
       chapterTitleEl.appendChild(title);
+      if (isProjectView) return;
       const chapterPreviewBtn = document.createElement("button");
       chapterPreviewBtn.type = "button";
       chapterPreviewBtn.className = "checklist-pill";
@@ -1795,6 +2369,14 @@
 
     const renderRows = () => {
       rowsEl.innerHTML = "";
+      if (state.selectedChapterId === PROJECT_VIEW_ID) {
+        renderChapterTitle({
+          id: PROJECT_VIEW_ID,
+          title: { de: t("project_page_nav", "Project") },
+        });
+        renderProjectPage();
+        return;
+      }
       const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
       if (!chapter) return;
       renderChapterTitle(chapter);

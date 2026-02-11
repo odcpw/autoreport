@@ -17,7 +17,8 @@
 
     const maybeOpenSettings = (result) => {
       if (result && result.source && result.source !== "sidecar") {
-        openSettings();
+        state.selectedChapterId = "__project__";
+        if (renderApi?.render) renderApi.render();
       }
     };
 

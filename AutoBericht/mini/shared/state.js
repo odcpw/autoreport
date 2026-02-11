@@ -247,24 +247,114 @@
     return String(hash >>> 0);
   };
 
-  const getChapterTitle = (chapter) => {
+  const CHAPTER_TITLE_BY_LOCALE = {
+    de: {
+      "0": "Management Summary",
+      "1": "Leitbild, Sicherheitsziele und Strategien",
+      "2": "Organisation",
+      "3": "Befähigung, Schulung, Kommunikation",
+      "4": "Sicherheitsstandards",
+      "4.8": "Beobachtungen",
+      "5": "Gefährdungsermittlung, Risikobeurteilung",
+      "6": "Massnahmen",
+      "7": "Notfallorganisation",
+      "8": "Mitwirkung",
+      "9": "Gesundheitsschutz",
+      "10": "Kontrolle",
+      "11": "Absenzenmanagement",
+      "12": "Freizeitsicherheit (Fakultativ)",
+      "13": "BGM (Fakultativ)",
+      "14": "Erweiterung für ISO 45001 (Fakultativ)",
+    },
+    fr: {
+      "0": "Management Summary",
+      "1": "Ligne de conduite, objectifs et stratégie",
+      "2": "Organisation",
+      "3": "Qualification, formation, communication",
+      "4": "Règles de sécurité",
+      "4.8": "Observations",
+      "5": "Détermination des phénomènes dangereux et évaluation des risques",
+      "6": "Mesures",
+      "7": "Organisation en cas d’urgence",
+      "8": "Participation",
+      "9": "Protection de la santé",
+      "10": "Contrôle, audit",
+      "11": "Gestion des absences",
+      "12": "Sécurité durant les loisirs (facultatif)",
+      "13": "GSE: Gestion de la santé en entreprise (facultatif)",
+      "14": "Extension pour ISO 45001 (facultatif)",
+    },
+    it: {
+      "0": "Management Summary",
+      "1": "Principi, obiettivi e strategie",
+      "2": "Organizzazione",
+      "3": "Qualificazione, formazione, comunicazione",
+      "4": "Norme di sicurezza",
+      "4.8": "Osservazioni",
+      "5": "Individuazione dei pericoli, valutazione dei rischi",
+      "6": "Misure",
+      "7": "Organizzazione per i casi di emergenza",
+      "8": "Partecipazione",
+      "9": "Tutela della salute",
+      "10": "Controllo",
+      "11": "Assenze",
+      "12": "Sicurezza nel tempo libero (parte facoltativa)",
+      "13": "GSA: gestione della salute in azienda (parte facoltativa)",
+      "14": "Ampliamento per l'ISO 45001 (parte facoltativa)",
+    },
+  };
+
+  const getLocaleBase = (locale) => {
+    const base = String(locale || "").toLowerCase().split("-")[0];
+    return ["de", "fr", "it"].includes(base) ? base : "de";
+  };
+
+  const getMappedChapterTitle = (chapterId, locale) => {
+    const id = String(chapterId || "");
+    if (!id) return "";
+    const base = getLocaleBase(locale);
+    return CHAPTER_TITLE_BY_LOCALE[base]?.[id] || CHAPTER_TITLE_BY_LOCALE.de?.[id] || "";
+  };
+
+  const getChapterTitle = (chapter, locale = "de-CH") => {
     if (!chapter) return "";
     if (typeof chapter.title === "string") return chapter.title;
-    if (chapter.title && chapter.title.de) return chapter.title.de;
+    if (chapter.title && typeof chapter.title === "object") {
+      const localeBase = getLocaleBase(locale);
+      const direct = chapter.title[locale];
+      if (direct) return String(direct);
+      const byBase = chapter.title[localeBase];
+      if (byBase) return String(byBase);
+      const mapped = getMappedChapterTitle(chapter.id, locale);
+      if (mapped) return mapped;
+      if (chapter.title.de) return String(chapter.title.de);
+      const firstValue = Object.values(chapter.title).find((value) => value != null && String(value).trim() !== "");
+      if (firstValue) return String(firstValue);
+    }
+    const mapped = getMappedChapterTitle(chapter.id, locale);
+    if (mapped) return mapped;
     if (chapter.id === "4.8") return "Beobachtungen";
     return chapter.id || "";
   };
 
-  const formatChapterLabel = (chapter) => {
+  const formatChapterLabel = (chapter, locale = "de-CH") => {
     if (!chapter) return "";
-    const title = getChapterTitle(chapter);
+    const title = getChapterTitle(chapter, locale);
     const id = chapter.id || "";
     if (!title) return id;
     if (!id) return title;
+    const isTopLevelNumeric = /^\d+$/.test(String(id));
     const normalized = title.trim();
-    if (normalized === id || normalized.startsWith(`${id} `) || normalized.startsWith(`${id}.`)) {
-      return normalized;
+    if (normalized === id) {
+      return isTopLevelNumeric ? `${id}.` : normalized;
     }
+    if (normalized.startsWith(`${id}.`)) return normalized;
+    if (normalized.startsWith(`${id} `)) {
+      const rest = normalized.slice(String(id).length + 1).trim();
+      if (!rest) return isTopLevelNumeric ? `${id}.` : normalized;
+      return isTopLevelNumeric ? `${id}. ${rest}` : `${id} ${rest}`;
+    }
+    if (isTopLevelNumeric) return `${id}. ${title}`.trim();
     return `${id} ${title}`.trim();
   };
 

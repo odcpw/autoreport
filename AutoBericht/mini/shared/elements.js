@@ -23,6 +23,7 @@
     settingsBackupMinutesEl: document.getElementById("settings-backup-minutes"),
     settingsLibraryHintEl: document.getElementById("settings-library-hint"),
     statusEl: document.getElementById("status"),
+    sidebarProjectBtn: document.getElementById("sidebar-project"),
     chapterListEl: document.getElementById("chapter-list"),
     chapterTitleEl: document.getElementById("chapter-title"),
     rowsEl: document.getElementById("rows"),

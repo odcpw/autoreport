@@ -3,23 +3,50 @@ body {
 }
 
 .app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
   min-height: 100vh;
   width: 100%;
+  overflow: hidden;
 }
 
 
 .layout {
   display: grid;
   grid-template-columns: 220px 1fr;
-  min-height: calc(100vh - 100px);
+  flex: 1 1 auto;
+  min-height: 0;
   min-width: 0;
 }
 
 .sidebar {
+  display: flex;
+  flex-direction: column;
   padding: 14px;
   background: #fdfaf5;
   border-right: 1px solid #e5e0d7;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.sidebar-project {
+  width: 100%;
+  text-align: left;
+  background: #fff;
+  border: 1px solid #e0d7c9;
+  margin-bottom: 10px;
+  padding: 6px 10px;
+  font-size: 0.9rem;
+  color: #1f2933;
+  border-radius: 999px;
+}
+
+.sidebar-project.active {
+  background: #1a232f;
+  color: #fff;
 }
 
 .sidebar h2 {
@@ -87,6 +114,8 @@ body {
 .content {
   padding: 24px 32px 48px;
   min-width: 0;
+  min-height: 0;
+  overflow: auto;
 }
 
 .chapter-title {
@@ -1068,7 +1097,107 @@ textarea[disabled] {
   padding: 10px;
 }
 
+.project-page {
+  display: grid;
+  gap: 14px;
+}
+
+.project-page__top {
+  display: grid;
+  gap: 6px;
+}
+
+.project-page__top h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.project-page__subtitle {
+  color: #5f6872;
+  font-size: 0.92rem;
+}
+
+.project-page__actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.project-card {
+  border: 1px solid #e6ddd2;
+  background: #fff;
+  border-radius: 14px;
+  padding: 12px;
+  display: grid;
+  gap: 10px;
+}
+
+.project-card h4 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.project-card__hint {
+  margin: 0;
+  color: #5f6872;
+  font-size: 0.88rem;
+}
+
+.project-meta-grid {
+  display: grid;
+  gap: 10px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.project-meta-field {
+  display: grid;
+  gap: 5px;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #5f6872;
+}
+
+.project-meta-field input,
+.project-meta-field select {
+  border-radius: 10px;
+  border: 1px solid #d7d0c7;
+  padding: 8px 10px;
+  font-size: 0.95rem;
+  color: #1f2933;
+  background: #fff;
+  text-transform: none;
+  letter-spacing: normal;
+}
+
+.project-meta-created {
+  font-size: 0.85rem;
+  color: #6b7280;
+}
+
+.project-logo-paths {
+  font-size: 0.84rem;
+  color: #3f4b59;
+  background: #f9f6f1;
+  border: 1px solid #ece3d8;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+
+.project-spider-canvas {
+  width: 760px;
+  max-width: 100%;
+  align-self: center;
+  border: 1px solid #e6ddd2;
+  border-radius: 12px;
+  background: #fff;
+}
+
 @media (max-width: 720px) {
+  .project-meta-grid {
+    grid-template-columns: 1fr;
+  }
+
   .checklist-row {
     grid-template-columns: 1fr;
     align-items: start;
