@@ -56,7 +56,11 @@
     runtime,
     debug,
     setStatus,
-    i18n: { t, setLocale },
+    i18n: {
+      t,
+      setLocale,
+      resolveSpellcheckLang: i18n.resolveSpellcheckLang || ((locale) => String(locale || "en").toLowerCase().split("-")[0] || "en"),
+    },
     markdown,
     fs: {
       saveHandle: fsHandles.saveHandle || (async () => {}),

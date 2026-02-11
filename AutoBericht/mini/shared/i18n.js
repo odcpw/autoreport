@@ -138,16 +138,39 @@
 
   let current = "en";
 
+  const resolveSpellcheckLang = (locale) => {
+    const base = String(locale || "").toLowerCase().split("-")[0];
+    if (base === "de" || base === "fr" || base === "it" || base === "en") return base;
+    return "en";
+  };
+
+  const applyLocaleToDocument = (locale) => {
+    if (typeof document === "undefined") return;
+    const spellLang = resolveSpellcheckLang(locale);
+    if (document.documentElement) {
+      document.documentElement.setAttribute("lang", locale);
+    }
+    document.querySelectorAll("textarea").forEach((node) => {
+      node.setAttribute("lang", spellLang);
+      node.setAttribute("spellcheck", "true");
+      node.spellcheck = true;
+    });
+  };
+
   const resolveLocale = (locale) => {
     if (!locale) return "en";
     if (locales[locale]) return locale;
     const base = String(locale).split("-")[0];
+    if (base === "de") return "de-CH";
+    if (base === "fr") return "fr-CH";
+    if (base === "it") return "it-CH";
     if (locales[base]) return base;
     return "en";
   };
 
   const setLocale = (locale) => {
     current = resolveLocale(locale);
+    applyLocaleToDocument(current);
   };
 
   const t = (key, fallback) => {
@@ -168,6 +191,7 @@
     t,
     setLocale,
     apply,
+    resolveSpellcheckLang,
     locales,
   };
 })();

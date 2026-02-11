@@ -164,6 +164,7 @@
       state.project.meta.company = elements.settingsCompanyEl.value.trim();
       state.project.meta.companyId = elements.settingsCompanyIdEl.value.trim();
       state.project.meta.locale = elements.settingsLocaleEl.value || "de-CH";
+      i18n.setLocale(state.project.meta.locale);
       if (elements.settingsBackupMinutesEl) {
         const raw = Number(elements.settingsBackupMinutesEl.value);
         const minutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
@@ -177,12 +178,14 @@
         try {
           await ioApi.saveSidecar();
           setStatus("Settings saved.");
+          if (renderApi?.renderRows) renderApi.renderRows();
         } catch (err) {
           setStatus(`Settings saved, but sidecar save failed: ${err.message}`);
           debug.logLine("error", `Sidecar save failed: ${err.message || err}`);
         }
       } else {
         setStatus("Settings saved (remember to save sidecar).");
+        if (renderApi?.renderRows) renderApi.renderRows();
       }
     };
 

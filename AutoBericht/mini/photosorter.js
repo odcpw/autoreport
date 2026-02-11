@@ -43,6 +43,7 @@
     setStatus,
     i18n: {
       setLocale: i18n.setLocale || (() => {}),
+      resolveSpellcheckLang: i18n.resolveSpellcheckLang || ((locale) => String(locale || "en").toLowerCase().split("-")[0] || "en"),
     },
     fs: {
       saveHandle: fs.saveHandle || (async () => {}),

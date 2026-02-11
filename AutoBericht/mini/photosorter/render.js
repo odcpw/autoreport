@@ -109,6 +109,13 @@
         elements.photoFilenameEl.textContent = current.path.split("/").pop();
       }
       if (elements.notesEl) {
+        const locale = document.documentElement?.getAttribute("lang") || "de-CH";
+        const spellLang = ctx.i18n?.resolveSpellcheckLang
+          ? ctx.i18n.resolveSpellcheckLang(locale)
+          : String(locale).toLowerCase().split("-")[0] || "en";
+        elements.notesEl.setAttribute("lang", spellLang);
+        elements.notesEl.setAttribute("spellcheck", "true");
+        elements.notesEl.spellcheck = true;
         elements.notesEl.value = current.notes || "";
         elements.notesEl.disabled = false;
       }

@@ -12,6 +12,14 @@
     if (!row.workstate) row.workstate = {};
     const ws = row.workstate;
     if (ws.selectedLevel == null) ws.selectedLevel = 1;
+    if (!Object.prototype.hasOwnProperty.call(ws, "priority")) {
+      ws.priority = 0;
+    } else {
+      const parsedPriority = Number(ws.priority);
+      ws.priority = Number.isFinite(parsedPriority) && parsedPriority >= 0 && parsedPriority <= 4
+        ? parsedPriority
+        : 0;
+    }
     if (ws.includeFinding == null) ws.includeFinding = false;
     if (ws.includeRecommendation == null) ws.includeRecommendation = true;
     if (ws.done == null) ws.done = false;

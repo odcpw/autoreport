@@ -53,6 +53,17 @@
       textarea.style.overflowY = scroll > maxHeight ? "auto" : "hidden";
     };
 
+    const applyEditorLocale = (inputEl) => {
+      if (!inputEl) return;
+      const locale = String(state.project?.meta?.locale || "de-CH");
+      const spellLang = ctx.i18n?.resolveSpellcheckLang
+        ? ctx.i18n.resolveSpellcheckLang(locale)
+        : String(locale).toLowerCase().split("-")[0] || "en";
+      inputEl.setAttribute("lang", spellLang);
+      inputEl.setAttribute("spellcheck", "true");
+      inputEl.spellcheck = true;
+    };
+
     const buildPhotoIndex = () => {
       const reportIndex = new Map();
       const observationIndex = new Map();
@@ -1042,6 +1053,16 @@
       return rowToText(row?.master?.recommendation);
     };
 
+    const resolvePriorityText = (row) => {
+      const ws = row?.workstate || {};
+      if (!Object.prototype.hasOwnProperty.call(ws, "priority")) return "";
+      const raw = Number(ws.priority);
+      if (!Number.isFinite(raw)) return "";
+      const value = Math.round(raw);
+      if (value < 1 || value > 4) return "";
+      return String(value);
+    };
+
     const isFieldObservationChapter = (chapterId) => String(chapterId || "").includes(".");
 
     const buildIncludedSections = (rows) => {
@@ -1105,6 +1126,7 @@
           title: chapter?.id === "4.8" ? String(row?.titleOverride || "").trim() : "",
           finding: resolveFindingText(row),
           recommendation: resolveRecommendationText(row),
+          priority: resolvePriorityText(row),
         });
       });
       return output;
@@ -1188,7 +1210,7 @@
 
         const prio = document.createElement("td");
         prio.className = "chapter-preview-table__prio";
-        prio.textContent = "";
+        prio.textContent = entry.priority || "";
 
         row.appendChild(finding);
         row.appendChild(recommendation);
@@ -1358,28 +1380,36 @@
       previewBtn.textContent = "Preview";
       const headerRight = document.createElement("div");
       headerRight.className = "row-header__right";
-      headerRight.appendChild(createAnswerBadge(row));
+      const headerAux = document.createElement("div");
+      headerAux.className = "row-header__aux";
+      const headerStable = document.createElement("div");
+      headerStable.className = "row-header__stable";
       if (score !== null && score !== undefined) {
         const scoreBadge = document.createElement("span");
         scoreBadge.className = "score-badge";
         scoreBadge.textContent = `${score}%`;
-        headerRight.appendChild(scoreBadge);
+        headerAux.appendChild(scoreBadge);
       }
       if (options.photoPill) {
-        headerRight.appendChild(options.photoPill);
+        headerAux.appendChild(options.photoPill);
       }
       if (options.reorderControls) {
-        headerRight.appendChild(options.reorderControls);
+        headerAux.appendChild(options.reorderControls);
       }
       const comments = stateHelpers.getAnswerComments(row);
       if (comments.length) {
-        headerRight.appendChild(createBadgeTooltip("Comment", comments.join("\n"), "comment-badge"));
+        headerAux.appendChild(createBadgeTooltip("Comment", comments.join("\n"), "comment-badge"));
       }
       const evidence = stateHelpers.getAnswerEvidence(row);
       if (evidence.length) {
-        headerRight.appendChild(createBadgeTooltip("Evidence", evidence.join("\n"), "evidence-badge"));
+        headerAux.appendChild(createBadgeTooltip("Evidence", evidence.join("\n"), "evidence-badge"));
       }
-      headerRight.appendChild(previewBtn);
+      headerStable.appendChild(createAnswerBadge(row));
+      headerStable.appendChild(previewBtn);
+      if (headerAux.childElementCount > 0) {
+        headerRight.appendChild(headerAux);
+      }
+      headerRight.appendChild(headerStable);
       header.appendChild(meta);
       header.appendChild(headerRight);
       return { header, previewBtn };
@@ -1454,6 +1484,35 @@
       return label;
     };
 
+    const createPriorityControls = (row, ws) => {
+      const group = document.createElement("div");
+      group.className = "priority-group";
+      const title = document.createElement("span");
+      title.className = "priority-group__label";
+      title.textContent = "Prio";
+      group.appendChild(title);
+      const current = Number(ws.priority);
+      const hasPriority = Number.isFinite(current) && current >= 0 && current <= 4;
+      const options = [1, 2, 3, 4, 0];
+      options.forEach((value) => {
+        const label = document.createElement("label");
+        label.className = "level-radio priority-radio";
+        const input = document.createElement("input");
+        input.type = "radio";
+        input.name = `priority-${row.id}`;
+        input.value = String(value);
+        input.checked = hasPriority ? current === value : value === 0;
+        input.addEventListener("change", () => {
+          ws.priority = value;
+          scheduleAutosave();
+        });
+        label.appendChild(input);
+        label.appendChild(document.createTextNode(String(value)));
+        group.appendChild(label);
+      });
+      return group;
+    };
+
     const createMarkdownHint = () => {
       const hint = document.createElement("span");
       hint.className = "hint";
@@ -1511,11 +1570,13 @@
       });
 
       const findingControls = document.createElement("div");
-      findingControls.className = "field-controls";
+      findingControls.className = "field-controls finding-controls";
       findingControls.appendChild(includeToggle);
       findingControls.appendChild(doneToggle);
+      findingControls.appendChild(createPriorityControls(row, ws));
 
       const findingArea = document.createElement("textarea");
+      applyEditorLocale(findingArea);
       findingArea.value = stateHelpers.getFindingText(row);
       findingArea.addEventListener("input", () => {
         ws.findingText = findingArea.value;
@@ -1594,6 +1655,7 @@
       });
 
       const recommendationInput = document.createElement("textarea");
+      applyEditorLocale(recommendationInput);
       const recommendationText = stateHelpers.getRecommendationText(row);
       recommendationInput.value = recommendationText;
       recommendationInput.addEventListener("input", () => {
@@ -1604,9 +1666,13 @@
       });
       requestAnimationFrame(() => autosizeTextarea(recommendationInput));
 
+      const recommendationControls = document.createElement("div");
+      recommendationControls.className = "recommendation-controls";
+      recommendationControls.appendChild(recControls);
+      recommendationControls.appendChild(libraryGroup);
+
       recHeader.appendChild(recLabel);
-      recHeader.appendChild(recControls);
-      recHeader.appendChild(libraryGroup);
+      recHeader.appendChild(recommendationControls);
       recField.appendChild(recHeader);
       recField.appendChild(recommendationInput);
       return recField;
