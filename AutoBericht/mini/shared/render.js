@@ -24,6 +24,9 @@
       checklistFiltersEl,
       checklistListEl,
       checklistSearchEl,
+      chapterPreviewModal,
+      chapterPreviewTitle,
+      chapterPreviewBody,
     } = elements;
 
     let scheduleAutosave = () => {};
@@ -592,6 +595,261 @@
       checklistOverlayEl.setAttribute("aria-hidden", "true");
     };
 
+    const PREVIEW_COL1_WIDTH = 35;
+    const PREVIEW_COL2_WIDTH = 58;
+    const PREVIEW_COL3_WIDTH = 7;
+
+    const isSectionRow = (row) => String(row?.kind || "").toLowerCase() === "section";
+
+    const rowToText = (value) => {
+      if (typeof stateHelpers.toText === "function") {
+        return stateHelpers.toText(value);
+      }
+      if (Array.isArray(value)) return value.join("\n");
+      if (value == null) return "";
+      return String(value);
+    };
+
+    const isIncludedRow = (row) => {
+      const ws = row?.workstate;
+      if (!ws || ws.includeFinding == null) return true;
+      return ws.includeFinding === true;
+    };
+
+    const resolveSectionId = (row, chapterId) => {
+      const sectionId = String(row?.sectionId || "").trim();
+      if (sectionId) return sectionId;
+      const rawId = String(row?.id || "");
+      const parts = rawId.split(".");
+      if (parts.length >= 2) return `${parts[0]}.${parts[1]}`;
+      if (chapterId) return `${chapterId}.1`;
+      return "";
+    };
+
+    const stripLeadingNumber = (value) => (
+      String(value || "")
+        .replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "")
+        .trim()
+    );
+
+    const resolveSectionTitle = (row) => {
+      const rawTitle = String(row?.title || row?.id || "");
+      const cleaned = stripLeadingNumber(rawTitle);
+      return cleaned || rawTitle;
+    };
+
+    const resolveFindingText = (row) => {
+      const ws = row?.workstate;
+      if (ws && Object.prototype.hasOwnProperty.call(ws, "findingText")) {
+        return rowToText(ws.findingText);
+      }
+      return rowToText(row?.master?.finding);
+    };
+
+    const resolveRecommendationText = (row) => {
+      const ws = row?.workstate || {};
+      if (ws.includeRecommendation === false) return "";
+      if (Object.prototype.hasOwnProperty.call(ws, "recommendationText")) {
+        return rowToText(ws.recommendationText);
+      }
+      return rowToText(row?.master?.recommendation);
+    };
+
+    const isFieldObservationChapter = (chapterId) => String(chapterId || "").includes(".");
+
+    const buildIncludedSections = (rows) => {
+      const included = new Set();
+      rows.forEach((row) => {
+        if (isSectionRow(row) || !isIncludedRow(row)) return;
+        const sectionId = String(row?.sectionId || "").trim();
+        if (sectionId) included.add(sectionId);
+      });
+      return included;
+    };
+
+    const buildRenumberMap = (rows, chapterId) => {
+      const rowMap = new Map();
+      const sectionMap = new Map();
+      const sectionCounts = new Map();
+      let itemCount = 0;
+      rows.forEach((row) => {
+        if (isSectionRow(row) || !isIncludedRow(row)) return;
+        const rowId = String(row?.id || "").trim();
+        if (!rowId) return;
+        if (isFieldObservationChapter(chapterId)) {
+          itemCount += 1;
+          rowMap.set(rowId, `${chapterId}.${itemCount}`);
+          return;
+        }
+        const sectionId = resolveSectionId(row, chapterId) || `${chapterId}.1`;
+        if (!sectionMap.has(sectionId)) {
+          sectionMap.set(sectionId, sectionMap.size + 1);
+        }
+        const count = (sectionCounts.get(sectionId) || 0) + 1;
+        sectionCounts.set(sectionId, count);
+        rowMap.set(rowId, `${chapterId}.${sectionMap.get(sectionId)}.${count}`);
+      });
+      return { rowMap, sectionMap };
+    };
+
+    const buildChapterPreviewRows = (chapter) => {
+      let rows = Array.isArray(chapter?.rows) ? chapter.rows : [];
+      if (chapter?.id === "4.8" || chapter?.id === "0") {
+        rows = normalizeHelpers.orderObservationRows(chapter);
+      }
+      const includedSections = buildIncludedSections(rows);
+      const { rowMap } = buildRenumberMap(rows, chapter?.id || "");
+      const output = [];
+      rows.forEach((row) => {
+        if (isSectionRow(row)) {
+          const sectionId = String(row?.id || "").trim();
+          if (!sectionId || !includedSections.has(sectionId)) return;
+          output.push({
+            kind: "section",
+            title: resolveSectionTitle(row),
+          });
+          return;
+        }
+        if (!isIncludedRow(row)) return;
+        const rowId = String(row?.id || "").trim();
+        output.push({
+          kind: "finding",
+          id: rowMap.get(rowId) || rowId,
+          finding: resolveFindingText(row),
+          recommendation: resolveRecommendationText(row),
+        });
+      });
+      return output;
+    };
+
+    const createChapterPreviewTable = (rows) => {
+      const table = document.createElement("table");
+      table.className = "chapter-preview-table";
+      const colgroup = document.createElement("colgroup");
+      [PREVIEW_COL1_WIDTH, PREVIEW_COL2_WIDTH, PREVIEW_COL3_WIDTH].forEach((width) => {
+        const col = document.createElement("col");
+        col.style.width = `${width}%`;
+        colgroup.appendChild(col);
+      });
+      table.appendChild(colgroup);
+
+      const body = document.createElement("tbody");
+
+      const topHeader = document.createElement("tr");
+      topHeader.className = "chapter-preview-table__check";
+      const topBlank = document.createElement("td");
+      topBlank.colSpan = 2;
+      topBlank.textContent = "";
+      const topCheck = document.createElement("td");
+      topCheck.className = "chapter-preview-table__prio";
+      topCheck.textContent = "✓";
+      topHeader.appendChild(topBlank);
+      topHeader.appendChild(topCheck);
+      body.appendChild(topHeader);
+
+      const titleHeader = document.createElement("tr");
+      titleHeader.className = "chapter-preview-table__title";
+      const titleMain = document.createElement("td");
+      titleMain.colSpan = 2;
+      titleMain.textContent = "Systempunkte mit Verbesserungspotenzial";
+      const titleSpacer = document.createElement("td");
+      titleSpacer.textContent = "";
+      titleHeader.appendChild(titleMain);
+      titleHeader.appendChild(titleSpacer);
+      body.appendChild(titleHeader);
+
+      const labelHeader = document.createElement("tr");
+      labelHeader.className = "chapter-preview-table__labels";
+      ["Ist-Zustand", "Lösungsansätze", "Prio"].forEach((label, index) => {
+        const th = document.createElement("th");
+        th.scope = "col";
+        th.textContent = label;
+        if (index === 2) th.className = "chapter-preview-table__prio";
+        labelHeader.appendChild(th);
+      });
+      body.appendChild(labelHeader);
+
+      rows.forEach((entry) => {
+        if (entry.kind === "section") {
+          const row = document.createElement("tr");
+          row.className = "chapter-preview-table__section";
+          const cell = document.createElement("td");
+          cell.colSpan = 3;
+          cell.textContent = entry.title || "";
+          row.appendChild(cell);
+          body.appendChild(row);
+          return;
+        }
+
+        const row = document.createElement("tr");
+        row.className = "chapter-preview-table__item";
+
+        const finding = document.createElement("td");
+        const id = document.createElement("div");
+        id.className = "chapter-preview-id";
+        id.textContent = entry.id || "";
+        const findingText = document.createElement("div");
+        findingText.className = "chapter-preview-text";
+        findingText.textContent = entry.finding || "";
+        finding.appendChild(id);
+        finding.appendChild(findingText);
+
+        const recommendation = document.createElement("td");
+        recommendation.className = "chapter-preview-text";
+        recommendation.textContent = entry.recommendation || "";
+
+        const prio = document.createElement("td");
+        prio.className = "chapter-preview-table__prio";
+        prio.textContent = "";
+
+        row.appendChild(finding);
+        row.appendChild(recommendation);
+        row.appendChild(prio);
+        body.appendChild(row);
+      });
+
+      table.appendChild(body);
+
+      const wrapper = document.createElement("div");
+      wrapper.className = "chapter-preview-table-wrap";
+      wrapper.appendChild(table);
+      return wrapper;
+    };
+
+    const renderChapterPreview = (chapter) => {
+      if (!chapterPreviewBody || !chapterPreviewTitle) return;
+      chapterPreviewBody.innerHTML = "";
+      const chapterLabel = stateHelpers.formatChapterLabel(chapter);
+      chapterPreviewTitle.textContent = t("chapter_preview_title", "Word Export Preview");
+      const subtitle = document.createElement("div");
+      subtitle.className = "chapter-preview-subtitle";
+      subtitle.textContent = chapterLabel;
+      chapterPreviewBody.appendChild(subtitle);
+
+      const rows = buildChapterPreviewRows(chapter);
+      if (!rows.length) {
+        const empty = document.createElement("div");
+        empty.className = "chapter-preview-empty";
+        empty.textContent = t("chapter_preview_empty", "No included findings in this chapter.");
+        chapterPreviewBody.appendChild(empty);
+        return;
+      }
+      chapterPreviewBody.appendChild(createChapterPreviewTable(rows));
+    };
+
+    const openChapterPreview = (chapter) => {
+      if (!chapterPreviewModal || !chapter) return;
+      renderChapterPreview(chapter);
+      chapterPreviewModal.classList.add("is-open");
+      chapterPreviewModal.setAttribute("aria-hidden", "false");
+    };
+
+    const closeChapterPreview = () => {
+      if (!chapterPreviewModal) return;
+      chapterPreviewModal.classList.remove("is-open");
+      chapterPreviewModal.setAttribute("aria-hidden", "true");
+    };
+
     const renderChapterList = () => {
       chapterListEl.innerHTML = "";
       const orderedChapters = [...state.project.chapters].sort((a, b) =>
@@ -632,6 +890,14 @@
       const pill = createPhotoPill(chapter.id);
       if (pill) chapterTitleEl.appendChild(pill);
       chapterTitleEl.appendChild(title);
+      const chapterPreviewBtn = document.createElement("button");
+      chapterPreviewBtn.type = "button";
+      chapterPreviewBtn.className = "checklist-pill";
+      chapterPreviewBtn.textContent = t("chapter_preview_button", "Preview chapter");
+      chapterPreviewBtn.addEventListener("click", () => {
+        openChapterPreview(chapter);
+      });
+      chapterTitleEl.appendChild(chapterPreviewBtn);
       if (chapter.id === "4.8") {
         const checklistBtn = document.createElement("button");
         checklistBtn.type = "button";
@@ -723,6 +989,11 @@
       if (row.type === "summary") return null;
       const selfItems = row.customer?.items || [];
       if (selfItems.length <= 1) return null;
+      const formatAnswer = (value) => {
+        if (value === 1 || value === "1" || value === true) return "Yes";
+        if (value === 0 || value === "0" || value === false) return "No";
+        return "—";
+      };
       const details = document.createElement("details");
       details.className = "self-details";
       const summary = document.createElement("summary");
@@ -732,7 +1003,9 @@
       list.className = "self-list";
       selfItems.forEach((item) => {
         const li = document.createElement("li");
-        li.textContent = `${item.id} — ${item.question || ""}`.trim();
+        const answer = formatAnswer(item.answer);
+        const label = `${item.id} [${answer}] — ${item.question || ""}`.trim();
+        li.textContent = label;
         list.appendChild(li);
       });
       details.appendChild(list);
@@ -884,7 +1157,10 @@
           renderRows();
         });
         label.appendChild(input);
-        label.appendChild(document.createTextNode(String(level)));
+        const pct = typeof stateHelpers.levelToPct === "function"
+          ? stateHelpers.levelToPct(level)
+          : (level - 1) * 25;
+        label.appendChild(document.createTextNode(`${pct}%`));
         levelGroup.appendChild(label);
       });
 
@@ -987,13 +1263,17 @@
 
     const shouldFilterRow = (row, ws) => {
       if (row.kind === "section") return false;
-      const mode = state.filters.mode;
-      if (mode === "include-only") return ws.includeFinding === true;
-      if (mode === "done-only") return ws.done === true;
-      if (mode === "hide-done") return ws.done !== true;
-      if (mode === "hide-yes") {
-        return stateHelpers.getAnswerState(row) === 1;
+      const answerMode = state.filters.answer || "all";
+      const includeMode = state.filters.include || "all";
+      const doneMode = state.filters.done || "all";
+      // `shouldFilterRow` returns true when the row should be hidden.
+      if (answerMode === "hide-yes") {
+        if (stateHelpers.getAnswerState(row) === 1) return true;
       }
+      if (includeMode === "included" && ws.includeFinding !== true) return true;
+      if (includeMode === "not-included" && ws.includeFinding === true) return true;
+      if (doneMode === "done" && ws.done !== true) return true;
+      if (doneMode === "not-done" && ws.done === true) return true;
       return false;
     };
 
@@ -1009,7 +1289,17 @@
       const photoTag = isObservationRow
         ? (row.tag || row.titleOverride || row.id)
         : (row.sectionId || row.id);
-      const showPhotoPill = row.type !== "summary" && !options.hidePhotoPill;
+      const hasParentSectionPill = !isObservationRow
+        && String(row.sectionId || "") !== String(row.id || "")
+        && Array.isArray(options.chapter?.rows)
+        && options.chapter.rows.some((candidate) => (
+          candidate
+          && candidate.kind === "section"
+          && String(candidate.id || "") === String(row.sectionId || "")
+        ));
+      const showPhotoPill = row.type !== "summary"
+        && !options.hidePhotoPill
+        && (isObservationRow || !hasParentSectionPill);
       const headerPayload = createRowHeader(row, score, {
         photoPill: showPhotoPill ? createPhotoPill(photoTag, photoKind) : null,
         reorderControls: options.reorderControls,
@@ -1079,6 +1369,8 @@
       stepPhotoOverlay,
       openChecklistOverlay,
       closeChecklistOverlay,
+      openChapterPreview,
+      closeChapterPreview,
       renderChapterList,
       renderChapterTitle,
       renderRows,

@@ -577,8 +577,8 @@
       },
       {
         "id": "2.1.2b",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organizzazione",
         "question": "Struttura linea-staff?",
@@ -587,8 +587,8 @@
       },
       {
         "id": "2.1.2c",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organizzazione",
         "question": "Struttura funzionale?",
@@ -597,8 +597,8 @@
       },
       {
         "id": "2.1.2d",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organizzazione",
         "question": "Struttura a matrice?",
@@ -607,8 +607,8 @@
       },
       {
         "id": "2.1.2e",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organizzazione",
         "question": "Struttura per progetto?",
@@ -617,8 +617,8 @@
       },
       {
         "id": "2.1.2f",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organizzazione",
         "question": "Altro? Specificare",
@@ -4718,6 +4718,86 @@
         "sectionLabel": ""
       },
       {
+        "id": "11.1",
+        "groupId": "11.1",
+        "collapsedId": "11.1",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "La direzione aziendale ha esplicitamente dichiarato di volere un sistema di gestione delle assenze?"
+      },
+      {
+        "id": "11.3",
+        "groupId": "11.3",
+        "collapsedId": "11.3",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "Si analizzano gli indicatori e si definiscono gli obiettivi di prevenzione con cadenza annuale?"
+      },
+      {
+        "id": "11.4",
+        "groupId": "11.4",
+        "collapsedId": "11.4",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "È stato definito un modello di intervento e sono state attribuite responsabilità (e compiti) per assistere i collaboratori in caso di assenze impreviste - brevi o prolungate - e per reinserirli nel processo lavorativo?"
+      },
+      {
+        "id": "11.5",
+        "groupId": "11.5",
+        "collapsedId": "11.5",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "I quadri (e le altre istanze coinvolte) ricevono un'introduzione alla gestione delle assenze e una formazione sul loro ruolo di assistenza e sulle pratiche amministrative da assolvere?"
+      },
+      {
+        "id": "11.6",
+        "groupId": "11.6",
+        "collapsedId": "11.6",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "I collaboratori vengono informati periodicamente sugli obiettivi della gestione delle assenze e sul comportamento corretto da seguire in caso di assenza?"
+      },
+      {
+        "id": "11.8",
+        "groupId": "11.8",
+        "collapsedId": "11.8",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "Dall'esito dei colloqui di rientro si ricavano misure preventive?"
+      },
+      {
+        "id": "11.9",
+        "groupId": "11.9",
+        "collapsedId": "11.9",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "È stata definita una procedura da seguire in caso di assenze frequenti?"
+      },
+      {
+        "id": "11.10",
+        "groupId": "11.10",
+        "collapsedId": "11.10",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "I superiori diretti chiedono ai collaboratori infortunati o malati, durante la loro assenza, qual è il loro stato di salute e offrono loro sostegno?"
+      },
+      {
+        "id": "11.11",
+        "groupId": "11.11",
+        "collapsedId": "11.11",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "I quadri controllano con sistematicità se per i collaboratori infortunati o malati vi è la possibilità di lavorare a tempo parziale o di svolgere momentaneamente attività alternative (non affaticanti)?"
+      },
+      {
+        "id": "11.12",
+        "groupId": "11.12",
+        "collapsedId": "11.12",
+        "chapter": 11,
+        "chapterLabel": "11 Assenze",
+        "question": "I medici curanti vengono informati dell'eventualità di un lavoro a tempo parziale o di attività alternative?"
+      },
+      {
         "id": "12.6.a",
         "groupId": "12.6",
         "collapsedId": "12.6",
@@ -4806,6 +4886,94 @@
         "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
         "question": "altro?",
         "sectionLabel": ""
+      },
+      {
+        "id": "12.1",
+        "groupId": "12.1",
+        "collapsedId": "12.1",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "La direzione aziendale ha esplicitamente dichiarato di voler aiutare i collaboratori ad adottare uno stile di vita sano e sicuro nel loro tempo libero?"
+      },
+      {
+        "id": "12.2",
+        "groupId": "12.2",
+        "collapsedId": "12.2",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "È previsto un budget per i progetti di sicurezza nel tempo libero?"
+      },
+      {
+        "id": "12.3",
+        "groupId": "12.3",
+        "collapsedId": "12.3",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Vi sono responsabili o gruppi di lavoro che pianificano e coordinano le misure di prevenzione degli infortuni nel tempo libero?"
+      },
+      {
+        "id": "12.4",
+        "groupId": "12.4",
+        "collapsedId": "12.4",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "I responsabili o i membri del gruppo di lavoro hanno una formazione in materia di prevenzione degli infortuni nel tempo libero (per es. corsi Suva, upi, ecc.)?"
+      },
+      {
+        "id": "12.5",
+        "groupId": "12.5",
+        "collapsedId": "12.5",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "I collaboratori vengono periodicamente informati in azienda sulle dinamiche degli infortuni nel tempo libero (tramite riunioni, rivista, Intranet, e-mail, albo ecc.)?"
+      },
+      {
+        "id": "12.7",
+        "groupId": "12.7",
+        "collapsedId": "12.7",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Dagli infortuni nel tempo libero si deducono eventuali ambiti di intervento?"
+      },
+      {
+        "id": "12.8",
+        "groupId": "12.8",
+        "collapsedId": "12.8",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Vi sono categorie di lavoratori (coll. giovani, anziani, uomini, donne) che causano un numero particolarmente elevato di infortuni?"
+      },
+      {
+        "id": "12.9",
+        "groupId": "12.9",
+        "collapsedId": "12.9",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "L'azienda ha associazioni sportive proprie?"
+      },
+      {
+        "id": "12.10",
+        "groupId": "12.10",
+        "collapsedId": "12.10",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Vi sono collaboratori all'interno dell'azienda che possiedono buone conoscenze e abilità sportive (per es. allenatori di calcio, responsabili di gruppi podistici, istruttori di fitness ecc.)?"
+      },
+      {
+        "id": "12.12",
+        "groupId": "12.12",
+        "collapsedId": "12.12",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Con le misure / i progetti sulla sicurezza nel tempo libero si intende raggiungere obiettivi concreti? Se sì, quali?"
+      },
+      {
+        "id": "12.13",
+        "groupId": "12.13",
+        "collapsedId": "12.13",
+        "chapter": 12,
+        "chapterLabel": "12 Sicurezza nel tempo libero (parte facoltativa)",
+        "question": "Tali misure / progetti sono sottoposti a valutazione da cui poi si ricavano insegnamenti preziosi per misure / progetti futuri?"
       },
       {
         "id": "13.2.a",
@@ -4995,6 +5163,54 @@
         "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
         "question": "disponibilità di un'istanza neutrale a cui rivolgersi in caso di situazioni conflittuali o problemi personali?",
         "sectionLabel": ""
+      },
+      {
+        "id": "13.1",
+        "groupId": "13.1",
+        "collapsedId": "13.1",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "La direzione aziendale ha esplicitamente dichiarato di voler integrare la gestione della salute in azienda nella politica aziendale e nei suoi principi di conduzione?"
+      },
+      {
+        "id": "13.3",
+        "groupId": "13.3",
+        "collapsedId": "13.3",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "Vi sono responsabili o gruppi di lavoro che pianificano e coordinano le misure di prevenzione della GSA?"
+      },
+      {
+        "id": "13.4",
+        "groupId": "13.4",
+        "collapsedId": "13.4",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "Tali responsabili o i membri del gruppo di lavoro hanno una formazione in materia di GSA e prevenzione?"
+      },
+      {
+        "id": "13.5",
+        "groupId": "13.5",
+        "collapsedId": "13.5",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "Le misure e gli ambiti di attuazione si basano su analisi del fabbisogno aziendale o delle esigenze dei collaboratori (condotte per es. attraverso sondaggi tra il personale o circoli della salute)?"
+      },
+      {
+        "id": "13.8",
+        "groupId": "13.8",
+        "collapsedId": "13.8",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "Vi sono in azienda progetti di GSA in corso? \nSe sì, da quanto tempo e su quali argomenti?"
+      },
+      {
+        "id": "13.9",
+        "groupId": "13.9",
+        "collapsedId": "13.9",
+        "chapter": 13,
+        "chapterLabel": "13 GSA: gestione della salute in azienda (parte facoltativa)",
+        "question": "Vengono valutate la qualità e l'efficacia delle misure e dei progetti di GSA e se ne ricavano poi insegnamenti per misure / progetti futuri?"
       },
       {
         "id": "14.1.1",
@@ -6961,6 +7177,90 @@
         "finding": "I superiori gerarchici non sono supportati da altri servizi nei loro sforzi di accompagnamento e integrazione.",
         "children": [],
         "recommendation": "I superiori necessitano di un supporto pratico in caso di assenze prolungate e di reintegrazioni, poiché oltre alle attività quotidiane spesso non hanno né il tempo né le competenze specialistiche per gestire casi di integrazione complessi. Il superiore gerarchico contatta il reparto HR o lo specialista della sicurezza sul lavoro per ogni assenza a partire dal 14º giorno, per discutere brevemente il caso. Questo contatto avviene per e-mail o tramite un breve colloquio indicando il motivo dell'assenza (se noto), la durata fino a quel momento e la data prevista di rientro. Non si tratta di un grande impegno. Come documentazione serve una registrazione nel registro delle assenze con il campo «Colloquio con HR/specialista della sicurezza sul lavoro il [data]». Ci si aspetta che entro tre mesi i superiori considerino questo colloquio come routine e non debbano più decidere da soli.\n\nLa direzione stabilisce quali servizi interni ed esterni possono essere coinvolti nei casi di integrazione e comunica questi punti di contatto a tutti i quadri dirigenti. Il reparto HR elabora a tal fine una panoramica con al massimo cinque contatti: referente interno HR, specialista della sicurezza sul lavoro, rilevamento tempestivo AI, medico di fiducia ed eventualmente un case manager esterno. Ogni voce contiene nome, funzione, numero di telefono e situazione tipica di intervento. Questa panoramica viene verificata annualmente per garantirne l'attualità e aggiornata in caso di cambiamenti del personale. L'incaricato della sicurezza distribuisce il documento ai nuovi superiori nell'ambito dell'introduzione. Come documentazione serve il documento stesso con la data di versione nonché una lista di distribuzione con conferma di ricezione. In questo modo i superiori sanno a chi rivolgersi senza dover cercare a lungo.\n\nNella riunione mensile dei quadri vengono discussi brevemente i casi di integrazione in corso, affinché i superiori possano imparare gli uni dagli altri e utilizzino effettivamente le offerte di supporto. Il responsabile di reparto porta un elenco di tutte le assenze superiori a 30 giorni e chiede per ogni caso lo stato dell'accompagnamento e della collaborazione con i servizi di supporto. I casi senza colloquio documentato vengono contrassegnati. Questa procedura richiede dieci minuti per riunione. Come documentazione serve il verbale della riunione con le colonne «Caso», «Servizio di supporto contattato (sì/no)» e «Prossimo passo». I superiori che finora non hanno richiesto aiuto ricevono così uno stimolo concreto. In questo modo il supporto entra nella quotidianità dirigenziale invece di rimanere un processo speciale.\n\nIl reparto HR valuta semestralmente con quale frequenza i superiori hanno effettivamente contattato i servizi di supporto definiti e come si sono sviluppati i casi di integrazione. La fonte dei dati è il registro delle assenze, integrato dai riscontri dei servizi di supporto. La valutazione mostra la frequenza dei contatti per reparto, la durata media delle assenze nei casi con e senza supporto nonché il tasso di rientro. Lo specialista della sicurezza sul lavoro verifica se i punti di contatto sono ancora adeguati o se esistono lacune. I risultati e gli eventuali adattamenti vengono presentati alla direzione e aggiornati nel concetto delle assenze. Come documentazione serve il rapporto di valutazione con data, base dati e proposte di misure. In questo modo l'azienda può vedere se il supporto è efficace e può migliorare in modo mirato."
+      },
+      {
+        "id": "1.3.2",
+        "groupId": "1.3.2",
+        "finding": "Non tutte le seguenti attività sono attuate in modo sistematico dai superiori per promuovere la sicurezza e la tutela della salute:\n- a) Valutazioni dei rischi\n- b) Audit, controlli\n- c) Indagini d'infortunio\n- d) Formazioni sul posto di lavoro\n- e) Campagne per la sicurezza sul lavoro\n- f) Campagne per la sicurezza nel tempo libero\n- g) Gestione delle assenze\n- h) Altre azioni (se del caso)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "1.4.1",
+        "groupId": "1.4.1",
+        "finding": "Non sono stati fissati obiettivi quantitativi per limitare la frequenza dei seguenti eventi:\n- a) Infortuni/malattie professionali\n- b) Infortuni non professionali\n- c) Malattie\n- d) Danni materiali\n- e) Disturbi\n- f) Altri eventi (se del caso)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "9.6.2",
+        "groupId": "9.6.2",
+        "finding": "Le pause di lavoro non sono definite o comunicate in modo chiaro:\n- a) Mattino\n- b) Mezzogiorno\n- c) Pomeriggio\n- d) Pause di turno",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "9.7.1",
+        "groupId": "9.7.1",
+        "finding": "Gli effetti della forma di retribuzione applicata sulla sicurezza e la salute non vengono valutati o discussi:\n- a) Salario a tempo\n- b) Salario a premio\n- c) Salario a rendimento\n- e) Cottimo in gruppo",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.2",
+        "groupId": "11.2",
+        "finding": "I dati relativi a infortuni e malattie e ai giorni di assenza non vengono gestiti in modo sistematico:\n- a) Registrati\n- b) Analizzati\n- c) Valutati\n- d) Comunicati",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.7",
+        "groupId": "11.7",
+        "finding": "I colloqui di rientro non vengono svolti in modo sistematico:\n- a) Dai quadri\n- b) Dopo ogni assenza imprevista di lunga durata\n- c) Dopo ogni assenza imprevista",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.13",
+        "groupId": "11.13",
+        "finding": "I quadri non ricevono un sostegno sufficiente nelle attività di assistenza e reinserimento:\n- a) Risorse umane\n- b) Altre unità organizzative (se del caso)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "12.6",
+        "groupId": "12.6",
+        "finding": "Gli infortuni nel tempo libero non vengono gestiti in modo sistematico:\n- a) Registrati\n- b) Analizzati\n- c) Valutati\n- d) Comunicati",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "12.11",
+        "groupId": "12.11",
+        "finding": "Non sono stati svolti (o non in misura sufficiente) progetti o misure per promuovere la sicurezza nel tempo libero (temi):\n- b) Rischio di inciampare e cadere\n- c) Sport con la palla\n- d) Sport invernali\n- e) Casa e giardino\n- f) Altro (se del caso)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.2",
+        "groupId": "13.2",
+        "finding": "Non esiste un piano/concetto completo per la GSA (gestione della salute in azienda) con:\n- a) Obiettivi\n- b) Svolgimento e tempistiche\n- c) Comunicazione ai gruppi target\n- d) Budget per progetti di GSA",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.6",
+        "groupId": "13.6",
+        "finding": "I collaboratori non sono sostenuti in tutti i temi rilevanti di promozione della salute:\n- a) Sufficiente movimento / sport\n- b) Alimentazione / peso corporeo sano\n- c) Strategie antistress e prevenzione del burnout\n- d) Gestione del lavoro a turni / lavoro notturno\n- e) Equilibrio tra lavoro e vita privata\n- f) Sonno e riposo\n- g) Prevenzione delle dipendenze",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.7",
+        "groupId": "13.7",
+        "finding": "Le risorse legate al lavoro non vengono incentivate in modo sufficiente:\n- a) Corsi formativi per quadri\n- b) Infrastruttura legata alla salute (sale ricreazione, docce, ecc.)\n- c) Organizzazione ergonomica degli ambienti e dei posti di lavoro\n- d) Corsi su postura, sollevamento e trasporto carichi\n- e) Inserimento di nuovi collaboratori\n- f) Formazione continua (competenze sociali e umane)\n- g) Buona cooperazione all'interno del team\n- h) Collaborazione e comunicazione tra livelli gerarchici\n- i) Misure per conciliare lavoro, famiglia e tempo libero\n- j) Istanza neutrale in caso di conflitti o problemi personali",
+        "children": [],
+        "recommendation": ""
       }
     ]
   },

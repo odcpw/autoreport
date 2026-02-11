@@ -577,8 +577,8 @@
       },
       {
         "id": "2.1.2b",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Organisation d’état-major de ligne?",
@@ -587,8 +587,8 @@
       },
       {
         "id": "2.1.2c",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Organisation fonctionnelle?",
@@ -597,8 +597,8 @@
       },
       {
         "id": "2.1.2d",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Organisation matricielle?",
@@ -607,8 +607,8 @@
       },
       {
         "id": "2.1.2e",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Organisation de projets?",
@@ -617,8 +617,8 @@
       },
       {
         "id": "2.1.2f",
-        "groupId": "2.1.2",
-        "collapsedId": "2.1.2",
+        "groupId": "2.1.1",
+        "collapsedId": "2.1.1",
         "chapter": 2,
         "chapterLabel": "2 Organisation",
         "question": "Autre forme? Si oui, laquelle?",
@@ -4718,6 +4718,86 @@
         "sectionLabel": ""
       },
       {
+        "id": "11.1",
+        "groupId": "11.1",
+        "collapsedId": "11.1",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Y a-t-il une déclaration d'intention exprimée par la direction qui se traduit par une gestion des absences?"
+      },
+      {
+        "id": "11.3",
+        "groupId": "11.3",
+        "collapsedId": "11.3",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les indicateurs sont-ils mis à jour annuellement et définis dans les objectifs de prévention?"
+      },
+      {
+        "id": "11.4",
+        "groupId": "11.4",
+        "collapsedId": "11.4",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Y a-t-il une définition des processus, responsabilités et tâches, qui fixent le mode de prise en charge des absences non planifiées de courtes et longues durées, ainsi que la réintégration au travail?"
+      },
+      {
+        "id": "11.5",
+        "groupId": "11.5",
+        "collapsedId": "11.5",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les supérieurs hiérarchiques (et les autres services impliqués) bénéficient-ils d’une initiation à la gestion des absences et d’une formation à leurs tâches administratives et de suivi?"
+      },
+      {
+        "id": "11.6",
+        "groupId": "11.6",
+        "collapsedId": "11.6",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les collaborateurs sont-ils périodiquement informés des buts de la gestion des absences et de la bonne attitude à adopter en cas d'absence?"
+      },
+      {
+        "id": "11.8",
+        "groupId": "11.8",
+        "collapsedId": "11.8",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Des mesures de prévention sont-elles déduites des conclusions des entretiens de retour au travail?"
+      },
+      {
+        "id": "11.9",
+        "groupId": "11.9",
+        "collapsedId": "11.9",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Une approche est-elle définie pour les absences fréquentes?"
+      },
+      {
+        "id": "11.10",
+        "groupId": "11.10",
+        "collapsedId": "11.10",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les chefs directs se renseignent-ils auprès des collaborateurs accidentés ou malades pendant leur absence au sujet de leur état de santé? Leur offrent-ils du soutien?"
+      },
+      {
+        "id": "11.11",
+        "groupId": "11.11",
+        "collapsedId": "11.11",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les possibilités d'occupation à temps partiel ou, éventuellement, avec un cahier des charges alternatif, sont-elles systématiquement envisagées par les chefs des collaborateurs accidentés ou malades?"
+      },
+      {
+        "id": "11.12",
+        "groupId": "11.12",
+        "collapsedId": "11.12",
+        "chapter": 11,
+        "chapterLabel": "11 Gestion des absences",
+        "question": "Les médecins traitants sont-ils informés des possibilités d'occupation à temps partiel ou, éventuellement, de cahiers des charges alternatifs?"
+      },
+      {
         "id": "12.6.a",
         "groupId": "12.6",
         "collapsedId": "12.6",
@@ -4806,6 +4886,94 @@
         "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
         "question": "Autres thèmes?",
         "sectionLabel": ""
+      },
+      {
+        "id": "12.1",
+        "groupId": "12.1",
+        "collapsedId": "12.1",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Y a-t-il une déclaration d'intention explicitement exprimée par la direction visant à encourager les collaborateurs à adopter un comportement sûr et sain dans le cadre des loisirs?"
+      },
+      {
+        "id": "12.2",
+        "groupId": "12.2",
+        "collapsedId": "12.2",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Les projets relatifs à la prévention des accidents lors des loisirs sont-ils budgetés?"
+      },
+      {
+        "id": "12.3",
+        "groupId": "12.3",
+        "collapsedId": "12.3",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Y a-t-il une personne ou un groupe responsable en charge de la prévention des accidents lors des loisirs?"
+      },
+      {
+        "id": "12.4",
+        "groupId": "12.4",
+        "collapsedId": "12.4",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Cette personne responsable ou les membres du groupe responsable bénéficient-ils d'une formation dans le domaine de la prévention des accidents lors des loisirs (par ex. Suva, BPA, etc.) ?"
+      },
+      {
+        "id": "12.5",
+        "groupId": "12.5",
+        "collapsedId": "12.5",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Les collaborateurs sont-ils régulièrement informés au sujet des accidents non professionnels de l'entreprise (entretiens, articles, intranet, mailing, panneau d'affichage, etc.) ?"
+      },
+      {
+        "id": "12.7",
+        "groupId": "12.7",
+        "collapsedId": "12.7",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Des points forts sont-ils déduits des statistiques d'accidents lors des loisirs?"
+      },
+      {
+        "id": "12.8",
+        "groupId": "12.8",
+        "collapsedId": "12.8",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Y a-t-il des catégories de collaborateurs (jeunes, âgés, hommes, femmes, etc.) particulièrement concernés par les accidents lors des loisirs?"
+      },
+      {
+        "id": "12.9",
+        "groupId": "12.9",
+        "collapsedId": "12.9",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "L'entreprise dispose-t-elle de ses propres associations/clubs de sport?"
+      },
+      {
+        "id": "12.10",
+        "groupId": "12.10",
+        "collapsedId": "12.10",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Y a-t-il dans l'entreprise des collaborateurs ayant de bonnes connaissances d'encadrement en pratique du sport, par ex. des entraîneurs, des coachs, des instructeurs?"
+      },
+      {
+        "id": "12.12",
+        "groupId": "12.12",
+        "collapsedId": "12.12",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Des objectifs concrets sont-ils poursuivis au travers de ces projets et mesures? Si oui, lesquels?"
+      },
+      {
+        "id": "12.13",
+        "groupId": "12.13",
+        "collapsedId": "12.13",
+        "chapter": 12,
+        "chapterLabel": "12 Sécurité durant les loisirs (facultatif)",
+        "question": "Ces projets et mesures sont-ils évalués de sorte à en tirer des enseignements ou des conséquences?"
       },
       {
         "id": "13.2.a",
@@ -4995,6 +5163,54 @@
         "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
         "question": "L'entreprise propose-t-elle un service de médiation neutre visant à traiter les cas de conflits et les collaborateurs en difficultés personnelles?",
         "sectionLabel": ""
+      },
+      {
+        "id": "13.1",
+        "groupId": "13.1",
+        "collapsedId": "13.1",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "Y a-t-il une déclaration d'intention explicitement exprimée par la direction visant à intégrer la gestion de la santé en entreprise dans la politique de l'entreprise et dans son mode de gestion?"
+      },
+      {
+        "id": "13.3",
+        "groupId": "13.3",
+        "collapsedId": "13.3",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "Y a-t-il une personne ou un groupe responsable en charge des projets de GSE?"
+      },
+      {
+        "id": "13.4",
+        "groupId": "13.4",
+        "collapsedId": "13.4",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "Cette personne ou les membres de ce groupe responsable disposent-ils d'une formation dans le domaine de la GSE?"
+      },
+      {
+        "id": "13.5",
+        "groupId": "13.5",
+        "collapsedId": "13.5",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "L'approche GSE est-elle fondée sur des points forts découlant des besoins perçus par l'entreprise ou des besoins tels qu'ils résultent d'une enquête auprès des collaborateurs, par ex. via un sondage ou des cercles de santé?"
+      },
+      {
+        "id": "13.8",
+        "groupId": "13.8",
+        "collapsedId": "13.8",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "Des projets de GSE sont-ils actuellement en cours? Si oui, depuis combien de temps et à propos de quels thèmes?"
+      },
+      {
+        "id": "13.9",
+        "groupId": "13.9",
+        "collapsedId": "13.9",
+        "chapter": 13,
+        "chapterLabel": "13 GSE: Gestion de la santé en entreprise (facultatif)",
+        "question": "La qualité et l'efficacité des projets GSE sont-elles évaluées de sorte à en tirer des enseignements ou des conséquences?"
       },
       {
         "id": "14.1.1",
@@ -6961,6 +7177,90 @@
         "finding": "Les supérieurs hiérarchiques ne sont pas soutenus par d'autres services dans leurs efforts d'accompagnement et d'intégration.",
         "children": [],
         "recommendation": "Les supérieurs hiérarchiques ont besoin d'un soutien pratique lors d'absences prolongées et de réintégrations, car ils n'ont souvent ni le temps ni l'expertise nécessaire pour gérer des cas d'intégration complexes en plus de leurs activités quotidiennes. Le supérieur hiérarchique contacte le service RH ou le spécialiste de la sécurité au travail pour chaque absence à partir du 14e jour afin de discuter brièvement du cas. Cette prise de contact se fait par courriel ou lors d'un bref entretien en indiquant le motif de l'absence (si connu), la durée jusqu'alors et la date de retour prévue. Cela ne représente pas un effort important. La preuve est une inscription dans le registre des absences avec le champ «concertation avec RH/spécialiste de la sécurité au travail le [date]». On attend des supérieurs hiérarchiques qu'ils considèrent cette concertation comme une routine dans les trois mois et qu'ils n'aient plus à décider seuls.\n\nLa direction définit quels services internes et externes peuvent être sollicités dans les cas d'intégration et communique ces points de contact à tous les cadres. Le service RH établit à cet effet un aperçu avec cinq contacts au maximum: personne de contact RH interne, spécialiste de la sécurité au travail, détection précoce AI, médecin-conseil et éventuellement gestionnaire de cas externe. Chaque entrée contient le nom, la fonction, le numéro de téléphone et la situation d'intervention typique. Cet aperçu est vérifié annuellement quant à son actualité et mis à jour lors de changements de personnel. Le chargé de sécurité distribue le document aux nouveaux supérieurs hiérarchiques dans le cadre de leur introduction. La preuve est le document lui-même avec la date de version ainsi qu'une liste de distribution avec accusé de réception. Ainsi, les supérieurs hiérarchiques savent à qui s'adresser sans devoir chercher longtemps.\n\nLors de la réunion mensuelle des cadres, les cas d'intégration en cours sont brièvement discutés afin que les supérieurs hiérarchiques apprennent les uns des autres et utilisent effectivement les offres de soutien. Le chef de département apporte une liste de toutes les absences de plus de 30 jours et s'enquiert pour chaque cas de l'état du suivi et de la collaboration avec les services de soutien. Les cas sans concertation documentée sont signalés. Cette procédure dure dix minutes par séance. La preuve est le procès-verbal de séance avec les colonnes «cas», «service de soutien contacté (oui/non)» et «prochaine étape». Les supérieurs hiérarchiques qui n'ont pas encore demandé d'aide reçoivent ainsi une impulsion concrète. Le soutien s'intègre ainsi dans le quotidien de la gestion au lieu de rester un processus à part.\n\nLe service RH évalue semestriellement la fréquence à laquelle les supérieurs hiérarchiques ont effectivement contacté les services de soutien définis et comment les cas d'intégration se sont déroulés. La source de données est le registre des absences, complété par les retours des services de soutien. L'évaluation indique la fréquence des contacts par département, la durée moyenne des absences pour les cas avec et sans soutien ainsi que le taux de retour. Le spécialiste de la sécurité au travail vérifie si les points de contact sont encore appropriés ou s'il existe des lacunes. Les conclusions et les éventuels ajustements sont présentés à la direction et mis à jour dans le concept d'absence. La preuve est le rapport d'évaluation avec la date, la base de données et les propositions de mesures. L'entreprise voit ainsi si le soutien est efficace et peut apporter des améliorations ciblées."
+      },
+      {
+        "id": "1.3.2",
+        "groupId": "1.3.2",
+        "finding": "Toutes les actions suivantes ne sont pas mises en œuvre de manière systématique par les supérieurs hiérarchiques pour promouvoir la sécurité et la santé:\n- a) Évaluations de risque\n- b) Audits, contrôles\n- c) Analyses d'accidents\n- d) Formation des collaborateurs sur le poste de travail\n- e) Campagnes en faveur de la sécurité au travail\n- f) Campagnes en faveur de la sécurité durant les loisirs\n- g) Gestion des absences\n- h) Autres actions (le cas échéant)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "1.4.1",
+        "groupId": "1.4.1",
+        "finding": "Il n'existe pas d'objectifs mesurables pour limiter la fréquence des événements suivants:\n- a) Accidents professionnels / maladies professionnels\n- b) Accidents non professionnels\n- c) Maladies\n- d) Dommages matériels\n- e) Perturbations\n- f) Autres événements (le cas échéant)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "9.6.2",
+        "groupId": "9.6.2",
+        "finding": "Les pauses de travail ne sont pas clairement définies ou communiquées:\n- a) Dans la matinée\n- b) À midi\n- c) Dans l'après-midi\n- d) Dans le cadre du travail en équipe",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "9.7.1",
+        "groupId": "9.7.1",
+        "finding": "Les effets de la forme de rémunération appliquée sur la sécurité et la santé ne sont pas évalués ou discutés:\n- a) Salaire au temps (mensuel ou horaire)\n- b) Salaire à la prime\n- c) Salaire au rendement\n- e) Salaire au forfait (par équipe)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.2",
+        "groupId": "11.2",
+        "finding": "Les données relatives aux accidents et aux maladies ainsi qu'aux jours d'absence ne sont pas traitées de manière systématique:\n- a) Consignées\n- b) Analysées\n- c) Exploitées\n- d) Communiquées",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.7",
+        "groupId": "11.7",
+        "finding": "Les entretiens de retour au travail ne sont pas menés de manière systématique:\n- a) Par les chefs\n- b) Après chaque absence non planifiée de longue durée\n- c) Après chaque absence non planifiée",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "11.13",
+        "groupId": "11.13",
+        "finding": "Les chefs ne sont pas suffisamment soutenus dans la gestion et l'intégration des personnes accidentées ou malades:\n- a) Par le service du personnel (RH)\n- b) Par d'autres services (le cas échéant)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "12.6",
+        "groupId": "12.6",
+        "finding": "Les accidents lors des loisirs ne sont pas traités de manière systématique:\n- a) Enregistrés\n- b) Analysés\n- c) Exploités\n- d) Communiqués",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "12.11",
+        "groupId": "12.11",
+        "finding": "Aucun ou pas assez de projets/mesures visant à promouvoir la sécurité dans les loisirs (thèmes):\n- b) Trébucher et chuter\n- c) Sports de balle\n- d) Sports d'hiver\n- e) Maison et jardin\n- f) Autres thèmes (le cas échéant)",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.2",
+        "groupId": "13.2",
+        "finding": "Il n'existe pas de concept complet de GSE (gestion de la santé en entreprise) avec:\n- a) Des buts\n- b) Une approche et un agenda\n- c) Une communication adaptée à des groupes cibles\n- d) Un cadre budgétaire pour des projets de GSE",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.6",
+        "groupId": "13.6",
+        "finding": "Les collaborateurs ne sont pas suffisamment soutenus dans tous les thèmes pertinents de promotion de la santé:\n- a) Bouger suffisamment, faire du sport\n- b) Nutrition / gestion du poids\n- c) Stratégies contre le stress et le burnout\n- d) Gestion du travail en équipe ou du travail de nuit\n- e) Équilibre travail/loisir\n- f) Sommeil et repos\n- g) Prévention des dépendances",
+        "children": [],
+        "recommendation": ""
+      },
+      {
+        "id": "13.7",
+        "groupId": "13.7",
+        "finding": "Les ressources liées au travail ne sont pas suffisamment encouragées:\n- a) Formation en management\n- b) Infrastructures liées à la santé (espaces de détente, douches, etc.)\n- c) Conception ergonomique des postes de travail\n- d) Instruction sur la posture et le port de charges\n- e) Intégration des nouveaux collaborateurs\n- f) Formation continue (compétences sociales, développement personnel)\n- g) Coopération et bonne ambiance au sein de l'équipe\n- h) Collaboration et communication entre niveaux hiérarchiques\n- i) Job sharing\n- j) Service de médiation neutre",
+        "children": [],
+        "recommendation": ""
       }
     ]
   },

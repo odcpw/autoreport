@@ -49,8 +49,39 @@ body {
 .filters {
   margin-top: 16px;
   display: grid;
-  gap: 8px;
+  gap: 12px;
   font-size: 0.9rem;
+}
+
+.filter-group {
+  border: 1px solid #e6ddd1;
+  border-radius: 10px;
+  background: #fff;
+  padding: 8px 10px;
+  display: grid;
+  gap: 6px;
+}
+
+.filter-group__title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #5f5448;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.filter-group label {
+  display: block;
+  line-height: 1.35;
+}
+
+.filter-group label + label {
+  margin-top: 4px;
+}
+
+.filter-group input[type="radio"] {
+  margin-right: 6px;
+  vertical-align: middle;
 }
 
 .content {
@@ -398,6 +429,88 @@ textarea[disabled] {
 
 .md-spacer {
   height: 8px;
+}
+
+.chapter-preview-modal__content {
+  width: min(1080px, 95vw);
+}
+
+.chapter-preview-modal__body {
+  gap: 10px;
+}
+
+.chapter-preview-subtitle {
+  font-size: 0.9rem;
+  color: #5f5448;
+  font-weight: 600;
+}
+
+.chapter-preview-empty {
+  border: 1px dashed #d7d0c7;
+  border-radius: 12px;
+  background: #f8f5ef;
+  color: #5f5448;
+  padding: 12px;
+  font-size: 0.9rem;
+}
+
+.chapter-preview-table-wrap {
+  border: 1px solid #d7d0c7;
+  border-radius: 12px;
+  overflow: auto;
+  max-height: 72vh;
+  background: #fff;
+}
+
+.chapter-preview-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-size: 0.86rem;
+  color: #1f2933;
+}
+
+.chapter-preview-table td,
+.chapter-preview-table th {
+  border: 1px solid #d7d0c7;
+  padding: 8px 10px;
+  vertical-align: top;
+}
+
+.chapter-preview-table__check td {
+  border-top: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: 1px solid #8f8f8f;
+}
+
+.chapter-preview-table__title td {
+  background: #f8f5ef;
+  font-weight: 700;
+}
+
+.chapter-preview-table__labels th {
+  background: #f2ede5;
+  font-weight: 700;
+  text-align: left;
+}
+
+.chapter-preview-table__section td {
+  background: #f8f5ef;
+  font-weight: 700;
+}
+
+.chapter-preview-id {
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.chapter-preview-text {
+  white-space: pre-wrap;
+}
+
+.chapter-preview-table__prio {
+  text-align: center;
 }
 
 .library-group {

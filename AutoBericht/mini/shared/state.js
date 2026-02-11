@@ -151,7 +151,9 @@
     project: structuredClone(projectTemplate),
     selectedChapterId: projectTemplate.chapters[0]?.id || "",
     filters: {
-      mode: "all",
+      answer: "all",
+      include: "all",
+      done: "all",
     },
     spiderOverrides: {},
     photoIndex: {
@@ -205,12 +207,18 @@
     return String(value);
   };
 
+  const levelToPct = (level) => {
+    const raw = Number(level || 1);
+    const clamped = Math.max(1, Math.min(4, Number.isFinite(raw) ? raw : 1));
+    const idx = Math.round(clamped) - 1;
+    // Map 1..4 to 0/33/66/100 (so level 4 is a true "100%"). Keep integers.
+    return [0, 33, 66, 100][Math.max(0, Math.min(3, idx))];
+  };
+
   const calculateScore = (row) => {
     if (row?.type === "field_observation" || row?.type === "summary") return null;
     const ws = row?.workstate || {};
-    if (ws.includeFinding === false) return 100;
-    const level = Number(ws.selectedLevel || 1);
-    return Math.max(0, Math.min(100, (level - 1) * 25));
+    return levelToPct(ws.selectedLevel || 1);
   };
 
   const sanitizeFilename = (value) => String(value || "")
@@ -316,6 +324,7 @@
     createState,
     compareIdSegments,
     toText,
+    levelToPct,
     calculateScore,
     sanitizeFilename,
     getLibraryFileName,

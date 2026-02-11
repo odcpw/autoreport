@@ -1,5 +1,12 @@
 (() => {
-  const LEVEL_TO_PCT = (level) => Math.max(0, Math.min(100, (Number(level || 1) - 1) * 25));
+  const stateHelpers = window.AutoBerichtState || {};
+  const LEVEL_TO_PCT = stateHelpers.levelToPct
+    || ((level) => {
+      const raw = Number(level || 1);
+      const clamped = Math.max(1, Math.min(4, Number.isFinite(raw) ? raw : 1));
+      const idx = Math.round(clamped) - 1;
+      return [0, 33, 66, 100][Math.max(0, Math.min(3, idx))];
+    });
 
   const readJsonFromHandle = async (dirHandle, filename) => {
     if (!dirHandle) return null;
@@ -99,7 +106,6 @@
         })();
         const consPct = (() => {
           const ws = row.workstate || {};
-          if (ws.includeFinding === false) return 100;
           return LEVEL_TO_PCT(ws.selectedLevel || 1);
         })();
         const compPct = pctFromCustomer(row);

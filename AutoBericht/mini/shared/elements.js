@@ -51,7 +51,14 @@
     spiderBackdrop: document.getElementById("spider-close"),
     spiderSaveBtn: document.getElementById("spider-save"),
     spiderTableBody: document.getElementById("spider-table-body"),
-    filterModeEls: Array.from(document.querySelectorAll('input[name="filter-mode"]')),
+    chapterPreviewModal: document.getElementById("chapter-preview-modal"),
+    chapterPreviewBackdrop: document.getElementById("chapter-preview-close"),
+    chapterPreviewCloseBtn: document.getElementById("chapter-preview-close-btn"),
+    chapterPreviewTitle: document.getElementById("chapter-preview-title"),
+    chapterPreviewBody: document.getElementById("chapter-preview-body"),
+    filterAnswerModeEls: Array.from(document.querySelectorAll('input[name="filter-answer-mode"]')),
+    filterIncludeModeEls: Array.from(document.querySelectorAll('input[name="filter-include-mode"]')),
+    filterDoneModeEls: Array.from(document.querySelectorAll('input[name="filter-done-mode"]')),
   });
 
   window.AutoBerichtElements = { getElements };

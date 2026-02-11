@@ -28,11 +28,23 @@
         <h2>Chapters</h2>
         <nav id="chapter-list"></nav>
         <div class="filters">
-          <label><input type="radio" name="filter-mode" value="all" checked /> Show all</label>
-          <label><input type="radio" name="filter-mode" value="hide-yes" /> Hide answered yes</label>
-          <label><input type="radio" name="filter-mode" value="include-only" /> Show include only</label>
-          <label><input type="radio" name="filter-mode" value="done-only" /> Show done only</label>
-          <label><input type="radio" name="filter-mode" value="hide-done" /> Hide done only</label>
+          <div class="filter-group">
+            <div class="filter-group__title">Answer</div>
+            <label><input type="radio" name="filter-answer-mode" value="all" checked /> Show all</label>
+            <label><input type="radio" name="filter-answer-mode" value="hide-yes" /> Hide answered yes</label>
+          </div>
+          <div class="filter-group">
+            <div class="filter-group__title">Include</div>
+            <label><input type="radio" name="filter-include-mode" value="all" checked /> Show all</label>
+            <label><input type="radio" name="filter-include-mode" value="included" /> Included only</label>
+            <label><input type="radio" name="filter-include-mode" value="not-included" /> Not included only</label>
+          </div>
+          <div class="filter-group">
+            <div class="filter-group__title">Done</div>
+            <label><input type="radio" name="filter-done-mode" value="all" checked /> Show all</label>
+            <label><input type="radio" name="filter-done-mode" value="done" /> Done only</label>
+            <label><input type="radio" name="filter-done-mode" value="not-done" /> Not done only</label>
+          </div>
         </div>
       </aside>
 
@@ -166,6 +178,19 @@
         <div class="modal__actions">
           <button id="spider-save" type="button">Save overrides</button>
           <button id="spider-cancel" type="button" class="ghost">Cancel</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="chapter-preview-modal" aria-hidden="true">
+      <div class="modal__backdrop" id="chapter-preview-close"></div>
+      <div class="modal__content modal__content--wide chapter-preview-modal__content" role="dialog" aria-modal="true" aria-labelledby="chapter-preview-title">
+        <div class="modal__header">
+          <h3 id="chapter-preview-title">Word Export Preview</h3>
+          <button id="chapter-preview-close-btn" type="button" class="modal__close" aria-label="Close chapter preview">×</button>
+        </div>
+        <div class="modal__body chapter-preview-modal__body">
+          <div id="chapter-preview-body"></div>
         </div>
       </div>
     </div>

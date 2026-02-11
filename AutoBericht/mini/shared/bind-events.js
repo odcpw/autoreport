@@ -111,15 +111,20 @@
       });
     }
 
-    if (elements.filterModeEls) {
-      elements.filterModeEls.forEach((input) => {
+    const bindFilterGroup = (inputs, key) => {
+      if (!inputs || !inputs.length) return;
+      inputs.forEach((input) => {
         input.addEventListener("change", () => {
           if (!input.checked) return;
-          state.filters.mode = input.value;
+          state.filters[key] = input.value;
           renderApi.renderRows();
         });
       });
-    }
+    };
+
+    bindFilterGroup(elements.filterAnswerModeEls, "answer");
+    bindFilterGroup(elements.filterIncludeModeEls, "include");
+    bindFilterGroup(elements.filterDoneModeEls, "done");
 
     const openSettings = () => {
       if (!elements.settingsModal) return;
@@ -234,6 +239,16 @@
         renderApi.closeChecklistOverlay();
       });
     }
+    if (elements.chapterPreviewBackdrop) {
+      elements.chapterPreviewBackdrop.addEventListener("click", () => {
+        renderApi.closeChapterPreview();
+      });
+    }
+    if (elements.chapterPreviewCloseBtn) {
+      elements.chapterPreviewCloseBtn.addEventListener("click", () => {
+        renderApi.closeChapterPreview();
+      });
+    }
     document.addEventListener("keydown", (event) => {
       if (!elements.photoOverlayEl || !elements.photoOverlayEl.classList.contains("is-open")) return;
       if (event.target && ["INPUT", "TEXTAREA"].includes(event.target.tagName)) return;
@@ -244,6 +259,10 @@
     document.addEventListener("keydown", (event) => {
       if (!elements.checklistOverlayEl || !elements.checklistOverlayEl.classList.contains("is-open")) return;
       if (event.key === "Escape") renderApi.closeChecklistOverlay();
+    });
+    document.addEventListener("keydown", (event) => {
+      if (!elements.chapterPreviewModal || !elements.chapterPreviewModal.classList.contains("is-open")) return;
+      if (event.key === "Escape") renderApi.closeChapterPreview();
     });
 
     window.addEventListener("visibilitychange", () => {

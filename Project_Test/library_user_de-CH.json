@@ -3,7 +3,13 @@
   "meta": {
     "locale": "de-CH",
     "source": "seed",
-    "updatedAt": "2026-01-11T00:25:53Z"
+    "updatedAt": "2026-01-27T14:40:01.169Z",
+    "author": "",
+    "initials": "",
+    "moderator": "",
+    "moderatorInitials": "",
+    "coModerator": "",
+    "coModeratorInitials": ""
   },
   "structure": {
     "items": [
@@ -7152,90 +7158,6 @@
         "finding": "Vorgesetzte werden bei ihren Betreuungs- und Integrationsbemühungen nicht durch andere Stellen unterstützt.",
         "children": [],
         "recommendation": "Vorgesetzte benötigen bei längeren Abwesenheiten und Wiedereingliederungen praktische Unterstützung, weil sie neben dem Tagesgeschäft oft weder Zeit noch Fachwissen für komplexe Integrationsfälle haben. Der Linienvorgesetzte kontaktiert bei jeder Absenz ab dem 14. Tag die HR-Abteilung oder den ASA-Spezialisten, um den Fall kurz zu besprechen. Diese Kontaktaufnahme erfolgt per E-Mail oder Kurzgespräch mit Angabe von Absenzgrund (sofern bekannt), bisheriger Dauer und geplantem Rückkehrdatum. Das ist kein grosser Aufwand. Als Nachweis dient ein Eintrag im Absenzenregister mit Feld «Rücksprache mit HR/ASA am [Datum]». Erwartet wird, dass Vorgesetzte innerhalb von drei Monaten diese Rücksprache als Routine betrachten und nicht mehr allein entscheiden müssen.\n\nDie GL legt fest, welche internen und externen Stellen bei Integrationsfällen beigezogen werden können, und kommuniziert diese Anlaufstellen an alle Führungskräfte. HR erstellt dafür eine Übersicht mit maximal fünf Kontakten: interne Ansprechperson HR, ASA-Spezialist, IV-Früherfassung, Vertrauensarzt und allenfalls externer Case Manager. Jeder Eintrag enthält Name, Funktion, Telefonnummer und typische Einsatzsituation. Diese Übersicht wird jährlich auf Aktualität geprüft und bei Personalwechseln nachgeführt. Der SiBe verteilt das Dokument an neue Vorgesetzte im Rahmen der Einführung. Nachweis ist das Dokument selbst mit Versionsdatum sowie eine Verteilerliste mit Empfangsbestätigung. Dadurch wissen Vorgesetzte, an wen sie sich wenden können, ohne lange suchen zu müssen.\n\nIn der monatlichen Führungsbesprechung werden laufende Integrationsfälle kurz besprochen, damit Vorgesetzte voneinander lernen und Unterstützungsangebote tatsächlich nutzen. Der Abteilungsleiter bringt eine Liste aller Absenzen über 30 Tage mit und fragt bei jedem Fall nach dem Stand der Betreuung und der Zusammenarbeit mit Unterstützungsstellen. Fälle ohne dokumentierte Rücksprache werden markiert. Dieses Vorgehen dauert zehn Minuten pro Sitzung. Als Nachweis dient das Sitzungsprotokoll mit Spalten «Fall», «Unterstützungsstelle kontaktiert (ja/nein)» und «nächster Schritt». Vorgesetzte, die bisher keine Hilfe angefordert haben, erhalten dadurch einen konkreten Anstoss. So fliesst die Unterstützung in den Führungsalltag ein, statt Sonderprozess zu bleiben.\n\nHR wertet halbjährlich aus, wie oft Vorgesetzte die definierten Unterstützungsstellen tatsächlich kontaktiert haben und wie die Integrationsfälle verlaufen sind. Datenquelle ist das Absenzenregister, ergänzt durch Rückmeldungen der Unterstützungsstellen. Die Auswertung zeigt Kontakthäufigkeit pro Abteilung, durchschnittliche Absenzdauer bei Fällen mit und ohne Unterstützung sowie Rückkehrquote. Der ASA-Spezialist prüft, ob die Anlaufstellen noch passend sind oder ob Lücken bestehen. Erkenntnisse und allfällige Anpassungen werden der GL präsentiert und im Absenzenkonzept nachgeführt. Nachweis ist der Auswertungsbericht mit Datum, Datengrundlage und Massnahmenvorschlägen. Das Unternehmen sieht so, ob die Unterstützung wirkt, und kann gezielt nachbessern."
-      },
-      {
-        "id": "1.3.2",
-        "groupId": "1.3.2",
-        "finding": "Folgende Aktivitäten werden von den Linienvorgesetzten nicht durchgängig zur Förderung von Sicherheit und Gesundheit umgesetzt:\n- a) Risikobeurteilungen\n- b) Audits/Kontrollen\n- c) Unfallabklärungen\n- d) Mitarbeiterschulungen am Arbeitsplatz\n- e) Kampagnen für Arbeitssicherheit\n- f) Kampagnen für Freizeitsicherheit\n- g) Absenzenmanagement\n- h) Weitere Aktivitäten (falls zutreffend)",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "1.4.1",
-        "groupId": "1.4.1",
-        "finding": "Es bestehen keine messbaren Ziele zur Begrenzung der Häufigkeit folgender Ereignisse:\n- a) Berufsunfälle/Berufskrankheiten\n- b) Nichtberufsunfälle\n- c) Krankheiten\n- d) Sachschäden\n- e) Störungen\n- f) Andere Ereignisse (falls zutreffend)",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "9.6.2",
-        "groupId": "9.6.2",
-        "finding": "Die Pausenregelung ist nicht klar definiert oder kommuniziert:\n- a) Vormittagspause\n- b) Mittagspause\n- c) Nachmittagspause\n- d) Schichtpausen",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "9.7.1",
-        "groupId": "9.7.1",
-        "finding": "Die Auswirkungen der im Betrieb angewendeten Lohnform auf Sicherheit und Gesundheit werden nicht bewertet oder reflektiert:\n- a) Zeitlohn\n- b) Prämienlohn (Zeitlohn plus Prämien)\n- c) Leistungslohn (Akkordlohn, Stücklohn)\n- e) Gruppenakkordlohn",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "11.2",
-        "groupId": "11.2",
-        "finding": "Daten zu Unfällen/Krankheiten und deren Ausfalltagen werden nicht systematisch:\n- a) erfasst\n- b) analysiert\n- c) ausgewertet\n- d) kommuniziert",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "11.7",
-        "groupId": "11.7",
-        "finding": "Rückkehrgespräche werden nicht konsequent geführt:\n- a) durch die Vorgesetzten\n- b) nach jeder ungeplanten längeren Absenz\n- c) nach jeder ungeplanten Absenz",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "11.13",
-        "groupId": "11.13",
-        "finding": "Vorgesetzte werden bei Betreuungs- und Integrationsbemühungen nicht ausreichend unterstützt:\n- a) durch die Personalabteilung\n- b) durch andere Stellen (falls zutreffend)",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "12.6",
-        "groupId": "12.6",
-        "finding": "Freizeitunfälle werden nicht systematisch:\n- a) erfasst\n- b) analysiert\n- c) ausgewertet\n- d) kommuniziert",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "12.11",
-        "groupId": "12.11",
-        "finding": "Es wurden keine oder nicht ausreichende Projekte/Massnahmen zur Förderung der Freizeitsicherheit durchgeführt (Schwerpunktthemen):\n- b) Stolpern und Stürzen\n- c) Ballsport\n- d) Wintersport\n- e) Haus und Garten\n- f) Weitere Schwerpunktthemen (falls zutreffend)",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "13.2",
-        "groupId": "13.2",
-        "finding": "Es besteht kein vollständiges Konzept für Betriebliches Gesundheitsmanagement (BGM) mit:\n- a) Zielen\n- b) Vorgehens- und Zeitplan\n- c) Kommunikation an Zielgruppen\n- d) Budgetrahmen für BGM-Projekte",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "13.6",
-        "groupId": "13.6",
-        "finding": "Mitarbeitende werden nicht in allen relevanten Themen zur Gesundheitsförderung unterstützt:\n- a) Bewegung/Sport\n- b) Ernährung/gesundes Körpergewicht\n- c) Strategien gegen Stress und Burnout\n- d) Umgang mit Schicht-/Nachtarbeit\n- e) Work-Life Balance\n- f) Schlaf und Erholung\n- g) Suchtprävention",
-        "children": [],
-        "recommendation": ""
-      },
-      {
-        "id": "13.7",
-        "groupId": "13.7",
-        "finding": "Arbeitsbezogene Ressourcen werden nicht ausreichend gefördert:\n- a) Führungsschulungen\n- b) Gesundheitsbezogene Infrastruktur\n- c) Ergonomische Gestaltung von Arbeitsräumen und Arbeitsplätzen\n- d) Schulung zu körperschonender Haltung (z.B. Heben/Tragen, Bildschirmergonomie)\n- e) Integration neuer Mitarbeitender\n- f) Regelmässige Weiterbildung (Persönlichkeits- und Sozialkompetenz)\n- g) Gute Zusammenarbeit im Team\n- h) Zusammenarbeit und Kommunikation über Abteilungen und Hierarchien\n- i) Vereinbarkeit von Beruf, Familie und Freizeit\n- j) Neutrale Ansprechstelle in Konfliktsituationen oder bei persönlichen Problemen",
-        "children": [],
-        "recommendation": ""
       }
     ]
   },
