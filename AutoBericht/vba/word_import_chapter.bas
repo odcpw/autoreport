@@ -343,7 +343,7 @@ Private Sub ImportChapterTable(ByVal chapterId As String)
             tbl.Cell(targetRow, 1).Range.Style = AB_STYLE_FINDING
             tbl.Cell(targetRow, 2).Range.Text = ResolveRecommendation(row)
             tbl.Cell(targetRow, 2).Range.Style = AB_STYLE_BODY
-            tbl.Cell(targetRow, 3).Range.Text = ""
+            tbl.Cell(targetRow, 3).Range.Text = ResolvePriority(row)
             tbl.Cell(targetRow, 3).Range.Style = AB_STYLE_BODY
             tbl.Cell(targetRow, 3).Range.Font.Bold = True
             tbl.Cell(targetRow, 3).Range.ParagraphFormat.Alignment = wdAlignParagraphCenter
@@ -1246,6 +1246,26 @@ Private Function ResolveRecommendation(ByVal row As Object) As String
             Exit Function
         End If
     End If
+End Function
+
+Private Function ResolvePriority(ByVal row As Object) As String
+    Dim ws As Object
+    Set ws = GetObject(row, "workstate")
+    If ws Is Nothing Then Exit Function
+
+    On Error GoTo SafeExit
+    If ws.Exists("priority") Then
+        Dim raw As Variant
+        raw = ws("priority")
+        If IsNumeric(raw) Then
+            Dim value As Long
+            value = CLng(raw)
+            If value >= 1 And value <= 4 Then
+                ResolvePriority = CStr(value)
+            End If
+        End If
+    End If
+SafeExit:
 End Function
 
 Private Function GetObject(ByVal dict As Object, ByVal key As String) As Object
