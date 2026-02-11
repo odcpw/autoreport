@@ -999,7 +999,7 @@
 
     const isIncludedRow = (row) => {
       const ws = row?.workstate;
-      if (!ws || ws.includeFinding == null) return true;
+      if (!ws || ws.includeFinding == null) return false;
       return ws.includeFinding === true;
     };
 
@@ -1102,7 +1102,7 @@
         output.push({
           kind: "finding",
           id: rowMap.get(rowId) || rowId,
-          title: String(row?.titleOverride || "").trim(),
+          title: chapter?.id === "4.8" ? String(row?.titleOverride || "").trim() : "",
           finding: resolveFindingText(row),
           recommendation: resolveRecommendationText(row),
         });

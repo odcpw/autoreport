@@ -42,7 +42,7 @@
             },
             workstate: {
               selectedLevel: 2,
-              includeFinding: true,
+              includeFinding: false,
               includeRecommendation: true,
               done: false,
               findingText: "Das Unternehmen verfuegt nicht ueber ein Leitbild.",
@@ -82,7 +82,7 @@
             },
             workstate: {
               selectedLevel: 3,
-              includeFinding: true,
+              includeFinding: false,
               includeRecommendation: true,
               done: true,
               findingText: "Es fehlt eine dokumentierte Sicherheitsstrategie.",
@@ -128,7 +128,7 @@
             },
             workstate: {
               selectedLevel: 1,
-              includeFinding: true,
+              includeFinding: false,
               includeRecommendation: true,
               done: false,
               findingText: "Regale sind nicht gegen Kippen gesichert.",

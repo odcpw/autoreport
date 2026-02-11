@@ -12,7 +12,7 @@
     if (!row.workstate) row.workstate = {};
     const ws = row.workstate;
     if (ws.selectedLevel == null) ws.selectedLevel = 1;
-    if (ws.includeFinding == null) ws.includeFinding = true;
+    if (ws.includeFinding == null) ws.includeFinding = false;
     if (ws.includeRecommendation == null) ws.includeRecommendation = true;
     if (ws.done == null) ws.done = false;
     if (ws.findingText == null) {
@@ -81,7 +81,7 @@
         customer: { answer: null, remark: "", items: [] },
         workstate: {
           selectedLevel: 1,
-          includeFinding: true,
+          includeFinding: false,
           includeRecommendation: true,
           done: false,
           findingText: OBS_FINDING_TEXT,
@@ -130,7 +130,7 @@
         },
         workstate: {
           selectedLevel: 1,
-          includeFinding: true,
+          includeFinding: false,
           includeRecommendation: true,
           done: false,
           findingText: "",
@@ -213,7 +213,7 @@
     },
     workstate: {
       selectedLevel: 1,
-      includeFinding: true,
+      includeFinding: false,
       includeRecommendation: true,
       done: false,
       findingText: OBS_FINDING_TEXT,

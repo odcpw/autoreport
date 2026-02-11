@@ -164,7 +164,7 @@
         },
         workstate: {
           selectedLevel: 1,
-          includeFinding: true,
+          includeFinding: false,
           includeRecommendation: true,
           done: false,
           findingText: toText(master?.finding),
@@ -213,7 +213,7 @@
         customer: { answer: null, remark: "", items: [] },
         workstate: {
           selectedLevel: 1,
-          includeFinding: true,
+          includeFinding: false,
           includeRecommendation: true,
           done: false,
           findingText: OBS_FINDING_TEXT,
