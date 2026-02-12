@@ -1678,7 +1678,9 @@
       page.appendChild(debugCard.card);
 
       rowsEl.appendChild(page);
-      renderSpider().catch(() => {});
+      renderSpider().catch((err) => {
+        debug.logLine("error", `Project spider initial render failed: ${err.message || err}`);
+      });
     };
 
     const renderChapterList = () => {

@@ -305,13 +305,19 @@
       if (event.key === "Escape" && renderApi.closeObservationsOrganizer) renderApi.closeObservationsOrganizer();
     });
 
+    const flushAutosaveSafe = (reason) => {
+      Promise.resolve(flushAutosave()).catch((err) => {
+        debug.logLine("error", `Autosave flush failed (${reason}): ${err.message || err}`);
+      });
+    };
+
     window.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
-        flushAutosave();
+        flushAutosaveSafe("visibilitychange");
       }
     });
     window.addEventListener("pagehide", () => {
-      flushAutosave();
+      flushAutosaveSafe("pagehide");
     });
 
     if (elements.importSelfBtn) {

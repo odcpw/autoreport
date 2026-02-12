@@ -90,10 +90,15 @@
       elements.spiderCancelBtn.addEventListener("click", closeModal);
     }
     if (elements.spiderSaveBtn) {
-      elements.spiderSaveBtn.addEventListener("click", () => {
+      elements.spiderSaveBtn.addEventListener("click", async () => {
         saveOverrides();
         if (ioApi?.saveSidecar) {
-          ioApi.saveSidecar().catch(() => {});
+          try {
+            await ioApi.saveSidecar();
+          } catch (err) {
+            setStatus(`Spider save failed: ${err.message || err}`);
+            debug.logLine("error", `Spider save failed: ${err.message || err}`);
+          }
         }
         closeModal();
       });

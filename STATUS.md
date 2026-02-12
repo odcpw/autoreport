@@ -12,6 +12,7 @@ This document tracks the **redesign** direction (2026).
 ## Current State (Redesign)
 
 - Minimal editor exists in `AutoBericht/mini/` with sidecar load/save and autosave.
+- No-VBA Word export is available from the Project page (DOCX template markers, logos, spider image, thermo bars, priority values, chapter table payloads).
 - PhotoSorter exists with stacked/tab layouts, observation tag add/remove, and filename display.
 - 4.8 Beobachtungen is a special chapter (reorderable rows, tag‑driven cards, photo overlay per tag).
 - Management Summary (Chapter 0) added with 8 placeholder cards.
@@ -32,14 +33,15 @@ This document tracks the **redesign** direction (2026).
 1. User opens the minimal editor.
 2. Selects a project folder via File System Access API.
 3. Loads and edits `project_sidecar.json`.
-4. Exports to Word/PPT via Word macro (content controls) reading sidecar JSON.
-5. Optional: materialize photo folders from tags.
+4. Exports directly to Word (`.docx`) from the browser using the project template placeholders.
+5. Optional: uses legacy Word/VBA pipeline where still required.
+6. Optional: materialize photo folders from tags.
 
 ## Immediate Next Steps
 
-- [ ] Word template: add bookmarks/content controls + styles per chapter (template work).
-- [x] Word VBA importer: read sidecar JSON, inject content, apply styles, renumber (chapters 0, 1–14, 4.8).
-- [ ] Meta token replacement in Word (company, companyId, author, etc.).
-- [ ] Spider/radar data export (per‑chapter scores).
+- [x] No-VBA Word export (template marker replacement, chapter payload injection, logo insertion, spider image, thermo bars, priority column).
+- [ ] Template hardening and governance (final placeholder map, style locks, and template QA pass).
+- [ ] Explicit UI locale policy (lock English UI vs project-locale-driven UI text).
+- [ ] Optional legacy VBA pipeline cleanup/retirement plan.
 - [x] No File System Access fallback (removed by design).
-- [ ] Continue progressive seed updates for chapters 2–14 using the v4 prompt.
+- [x] Seed recommendations expanded for chapters 1–14 in DE/FR/IT libraries.
