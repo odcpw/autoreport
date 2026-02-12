@@ -1261,100 +1261,61 @@
       const page = document.createElement("section");
       page.className = "project-page";
 
-      const toolsCard = document.createElement("div");
-      toolsCard.className = "project-card";
-      const toolsTitle = document.createElement("h4");
-      toolsTitle.textContent = t("project_tools_title", "Tools");
-      toolsCard.appendChild(toolsTitle);
-      const toolsActions = document.createElement("div");
-      toolsActions.className = "project-page__actions";
-      const saveBtn = document.createElement("button");
-      saveBtn.type = "button";
-      saveBtn.textContent = t("project_save_sidecar", "Save sidecar");
-      saveBtn.addEventListener("click", () => {
-        scheduleAutosave();
-        setStatus(t("project_save_queued", "Save queued (autosave)."));
-      });
-      const exportBtn = document.createElement("button");
-      exportBtn.type = "button";
-      exportBtn.className = "ghost";
-      exportBtn.textContent = t("project_export_no_vba", "Word Export (No VBA)");
-      exportBtn.addEventListener("click", async () => {
-        if (!runtime.dirHandle) {
-          setStatus(t("project_open_folder_first", "Open project folder first."));
-          return;
+      const createToolCard = ({
+        title,
+        hint,
+        buttonLabel,
+        buttonClass = "ghost",
+        onClick,
+      }) => {
+        const card = document.createElement("div");
+        card.className = "project-card";
+        const cardTitle = document.createElement("h4");
+        cardTitle.textContent = title;
+        card.appendChild(cardTitle);
+        if (hint) {
+          const hintEl = document.createElement("p");
+          hintEl.className = "project-card__hint";
+          hintEl.textContent = hint;
+          card.appendChild(hintEl);
         }
-        const exporter = window.AutoBerichtWordExport || {};
-        if (!exporter.exportReportDocx) {
-          setStatus(t("project_export_missing", "No-VBA exporter not available."));
-          return;
-        }
-        exportBtn.disabled = true;
-        const previous = exportBtn.textContent;
-        exportBtn.textContent = t("project_export_running", "Exporting ...");
-        try {
-          const result = await exporter.exportReportDocx({
-            project: state.project,
-            sidecarDoc: runtime.sidecarDoc,
-            projectHandle: runtime.dirHandle,
-            spiderOverrides: state.spiderOverrides || {},
-            computeSpider: window.AutoBerichtSpider?.computeSpider,
-            compareIdSegments: stateHelpers.compareIdSegments,
-            toText: stateHelpers.toText,
-            markdownToHtml,
-          });
-          if (result?.savedAs) {
-            setStatus(`Exported ${result.savedAs}`);
-          } else {
-            setStatus(t("project_export_done", "Export complete."));
-          }
-        } catch (err) {
-          setStatus(`Export failed: ${err.message || err}`);
-          debug.logLine("error", `No-VBA export failed: ${err.message || err}`);
-        } finally {
-          exportBtn.disabled = false;
-          exportBtn.textContent = previous;
-        }
-      });
-      const importSelfBtn = document.createElement("button");
-      importSelfBtn.type = "button";
-      importSelfBtn.textContent = t("project_tool_import_self", "Import Selbstbeurteilung");
-      importSelfBtn.addEventListener("click", () => {
+        const actions = document.createElement("div");
+        actions.className = "project-page__actions";
+        const button = document.createElement("button");
+        button.type = "button";
+        if (buttonClass) button.className = buttonClass;
+        button.textContent = buttonLabel;
+        button.addEventListener("click", async () => {
+          await onClick(button);
+        });
+        actions.appendChild(button);
+        card.appendChild(actions);
+        return { card, button };
+      };
+
+      const triggerImportSelf = () => {
         if (elements.importSelfBtn) {
           elements.importSelfBtn.click();
         } else {
           setStatus("Import tool is not available.");
         }
-      });
-      const generateLibraryBtn = document.createElement("button");
-      generateLibraryBtn.type = "button";
-      generateLibraryBtn.className = "ghost";
-      generateLibraryBtn.textContent = t("project_tool_library", "Generate / Update Library");
-      generateLibraryBtn.addEventListener("click", () => {
+      };
+
+      const triggerGenerateLibrary = () => {
         if (elements.generateLibraryBtn) {
           elements.generateLibraryBtn.click();
         } else {
           setStatus("Library tool is not available.");
         }
-      });
-      const saveLogBtn = document.createElement("button");
-      saveLogBtn.type = "button";
-      saveLogBtn.className = "ghost";
-      saveLogBtn.textContent = t("project_tool_log", "Save debug log");
-      saveLogBtn.addEventListener("click", () => {
+      };
+
+      const triggerSaveLog = () => {
         if (elements.saveLogBtn) {
           elements.saveLogBtn.click();
         } else {
           setStatus("Log tool is not available.");
         }
-      });
-      toolsActions.appendChild(saveBtn);
-      toolsActions.appendChild(exportBtn);
-      toolsActions.appendChild(importSelfBtn);
-      toolsActions.appendChild(generateLibraryBtn);
-      toolsActions.appendChild(saveLogBtn);
-      toolsCard.appendChild(toolsActions);
-      page.appendChild(toolsCard);
+      };
 
       const formCard = document.createElement("div");
       formCard.className = "project-card";
@@ -1466,6 +1427,73 @@
       created.textContent = `${t("project_meta_created", "Created")}: ${formatIsoDate(meta.createdAt) || "—"}`;
       formCard.appendChild(created);
       page.appendChild(formCard);
+
+      const importCard = createToolCard({
+        title: t("project_tool_import_title", "Import Selbstbeurteilung"),
+        hint: t("project_tool_import_hint", "Pick the Selbstbeurteilung file. It will be imported and copied into the project Inputs folder."),
+        buttonLabel: t("project_tool_import_self", "Import Selbstbeurteilung"),
+        buttonClass: "",
+        onClick: async () => {
+          triggerImportSelf();
+        },
+      });
+      page.appendChild(importCard.card);
+
+      const exportCard = createToolCard({
+        title: t("project_export_card_title", "Word Export"),
+        hint: t("project_export_card_hint", "Pick the DOCX template and create a report in Outputs using the current sidecar data."),
+        buttonLabel: t("project_export_no_vba", "Word Export (No VBA)"),
+        buttonClass: "ghost",
+        onClick: async (button) => {
+          if (!runtime.dirHandle) {
+            setStatus(t("project_open_folder_first", "Open project folder first."));
+            return;
+          }
+          const exporter = window.AutoBerichtWordExport || {};
+          if (!exporter.exportReportDocx) {
+            setStatus(t("project_export_missing", "No-VBA exporter not available."));
+            return;
+          }
+          button.disabled = true;
+          const previous = button.textContent;
+          button.textContent = t("project_export_running", "Exporting ...");
+          try {
+            const result = await exporter.exportReportDocx({
+              project: state.project,
+              sidecarDoc: runtime.sidecarDoc,
+              projectHandle: runtime.dirHandle,
+              spiderOverrides: state.spiderOverrides || {},
+              computeSpider: window.AutoBerichtSpider?.computeSpider,
+              compareIdSegments: stateHelpers.compareIdSegments,
+              toText: stateHelpers.toText,
+              markdownToHtml,
+            });
+            if (result?.savedAs) {
+              setStatus(`Exported ${result.savedAs}`);
+            } else {
+              setStatus(t("project_export_done", "Export complete."));
+            }
+          } catch (err) {
+            setStatus(`Export failed: ${err.message || err}`);
+            debug.logLine("error", `No-VBA export failed: ${err.message || err}`);
+          } finally {
+            button.disabled = false;
+            button.textContent = previous;
+          }
+        },
+      });
+      page.appendChild(exportCard.card);
+
+      const libraryCard = createToolCard({
+        title: t("project_tool_library_title", "Library Export"),
+        hint: t("project_tool_library_hint", "Generate or update the library from the current project content."),
+        buttonLabel: t("project_tool_library", "Generate / Update Library"),
+        buttonClass: "ghost",
+        onClick: async () => {
+          triggerGenerateLibrary();
+        },
+      });
+      page.appendChild(libraryCard.card);
 
       const logoCard = document.createElement("div");
       logoCard.className = "project-card";
@@ -1637,6 +1665,18 @@
       });
 
       page.appendChild(spiderCard);
+
+      const debugCard = createToolCard({
+        title: t("project_tool_log_title", "Debug Log"),
+        hint: t("project_tool_log_hint", "Save the current debug log to share diagnostics when troubleshooting."),
+        buttonLabel: t("project_tool_log", "Save debug log"),
+        buttonClass: "ghost",
+        onClick: async () => {
+          triggerSaveLog();
+        },
+      });
+      page.appendChild(debugCard.card);
+
       rowsEl.appendChild(page);
       renderSpider().catch(() => {});
     };
