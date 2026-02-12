@@ -4,6 +4,7 @@
     const { elements, state, runtime, debug, setStatus } = ctx;
     const { t } = ctx.i18n;
     const { escapeHtml = (value) => value, formatInlineMarkdown = (value) => value, markdownToHtml = (value) => value } = ctx.markdown || {};
+    const reportRows = window.AutoBerichtReportRows || {};
 
     const {
       chapterListEl,
@@ -997,9 +998,14 @@
     const PREVIEW_COL2_WIDTH = 58;
     const PREVIEW_COL3_WIDTH = 7;
 
-    const isSectionRow = (row) => String(row?.kind || "").toLowerCase() === "section";
+    const isSectionRow = typeof reportRows.isSectionRow === "function"
+      ? reportRows.isSectionRow
+      : (row) => String(row?.kind || "").toLowerCase() === "section";
 
     const rowToText = (value) => {
+      if (typeof reportRows.rowToText === "function") {
+        return reportRows.rowToText(value, stateHelpers.toText);
+      }
       if (typeof stateHelpers.toText === "function") {
         return stateHelpers.toText(value);
       }
@@ -1008,121 +1014,61 @@
       return String(value);
     };
 
-    const isIncludedRow = (row) => {
-      const ws = row?.workstate;
-      if (!ws || ws.includeFinding == null) return false;
-      return ws.includeFinding === true;
-    };
+    const isIncludedRow = typeof reportRows.isReportReadyRow === "function"
+      ? reportRows.isReportReadyRow
+      : (row) => {
+        const ws = row?.workstate;
+        if (!ws || ws.includeFinding == null) return false;
+        return ws.includeFinding === true && ws.done === true;
+      };
 
-    const resolveSectionId = (row, chapterId) => {
-      const sectionId = String(row?.sectionId || "").trim();
-      if (sectionId) return sectionId;
-      const rawId = String(row?.id || "");
-      const parts = rawId.split(".");
-      if (parts.length >= 2) return `${parts[0]}.${parts[1]}`;
-      if (chapterId) return `${chapterId}.1`;
-      return "";
-    };
+    const resolveSectionTitle = typeof reportRows.resolveSectionTitle === "function"
+      ? reportRows.resolveSectionTitle
+      : (row) => String(row?.title || row?.id || "");
 
-    const stripLeadingNumber = (value) => (
-      String(value || "")
-        .replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "")
-        .trim()
-    );
+    const resolveFindingText = typeof reportRows.resolveFindingText === "function"
+      ? (row) => reportRows.resolveFindingText(row, stateHelpers.toText)
+      : (row) => rowToText(row?.workstate?.findingText ?? row?.master?.finding);
 
-    const resolveSectionTitle = (row) => {
-      const rawTitle = String(row?.title || row?.id || "");
-      const cleaned = stripLeadingNumber(rawTitle);
-      return cleaned || rawTitle;
-    };
+    const resolveRecommendationText = typeof reportRows.resolveRecommendationText === "function"
+      ? (row) => reportRows.resolveRecommendationText(row, stateHelpers.toText)
+      : (row) => rowToText(row?.workstate?.recommendationText ?? row?.master?.recommendation);
 
-    const resolveFindingText = (row) => {
-      const ws = row?.workstate;
-      if (ws && Object.prototype.hasOwnProperty.call(ws, "findingText")) {
-        return rowToText(ws.findingText);
-      }
-      return rowToText(row?.master?.finding);
-    };
-
-    const resolveRecommendationText = (row) => {
-      const ws = row?.workstate || {};
-      if (ws.includeRecommendation === false) return "";
-      if (Object.prototype.hasOwnProperty.call(ws, "recommendationText")) {
-        return rowToText(ws.recommendationText);
-      }
-      return rowToText(row?.master?.recommendation);
-    };
-
-    const resolvePriorityText = (row) => {
-      const ws = row?.workstate || {};
-      if (!Object.prototype.hasOwnProperty.call(ws, "priority")) return "";
-      const raw = Number(ws.priority);
-      if (!Number.isFinite(raw)) return "";
-      const value = Math.round(raw);
-      if (value < 1 || value > 4) return "";
-      return String(value);
-    };
-
-    const isFieldObservationChapter = (chapterId) => String(chapterId || "").includes(".");
-
-    const buildIncludedSections = (rows) => {
-      const included = new Set();
-      rows.forEach((row) => {
-        if (isSectionRow(row) || !isIncludedRow(row)) return;
-        const sectionId = String(row?.sectionId || "").trim();
-        if (sectionId) included.add(sectionId);
-      });
-      return included;
-    };
-
-    const buildRenumberMap = (rows, chapterId) => {
-      const rowMap = new Map();
-      const sectionMap = new Map();
-      const sectionCounts = new Map();
-      let itemCount = 0;
-      rows.forEach((row) => {
-        if (isSectionRow(row) || !isIncludedRow(row)) return;
-        const rowId = String(row?.id || "").trim();
-        if (!rowId) return;
-        if (isFieldObservationChapter(chapterId)) {
-          itemCount += 1;
-          rowMap.set(rowId, `${chapterId}.${itemCount}`);
-          return;
-        }
-        const sectionId = resolveSectionId(row, chapterId) || `${chapterId}.1`;
-        if (!sectionMap.has(sectionId)) {
-          sectionMap.set(sectionId, sectionMap.size + 1);
-        }
-        const count = (sectionCounts.get(sectionId) || 0) + 1;
-        sectionCounts.set(sectionId, count);
-        rowMap.set(rowId, `${chapterId}.${sectionMap.get(sectionId)}.${count}`);
-      });
-      return { rowMap, sectionMap };
-    };
+    const resolvePriorityText = typeof reportRows.resolvePriorityText === "function"
+      ? reportRows.resolvePriorityText
+      : (row) => {
+        const raw = Number(row?.workstate?.priority);
+        if (!Number.isFinite(raw)) return "";
+        const value = Math.round(raw);
+        if (value < 1 || value > 4) return "";
+        return String(value);
+      };
 
     const buildChapterPreviewRows = (chapter) => {
       let rows = Array.isArray(chapter?.rows) ? chapter.rows : [];
       if (chapter?.id === "4.8" || chapter?.id === "0") {
         rows = normalizeHelpers.orderObservationRows(chapter);
       }
-      const includedSections = buildIncludedSections(rows);
-      const { rowMap } = buildRenumberMap(rows, chapter?.id || "");
+      if (typeof reportRows.buildChapterRows === "function") {
+        return reportRows.buildChapterRows(chapter, {
+          rows,
+          includeRow: isIncludedRow,
+          toText: stateHelpers.toText,
+          titleForFinding: (row, chapterId) => (
+            chapterId === "4.8" ? String(row?.titleOverride || "").trim() : ""
+          ),
+        });
+      }
       const output = [];
       rows.forEach((row) => {
         if (isSectionRow(row)) {
-          const sectionId = String(row?.id || "").trim();
-          if (!sectionId || !includedSections.has(sectionId)) return;
-          output.push({
-            kind: "section",
-            title: resolveSectionTitle(row),
-          });
+          output.push({ kind: "section", title: resolveSectionTitle(row) });
           return;
         }
         if (!isIncludedRow(row)) return;
-        const rowId = String(row?.id || "").trim();
         output.push({
           kind: "finding",
-          id: rowMap.get(rowId) || rowId,
+          id: String(row?.id || ""),
           title: chapter?.id === "4.8" ? String(row?.titleOverride || "").trim() : "",
           finding: resolveFindingText(row),
           recommendation: resolveRecommendationText(row),
@@ -1296,162 +1242,15 @@
 
     const drawSpiderCanvas = (canvas, rows, companyLabel = "Company") => {
       if (!canvas) return;
-      const logicalWidth = 760;
-      const logicalHeight = 500;
-      const dpr = Math.max(1, Math.min(2, window.devicePixelRatio || 1));
-      canvas.style.width = `${logicalWidth}px`;
-      canvas.style.height = `${logicalHeight}px`;
-      canvas.width = Math.round(logicalWidth * dpr);
-      canvas.height = Math.round(logicalHeight * dpr);
-      const ctx2d = canvas.getContext("2d");
-      if (!ctx2d) return;
-      ctx2d.setTransform(dpr, 0, 0, dpr, 0, 0);
-      const spiderRows = Array.isArray(rows) ? rows : [];
-      const labels = spiderRows.map((row) => String(row?.displayLabel || row?.label || row?.id || ""));
-      const companyValues = spiderRows.map((row) => Number(row?.company || 0));
-      const consultantValues = spiderRows.map((row) => Number(row?.consultant || 0));
-      const width = logicalWidth;
-      const height = logicalHeight;
-      ctx2d.clearRect(0, 0, width, height);
-      ctx2d.fillStyle = "#fff";
-      ctx2d.fillRect(0, 0, width, height);
-
-      const cx = Math.round(width * 0.5);
-      const cy = Math.round(height * 0.46);
-      const radius = Math.round(Math.min(width, height) * 0.31);
-      const steps = 5;
-      const maxValue = 100;
-      const count = labels.length || 1;
-
-      const wrapLabel = (text, maxWidth, maxLines) => {
-        const words = String(text || "").trim().split(/\s+/).filter(Boolean);
-        if (!words.length) return [""];
-        const lines = [];
-        let current = "";
-        words.forEach((word) => {
-          const candidate = current ? `${current} ${word}` : word;
-          if (!current || ctx2d.measureText(candidate).width <= maxWidth) {
-            current = candidate;
-          } else {
-            lines.push(current);
-            current = word;
-          }
-        });
-        if (current) lines.push(current);
-        if (lines.length <= maxLines) return lines;
-        const trimmed = lines.slice(0, maxLines);
-        let last = trimmed[maxLines - 1];
-        while (last.length > 1 && ctx2d.measureText(`${last}…`).width > maxWidth) {
-          last = last.slice(0, -1);
-        }
-        trimmed[maxLines - 1] = `${last}…`;
-        return trimmed;
-      };
-
-      ctx2d.strokeStyle = "#d9d5ce";
-      ctx2d.lineWidth = 1;
-      for (let ring = 1; ring <= steps; ring += 1) {
-        const r = (radius * ring) / steps;
-        ctx2d.beginPath();
-        for (let i = 0; i < count; i += 1) {
-          const angle = (-Math.PI / 2) + (Math.PI * 2 * i) / count;
-          const x = cx + Math.cos(angle) * r;
-          const y = cy + Math.sin(angle) * r;
-          if (i === 0) ctx2d.moveTo(x, y);
-          else ctx2d.lineTo(x, y);
-        }
-        ctx2d.closePath();
-        ctx2d.stroke();
-      }
-
-      ctx2d.strokeStyle = "#c4beb4";
-      labels.forEach((label, index) => {
-        const angle = (-Math.PI / 2) + (Math.PI * 2 * index) / count;
-        const x = cx + Math.cos(angle) * radius;
-        const y = cy + Math.sin(angle) * radius;
-        ctx2d.beginPath();
-        ctx2d.moveTo(cx, cy);
-        ctx2d.lineTo(x, y);
-        ctx2d.stroke();
-
-        const textX = cx + Math.cos(angle) * (radius + 16);
-        const textY = cy + Math.sin(angle) * (radius + 16);
-        ctx2d.fillStyle = "#4b5563";
-        ctx2d.font = "14px system-ui, -apple-system, Segoe UI, sans-serif";
-        const horizontal = Math.cos(angle);
-        const align = horizontal > 0.2 ? "left" : horizontal < -0.2 ? "right" : "center";
-        ctx2d.textAlign = align;
-        ctx2d.textBaseline = "top";
-        const maxWidth = align === "center" ? 260 : 220;
-        const lines = wrapLabel(label, maxWidth, 2);
-        let xLabel = textX;
-        if (align === "left") xLabel = Math.min(xLabel, width - maxWidth - 10);
-        if (align === "right") xLabel = Math.max(xLabel, maxWidth + 10);
-        if (align === "center") xLabel = Math.max(maxWidth * 0.5 + 10, Math.min(width - (maxWidth * 0.5) - 10, xLabel));
-        if (/^\s*4\./.test(label)) xLabel += 10;
-        const lineHeight = 16;
-        const topNudge = index === 0 ? -14 : 0;
-        const startY = textY - ((lines.length - 1) * lineHeight * 0.5) + topNudge;
-        lines.forEach((line, lineIndex) => {
-          ctx2d.fillText(line, xLabel, startY + (lineIndex * lineHeight));
-        });
-      });
-
-      const drawPolygon = (values, stroke, fill) => {
-        ctx2d.beginPath();
-        values.forEach((value, index) => {
-          const pct = Math.max(0, Math.min(maxValue, Number(value || 0))) / maxValue;
-          const angle = (-Math.PI / 2) + (Math.PI * 2 * index) / count;
-          const x = cx + Math.cos(angle) * radius * pct;
-          const y = cy + Math.sin(angle) * radius * pct;
-          if (index === 0) ctx2d.moveTo(x, y);
-          else ctx2d.lineTo(x, y);
-        });
-        ctx2d.closePath();
-        ctx2d.fillStyle = fill;
-        ctx2d.strokeStyle = stroke;
-        ctx2d.lineWidth = 2;
-        ctx2d.fill();
-        ctx2d.stroke();
-      };
-
-      drawPolygon(companyValues, "#2563eb", "rgba(37,99,235,0.14)");
-      drawPolygon(consultantValues, "#dc2626", "rgba(220,38,38,0.11)");
-
-      const legendTopY = height - 52;
-      const legendLineHeight = 18;
-      const legendColumnMaxWidth = 220;
-      const markerWidth = 16;
-      const markerTextGap = 8;
-      const legendGap = 36;
-
-      ctx2d.textAlign = "left";
-      ctx2d.textBaseline = "top";
-      ctx2d.font = "17px system-ui, -apple-system, Segoe UI, sans-serif";
-
-      const leftLegendLines = wrapLabel(companyLabel || "Company", legendColumnMaxWidth, 2);
-      const rightLegendLines = wrapLabel("Suva", legendColumnMaxWidth, 2);
-      const leftTextWidth = leftLegendLines.reduce((max, line) => Math.max(max, ctx2d.measureText(line).width), 0);
-      const rightTextWidth = rightLegendLines.reduce((max, line) => Math.max(max, ctx2d.measureText(line).width), 0);
-      const leftBlockWidth = markerWidth + markerTextGap + leftTextWidth;
-      const rightBlockWidth = markerWidth + markerTextGap + rightTextWidth;
-      const totalLegendWidth = leftBlockWidth + legendGap + rightBlockWidth;
-      const leftMarkerX = Math.round((width - totalLegendWidth) * 0.5);
-      const rightMarkerX = leftMarkerX + leftBlockWidth + legendGap;
-      const markerY = legendTopY + 8;
-      const leftTextX = leftMarkerX + markerWidth + markerTextGap;
-      const rightTextX = rightMarkerX + markerWidth + markerTextGap;
-
-      ctx2d.fillStyle = "#2563eb";
-      ctx2d.fillRect(leftMarkerX, markerY, markerWidth, 3);
-      leftLegendLines.forEach((line, lineIndex) => {
-        ctx2d.fillText(line, leftTextX, legendTopY + (lineIndex * legendLineHeight));
-      });
-
-      ctx2d.fillStyle = "#dc2626";
-      ctx2d.fillRect(rightMarkerX, markerY, markerWidth, 3);
-      rightLegendLines.forEach((line, lineIndex) => {
-        ctx2d.fillText(line, rightTextX, legendTopY + (lineIndex * legendLineHeight));
+      const spiderChart = window.AutoBerichtSpiderChart || {};
+      if (typeof spiderChart.drawToCanvas !== "function") return;
+      spiderChart.drawToCanvas(canvas, rows, {
+        width: 760,
+        height: 500,
+        dpr: Math.max(1, Math.min(2, window.devicePixelRatio || 1)),
+        setCssSize: true,
+        companyLabel,
+        suvaLabel: "Suva",
       });
     };
 
@@ -1592,6 +1391,10 @@
           input.addEventListener("change", () => onInput(input.value));
         }
         label.appendChild(input);
+        if (options.colSpan) {
+          const span = Math.max(1, Math.floor(Number(options.colSpan) || 1));
+          label.style.gridColumn = `span ${span}`;
+        }
         return label;
       };
 
@@ -1599,33 +1402,46 @@
         meta.moderator = String(value || "").trim();
         meta.author = meta.moderator;
         scheduleAutosave();
-      }));
+      }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_moderator_initials", "Moderator initials"), meta.moderatorInitials || "", (value) => {
         meta.moderatorInitials = String(value || "").trim();
         meta.initials = meta.moderatorInitials;
         scheduleAutosave();
-      }));
+      }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_co_moderator", "Co-moderator"), meta.coModerator || "", (value) => {
         meta.coModerator = String(value || "").trim();
         scheduleAutosave();
-      }));
+      }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_co_initials", "Co-moderator initials"), meta.coModeratorInitials || "", (value) => {
         meta.coModeratorInitials = String(value || "").trim();
         scheduleAutosave();
-      }));
+      }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_company", "Company"), meta.company || "", (value) => {
         meta.company = String(value || "").trim();
         scheduleAutosave();
-      }));
+      }, { colSpan: 3 }));
       formGrid.appendChild(createMetaField(t("project_meta_companyid", "Company ID"), meta.companyId || "", (value) => {
         meta.companyId = String(value || "").trim();
         scheduleAutosave();
-      }));
+      }, { colSpan: 2 }));
+      formGrid.appendChild(createMetaField(t("project_meta_address", "Address"), meta.address || "", (value) => {
+        meta.address = String(value || "").trim();
+        scheduleAutosave();
+      }, { colSpan: 2 }));
+      formGrid.appendChild(createMetaField(t("project_meta_postal", "PLZ"), meta.plz || "", (value) => {
+        meta.plz = String(value || "").trim();
+        scheduleAutosave();
+      }, { colSpan: 1 }));
+      formGrid.appendChild(createMetaField(t("project_meta_city", "City"), meta.city || "", (value) => {
+        meta.city = String(value || "").trim();
+        scheduleAutosave();
+      }, { colSpan: 2 }));
       formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "de-CH", (value) => {
         meta.locale = value || "de-CH";
         ctx.i18n.setLocale(meta.locale);
         scheduleAutosave();
       }, {
+        colSpan: 5,
         select: true,
         items: [
           { value: "de-CH", label: "DE" },
@@ -1637,7 +1453,12 @@
         const raw = Number(value);
         meta.autobackupMinutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
         scheduleAutosave();
-      }, { type: "number", min: 0, step: 1 }));
+      }, {
+        colSpan: 5,
+        type: "number",
+        min: 0,
+        step: 1,
+      }));
       formCard.appendChild(formGrid);
 
       const created = document.createElement("div");

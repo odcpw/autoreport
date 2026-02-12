@@ -42,6 +42,9 @@
     if (!project.meta.locale) project.meta.locale = "de-CH";
     if (!project.meta.company) project.meta.company = "";
     if (!project.meta.companyId) project.meta.companyId = "";
+    if (!project.meta.address) project.meta.address = "";
+    if (!project.meta.plz) project.meta.plz = "";
+    if (!project.meta.city) project.meta.city = "";
     if (!project.meta.moderator && project.meta.author) project.meta.moderator = project.meta.author;
     if (!project.meta.moderator) project.meta.moderator = "";
     if (!project.meta.moderatorInitials && project.meta.initials) project.meta.moderatorInitials = project.meta.initials;

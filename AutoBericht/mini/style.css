@@ -1146,12 +1146,13 @@ textarea[disabled] {
 .project-meta-grid {
   display: grid;
   gap: 10px;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: repeat(10, minmax(0, 1fr));
 }
 
 .project-meta-field {
   display: grid;
   gap: 5px;
+  min-width: 0;
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
@@ -1160,6 +1161,7 @@ textarea[disabled] {
 
 .project-meta-field input,
 .project-meta-field select {
+  width: 100%;
   border-radius: 10px;
   border: 1px solid #d7d0c7;
   padding: 8px 10px;
@@ -1196,6 +1198,10 @@ textarea[disabled] {
 @media (max-width: 720px) {
   .project-meta-grid {
     grid-template-columns: 1fr;
+  }
+
+  .project-meta-field {
+    grid-column: 1 / -1 !important;
   }
 
   .checklist-row {
