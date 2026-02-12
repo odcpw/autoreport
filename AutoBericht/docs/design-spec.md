@@ -61,8 +61,10 @@ Outputs:
   Remaining items are renumbered within each chapter.
 - Self-assessment answers are binary; consultants adjust to percentage scores.
   These feed a spider chart in the report.
-- Score rule (derived): selected level 1=0%, 2=25%, 3=50%, 4=75%.
-  If a finding is excluded, treat it as 100%. Field observations have no score.
+- Score rule (current): selected level maps directly to percentages
+  1=0%, 2=33%, 3=66%, 4=100%.
+- Inclusion in report is controlled independently (`include` + `done`);
+  excluded findings are not auto-converted to 100%. Field observations have no score.
 - Reports are single-language (DE/FR/IT), templates are fixed but updated over time.
 
 ## 7. Data Model (Draft)
@@ -102,7 +104,7 @@ RecommendationLibrary (per engineer)
 
 - Implemented layout: single-page, scroll-free tagging workflow sized for 1920×1080 @125%.
 - Tag panes use uniform buttons with tooltips; photo preview and tagging controls stay visible.
-- Two-layout toggle is NOT used; current design keeps one layout (decision: single layout sufficient).
+- Layout mode toggle is available (stacked and tabs), with the current choice persisted locally.
 
 ## 9. Proposed Architecture (Policy-Safe)
 

@@ -12,8 +12,11 @@ This document tracks the **redesign** direction (2026).
 ## Current State (Redesign)
 
 - Minimal editor exists in `AutoBericht/mini/` with sidecar load/save and autosave.
+- Project page is the main control center (project metadata, locale/autosave, tools, spider editor, logo pipeline, and debug log export).
 - No-VBA Word export is available from the Project page (DOCX template markers, logos, spider image, thermo bars, priority values, chapter table payloads).
+- Word export v1 contract is documented in `AutoBericht/mini/docs/word-export-v1.md`.
 - PhotoSorter exists with stacked/tab layouts, observation tag add/remove, and filename display.
+- PhotoSorter hardening pass completed (autosave flush logging, safer defaults, stronger knowledge-base validation, locale-aware sorting).
 - 4.8 Beobachtungen is a special chapter (reorderable rows, tag‑driven cards, photo overlay per tag).
 - Management Summary (Chapter 0) added with 8 placeholder cards.
 - Markdown-lite preview supports bold/italic/bullets/links; tooltip cheatsheet added.
@@ -41,7 +44,13 @@ This document tracks the **redesign** direction (2026).
 
 - [x] No-VBA Word export (template marker replacement, chapter payload injection, logo insertion, spider image, thermo bars, priority column).
 - [ ] Template hardening and governance (final placeholder map, style locks, and template QA pass).
+- [ ] Create FR and IT Word template variants (same placeholder/style contract as DE template).
 - [ ] Explicit UI locale policy (lock English UI vs project-locale-driven UI text).
-- [ ] Optional legacy VBA pipeline cleanup/retirement plan.
+- [ ] Keep legacy VBA pipeline supported in parallel (no cleanup/retirement decision yet).
 - [x] No File System Access fallback (removed by design).
 - [x] Seed recommendations expanded for chapters 1–14 in DE/FR/IT libraries.
+
+## Deferred For Now
+
+- Sidecar compatibility matrix/migration testing (single active sidecar project at the moment).
+- Full export regression matrix across all scenarios/locales (to be resumed after FR/IT templates are in place).
