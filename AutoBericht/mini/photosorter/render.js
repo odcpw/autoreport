@@ -172,6 +172,7 @@
           if (!existing.some((option) => option.value === value)) {
             const next = tagsApi.sortOptionsForGroup(group, [...existing, { value, label: value }]);
             state.tagOptions[group] = next;
+            actions.persistTagOptions?.();
           }
           addInput.value = "";
           renderPanels();

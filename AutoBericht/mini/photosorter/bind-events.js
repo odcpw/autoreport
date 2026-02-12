@@ -383,13 +383,19 @@
       });
     }
 
+    const flushAutosaveSafely = () => {
+      Promise.resolve(ioApi.flushAutosave?.()).catch((err) => {
+        debug.logLine("error", `Autosave flush failed: ${err?.message || err}`);
+      });
+    };
+
     window.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") {
-        ioApi.flushAutosave();
+        flushAutosaveSafely();
       }
     });
     window.addEventListener("pagehide", () => {
-      ioApi.flushAutosave();
+      flushAutosaveSafely();
     });
 
     return {

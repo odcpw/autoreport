@@ -28,6 +28,7 @@
   };
 
   const isNumericTag = (value) => /^\d+(?:\.\d+)*$/.test(value);
+  const getSortLocale = () => document.documentElement?.getAttribute("lang") || "de";
 
   const compareNumericTags = (a, b) => {
     const left = String(a.value || a.label || "");
@@ -47,7 +48,7 @@
     }
     if (leftIsNum) return -1;
     if (rightIsNum) return 1;
-    return left.localeCompare(right, "de", { numeric: true });
+    return left.localeCompare(right, getSortLocale(), { numeric: true });
   };
 
   const sortOptionsForGroup = (group, options) => {
@@ -55,8 +56,9 @@
     if (group === "report") {
       return list.sort(compareNumericTags);
     }
+    const locale = getSortLocale();
     return list.sort((a, b) => String(a.label || a.value || "")
-      .localeCompare(String(b.label || b.value || ""), "de", { numeric: true }));
+      .localeCompare(String(b.label || b.value || ""), locale, { numeric: true }));
   };
 
   const dedupeOptions = (options) => {
@@ -160,7 +162,8 @@
     return { chapters, rest };
   };
 
-  const EMPTY_TAG_OPTIONS = ensureTagOptions({});
+  const createEmptyTagOptions = () => ensureTagOptions({});
+  const EMPTY_TAG_OPTIONS = createEmptyTagOptions();
 
   const buildReportTagOptionsFromStructure = (items) => {
     if (!Array.isArray(items)) return [];
@@ -208,6 +211,7 @@
     splitChapterOptions,
     sortOptionsForGroup,
     dedupeOptions,
+    createEmptyTagOptions,
     EMPTY_TAG_OPTIONS,
   };
 })();

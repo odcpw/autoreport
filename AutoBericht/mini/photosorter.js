@@ -73,6 +73,7 @@
     toggleTag: () => {},
     removeObservationTag: () => {},
     setPhotoUnsorted: () => {},
+    persistTagOptions: () => {},
     enableActions: () => {},
   };
 
@@ -88,6 +89,9 @@
       i18n: ctx.i18n,
     })
     : {};
+  actions.persistTagOptions = () => {
+    ioApi.scheduleAutosave?.();
+  };
 
   actions.toggleTag = (group, tag) => {
     const current = photosApi.getCurrentPhoto?.();
@@ -143,7 +147,13 @@
   actions.enableActions = bindApi.enableActions || (() => {});
 
   const init = async () => {
-    state.tagOptions = tagsApi.EMPTY_TAG_OPTIONS;
+    state.tagOptions = tagsApi.createEmptyTagOptions
+      ? tagsApi.createEmptyTagOptions()
+      : structuredClone(tagsApi.EMPTY_TAG_OPTIONS || {
+        report: [],
+        observations: [],
+        training: [],
+      });
     const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
     renderApi.updateStatusVisibility?.(statusHidden);
     renderApi.applyLayoutMode?.();

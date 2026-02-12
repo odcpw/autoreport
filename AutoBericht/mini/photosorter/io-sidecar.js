@@ -4,6 +4,34 @@
     const { tagsApi, photosApi, i18n } = deps;
     const seeds = window.AutoBerichtSeeds || {};
     const normalizeHelpers = window.AutoBerichtNormalize || {};
+    const createEmptyTagOptions = () => (
+      typeof tagsApi.createEmptyTagOptions === "function"
+        ? tagsApi.createEmptyTagOptions()
+        : structuredClone(tagsApi.EMPTY_TAG_OPTIONS || {
+          report: [],
+          observations: [],
+          training: [],
+        })
+    );
+    const getSortLocale = () => document.documentElement?.getAttribute("lang") || "de";
+    const resolveLocaleKey = (locale) => {
+      const value = String(locale || "de-CH").toLowerCase();
+      if (value.startsWith("fr")) return "fr";
+      if (value.startsWith("it")) return "it";
+      return "de";
+    };
+    const getPreferredLocale = () => (
+      state.sidecarDoc?.report?.project?.meta?.locale
+      || state.projectDoc?.meta?.locale
+      || document.documentElement?.getAttribute("lang")
+      || "de-CH"
+    );
+    const getKnowledgeBaseTryPaths = () => {
+      const preferred = resolveLocaleKey(getPreferredLocale());
+      return [preferred, "de", "fr", "it"]
+        .filter((value, index, list) => list.indexOf(value) === index)
+        .map((key) => `../data/seed/knowledge_base_${key}.json`);
+    };
 
     const createEmptyProjectDoc = () => ({
       meta: {
@@ -11,7 +39,7 @@
         createdAt: new Date().toISOString(),
       },
       photos: {},
-      photoTagOptions: structuredClone(tagsApi.EMPTY_TAG_OPTIONS),
+      photoTagOptions: createEmptyTagOptions(),
       photoRoot: "",
     });
 
@@ -19,7 +47,7 @@
       const base = doc && typeof doc === "object" ? structuredClone(doc) : {};
       if (!base.meta) base.meta = { projectId: "", createdAt: new Date().toISOString() };
       if (!base.photos) base.photos = {};
-      if (!base.photoTagOptions) base.photoTagOptions = structuredClone(tagsApi.EMPTY_TAG_OPTIONS);
+      if (!base.photoTagOptions) base.photoTagOptions = createEmptyTagOptions();
       if (!base.photoRoot) base.photoRoot = "";
       return base;
     };
@@ -66,7 +94,8 @@
         if (!isLibraryFileName(name)) continue;
         matches.push({ name, handle });
       }
-      matches.sort((a, b) => a.name.localeCompare(b.name, "de", { numeric: true }));
+      const locale = getSortLocale();
+      matches.sort((a, b) => a.name.localeCompare(b.name, locale, { numeric: true }));
       return matches;
     };
 
@@ -101,10 +130,24 @@
       });
     };
 
-    const isValidKnowledgeBase = (data) => {
-      if (!data || typeof data !== "object") return false;
-      if (!data.schemaVersion) return false;
-      if (!data.tags || typeof data.tags !== "object") return false;
+    const isValidKnowledgeBase = (data, source = "knowledge base") => {
+      if (!data || typeof data !== "object") {
+        debug.logLine("error", `${source} missing or invalid.`);
+        return false;
+      }
+      if (typeof seeds.validateKnowledgeBase === "function") {
+        try {
+          seeds.validateKnowledgeBase(data);
+          return true;
+        } catch (err) {
+          debug.logLine("error", `${source} validation failed: ${err?.message || err}`);
+          return false;
+        }
+      }
+      if (!data.schemaVersion || !data.tags || typeof data.tags !== "object") {
+        debug.logLine("error", `${source} missing required schema fields.`);
+        return false;
+      }
       return true;
     };
 
@@ -118,29 +161,28 @@
             if (picked) {
               const file = await picked.handle.getFile();
               const parsed = JSON.parse(await file.text());
-              if (isValidKnowledgeBase(parsed)) return parsed;
-              debug.logLine("error", "User library is missing knowledge base schema.");
+              if (isValidKnowledgeBase(parsed, `User library (${picked.name})`)) return parsed;
             }
           }
         } catch (err) {
-          // ignore and try seed
+          debug.logLine("warn", `User library load failed; trying bundled seeds: ${err?.message || err}`);
         }
       }
 
       // 2) Bundled seed next to the app (served by the local server)
       try {
         const baseUrl = new URL(window.location.href);
-        const tryPaths = [
-          "../data/seed/knowledge_base_de.json",
-          "../data/seed/knowledge_base_fr.json",
-          "../data/seed/knowledge_base_it.json",
-        ];
+        const tryPaths = getKnowledgeBaseTryPaths();
         for (const rel of tryPaths) {
-          const url = new URL(rel, baseUrl);
-          const res = await fetch(url.toString());
-          if (!res.ok) continue;
-          const parsed = await res.json();
-          if (isValidKnowledgeBase(parsed)) return parsed;
+          try {
+            const url = new URL(rel, baseUrl);
+            const res = await fetch(url.toString());
+            if (!res.ok) continue;
+            const parsed = await res.json();
+            if (isValidKnowledgeBase(parsed, `Bundled seed (${rel})`)) return parsed;
+          } catch (err) {
+            debug.logLine("warn", `Failed loading bundled seed (${rel}): ${err?.message || err}`);
+          }
         }
       } catch (err) {
         debug.logLine("error", `Failed to load bundled seed via fetch: ${err.message || err}`);
@@ -235,7 +277,7 @@
       } catch (err) {
         state.sidecarDoc = null;
         state.projectDoc = createEmptyProjectDoc();
-        state.tagOptions = tagsApi.EMPTY_TAG_OPTIONS;
+        state.tagOptions = createEmptyTagOptions();
         const knowledgeBase = await readKnowledgeBase();
         let reportProject = null;
         let statusMessage = "Sidecar not found; starting fresh.";
