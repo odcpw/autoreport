@@ -371,6 +371,21 @@
     return toText(ws.recommendationText);
   };
 
+  const getChapterPositivesText = (chapter) => {
+    const meta = chapter?.meta || {};
+    return toText(meta.positivesText);
+  };
+
+  const isChapterPositivesReady = (chapter) => {
+    const meta = chapter?.meta || {};
+    return meta.positivesInclude === true && meta.positivesDone === true;
+  };
+
+  const getChapterPositivesExportText = (chapter) => {
+    if (!isChapterPositivesReady(chapter)) return "";
+    return getChapterPositivesText(chapter).trim();
+  };
+
   const getAnswerState = (row) => {
     const direct = row.customer?.answer;
     if (direct === 0 || direct === 1) return direct;
@@ -426,6 +441,9 @@
     formatChapterLabel,
     getFindingText,
     getRecommendationText,
+    getChapterPositivesText,
+    isChapterPositivesReady,
+    getChapterPositivesExportText,
     getAnswerState,
     getAnswerComments,
     getAnswerEvidence,

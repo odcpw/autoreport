@@ -1078,9 +1078,10 @@
       return output;
     };
 
-    const createChapterPreviewTable = (rows) => {
+    const createChapterPreviewTable = (rows, options = {}) => {
       const table = document.createElement("table");
       table.className = "chapter-preview-table";
+      const positivesText = String(options?.positivesText || "").trim();
       const colgroup = document.createElement("colgroup");
       [PREVIEW_COL1_WIDTH, PREVIEW_COL2_WIDTH, PREVIEW_COL3_WIDTH].forEach((width) => {
         const col = document.createElement("col");
@@ -1095,7 +1096,12 @@
       topHeader.className = "chapter-preview-table__check";
       const topBlank = document.createElement("td");
       topBlank.colSpan = 2;
-      topBlank.textContent = "";
+      topBlank.className = "chapter-preview-text";
+      if (positivesText) {
+        topBlank.innerHTML = markdownToHtml(positivesText);
+      } else {
+        topBlank.textContent = "";
+      }
       const topCheck = document.createElement("td");
       topCheck.className = "chapter-preview-table__prio";
       topCheck.textContent = "✓";
@@ -1183,14 +1189,17 @@
       chapterPreviewBody.appendChild(subtitle);
 
       const rows = buildChapterPreviewRows(chapter);
-      if (!rows.length) {
+      const positivesText = stateHelpers.getChapterPositivesExportText
+        ? stateHelpers.getChapterPositivesExportText(chapter)
+        : "";
+      if (!rows.length && !positivesText) {
         const empty = document.createElement("div");
         empty.className = "chapter-preview-empty";
         empty.textContent = t("chapter_preview_empty", "No included findings in this chapter.");
         chapterPreviewBody.appendChild(empty);
         return;
       }
-      chapterPreviewBody.appendChild(createChapterPreviewTable(rows));
+      chapterPreviewBody.appendChild(createChapterPreviewTable(rows, { positivesText }));
     };
 
     const openChapterPreview = (chapter) => {
@@ -1950,6 +1959,30 @@
       return group;
     };
 
+    const createLibraryGroup = (currentAction, onSelect, labelText = "Library") => {
+      const libraryGroup = document.createElement("div");
+      libraryGroup.className = "library-group";
+      const libraryLabel = document.createElement("span");
+      libraryLabel.textContent = labelText;
+      libraryGroup.appendChild(libraryLabel);
+      const actionButtons = [
+        { key: "off", label: "Off" },
+        { key: "append", label: "Append" },
+        { key: "replace", label: "Replace" },
+      ];
+      actionButtons.forEach((option) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.textContent = option.label;
+        if ((currentAction || "off") === option.key) {
+          button.classList.add("is-active");
+        }
+        button.addEventListener("click", () => onSelect(option.key));
+        libraryGroup.appendChild(button);
+      });
+      return libraryGroup;
+    };
+
     const createMarkdownHint = () => {
       const hint = document.createElement("span");
       hint.className = "hint";
@@ -2066,30 +2099,15 @@
       recControls.className = "field-controls";
       recControls.appendChild(levelGroup);
 
-      const libraryGroup = document.createElement("div");
-      libraryGroup.className = "library-group";
-      const libraryLabel = document.createElement("span");
-      libraryLabel.textContent = "Library";
-      libraryGroup.appendChild(libraryLabel);
-      const actionButtons = [
-        { key: "off", label: "Off" },
-        { key: "append", label: "Append" },
-        { key: "replace", label: "Replace" },
-      ];
-      actionButtons.forEach((option) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.textContent = option.label;
-        if ((ws.libraryAction || "off") === option.key) {
-          button.classList.add("is-active");
-        }
-        button.addEventListener("click", () => {
-          ws.libraryAction = option.key;
+      const libraryGroup = createLibraryGroup(
+        ws.libraryAction || "off",
+        (nextAction) => {
+          ws.libraryAction = nextAction;
           scheduleAutosave();
           renderRows();
-        });
-        libraryGroup.appendChild(button);
-      });
+        },
+        "Library",
+      );
 
       const recommendationInput = document.createElement("textarea");
       applyEditorLocale(recommendationInput);
@@ -2113,6 +2131,58 @@
       recField.appendChild(recHeader);
       recField.appendChild(recommendationInput);
       return recField;
+    };
+
+    const createSummaryField = (row, ws, onChange) => {
+      const summaryField = document.createElement("div");
+      summaryField.className = "field";
+      const summaryHeader = document.createElement("div");
+      summaryHeader.className = "field-header";
+      const summaryLabel = document.createElement("label");
+      summaryLabel.textContent = "Summary";
+      summaryLabel.appendChild(createMarkdownHint());
+
+      const includeToggle = createToggle("Include", ws.includeFinding, (checked) => {
+        ws.includeFinding = checked;
+        scheduleAutosave();
+        renderRows();
+      });
+      const doneToggle = createToggle("Done", ws.done, (checked) => {
+        ws.done = checked;
+        scheduleAutosave();
+        renderRows();
+      });
+
+      const summaryControls = document.createElement("div");
+      summaryControls.className = "field-controls";
+      summaryControls.appendChild(includeToggle);
+      summaryControls.appendChild(doneToggle);
+      summaryControls.appendChild(createLibraryGroup(
+        ws.libraryAction || "off",
+        (nextAction) => {
+          ws.libraryAction = nextAction;
+          scheduleAutosave();
+          renderRows();
+        },
+        "Library",
+      ));
+
+      const summaryInput = document.createElement("textarea");
+      applyEditorLocale(summaryInput);
+      summaryInput.value = stateHelpers.getRecommendationText(row);
+      summaryInput.addEventListener("input", () => {
+        ws.recommendationText = summaryInput.value;
+        scheduleAutosave();
+        autosizeTextarea(summaryInput);
+        if (onChange) onChange();
+      });
+      requestAnimationFrame(() => autosizeTextarea(summaryInput));
+
+      summaryHeader.appendChild(summaryLabel);
+      summaryHeader.appendChild(summaryControls);
+      summaryField.appendChild(summaryHeader);
+      summaryField.appendChild(summaryInput);
+      return summaryField;
     };
 
     const createPreviewPanel = (row, previewBtn) => {
@@ -2222,11 +2292,81 @@
         }
       };
       const rowBody = document.createElement("div");
-      rowBody.className = "row-body";
-      rowBody.appendChild(createFindingField(row, ws, onChange));
-      rowBody.appendChild(createRecommendationField(row, ws, onChange));
+      rowBody.className = row.type === "summary" ? "row-body row-body--single" : "row-body";
+      if (row.type === "summary") {
+        rowBody.appendChild(createSummaryField(row, ws, onChange));
+      } else {
+        rowBody.appendChild(createFindingField(row, ws, onChange));
+        rowBody.appendChild(createRecommendationField(row, ws, onChange));
+      }
       card.appendChild(rowBody);
       card.appendChild(previewPanel.preview);
+      return card;
+    };
+
+    const createChapterPositivesCard = (chapter) => {
+      if (!chapter || String(chapter.id || "") === "0") return null;
+      if (typeof normalizeHelpers.ensureChapterMetaDefaults === "function") {
+        normalizeHelpers.ensureChapterMetaDefaults(chapter);
+      } else {
+        chapter.meta = chapter.meta || {};
+        if (chapter.meta.positivesText == null) chapter.meta.positivesText = "";
+        if (chapter.meta.positivesInclude == null) chapter.meta.positivesInclude = false;
+        if (chapter.meta.positivesDone == null) chapter.meta.positivesDone = false;
+        if (!chapter.meta.positivesLibraryAction) chapter.meta.positivesLibraryAction = "off";
+        if (chapter.meta.positivesLibraryHash == null) chapter.meta.positivesLibraryHash = "";
+      }
+      const meta = chapter.meta;
+      const card = document.createElement("div");
+      card.className = "row-card chapter-positives-card";
+
+      const header = document.createElement("div");
+      header.className = "field-header";
+      const label = document.createElement("label");
+      label.textContent = "Positives";
+      label.appendChild(createMarkdownHint());
+
+      const includeToggle = createToggle("Include", meta.positivesInclude === true, (checked) => {
+        meta.positivesInclude = checked;
+        scheduleAutosave();
+        renderRows();
+      });
+      const doneToggle = createToggle("Done", meta.positivesDone === true, (checked) => {
+        meta.positivesDone = checked;
+        scheduleAutosave();
+        renderRows();
+      });
+
+      const controls = document.createElement("div");
+      controls.className = "field-controls";
+      controls.appendChild(includeToggle);
+      controls.appendChild(doneToggle);
+      controls.appendChild(createLibraryGroup(
+        meta.positivesLibraryAction || "off",
+        (nextAction) => {
+          meta.positivesLibraryAction = nextAction;
+          scheduleAutosave();
+          renderRows();
+        },
+        "Library",
+      ));
+
+      const input = document.createElement("textarea");
+      applyEditorLocale(input);
+      input.value = stateHelpers.getChapterPositivesText
+        ? stateHelpers.getChapterPositivesText(chapter)
+        : String(meta.positivesText || "");
+      input.addEventListener("input", () => {
+        meta.positivesText = input.value;
+        scheduleAutosave();
+        autosizeTextarea(input);
+      });
+      requestAnimationFrame(() => autosizeTextarea(input));
+
+      header.appendChild(label);
+      header.appendChild(controls);
+      card.appendChild(header);
+      card.appendChild(input);
       return card;
     };
 
@@ -2243,6 +2383,8 @@
       const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
       if (!chapter) return;
       renderChapterTitle(chapter);
+      const chapterPositivesCard = createChapterPositivesCard(chapter);
+      if (chapterPositivesCard) rowsEl.appendChild(chapterPositivesCard);
       let rows = chapter.rows || [];
       let displayIds = new Map();
       if (chapter.id === "4.8" || chapter.id === "0") {

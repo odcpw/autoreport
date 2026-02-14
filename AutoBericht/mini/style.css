@@ -308,6 +308,10 @@ body {
   margin-bottom: 8px;
 }
 
+.row-body--single {
+  grid-template-columns: 1fr;
+}
+
 .field {
   display: contents;
   min-width: 0;
@@ -343,6 +347,10 @@ body {
   align-items: center;
   gap: 10px;
   flex-wrap: wrap;
+}
+
+.chapter-positives-card .field-header {
+  margin-bottom: 8px;
 }
 
 .finding-controls {

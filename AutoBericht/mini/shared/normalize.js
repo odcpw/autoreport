@@ -58,6 +58,26 @@
     if (setLocale) setLocale(project.meta.locale);
   };
 
+  const ensureChapterMetaDefaults = (chapter) => {
+    if (!chapter || typeof chapter !== "object") return;
+    if (!chapter.meta || typeof chapter.meta !== "object") chapter.meta = {};
+    const meta = chapter.meta;
+    if (meta.positivesText == null) meta.positivesText = "";
+    if (meta.positivesInclude == null) {
+      meta.positivesInclude = false;
+    } else {
+      meta.positivesInclude = meta.positivesInclude === true;
+    }
+    if (meta.positivesDone == null) {
+      meta.positivesDone = false;
+    } else {
+      meta.positivesDone = meta.positivesDone === true;
+    }
+    const action = String(meta.positivesLibraryAction || "off").toLowerCase();
+    meta.positivesLibraryAction = ["off", "append", "replace"].includes(action) ? action : "off";
+    if (meta.positivesLibraryHash == null) meta.positivesLibraryHash = "";
+  };
+
   const ensureObservationChapter = (project) => {
     if (!project?.chapters) return project;
     const hasObservation = project.chapters.some((chapter) => chapter.id === "4.8");
@@ -186,6 +206,7 @@
     ensureManagementSummaryChapter(project);
     ensureProjectMeta(project, setLocale);
     (project.chapters || []).forEach((chapter) => {
+      ensureChapterMetaDefaults(chapter);
       (chapter.rows || []).forEach((row) => {
         if (row.kind === "section") return;
         ensureWorkstateDefaults(row);
@@ -320,6 +341,7 @@
   window.AutoBerichtNormalize = {
     ensureWorkstateDefaults,
     ensureProjectMeta,
+    ensureChapterMetaDefaults,
     ensureObservationChapter,
     ensureManagementSummaryChapter,
     normalizeProject,

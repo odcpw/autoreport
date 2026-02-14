@@ -621,7 +621,11 @@
 
   const buildChapterTableXml = (chapter, toText) => {
     const rows = buildChapterRows(chapter, toText);
-    if (!rows.length) return paragraphXml("(No included findings)");
+    const chapterMeta = chapter?.meta || {};
+    const positivesText = chapterMeta.positivesInclude === true && chapterMeta.positivesDone === true
+      ? String(chapterMeta.positivesText || "").trim()
+      : "";
+    if (!rows.length && !positivesText) return paragraphXml("(No included findings)");
     const chapterId = String(chapter?.id || "");
     const widthCol1 = 3150;
     const widthCol2 = 5220;
@@ -638,7 +642,7 @@
         "<w:gridSpan w:val=\"2\"/>",
         "<w:tcBorders><w:bottom w:val=\"single\" w:sz=\"4\" w:space=\"0\" w:color=\"auto\"/></w:tcBorders>",
         "</w:tcPr>",
-        paragraphXml(""),
+        positivesText ? multiParagraphXml(positivesText) : paragraphXml(""),
         "</w:tc>",
         "<w:tc><w:tcPr>",
         `<w:tcW w:w="${widthCol3}" w:type="dxa"/>`,

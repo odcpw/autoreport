@@ -17,6 +17,11 @@ Rows are exported only when both flags are true:
 
 In other words: report-ready rows are `includeFinding && done`.
 
+Chapter-level positives in chapter tables are exported only when both chapter flags are true:
+
+- `chapter.meta.positivesInclude === true`
+- `chapter.meta.positivesDone === true`
+
 ## Placeholder Contract
 
 ### Text markers
@@ -34,7 +39,7 @@ In other words: report-ready rows are `includeFinding && done`.
 
 - `CHAPTER0$$`, `CHAPTER1$$`, `CHAPTER2$$`, ... (by chapter id)
 - Chapter `0`: exported as lettered list paragraphs.
-- Other chapters: exported as table payloads.
+- Other chapters: exported as table payloads; the top-left header cell (left of `✓`) is populated from chapter positives.
 
 ### Image markers
 

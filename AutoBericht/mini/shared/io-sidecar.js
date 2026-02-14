@@ -315,6 +315,11 @@
 
       const existingEntries = knowledgeBase.library?.entries || [];
       const entriesMap = new Map(existingEntries.map((entry) => [entry.id, entry]));
+      const existingChapterPositives = (
+        knowledgeBase.library
+        && typeof knowledgeBase.library.chapterPositives === "object"
+        && !Array.isArray(knowledgeBase.library.chapterPositives)
+      ) ? structuredClone(knowledgeBase.library.chapterPositives) : {};
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       const lastUsedAt = new Date().toISOString();
       let applied = 0;
@@ -345,6 +350,34 @@
           ws.libraryHash = currentHash;
           applied += 1;
         });
+
+        if (typeof normalizeHelpers.ensureChapterMetaDefaults === "function") {
+          normalizeHelpers.ensureChapterMetaDefaults(chapter);
+        }
+        const chapterMeta = chapter?.meta || {};
+        const chapterAction = String(chapterMeta.positivesLibraryAction || "off").toLowerCase();
+        if (!["append", "replace"].includes(chapterAction)) return;
+        const chapterId = String(chapter?.id || "").trim();
+        if (!chapterId) return;
+        const text = stateHelpers.toText(chapterMeta.positivesText).trim();
+        if (!text) return;
+        const currentHash = stateHelpers.hashText(text);
+        if (chapterMeta.positivesLibraryHash === currentHash) return;
+        const currentEntry = existingChapterPositives[chapterId];
+        const previousText = typeof currentEntry === "string"
+          ? currentEntry
+          : stateHelpers.toText(currentEntry?.text);
+        let nextText = text;
+        if (chapterAction === "append") {
+          const existing = previousText.trim();
+          nextText = existing ? `${existing}\n\n${text}` : text;
+        }
+        existingChapterPositives[chapterId] = {
+          text: nextText,
+          lastUsed: lastUsedAt,
+        };
+        chapterMeta.positivesLibraryHash = currentHash;
+        applied += 1;
       });
 
       const output = structuredClone(knowledgeBase);
@@ -362,6 +395,7 @@
       };
       output.library = output.library || { entries: [] };
       output.library.entries = Array.from(entriesMap.values());
+      output.library.chapterPositives = existingChapterPositives;
       output.tags = output.tags || { report: [], observations: [], training: [] };
 
       const applySummaryOrder = () => {
@@ -438,7 +472,7 @@
       await saveLibraryFile(output, timestamp);
       await saveSidecar();
       if (applied === 0) {
-        setStatus("Library updated (0 changes). Set Library to Append/Replace to include rows.");
+        setStatus("Library updated (0 changes). Set Library to Append/Replace on rows or chapter positives.");
       } else {
         setStatus(`Library updated (${applied} changes).`);
       }

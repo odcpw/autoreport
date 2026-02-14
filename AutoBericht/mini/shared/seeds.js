@@ -114,6 +114,15 @@
   const buildProjectFromKnowledgeBase = (knowledgeBase) => {
     validateKnowledgeBase(knowledgeBase);
     const libraryMap = buildLibraryMap(knowledgeBase);
+    const chapterPositivesMap = knowledgeBase?.library?.chapterPositives;
+    const getChapterPositivesText = (chapterId) => {
+      if (!chapterPositivesMap || typeof chapterPositivesMap !== "object" || Array.isArray(chapterPositivesMap)) return "";
+      const entry = chapterPositivesMap[String(chapterId || "")];
+      if (entry == null) return "";
+      if (typeof entry === "string") return entry;
+      if (typeof entry === "object") return toText(entry.text || entry.value || "");
+      return "";
+    };
     const groups = new Map();
 
     (knowledgeBase?.structure?.items || []).forEach((item) => {
@@ -146,7 +155,14 @@
           de: group.chapterLabel || (chapterId === "4.8" ? "Beobachtungen" : `Kapitel ${chapterId}`),
         },
         rows: [],
+        meta: {
+          positivesText: getChapterPositivesText(chapterId),
+        },
       };
+      if (!chapter.meta) chapter.meta = {};
+      if (chapter.meta.positivesText == null) {
+        chapter.meta.positivesText = getChapterPositivesText(chapterId);
+      }
       const master = libraryMap.get(group.id) || null;
       const sectionLabel = group.items.find((item) => item.sectionLabel)?.sectionLabel || "";
       const sectionId = String(group.id).split(".").slice(0, 2).join(".");
@@ -226,6 +242,9 @@
         id: "4.8",
         title: { de: "Beobachtungen" },
         rows: [],
+        meta: {
+          positivesText: getChapterPositivesText("4.8"),
+        },
       };
       obsChapter.rows = obsRows;
       if (!obsChapterExisting) {
@@ -234,6 +253,9 @@
     }
     if (obsChapter) {
       obsChapter.meta = obsChapter.meta || {};
+      if (obsChapter.meta.positivesText == null) {
+        obsChapter.meta.positivesText = getChapterPositivesText("4.8");
+      }
       obsChapter.meta.order = (obsChapter.rows || [])
         .filter((row) => row.kind !== "section")
         .map((row) => row.id);
