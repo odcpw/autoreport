@@ -1026,6 +1026,10 @@
       ? reportRows.resolveSectionTitle
       : (row) => String(row?.title || row?.id || "");
 
+    const stripLeadingNumber = typeof reportRows.stripLeadingNumber === "function"
+      ? reportRows.stripLeadingNumber
+      : (value) => String(value || "").replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "").trim();
+
     const resolveFindingText = typeof reportRows.resolveFindingText === "function"
       ? (row) => reportRows.resolveFindingText(row, stateHelpers.toText)
       : (row) => rowToText(row?.workstate?.findingText ?? row?.master?.finding);
@@ -1078,10 +1082,28 @@
       return output;
     };
 
+    const alphaLabel = (index) => {
+      let n = Number(index) + 1;
+      if (!Number.isFinite(n) || n < 1) return "";
+      let out = "";
+      while (n > 0) {
+        const rem = (n - 1) % 26;
+        out = String.fromCharCode(65 + rem) + out;
+        n = Math.floor((n - 1) / 26);
+      }
+      return out;
+    };
+
+    const collapseSingleLine = (text) => String(text || "")
+      .replace(/\r?\n+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+
     const createChapterPreviewTable = (rows, options = {}) => {
       const table = document.createElement("table");
       table.className = "chapter-preview-table";
       const positivesText = String(options?.positivesText || "").trim();
+      const chapterId = String(options?.chapterId || "");
       const colgroup = document.createElement("colgroup");
       [PREVIEW_COL1_WIDTH, PREVIEW_COL2_WIDTH, PREVIEW_COL3_WIDTH].forEach((width) => {
         const col = document.createElement("col");
@@ -1137,7 +1159,8 @@
           row.className = "chapter-preview-table__section";
           const cell = document.createElement("td");
           cell.colSpan = 3;
-          cell.textContent = entry.title || "";
+          const sectionLabel = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
+          cell.textContent = sectionLabel || entry.title || "";
           row.appendChild(cell);
           body.appendChild(row);
           return;
@@ -1147,13 +1170,23 @@
         row.className = "chapter-preview-table__item";
 
         const finding = document.createElement("td");
-        const id = document.createElement("div");
-        id.className = "chapter-preview-id";
-        id.textContent = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
         const findingText = document.createElement("div");
         findingText.className = "chapter-preview-text";
-        findingText.innerHTML = markdownToHtml(entry.finding || "");
-        finding.appendChild(id);
+        if (chapterId === "4.8") {
+          const id = document.createElement("div");
+          id.className = "chapter-preview-id";
+          id.textContent = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
+          finding.appendChild(id);
+          findingText.innerHTML = markdownToHtml(entry.finding || "");
+        } else {
+          const collapsedFinding = collapseSingleLine(entry.finding || "");
+          const normalizedFinding = stripLeadingNumber(collapsedFinding) || collapsedFinding;
+          const inlineFinding = [
+            `${entry.id || ""}`.trim(),
+            normalizedFinding,
+          ].filter(Boolean).join(" ");
+          findingText.innerHTML = markdownToHtml(inlineFinding);
+        }
         finding.appendChild(findingText);
 
         const recommendation = document.createElement("td");
@@ -1178,6 +1211,23 @@
       return wrapper;
     };
 
+    const createChapter0PreviewList = (rows) => {
+      const findings = (rows || []).filter((entry) => entry.kind === "finding");
+      if (!findings.length) return null;
+      const wrapper = document.createElement("div");
+      wrapper.className = "chapter-preview-table-wrap chapter-preview-summary-wrap";
+      const list = document.createElement("ol");
+      list.className = "chapter-preview-summary-list";
+      findings.forEach((entry, index) => {
+        const item = document.createElement("li");
+        item.setAttribute("data-alpha", alphaLabel(index));
+        item.textContent = collapseSingleLine(entry.recommendation || "");
+        list.appendChild(item);
+      });
+      wrapper.appendChild(list);
+      return wrapper;
+    };
+
     const renderChapterPreview = (chapter) => {
       if (!chapterPreviewBody || !chapterPreviewTitle) return;
       chapterPreviewBody.innerHTML = "";
@@ -1189,6 +1239,18 @@
       chapterPreviewBody.appendChild(subtitle);
 
       const rows = buildChapterPreviewRows(chapter);
+      if (String(chapter?.id || "") === "0") {
+        const summaryList = createChapter0PreviewList(rows);
+        if (!summaryList) {
+          const empty = document.createElement("div");
+          empty.className = "chapter-preview-empty";
+          empty.textContent = t("chapter_preview_empty", "No included findings in this chapter.");
+          chapterPreviewBody.appendChild(empty);
+          return;
+        }
+        chapterPreviewBody.appendChild(summaryList);
+        return;
+      }
       const positivesText = stateHelpers.getChapterPositivesExportText
         ? stateHelpers.getChapterPositivesExportText(chapter)
         : "";
@@ -1199,7 +1261,10 @@
         chapterPreviewBody.appendChild(empty);
         return;
       }
-      chapterPreviewBody.appendChild(createChapterPreviewTable(rows, { positivesText }));
+      chapterPreviewBody.appendChild(createChapterPreviewTable(rows, {
+        positivesText,
+        chapterId: String(chapter?.id || ""),
+      }));
     };
 
     const openChapterPreview = (chapter) => {
@@ -1861,8 +1926,8 @@
       return { header, previewBtn };
     };
 
-    const createSelfAssessmentDetails = (row) => {
-      if (row.type === "summary") return null;
+    const createSelfAssessmentDetails = (row, options = {}) => {
+      if (options.isSummary === true || row.type === "summary") return null;
       const selfItems = row.customer?.items || [];
       if (selfItems.length <= 1) return null;
       const formatAnswer = (value) => {
@@ -2253,10 +2318,11 @@
     const createRowCard = (row, options = {}) => {
       normalizeHelpers.ensureWorkstateDefaults(row);
       const ws = row.workstate;
+      const isSummaryRow = String(options.chapter?.id || "") === "0";
       if (shouldFilterRow(row, ws)) return null;
       const card = document.createElement("div");
       card.className = "row-card";
-      const score = stateHelpers.calculateScore(row);
+      const score = isSummaryRow ? null : stateHelpers.calculateScore(row);
       const isObservationRow = row.type === "field_observation";
       const photoKind = isObservationRow ? "observations" : "report";
       const photoTag = isObservationRow
@@ -2270,7 +2336,7 @@
           && candidate.kind === "section"
           && String(candidate.id || "") === String(row.sectionId || "")
         ));
-      const showPhotoPill = row.type !== "summary"
+      const showPhotoPill = !isSummaryRow
         && !options.hidePhotoPill
         && (isObservationRow || !hasParentSectionPill);
       const headerPayload = createRowHeader(row, score, {
@@ -2278,7 +2344,7 @@
         reorderControls: options.reorderControls,
         displayId: options.displayId,
       });
-      const selfDetails = createSelfAssessmentDetails(row);
+      const selfDetails = createSelfAssessmentDetails(row, { isSummary: isSummaryRow });
       if (headerPayload) {
         card.appendChild(headerPayload.header);
       }
@@ -2292,8 +2358,8 @@
         }
       };
       const rowBody = document.createElement("div");
-      rowBody.className = row.type === "summary" ? "row-body row-body--single" : "row-body";
-      if (row.type === "summary") {
+      rowBody.className = isSummaryRow ? "row-body row-body--single" : "row-body";
+      if (isSummaryRow) {
         rowBody.appendChild(createSummaryField(row, ws, onChange));
       } else {
         rowBody.appendChild(createFindingField(row, ws, onChange));

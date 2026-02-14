@@ -548,6 +548,25 @@ textarea[disabled] {
   background: #fff;
 }
 
+.chapter-preview-summary-wrap {
+  padding: 14px 16px;
+}
+
+.chapter-preview-summary-list {
+  margin: 0;
+  padding-left: 24px;
+  list-style-type: upper-alpha;
+}
+
+.chapter-preview-summary-list li {
+  margin: 0 0 10px;
+  line-height: 1.45;
+}
+
+.chapter-preview-summary-list li:last-child {
+  margin-bottom: 0;
+}
+
 .chapter-preview-table {
   width: 100%;
   border-collapse: collapse;

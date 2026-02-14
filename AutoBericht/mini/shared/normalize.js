@@ -181,6 +181,12 @@
     }
     const summaryChapter = project.chapters.find((chapter) => chapter.id === "0");
     if (summaryChapter) {
+      (summaryChapter.rows || []).forEach((row) => {
+        if (!row || row.kind === "section") return;
+        // Chapter 0 is edited/exported as single-text summary items.
+        row.type = "summary";
+        ensureWorkstateDefaults(row);
+      });
       summaryChapter.meta = summaryChapter.meta || {};
       if (!Array.isArray(summaryChapter.meta.order)) {
         summaryChapter.meta.order = (summaryChapter.rows || [])
