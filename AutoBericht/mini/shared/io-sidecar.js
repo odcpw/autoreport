@@ -136,6 +136,70 @@
       return knowledgeBase;
     };
 
+    const backfillRowItemsFromSeed = (project, seedBase) => {
+      const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => 0);
+      const normalizeId = (raw) => String(raw || "")
+        .trim()
+        .toLowerCase()
+        .replace(/\s+/g, "")
+        .replace(/\.+$/g, "");
+      const seedItems = seedBase?.structure?.items || [];
+      if (!project?.chapters || !seedItems.length) return { added: 0, touched: 0 };
+
+      const itemsByGroup = new Map();
+      seedItems.forEach((item) => {
+        const groupId = item.collapsedId || item.groupId || item.id;
+        if (!groupId) return;
+        const group = itemsByGroup.get(groupId) || [];
+        group.push(item);
+        itemsByGroup.set(groupId, group);
+      });
+      itemsByGroup.forEach((group) => group.sort((a, b) => compareIdSegments(a.id, b.id)));
+
+      let added = 0;
+      let touched = 0;
+      project.chapters.forEach((chapter) => {
+        (chapter.rows || []).forEach((row) => {
+          if (!row || row.kind === "section") return;
+          const rowId = String(row.id || "");
+          if (!rowId) return;
+          if (row.type === "field_observation" || rowId === "4.8" || rowId.startsWith("4.8.")) return;
+          const groupSeed = itemsByGroup.get(rowId);
+          if (!groupSeed || !groupSeed.length) return;
+
+          row.customer = row.customer || {};
+          if (!Array.isArray(row.customer.items)) row.customer.items = [];
+          const existingIds = new Set(row.customer.items.map((item) => normalizeId(item?.id)));
+
+          let rowAdded = 0;
+          groupSeed.forEach((seedItem) => {
+            const id = String(seedItem?.id || "");
+            if (!id) return;
+            const key = normalizeId(id);
+            if (!key) return;
+            if (existingIds.has(key)) return;
+            const clone = structuredClone(seedItem);
+            clone.answer = null;
+            clone.comment = "";
+            clone.evidence = "";
+            row.customer.items.push(clone);
+            existingIds.add(key);
+            rowAdded += 1;
+          });
+          if (!rowAdded) return;
+          row.customer.items.sort((a, b) => compareIdSegments(a.id, b.id));
+          if (row.customer.items.length > 1 && row.customer.items[0]?.question) {
+            // For tiroir questions, the first sub-question carries the full stem.
+            row.titleOverride = row.customer.items[0].question;
+          }
+          added += rowAdded;
+          touched += 1;
+        });
+      });
+
+      return { added, touched };
+    };
+
     const loadProjectFromFolder = async () => {
       if (!runtime.dirHandle) return { ok: false, source: "none" };
       let sidecarDoc = null;
@@ -152,13 +216,32 @@
       const reportProject = extractReportProject(sidecarDoc);
       if (reportProject) {
         state.project = normalizeHelpers.normalizeProject(reportProject, ctx.i18n.setLocale);
+        let backfill = null;
+        try {
+          const seedBase = await loadSeedKnowledgeBase(state.project?.meta?.locale);
+          if (seedBase) {
+            const result = backfillRowItemsFromSeed(state.project, seedBase);
+            backfill = result;
+            if (result.added) {
+              debug.logLine("info", `Backfilled missing questions from seed: ${result.added} items across ${result.touched} rows.`);
+              try {
+                await saveSidecar();
+              } catch (err) {
+                debug.logLine("warn", `Seed backfill save failed: ${err.message || err}`);
+              }
+            }
+          }
+        } catch (err) {
+          debug.logLine("warn", `Seed backfill skipped: ${err.message || err}`);
+        }
         normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
         state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
         renderApi.buildPhotoIndex();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
-        setStatus("Loaded project_sidecar.json");
-        debug.logLine("info", "Loaded project_sidecar.json");
+        const backfillNote = backfill?.added ? ` (backfilled ${backfill.added})` : "";
+        setStatus(`Loaded project_sidecar.json${backfillNote}`);
+        debug.logLine("info", `Loaded project_sidecar.json${backfillNote}`);
         return { ok: true, source: "sidecar" };
       }
 

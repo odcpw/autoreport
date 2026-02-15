@@ -2350,6 +2350,15 @@
         "sectionLabel": "3.2. Neueintretende Mitarbeitende"
       },
       {
+        "id": "3.2.4.a",
+        "groupId": "3.2.4",
+        "collapsedId": "3.2.4",
+        "chapter": 3,
+        "chapterLabel": "3. Befähigung, Schulung, Kommunikation",
+        "question": "Werden bestimmte Dokumentationen zum Thema Sicherheit und Gesundheitsschutz abgegeben an:\nneue Mitarbeidende?",
+        "sectionLabel": "3.2. Neueintretende Mitarbeitende"
+      },
+      {
         "id": "3.2.4.b",
         "groupId": "3.2.4",
         "collapsedId": "3.2.4",
