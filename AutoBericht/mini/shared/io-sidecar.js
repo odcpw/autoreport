@@ -224,11 +224,6 @@
             backfill = result;
             if (result.added) {
               debug.logLine("info", `Backfilled missing questions from seed: ${result.added} items across ${result.touched} rows.`);
-              try {
-                await saveSidecar();
-              } catch (err) {
-                debug.logLine("warn", `Seed backfill save failed: ${err.message || err}`);
-              }
             }
           }
         } catch (err) {
@@ -239,6 +234,13 @@
         renderApi.buildPhotoIndex();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
+        if (backfill?.added) {
+          try {
+            await saveSidecar();
+          } catch (err) {
+            debug.logLine("warn", `Seed backfill save failed: ${err.message || err}`);
+          }
+        }
         const backfillNote = backfill?.added ? ` (backfilled ${backfill.added})` : "";
         setStatus(`Loaded project_sidecar.json${backfillNote}`);
         debug.logLine("info", `Loaded project_sidecar.json${backfillNote}`);
