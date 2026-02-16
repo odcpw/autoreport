@@ -3,7 +3,7 @@
     const { stateHelpers, normalizeHelpers } = deps;
     const { elements, state, runtime, debug, setStatus } = ctx;
     const { t } = ctx.i18n;
-    const { escapeHtml = (value) => value, formatInlineMarkdown = (value) => value, markdownToHtml = (value) => value } = ctx.markdown || {};
+    const { escapeHtml = (value) => value, formatInlineMarkdown = (value) => value } = ctx.markdown || {};
     const reportRows = window.AutoBerichtReportRows || {};
 
     const {
@@ -1099,6 +1099,38 @@
       .replace(/\s+/g, " ")
       .trim();
 
+    const previewWordLikeHtml = (text) => {
+      const lines = String(text || "").split(/\r?\n/);
+      if (!lines.length) return "";
+      const parts = [];
+      let inList = false;
+      const closeList = () => {
+        if (!inList) return;
+        parts.push("</ul>");
+        inList = false;
+      };
+      lines.forEach((line) => {
+        const trimmed = line.trim();
+        if (trimmed.startsWith("- ")) {
+          if (!inList) {
+            parts.push("<ul>");
+            inList = true;
+          }
+          const item = trimmed.slice(2);
+          parts.push(`<li>${formatInlineMarkdown(escapeHtml(item))}</li>`);
+          return;
+        }
+        closeList();
+        if (trimmed === "") {
+          parts.push("<p></p>");
+          return;
+        }
+        parts.push(`<p>${formatInlineMarkdown(escapeHtml(line))}</p>`);
+      });
+      closeList();
+      return parts.join("");
+    };
+
     const createChapterPreviewTable = (rows, options = {}) => {
       const table = document.createElement("table");
       table.className = "chapter-preview-table";
@@ -1120,7 +1152,7 @@
       topBlank.colSpan = 2;
       topBlank.className = "chapter-preview-text";
       if (positivesText) {
-        topBlank.innerHTML = markdownToHtml(positivesText);
+        topBlank.innerHTML = previewWordLikeHtml(positivesText);
       } else {
         topBlank.textContent = "";
       }
@@ -1177,7 +1209,7 @@
           id.className = "chapter-preview-id";
           id.textContent = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
           finding.appendChild(id);
-          findingText.innerHTML = markdownToHtml(entry.finding || "");
+          findingText.innerHTML = previewWordLikeHtml(entry.finding || "");
         } else {
           const collapsedFinding = collapseSingleLine(entry.finding || "");
           const normalizedFinding = stripLeadingNumber(collapsedFinding) || collapsedFinding;
@@ -1185,13 +1217,13 @@
             `${entry.id || ""}`.trim(),
             normalizedFinding,
           ].filter(Boolean).join(" ");
-          findingText.innerHTML = markdownToHtml(inlineFinding);
+          findingText.innerHTML = previewWordLikeHtml(inlineFinding);
         }
         finding.appendChild(findingText);
 
         const recommendation = document.createElement("td");
         recommendation.className = "chapter-preview-text";
-        recommendation.innerHTML = markdownToHtml(entry.recommendation || "");
+        recommendation.innerHTML = previewWordLikeHtml(entry.recommendation || "");
 
         const prio = document.createElement("td");
         prio.className = "chapter-preview-table__prio";
@@ -2268,11 +2300,11 @@
         const recommendation = stateHelpers.getRecommendationText(row);
         findingCol.innerHTML = [
           `<strong>${escapeHtml(t("preview_finding", "Finding"))}</strong>`,
-          `${markdownToHtml(findingText || "")}`,
+          `${previewWordLikeHtml(findingText || "")}`,
         ].join("\n");
         recCol.innerHTML = [
           `<strong>${escapeHtml(t("preview_recommendation", "Recommendation"))}</strong>`,
-          `${markdownToHtml(recommendation || "")}`,
+          `${previewWordLikeHtml(recommendation || "")}`,
         ].join("\n");
       };
 
