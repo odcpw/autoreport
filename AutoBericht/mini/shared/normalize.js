@@ -7,11 +7,32 @@
     return String(value);
   });
   const OBS_FINDING_TEXT = "Folgende unsichere Situationen wurden beobachtet:";
+  const clampSelectedLevel = (value) => {
+    const parsed = Number(value);
+    if (!Number.isFinite(parsed)) return 1;
+    return Math.max(1, Math.min(4, Math.round(parsed)));
+  };
+
+  const getSelfAnswerState = (row) => {
+    const direct = row?.customer?.answer;
+    if (direct === 1 || direct === "1" || direct === true) return 1;
+    if (direct === 0 || direct === "0" || direct === false) return 0;
+    const items = Array.isArray(row?.customer?.items) ? row.customer.items : [];
+    const answers = new Set();
+    items.forEach((item) => {
+      const value = item?.answer;
+      if (value === 1 || value === "1" || value === true) answers.add(1);
+      if (value === 0 || value === "0" || value === false) answers.add(0);
+    });
+    if (answers.size === 1) return Array.from(answers)[0];
+    if (answers.size > 1) return "mixed";
+    return null;
+  };
 
   const ensureWorkstateDefaults = (row) => {
     if (!row.workstate) row.workstate = {};
     const ws = row.workstate;
-    if (ws.selectedLevel == null) ws.selectedLevel = 1;
+    ws.selectedLevel = clampSelectedLevel(ws.selectedLevel == null ? 1 : ws.selectedLevel);
     if (!Object.prototype.hasOwnProperty.call(ws, "priority")) {
       ws.priority = 0;
     } else {
@@ -23,6 +44,15 @@
     if (ws.includeFinding == null) ws.includeFinding = false;
     if (ws.includeRecommendation == null) ws.includeRecommendation = true;
     if (ws.done == null) ws.done = false;
+    if (ws.scoreTouched == null) {
+      // Legacy rows: values other than historical defaults are treated as user-edited.
+      ws.scoreTouched = ws.selectedLevel !== 1 || ws.done === true || ws.includeFinding === true;
+    } else {
+      ws.scoreTouched = ws.scoreTouched === true;
+    }
+    if (ws.autoScoreApplied == null) ws.autoScoreApplied = false;
+    ws.autoScoreApplied = ws.autoScoreApplied === true;
+    ws.autoScoreLevel = clampSelectedLevel(ws.autoScoreLevel == null ? ws.selectedLevel : ws.autoScoreLevel);
     if (ws.findingText == null) {
       if (row.type === "field_observation") {
         ws.findingText = OBS_FINDING_TEXT;
@@ -35,6 +65,28 @@
     }
     if (!ws.libraryAction) ws.libraryAction = "off";
     if (ws.libraryHash == null) ws.libraryHash = "";
+
+    if (!ws.scoreTouched && row?.type !== "field_observation" && row?.type !== "summary") {
+      const answerState = getSelfAnswerState(row);
+      const desiredLevel = answerState === 1 ? 4 : 1;
+      if (ws.autoScoreApplied && ws.selectedLevel !== ws.autoScoreLevel) {
+        // Row was moved away from the last auto-default value -> treat as manual.
+        ws.scoreTouched = true;
+      }
+      if (!ws.scoreTouched) {
+        ws.selectedLevel = desiredLevel;
+        ws.autoScoreApplied = true;
+        ws.autoScoreLevel = desiredLevel;
+      }
+    }
+
+    if (ws.scoreTouched) {
+      // Keep marker aligned if manual rows are later changed by script/import.
+      ws.autoScoreLevel = ws.selectedLevel;
+    } else if (row?.type === "field_observation" || row?.type === "summary") {
+      ws.autoScoreLevel = ws.selectedLevel;
+      ws.autoScoreApplied = false;
+    }
   };
 
   const ensureProjectMeta = (project, setLocale) => {
