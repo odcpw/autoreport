@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autobericht.local/schemas/evidence_matches.schema.json",
+  "title": "Evidence Matches",
+  "type": "object",
+  "required": ["created_at", "spec_version", "generator", "rows"],
+  "properties": {
+    "created_at": {
+      "type": "string"
+    },
+    "spec_version": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "rows": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["row_id", "status", "citations"],
+        "properties": {
+          "row_id": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["evidence_found", "weak", "none"]
+          },
+          "citations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["citation_id", "file", "snippet", "score"],
+              "properties": {
+                "citation_id": {
+                  "type": "string"
+                },
+                "file": {
+                  "type": "string"
+                },
+                "page": {
+                  "type": ["number", "null"]
+                },
+                "snippet": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}

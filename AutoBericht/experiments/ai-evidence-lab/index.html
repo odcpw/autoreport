@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Evidence Lab</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="title-wrap">
+        <h1>AI Evidence Lab</h1>
+        <p class="subtitle">Standalone offline experiment for evidence-first report support.</p>
+      </div>
+      <div class="version" id="app-version">v0.1.0</div>
+    </header>
+
+    <section class="toolbar">
+      <button id="pick-folder" type="button">Pick Folder</button>
+      <button id="scan-inputs" type="button">Scan Inputs</button>
+      <button id="build-index" type="button">Build / Refresh Index</button>
+      <button id="match-selected" type="button">Find Evidence (Selected Row)</button>
+      <button id="match-included" type="button">Find Evidence (Included Rows)</button>
+      <button id="export-proposal" type="button">Export Proposal JSON</button>
+      <button id="save-log" type="button">Save Debug Log</button>
+    </section>
+
+    <section class="meta-grid">
+      <div class="meta-box">
+        <h2>Capabilities</h2>
+        <div id="capability-chips" class="chips"></div>
+        <button id="request-persist" type="button">Request Persistent Storage</button>
+      </div>
+      <div class="meta-box">
+        <h2>Project</h2>
+        <div id="project-summary" class="mono">No folder selected.</div>
+      </div>
+      <div class="meta-box">
+        <h2>Run Summary</h2>
+        <div id="run-summary" class="mono">Idle.</div>
+      </div>
+    </section>
+
+    <main class="layout">
+      <section class="panel" id="left-panel">
+        <h2>Inputs Inventory</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>File</th>
+              <th>Type</th>
+              <th>Size</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="inventory-body"></tbody>
+        </table>
+      </section>
+
+      <section class="panel" id="center-panel">
+        <h2>Rows</h2>
+        <input id="row-search" type="search" placeholder="Search row id or title" />
+        <div id="row-list" class="row-list"></div>
+      </section>
+
+      <section class="panel" id="right-panel">
+        <h2>Selected Row</h2>
+        <div id="row-details" class="mono">Select a row.</div>
+      </section>
+    </main>
+
+    <section class="panel log-panel">
+      <h2>Log</h2>
+      <pre id="log-output"></pre>
+    </section>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

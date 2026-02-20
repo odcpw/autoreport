@@ -1,0 +1,51 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autobericht.local/schemas/sidecar_patch.schema.json",
+  "title": "Sidecar Patch Preview",
+  "type": "object",
+  "required": ["created_at", "spec_version", "generator", "operations"],
+  "properties": {
+    "created_at": {
+      "type": "string"
+    },
+    "spec_version": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "operations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["row_id", "mode", "finding", "recommendation", "citation_ids"],
+        "properties": {
+          "row_id": {
+            "type": "string"
+          },
+          "mode": {
+            "type": "string",
+            "enum": ["append", "replace", "skip"]
+          },
+          "finding": {
+            "type": "string"
+          },
+          "recommendation": {
+            "type": "string"
+          },
+          "citation_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "row_hash": {
+            "type": ["string", "null"]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
