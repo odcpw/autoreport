@@ -1,0 +1,54 @@
+{
+  "pairs": [
+    {
+      "row_id": "1.1.1",
+      "expected_file": "sample_jd_de.docx",
+      "must_contain_any": ["stellenbeschreibung", "sicherheit"]
+    },
+    {
+      "row_id": "1.1.2",
+      "expected_file": "sample_jd_de.docx",
+      "must_contain_any": ["linienvorgesetzte", "unterweisungen"]
+    },
+    {
+      "row_id": "1.2.1",
+      "expected_file": "sample_sop_text.pdf",
+      "must_contain_any": ["incident", "reporting", "hours"]
+    },
+    {
+      "row_id": "1.2.2",
+      "expected_file": "sample_sop_text.pdf",
+      "must_contain_any": ["risques", "chimiques", "trimestre"]
+    },
+    {
+      "row_id": "2.1.1",
+      "expected_file": "sample_sop_text.pdf",
+      "must_contain_any": ["emergency", "drills", "months"]
+    },
+    {
+      "row_id": "2.1.2",
+      "expected_file": "sample_register.xlsx",
+      "must_contain_any": ["ppe", "stock", "review"]
+    },
+    {
+      "row_id": "2.1.3",
+      "expected_file": "sample_register.xlsx",
+      "must_contain_any": ["forklift", "training", "planned"]
+    },
+    {
+      "row_id": "3.1.1",
+      "expected_file": "sample_register.xlsx",
+      "must_contain_any": ["chemical", "storage", "audit"]
+    },
+    {
+      "row_id": "3.1.2",
+      "expected_file": "sample_sop_scanned.pdf",
+      "must_contain_any": ["percorso", "pedonale", "segnalato"]
+    },
+    {
+      "row_id": "3.1.3",
+      "expected_file": "sample_register.xlsx",
+      "must_contain_any": ["ergonomia", "postazione", "manual"]
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "spec_version": "0.1",
+  "generator": "ai-evidence-lab-qa-corpus",
+  "chunks": [
+    {
+      "file_path": "inputs/sample_jd_de.docx",
+      "source_type": "docx",
+      "page_number": 1,
+      "confidence": 0.98,
+      "text": "In jeder stellenbeschreibung sind sicherheit und gesundheit als kernaufgabe festgelegt. Linienvorgesetzte fuehren unterweisungen durch und dokumentieren die verantwortung fuer ihre teams."
+    },
+    {
+      "file_path": "inputs/sample_sop_text.pdf",
+      "source_type": "pdf_text",
+      "page_number": 1,
+      "confidence": 0.96,
+      "text": "SOP 12 incident reporting must happen within 24 hours after any event. Emergency drills are scheduled every six months for each shift. Les risques chimiques sont evalues chaque trimestre et les mesures sont suivies."
+    },
+    {
+      "file_path": "inputs/sample_sop_scanned.pdf",
+      "source_type": "pdf_ocr",
+      "page_number": 1,
+      "confidence": 0.74,
+      "text": "Nel magazzino il percorso pedonale segnalato deve restare libero. Le imbracature controllate ogni settimana. Cartello sicurezza area carico visibile."
+    },
+    {
+      "file_path": "inputs/sample_register.xlsx",
+      "source_type": "xlsx",
+      "page_number": null,
+      "confidence": 0.94,
+      "text": "PPE stock review monthly owner HSE lead. Forklift refresher training planned for all drivers. Chemical storage audit open action for solvent room. Ergonomia postazione e manual handling review for packing line."
+    }
+  ]
+}

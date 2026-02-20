@@ -1,0 +1,6 @@
+Descrizione del ruolo Responsabile produzione
+
+Compiti:
+- Esegue giro sicurezza giornaliero.
+- Verifica uso DPI.
+- Segnala incidenti e quasi incidenti.

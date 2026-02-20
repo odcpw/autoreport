@@ -18,10 +18,14 @@
     <section class="toolbar">
       <button id="pick-folder" type="button">Pick Folder</button>
       <button id="scan-inputs" type="button">Scan Inputs</button>
+      <button id="cancel-run" type="button">Cancel Active Run</button>
       <button id="build-index" type="button">Build / Refresh Index</button>
+      <button id="clear-cache" type="button">Clear Cache / Rebuild</button>
       <button id="match-selected" type="button">Find Evidence (Selected Row)</button>
       <button id="match-included" type="button">Find Evidence (Included Rows)</button>
+      <button id="generate-draft" type="button">Generate Draft (Cited)</button>
       <button id="export-proposal" type="button">Export Proposal JSON</button>
+      <button id="run-smoke" type="button">Run Smoke E2E</button>
       <button id="save-log" type="button">Save Debug Log</button>
     </section>
 
@@ -29,6 +33,13 @@
       <div class="meta-box">
         <h2>Capabilities</h2>
         <div id="capability-chips" class="chips"></div>
+        <div class="privacy-note">
+          Local processing only. No cloud upload in this experiment mode.
+        </div>
+        <label class="privacy-toggle">
+          <input id="opt-log-sensitive" type="checkbox" />
+          Include sensitive snippets in debug log
+        </label>
         <button id="request-persist" type="button">Request Persistent Storage</button>
       </div>
       <div class="meta-box">
@@ -38,6 +49,25 @@
       <div class="meta-box">
         <h2>Run Summary</h2>
         <div id="run-summary" class="mono">Idle.</div>
+        <div class="perf-controls">
+          <label>
+            Batch size
+            <input id="setting-batch-size" type="number" min="1" max="256" value="16" />
+          </label>
+          <label>
+            Max files/pages per run
+            <input id="setting-max-units" type="number" min="0" max="100000" value="0" />
+          </label>
+          <label>
+            Chunk memory guard
+            <input id="setting-memory-guard" type="number" min="100" max="1000000" value="50000" />
+          </label>
+          <div class="profile-row">
+            <button id="profile-overnight" type="button">Overnight</button>
+            <button id="profile-cpu" type="button">CPU-friendly</button>
+            <button id="profile-webgpu" type="button">WebGPU-preferred</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -66,6 +96,15 @@
       <section class="panel" id="right-panel">
         <h2>Selected Row</h2>
         <div id="row-details" class="mono">Select a row.</div>
+        <h2 class="subheading">Evidence</h2>
+        <div id="evidence-state" class="mono">No evidence run yet.</div>
+        <div class="evidence-toggles">
+          <label><input id="filter-low-confidence" type="checkbox" /> Hide low-confidence OCR</label>
+          <label><input id="group-by-file" type="checkbox" /> Group by file</label>
+        </div>
+        <div id="evidence-list" class="evidence-list"></div>
+        <h2 class="subheading">Patch Preview</h2>
+        <div id="patch-preview" class="mono">No patch preview yet.</div>
       </section>
     </main>
 

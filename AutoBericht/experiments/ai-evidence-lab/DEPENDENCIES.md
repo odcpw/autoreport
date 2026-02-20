@@ -85,15 +85,12 @@ Wave 3
 
 ## Current Execution Snapshot
 
-Completed in this pass (Wave 1 core):
-- Lane A: T001-T017
-- Lane B: T018-T032
-- Lane C: T033-T036
-- Lane D: T039-T041, T044-T045
-- Lane E: T117, T122
+Completed in v0.1 closeout:
+- Lane A: T001-T017 complete
+- Lane B: T018-T032 complete
+- Lane C: T033-T038 and T105-T116 complete
+- Lane D: T039-T082 complete
+- Lane E: T083-T165 complete
 
-In progress next:
-- Lane C: T037-T038
-- Lane D: T042-T043
-- Lane E: T118-T121, T123
-
+Still open next:
+- None for v0.1 task list. Remaining work is roadmap scope (v0.2+).

@@ -1,0 +1,6 @@
+Description de poste Responsable de production
+
+Taches:
+- Effectue un tour securite quotidien.
+- Verifie le port des EPI.
+- Signale incidents et presque-accidents.

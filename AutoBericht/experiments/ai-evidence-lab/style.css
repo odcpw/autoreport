@@ -111,6 +111,12 @@ button:hover {
   margin-bottom: 8px;
 }
 
+.subheading {
+  margin-top: 12px;
+  margin-bottom: 8px;
+  font-size: 1rem;
+}
+
 .log-panel {
   margin: 0 20px 20px;
 }
@@ -136,6 +142,44 @@ button:hover {
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+}
+
+.privacy-note {
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.privacy-toggle {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  font-size: 0.84rem;
+  color: var(--muted);
+}
+
+.perf-controls {
+  display: grid;
+  gap: 8px;
+}
+
+.perf-controls label {
+  display: grid;
+  gap: 4px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.perf-controls input {
+  border: 1px solid #cfc6bc;
+  border-radius: 8px;
+  padding: 6px 8px;
+  width: 100%;
+}
+
+.profile-row {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .chip {
@@ -200,6 +244,84 @@ td {
 
 .row-item small {
   color: var(--muted);
+}
+
+#evidence-state {
+  margin-bottom: 8px;
+}
+
+.evidence-list {
+  display: grid;
+  gap: 8px;
+}
+
+.evidence-toggles {
+  display: grid;
+  gap: 4px;
+  margin-bottom: 8px;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.evidence-group-title {
+  margin: 0;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.evidence-card {
+  border: 1px solid #dfd8cf;
+  border-radius: 10px;
+  padding: 8px;
+  background: #fcfbf8;
+}
+
+.evidence-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+  font-size: 0.88rem;
+}
+
+.evidence-meta {
+  color: var(--muted);
+}
+
+.evidence-score {
+  border-radius: 999px;
+  border: 1px solid #d6d0c7;
+  padding: 2px 8px;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.evidence-card details {
+  margin-top: 6px;
+}
+
+.evidence-snippet {
+  margin: 0;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  white-space: pre-wrap;
+}
+
+.evidence-actions {
+  margin-top: 8px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.evidence-actions button {
+  font-size: 0.78rem;
+  padding: 4px 8px;
+}
+
+mark {
+  background: #fff1b6;
+  padding: 0 2px;
 }
 
 #row-search {

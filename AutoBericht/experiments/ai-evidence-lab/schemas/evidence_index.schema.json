@@ -1,0 +1,95 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://autobericht.local/schemas/evidence_index.schema.json",
+  "title": "Evidence Index",
+  "type": "object",
+  "required": ["created_at", "spec_version", "generator", "source", "chunks"],
+  "properties": {
+    "created_at": {
+      "type": "string"
+    },
+    "spec_version": {
+      "type": "string"
+    },
+    "generator": {
+      "type": "string"
+    },
+    "source": {
+      "type": "object",
+      "required": ["file_count", "chunk_count"],
+      "properties": {
+        "file_count": {
+          "type": "number"
+        },
+        "chunk_count": {
+          "type": "number"
+        },
+        "local_only_models": {
+          "type": "boolean"
+        },
+        "runtime": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": true
+    },
+    "chunks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["chunk_id", "file_path", "source_type", "text"],
+        "properties": {
+          "chunk_id": {
+            "type": "string"
+          },
+          "file_path": {
+            "type": "string"
+          },
+          "page_number": {
+            "type": ["number", "null"]
+          },
+          "source_type": {
+            "type": "string"
+          },
+          "language_guess": {
+            "type": "string"
+          },
+          "text": {
+            "type": "string"
+          },
+          "char_span": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "fingerprint": {
+            "type": "string"
+          },
+          "token_count": {
+            "type": "number"
+          },
+          "terms": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "vector": {
+            "type": "array",
+            "items": {
+              "type": "number"
+            }
+          },
+          "confidence": {
+            "type": ["number", "null"]
+          }
+        },
+        "additionalProperties": true
+      }
+    }
+  },
+  "additionalProperties": true
+}
