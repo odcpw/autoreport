@@ -700,7 +700,7 @@ textarea[disabled] {
 
 .organizer-row {
   display: grid;
-  grid-template-columns: auto 1fr auto auto;
+  grid-template-columns: auto 1fr auto auto auto;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
@@ -737,6 +737,20 @@ textarea[disabled] {
   font-weight: 600;
   color: #1f2933;
   overflow-wrap: anywhere;
+}
+
+.organizer-priority {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 38px;
+  padding: 2px 8px;
+  border-radius: 999px;
+  border: 1px solid #d7d0c7;
+  background: #eef3fa;
+  color: #2f4b6c;
+  font-size: 0.75rem;
+  font-weight: 700;
 }
 
 .organizer-count {
@@ -1241,10 +1255,10 @@ textarea[disabled] {
   }
 
   .organizer-row {
-    grid-template-columns: auto 1fr auto;
+    grid-template-columns: auto 1fr auto auto;
     grid-template-areas:
-      "drag title count"
-      ". actions actions";
+      "drag title priority count"
+      ". actions actions actions";
     align-items: start;
   }
 
@@ -1254,6 +1268,10 @@ textarea[disabled] {
 
   .organizer-title {
     grid-area: title;
+  }
+
+  .organizer-priority {
+    grid-area: priority;
   }
 
   .organizer-count {

@@ -622,6 +622,7 @@
 
     const OBS_SORT_OPTIONS = [
       { key: "manual", label: t("obs_sort_manual", "Manual") },
+      { key: "prio-asc", label: t("obs_sort_prio_asc", "Prio 1-4") },
       { key: "count-desc", label: t("obs_sort_count_desc", "Count ↓") },
       { key: "count-asc", label: t("obs_sort_count_asc", "Count ↑") },
       { key: "alpha-asc", label: t("obs_sort_alpha_asc", "A-Z") },
@@ -658,6 +659,12 @@
       const tag = getObservationTagLabel(row);
       if (!tag) return 0;
       return getPhotosForTag(tag, "observations").length;
+    };
+
+    const getObservationPriorityValue = (row) => {
+      const raw = Number(row?.workstate?.priority);
+      if (!Number.isFinite(raw)) return 0;
+      return Math.max(0, Math.min(4, Math.round(raw)));
     };
 
     const normalizeOrganizerOrder = (order, rowMap) => {
@@ -698,9 +705,17 @@
           rowId,
           title: getObservationTagLabel(row),
           count: getObservationPhotoCount(row),
+          priority: getObservationPriorityValue(row),
         };
       });
       entries.sort((a, b) => {
+        if (sortMode === "prio-asc") {
+          // Keep manual order inside each priority bucket.
+          const aBucket = a.priority === 0 ? 99 : a.priority;
+          const bBucket = b.priority === 0 ? 99 : b.priority;
+          if (aBucket !== bBucket) return aBucket - bBucket;
+          return manualOrder.indexOf(a.rowId) - manualOrder.indexOf(b.rowId);
+        }
         if (sortMode === "count-desc") {
           if (b.count !== a.count) return b.count - a.count;
           const byTitle = compareText(a.title, b.title);
@@ -849,6 +864,7 @@
         const { rowId, row } = item;
         const label = getObservationTagLabel(row) || rowId;
         const photoCount = getObservationPhotoCount(row);
+        const priorityValue = getObservationPriorityValue(row);
         const draftIndex = observationsOrganizer.draftOrder.indexOf(rowId);
 
         const entry = document.createElement("div");
@@ -894,6 +910,11 @@
         title.className = "organizer-title";
         title.textContent = label;
 
+        const priority = document.createElement("span");
+        priority.className = "organizer-priority";
+        priority.textContent = `P${priorityValue}`;
+        priority.title = `Priority ${priorityValue}`;
+
         const count = document.createElement("span");
         count.className = "organizer-count";
         count.textContent = `${photoCount}`;
@@ -922,6 +943,7 @@
 
         entry.appendChild(dragHandle);
         entry.appendChild(title);
+        entry.appendChild(priority);
         entry.appendChild(count);
         entry.appendChild(actions);
         listFragment.appendChild(entry);
