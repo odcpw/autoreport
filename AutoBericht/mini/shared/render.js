@@ -1594,7 +1594,6 @@
               computeSpider: window.AutoBerichtSpider?.computeSpider,
               compareIdSegments: stateHelpers.compareIdSegments,
               toText: stateHelpers.toText,
-              markdownToHtml,
             });
             if (result?.savedAs) {
               setStatus(`Exported ${result.savedAs}`);
