@@ -124,9 +124,10 @@
       if (!tags.has(val)) tags.set(val, lbl || val);
     };
     const shouldSkipSection = (sectionId) => {
-      const topLevel = String(sectionId || "").split(".")[0];
-      // Skip top-level (0,1,2,3,4...) and specific exclusion chapters
-      return /^[0-9]+$/.test(topLevel) || ["11", "12", "13", "14"].includes(topLevel);
+      const normalized = String(sectionId || "").trim();
+      const topLevel = normalized.split(".")[0];
+      // Skip top-level chapter IDs (no dot) and specific exclusion chapters.
+      return !normalized.includes(".") || ["11", "12", "13", "14"].includes(topLevel);
     };
     project.chapters.forEach((chapter) => {
       // Do not include whole-chapter tags; we only want 1.1-style sections

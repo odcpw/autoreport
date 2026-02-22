@@ -143,27 +143,61 @@
         .toLowerCase()
         .replace(/\s+/g, "")
         .replace(/\.+$/g, "");
+      const deriveSectionId = (value) => {
+        const parts = String(value || "").split(".");
+        if (parts.length < 2) return "";
+        return `${parts[0]}.${parts[1]}`;
+      };
       const seedItems = seedBase?.structure?.items || [];
-      if (!project?.chapters || !seedItems.length) return { added: 0, touched: 0 };
+      if (!project?.chapters || !seedItems.length) {
+        return {
+          added: 0,
+          touched: 0,
+          sectionLabelsBackfilled: 0,
+          sectionsRebuilt: 0,
+        };
+      }
 
       const itemsByGroup = new Map();
+      const sectionLabelsById = new Map();
       seedItems.forEach((item) => {
         const groupId = item.collapsedId || item.groupId || item.id;
         if (!groupId) return;
         const group = itemsByGroup.get(groupId) || [];
         group.push(item);
         itemsByGroup.set(groupId, group);
+
+        const sectionId = deriveSectionId(groupId);
+        const sectionLabel = String(item.sectionLabel || "").trim();
+        if (sectionId && sectionLabel && !sectionLabelsById.has(sectionId)) {
+          sectionLabelsById.set(sectionId, sectionLabel);
+        }
       });
       itemsByGroup.forEach((group) => group.sort((a, b) => compareIdSegments(a.id, b.id)));
 
       let added = 0;
       let touched = 0;
+      let sectionLabelsBackfilled = 0;
+      let sectionsRebuilt = 0;
       project.chapters.forEach((chapter) => {
+        const nonSectionRows = [];
         (chapter.rows || []).forEach((row) => {
           if (!row || row.kind === "section") return;
+          nonSectionRows.push(row);
           const rowId = String(row.id || "");
           if (!rowId) return;
           if (row.type === "field_observation" || rowId === "4.8" || rowId.startsWith("4.8.")) return;
+
+          const rowSectionId = String(row.sectionId || "").trim() || deriveSectionId(rowId);
+          if (rowSectionId && !row.sectionId) row.sectionId = rowSectionId;
+          if (rowSectionId && !String(row.sectionLabel || "").trim()) {
+            const seededLabel = sectionLabelsById.get(rowSectionId);
+            if (seededLabel) {
+              row.sectionLabel = seededLabel;
+              sectionLabelsBackfilled += 1;
+            }
+          }
+
           const groupSeed = itemsByGroup.get(rowId);
           if (!groupSeed || !groupSeed.length) return;
 
@@ -195,9 +229,46 @@
           added += rowAdded;
           touched += 1;
         });
+
+        if (chapter.id === "0" || chapter.id === "4.8") return;
+
+        let lastSectionId = "";
+        const rebuilt = [];
+        nonSectionRows.forEach((row) => {
+          const sectionId = String(row?.sectionId || "").trim();
+          const sectionLabel = String(row?.sectionLabel || "").trim();
+          if (sectionId && sectionLabel && sectionId !== lastSectionId) {
+            rebuilt.push({
+              kind: "section",
+              id: sectionId,
+              title: sectionLabel,
+            });
+            lastSectionId = sectionId;
+          }
+          rebuilt.push(row);
+        });
+
+        const oldSections = (chapter.rows || []).filter((row) => row?.kind === "section");
+        const newSections = rebuilt.filter((row) => row?.kind === "section");
+        const sectionRowsChanged = (
+          oldSections.length !== newSections.length
+          || oldSections.some((row, index) => (
+            String(row?.id || "") !== String(newSections[index]?.id || "")
+            || String(row?.title || "") !== String(newSections[index]?.title || "")
+          ))
+        );
+        if (sectionRowsChanged) {
+          chapter.rows = rebuilt;
+          sectionsRebuilt += 1;
+        }
       });
 
-      return { added, touched };
+      return {
+        added,
+        touched,
+        sectionLabelsBackfilled,
+        sectionsRebuilt,
+      };
     };
 
     const loadProjectFromFolder = async () => {
@@ -225,6 +296,12 @@
             if (result.added) {
               debug.logLine("info", `Backfilled missing questions from seed: ${result.added} items across ${result.touched} rows.`);
             }
+            if (result.sectionLabelsBackfilled || result.sectionsRebuilt) {
+              debug.logLine(
+                "info",
+                `Backfilled section metadata from seed: ${result.sectionLabelsBackfilled || 0} labels; rebuilt sections in ${result.sectionsRebuilt || 0} chapters.`,
+              );
+            }
           }
         } catch (err) {
           debug.logLine("warn", `Seed backfill skipped: ${err.message || err}`);
@@ -234,14 +311,18 @@
         renderApi.buildPhotoIndex();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
-        if (backfill?.added) {
+        if (backfill?.added || backfill?.sectionLabelsBackfilled || backfill?.sectionsRebuilt) {
           try {
             await saveSidecar();
           } catch (err) {
             debug.logLine("warn", `Seed backfill save failed: ${err.message || err}`);
           }
         }
-        const backfillNote = backfill?.added ? ` (backfilled ${backfill.added})` : "";
+        const backfillParts = [];
+        if (backfill?.added) backfillParts.push(`questions +${backfill.added}`);
+        if (backfill?.sectionLabelsBackfilled) backfillParts.push(`section labels +${backfill.sectionLabelsBackfilled}`);
+        if (backfill?.sectionsRebuilt) backfillParts.push(`section headers rebuilt ${backfill.sectionsRebuilt}`);
+        const backfillNote = backfillParts.length ? ` (${backfillParts.join("; ")})` : "";
         setStatus(`Loaded project_sidecar.json${backfillNote}`);
         debug.logLine("info", `Loaded project_sidecar.json${backfillNote}`);
         return { ok: true, source: "sidecar" };
