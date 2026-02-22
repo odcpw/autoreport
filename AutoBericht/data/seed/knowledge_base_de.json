@@ -7226,6 +7226,97 @@
         "recommendation": "Bei leistungsabhängiger Entlöhnung wird ein garantierter, leistungsunabhängiger Grundlohn schriftlich festgelegt. Die Lohnregel wird allen Mitarbeitenden transparent erklärt und im Personalreglement verankert. Quartalsweise wird geprüft, ob die Regelung sicherheitskritischen Leistungsdruck reduziert."
       },
       {
+        "id": "9.6.1",
+        "groupId": "9.6.1",
+        "finding": "Die offiziellen Arbeitspausen sind im Unternehmen nicht verbindlich geregelt.",
+        "children": [],
+        "recommendation": "Legen Sie für alle Bereiche verbindliche Pausenregelungen mit Dauer, Zeitfenstern und Vertretungsregeln fest und kommunizieren Sie diese schriftlich. Vorgesetzte überwachen die einheitliche Anwendung im Alltag und dokumentieren Abweichungen. Nach drei Monaten wird die Wirksamkeit anhand kurzer Teamrückmeldungen überprüft."
+      },
+      {
+        "id": "9.8.1",
+        "groupId": "9.8.1",
+        "finding": "In Ihrem Unternehmen werden gesundheitsgefährdende Stoffe hergestellt oder verarbeitet, ohne dass die damit verbundenen Schutzanforderungen ausreichend gesteuert sind.",
+        "children": [],
+        "recommendation": "Erfassen Sie alle gesundheitsgefährdenden Stoffe in einem verbindlichen Stoffverzeichnis und führen Sie pro Stoff eine dokumentierte Gefährdungsbeurteilung durch. Legen Sie klare Schutzmassnahmen, Zuständigkeiten und Kontrollintervalle fest. Prüfen Sie die Umsetzung mindestens quartalsweise und dokumentieren Sie Abweichungen mit Terminen und Verantwortlichen."
+      },
+      {
+        "id": "9.8.2",
+        "groupId": "9.8.2",
+        "finding": "Gesundheitsgefährdende Stoffe werden gelagert, ohne dass ein durchgängig wirksames Lagerkonzept sichergestellt ist.",
+        "children": [],
+        "recommendation": "Definieren Sie ein Lagerkonzept mit klarer Trennung unverträglicher Stoffe, eindeutiger Kennzeichnung und kontrollierten Lagermengen. Stellen Sie Auffangsysteme, Belüftung und Notfallmittel gemäss Stoffeigenschaften bereit. Führen Sie monatliche Lagerkontrollen mit dokumentierter Mängelbehebung durch."
+      },
+      {
+        "id": "9.8.3",
+        "groupId": "9.8.3",
+        "finding": "Die Sicherheitsbestimmungen im Umgang mit gesundheitsgefährdenden Stoffen werden nicht konsequent eingehalten.",
+        "children": [],
+        "recommendation": "Führen Sie verbindliche Arbeitsanweisungen für Tätigkeiten mit gesundheitsgefährdenden Stoffen ein und überprüfen Sie deren Einhaltung regelmässig mit kurzen Vor-Ort-Kontrollen. Besprechen Sie Abweichungen unmittelbar mit den betroffenen Teams und setzen Sie Korrekturmassnahmen mit Fristen um. Verankern Sie die Kontrolle als festen Punkt im Führungsrundgang."
+      },
+      {
+        "id": "9.8.4",
+        "groupId": "9.8.4",
+        "finding": "Für gesundheitsgefährdende Stoffe sind die erforderlichen Sicherheitsdatenblätter nicht vollständig vorhanden oder nicht aktuell.",
+        "children": [],
+        "recommendation": "Richten Sie eine zentrale, versionierte Verwaltung für Sicherheitsdatenblätter ein und ordnen Sie jedem Stoff ein gültiges Datenblatt zu. Definieren Sie, wer Aktualität und Vollständigkeit quartalsweise prüft. Fehlende oder veraltete Datenblätter sind vor weiterer Verwendung des Stoffes zu ergänzen."
+      },
+      {
+        "id": "9.8.5",
+        "groupId": "9.8.5",
+        "finding": "Sicherheitsdatenblätter sind an den relevanten Arbeitsplätzen nicht ausreichend verfügbar.",
+        "children": [],
+        "recommendation": "Stellen Sie Sicherheitsdatenblätter direkt am Einsatzort in Papierform oder digital mit sofortigem Zugriff bereit. Kennzeichnen Sie klar, wo die Informationen zu finden sind, und prüfen Sie die Verfügbarkeit im Rahmen der Bereichskontrollen. Dokumentieren Sie den Nachweis je Arbeitsplatz."
+      },
+      {
+        "id": "9.8.6",
+        "groupId": "9.8.6",
+        "finding": "Mitarbeitende sind nicht ausreichend über die Inhalte der Sicherheitsdatenblätter geschult.",
+        "children": [],
+        "recommendation": "Führen Sie eine verpflichtende, rollenbezogene Unterweisung zu Sicherheitsdatenblättern ein, inklusive Bedeutung von Gefahrenhinweisen, Schutzmassnahmen und Verhalten im Notfall. Wiederholen Sie die Schulung mindestens jährlich sowie bei Stoffwechseln. Dokumentieren Sie Teilnahme, Verständniskontrolle und offene Nachschulungen."
+      },
+      {
+        "id": "9.8.7",
+        "groupId": "9.8.7",
+        "finding": "Die erforderlichen Infrastrukturmittel zur Umsetzung der Sicherheitsdatenblätter sind nicht vollständig vorhanden oder nicht funktionssicher.",
+        "children": [],
+        "recommendation": "Ermitteln Sie pro Arbeitsbereich die notwendigen Infrastrukturmittel aus den Sicherheitsdatenblättern (z. B. Absaugung, Augendusche, Auffangmittel, PSA-Stationen) und gleichen Sie Soll/Ist ab. Beschaffen Sie fehlende Mittel priorisiert und legen Sie Wartungs- sowie Prüfintervalle fest. Die Funktionsfähigkeit ist regelmässig zu dokumentieren."
+      },
+      {
+        "id": "9.10.1",
+        "groupId": "9.10.1",
+        "finding": "Ergonomische Grundsätze werden bei der Planung neuer Arbeitsmittel, Arbeitsplätze und Arbeitsverfahren nicht systematisch berücksichtigt.",
+        "children": [],
+        "recommendation": "Verankern Sie eine verpflichtende Ergonomieprüfung in jedem Planungs- und Beschaffungsprojekt vor Freigabe. Nutzen Sie eine standardisierte Checkliste mit klaren Mindestanforderungen. Planungsentscheide ohne erfüllte Ergonomiekriterien dürfen nicht in die Umsetzung gehen."
+      },
+      {
+        "id": "9.10.2",
+        "groupId": "9.10.2",
+        "finding": "Arbeitsplätze werden nicht periodisch nach ergonomischen Grundsätzen überprüft.",
+        "children": [],
+        "recommendation": "Führen Sie einen festen Prüfzyklus für ergonomische Arbeitsplatzbeurteilungen ein (mindestens jährlich sowie bei wesentlichen Änderungen). Priorisieren Sie Belastungsschwerpunkte und hinterlegen Sie Massnahmen mit Termin und Verantwortlichen. Verfolgen Sie den Umsetzungsstand in der Führungssitzung."
+      },
+      {
+        "id": "9.10.3",
+        "groupId": "9.10.3",
+        "finding": "Arbeits- und Betriebsmittelplaner verfügen nicht durchgängig über ausreichende ergonomische Kenntnisse.",
+        "children": [],
+        "recommendation": "Definieren Sie ergonomische Mindestkompetenzen für Planungsfunktionen und schulen Sie betroffene Personen gezielt. Hinterlegen Sie die Qualifikation als Pflichtkriterium in Rollenprofilen und Projektfreigaben. Wiederholen Sie die Weiterbildung regelmässig und dokumentieren Sie den Nachweis."
+      },
+      {
+        "id": "9.10.4",
+        "groupId": "9.10.4",
+        "finding": "Bei ergonomischen Problemstellungen werden interne oder externe Fachstellen nicht systematisch konsultiert.",
+        "children": [],
+        "recommendation": "Legen Sie einen klaren Konsultationsprozess für ergonomische Fragestellungen fest, inklusive Auslösekriterien und zuständiger Fachstellen. Dokumentieren Sie jede Anfrage, Empfehlung und Entscheidung nachvollziehbar. Bei komplexen Fällen sind externe Spezialisten verbindlich einzubeziehen."
+      },
+      {
+        "id": "9.10.5",
+        "groupId": "9.10.5",
+        "finding": "Ergonomische Kriterien und Anforderungen sind in Kaufverträgen und Bestellungen nicht verbindlich verankert.",
+        "children": [],
+        "recommendation": "Integrieren Sie verbindliche Ergonomieanforderungen in Ausschreibungen, Bestellungen und Verträge sowie messbare Abnahmekriterien. Prüfen Sie die Liefererfüllung vor Inbetriebnahme anhand dieser Kriterien. Abweichungen sind mit Lieferanten verbindlich nachzubessern."
+      },
+      {
         "id": "11.2",
         "groupId": "11.2",
         "finding": "Daten zu Unfällen/Krankheiten und deren Ausfalltagen werden nicht systematisch:\n- a) erfasst\n- b) analysiert\n- c) ausgewertet\n- d) kommuniziert",

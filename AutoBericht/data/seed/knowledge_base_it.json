@@ -7244,6 +7244,97 @@
         "recommendation": "In caso di retribuzione a rendimento viene definito per iscritto un salario di base garantito e indipendente dalla performance. La regola retributiva è comunicata in modo trasparente e inserita nel regolamento del personale. Un monitoraggio trimestrale verifica se la misura riduce la pressione al rendimento critica per la sicurezza."
       },
       {
+        "id": "9.6.1",
+        "groupId": "9.6.1",
+        "finding": "Le pause ufficiali non sono regolamentate in modo vincolante in azienda.",
+        "children": [],
+        "recommendation": "Definite per tutti i reparti regole vincolanti sulle pause con durata, fasce orarie e criteri di sostituzione, e comunicatele per iscritto. I superiori verificano un'applicazione uniforme nella pratica quotidiana e documentano le deviazioni. Dopo tre mesi l'efficacia viene valutata con brevi riscontri dei team."
+      },
+      {
+        "id": "9.8.1",
+        "groupId": "9.8.1",
+        "finding": "In azienda si producono o si lavorano sostanze pericolose per la salute senza un controllo sufficiente dei requisiti di protezione.",
+        "children": [],
+        "recommendation": "Registrate tutte le sostanze pericolose in un inventario vincolante e svolgete per ciascuna una valutazione dei rischi documentata. Definite misure di protezione chiare, responsabilità e intervalli di controllo. Verificate l'attuazione almeno trimestralmente e documentate le deviazioni con termini e responsabili."
+      },
+      {
+        "id": "9.8.2",
+        "groupId": "9.8.2",
+        "finding": "Le sostanze pericolose per la salute sono stoccate senza un concetto di deposito efficace e continuativo.",
+        "children": [],
+        "recommendation": "Definite un concetto di stoccaggio con separazione delle sostanze incompatibili, etichettatura chiara e quantità controllate. Mettete a disposizione sistemi di contenimento, ventilazione e mezzi di emergenza in base alle proprietà delle sostanze. Eseguite controlli mensili del deposito con gestione documentata delle non conformità."
+      },
+      {
+        "id": "9.8.3",
+        "groupId": "9.8.3",
+        "finding": "Le norme di sicurezza relative alle sostanze pericolose per la salute non vengono rispettate in modo sistematico.",
+        "children": [],
+        "recommendation": "Introducete istruzioni di lavoro vincolanti per le attività con sostanze pericolose e verificate regolarmente l'applicazione con brevi controlli sul campo. Discutete subito le deviazioni con i team interessati e attuate misure correttive con scadenze. Rendete questo controllo un punto fisso nei giri di gestione."
+      },
+      {
+        "id": "9.8.4",
+        "groupId": "9.8.4",
+        "finding": "Le schede di sicurezza richieste non sono complete o aggiornate per tutte le sostanze pericolose.",
+        "children": [],
+        "recommendation": "Istaurate una gestione centralizzata e versionata delle schede di sicurezza, assegnando a ogni sostanza una scheda valida. Definite chi controlla trimestralmente aggiornamento e completezza. Le schede mancanti o obsolete devono essere integrate prima di continuare l'uso della sostanza."
+      },
+      {
+        "id": "9.8.5",
+        "groupId": "9.8.5",
+        "finding": "Le schede di sicurezza non sono sufficientemente disponibili nei posti di lavoro pertinenti.",
+        "children": [],
+        "recommendation": "Rendete le schede di sicurezza disponibili direttamente sul posto di lavoro, in formato cartaceo o digitale con accesso immediato. Indicate chiaramente dove reperire le informazioni e verificate la disponibilità nei controlli di reparto. Documentate la conformità per ciascun posto."
+      },
+      {
+        "id": "9.8.6",
+        "groupId": "9.8.6",
+        "finding": "I dipendenti non sono sufficientemente formati sui contenuti delle schede di sicurezza.",
+        "children": [],
+        "recommendation": "Introducete una formazione obbligatoria e mirata per ruolo sulle schede di sicurezza, includendo significato dei pericoli, misure di protezione e comportamento in emergenza. Ripetete la formazione almeno annualmente e in caso di cambio sostanze. Documentate partecipazione, verifica della comprensione e necessità di recupero."
+      },
+      {
+        "id": "9.8.7",
+        "groupId": "9.8.7",
+        "finding": "I mezzi infrastrutturali necessari per applicare le regole delle schede di sicurezza sono incompleti o non affidabili.",
+        "children": [],
+        "recommendation": "Individuate per ogni area i mezzi infrastrutturali richiesti dalle schede di sicurezza (ad esempio aspirazione, doccia oculare, sistemi di contenimento, stazioni DPI) e confrontate stato atteso e stato reale. Acquistate con priorità i mezzi mancanti e definite intervalli di manutenzione e controllo. Documentate regolarmente la funzionalità."
+      },
+      {
+        "id": "9.10.1",
+        "groupId": "9.10.1",
+        "finding": "I principi ergonomici non vengono considerati in modo sistematico nella pianificazione di nuove attrezzature, posti e procedure di lavoro.",
+        "children": [],
+        "recommendation": "Inserite una verifica ergonomica obbligatoria in ogni progetto di pianificazione e acquisto prima dell'approvazione. Utilizzate una checklist standardizzata con requisiti minimi chiari. Le decisioni prive di conformità ergonomica non devono passare alla fase esecutiva."
+      },
+      {
+        "id": "9.10.2",
+        "groupId": "9.10.2",
+        "finding": "I posti di lavoro non vengono verificati periodicamente secondo principi ergonomici.",
+        "children": [],
+        "recommendation": "Definite un ciclo fisso di valutazione ergonomica dei posti di lavoro (almeno annuale e in caso di cambiamenti rilevanti). Prioritizzate le aree con maggior carico e assegnate misure con scadenze e responsabili. Monitorate l'avanzamento nelle riunioni di direzione."
+      },
+      {
+        "id": "9.10.3",
+        "groupId": "9.10.3",
+        "finding": "I pianificatori del lavoro e delle attrezzature non dispongono in modo uniforme di conoscenze ergonomiche sufficienti.",
+        "children": [],
+        "recommendation": "Definite competenze ergonomiche minime per i ruoli di pianificazione e formate in modo mirato le persone coinvolte. Inserite tale qualifica come criterio obbligatorio nei profili di ruolo e nelle approvazioni di progetto. Ripetete la formazione periodicamente e conservate evidenza documentale."
+      },
+      {
+        "id": "9.10.4",
+        "groupId": "9.10.4",
+        "finding": "Per le problematiche ergonomiche non vengono consultati in modo sistematico servizi interni o esterni.",
+        "children": [],
+        "recommendation": "Definite un processo chiaro di consultazione per le questioni ergonomiche, con criteri di attivazione e servizi competenti. Documentate in modo tracciabile ogni richiesta, raccomandazione e decisione. Nei casi complessi il coinvolgimento di specialisti esterni deve essere vincolante."
+      },
+      {
+        "id": "9.10.5",
+        "groupId": "9.10.5",
+        "finding": "I criteri e i requisiti ergonomici non sono integrati in modo vincolante nei contratti di acquisto e negli ordini.",
+        "children": [],
+        "recommendation": "Integrate requisiti ergonomici vincolanti in capitolati, ordini e contratti con criteri di accettazione misurabili. Verificate la conformità in fase di consegna prima della messa in servizio. In caso di scostamenti, richiedete adeguamenti contrattuali ai fornitori."
+      },
+      {
         "id": "11.2",
         "groupId": "11.2",
         "finding": "I dati relativi a infortuni e malattie e ai giorni di assenza non vengono gestiti in modo sistematico:\n- a) Registrati\n- b) Analizzati\n- c) Valutati\n- d) Comunicati",

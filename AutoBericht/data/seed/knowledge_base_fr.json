@@ -7244,6 +7244,97 @@
         "recommendation": "En cas de rémunération au rendement, un salaire de base garanti et indépendant de la performance est défini par écrit. La règle salariale est expliquée de manière transparente et ancrée dans le règlement du personnel. Un suivi trimestriel vérifie que la mesure réduit la pression de rendement nuisible à la sécurité."
       },
       {
+        "id": "9.6.1",
+        "groupId": "9.6.1",
+        "finding": "Les pauses officielles ne sont pas réglées de manière contraignante dans l'entreprise.",
+        "children": [],
+        "recommendation": "Définissez pour tous les secteurs des règles de pause contraignantes avec durée, plages horaires et modalités de remplacement, puis communiquez-les par écrit. L'encadrement contrôle l'application uniforme au quotidien et documente les écarts. Après trois mois, l'efficacité est vérifiée au moyen de retours d'équipe succincts."
+      },
+      {
+        "id": "9.8.1",
+        "groupId": "9.8.1",
+        "finding": "Des substances dangereuses pour la santé sont produites ou manipulées sans maîtrise suffisante des exigences de protection.",
+        "children": [],
+        "recommendation": "Recensez toutes les substances dangereuses dans un inventaire contraignant et réalisez une évaluation des risques documentée pour chaque substance. Définissez des mesures de protection claires, des responsabilités et des intervalles de contrôle. Vérifiez la mise en œuvre au minimum chaque trimestre et documentez les écarts avec délais et responsables."
+      },
+      {
+        "id": "9.8.2",
+        "groupId": "9.8.2",
+        "finding": "Des substances dangereuses pour la santé sont stockées sans concept de stockage efficace et continu.",
+        "children": [],
+        "recommendation": "Définissez un concept de stockage avec séparation des substances incompatibles, étiquetage clair et quantités maîtrisées. Mettez à disposition des systèmes de rétention, une ventilation adéquate et les moyens d'urgence selon les propriétés des substances. Effectuez des contrôles mensuels du stockage avec traitement documenté des écarts."
+      },
+      {
+        "id": "9.8.3",
+        "groupId": "9.8.3",
+        "finding": "Les prescriptions de sécurité liées aux substances dangereuses pour la santé ne sont pas respectées de manière systématique.",
+        "children": [],
+        "recommendation": "Introduisez des instructions de travail contraignantes pour les activités impliquant des substances dangereuses et vérifiez régulièrement leur application par des contrôles terrain courts. Traitez immédiatement les écarts avec les équipes concernées et fixez des mesures correctives avec délais. Ancrez ce contrôle comme point fixe dans les tournées de management."
+      },
+      {
+        "id": "9.8.4",
+        "groupId": "9.8.4",
+        "finding": "Les fiches de données de sécurité requises ne sont pas complètes ou pas à jour pour toutes les substances dangereuses.",
+        "children": [],
+        "recommendation": "Mettez en place une gestion centrale et versionnée des fiches de données de sécurité, avec affectation d'une fiche valide à chaque substance. Définissez qui contrôle trimestriellement l'actualité et l'exhaustivité. Toute fiche manquante ou périmée doit être complétée avant poursuite d'utilisation de la substance."
+      },
+      {
+        "id": "9.8.5",
+        "groupId": "9.8.5",
+        "finding": "Les fiches de données de sécurité ne sont pas suffisamment disponibles aux postes de travail concernés.",
+        "children": [],
+        "recommendation": "Rendez les fiches de données de sécurité accessibles directement au poste de travail, en version papier ou numérique avec accès immédiat. Indiquez clairement où ces informations se trouvent et vérifiez la disponibilité dans les contrôles de secteur. Documentez la preuve par poste."
+      },
+      {
+        "id": "9.8.6",
+        "groupId": "9.8.6",
+        "finding": "Les collaborateurs ne sont pas suffisamment formés au contenu des fiches de données de sécurité.",
+        "children": [],
+        "recommendation": "Mettez en place une formation obligatoire et adaptée aux rôles sur les fiches de données de sécurité, incluant signification des dangers, mesures de protection et conduite en cas d'urgence. Renouvelez la formation au moins annuellement et lors de changements de substances. Documentez participation, contrôle de compréhension et besoins de rattrapage."
+      },
+      {
+        "id": "9.8.7",
+        "groupId": "9.8.7",
+        "finding": "Les moyens d'infrastructure nécessaires pour appliquer les règles des fiches de sécurité sont incomplets ou non fiables.",
+        "children": [],
+        "recommendation": "Identifiez par zone de travail les moyens d'infrastructure requis selon les fiches de sécurité (p. ex. aspiration, douche oculaire, matériel de rétention, stations EPI) et comparez l'état cible à l'état réel. Acquérez prioritairement les moyens manquants et fixez des intervalles de maintenance et de contrôle. Documentez régulièrement la disponibilité fonctionnelle."
+      },
+      {
+        "id": "9.10.1",
+        "groupId": "9.10.1",
+        "finding": "Les principes ergonomiques ne sont pas pris en compte de manière systématique lors de la planification de nouveaux moyens, postes et procédures de travail.",
+        "children": [],
+        "recommendation": "Ancrez une vérification ergonomique obligatoire dans chaque projet de planification et d'achat avant validation. Utilisez une checklist standardisée avec exigences minimales claires. Les décisions de planification sans critères ergonomiques satisfaits ne doivent pas passer en réalisation."
+      },
+      {
+        "id": "9.10.2",
+        "groupId": "9.10.2",
+        "finding": "Les postes de travail ne sont pas contrôlés périodiquement selon des principes ergonomiques.",
+        "children": [],
+        "recommendation": "Mettez en place un cycle fixe d'évaluation ergonomique des postes de travail (au moins annuel et lors de changements significatifs). Priorisez les zones de charge et définissez des mesures avec échéances et responsables. Suivez l'avancement en réunion de direction."
+      },
+      {
+        "id": "9.10.3",
+        "groupId": "9.10.3",
+        "finding": "Les planificateurs des moyens de travail et d'exploitation ne disposent pas de connaissances ergonomiques suffisantes de manière homogène.",
+        "children": [],
+        "recommendation": "Définissez des compétences minimales en ergonomie pour les fonctions de planification et formez les personnes concernées de manière ciblée. Intégrez cette qualification comme critère obligatoire dans les profils de rôle et validations de projet. Renouvelez la formation régulièrement et conservez la preuve documentaire."
+      },
+      {
+        "id": "9.10.4",
+        "groupId": "9.10.4",
+        "finding": "Les services internes ou externes ne sont pas consultés de manière systématique pour les questions ergonomiques.",
+        "children": [],
+        "recommendation": "Définissez un processus clair de consultation pour les problématiques ergonomiques, avec critères de déclenchement et services compétents. Documentez chaque demande, recommandation et décision de manière traçable. Pour les cas complexes, l'appui de spécialistes externes doit être obligatoire."
+      },
+      {
+        "id": "9.10.5",
+        "groupId": "9.10.5",
+        "finding": "Les critères et exigences ergonomiques ne sont pas intégrés de manière contraignante dans les contrats d'achat et les commandes.",
+        "children": [],
+        "recommendation": "Intégrez des exigences ergonomiques contraignantes dans les appels d'offres, commandes et contrats, avec critères de réception mesurables. Vérifiez la conformité à la livraison avant mise en service. Exigez des corrections contractuelles en cas d'écarts."
+      },
+      {
         "id": "11.2",
         "groupId": "11.2",
         "finding": "Les données relatives aux accidents et aux maladies ainsi qu'aux jours d'absence ne sont pas traitées de manière systématique:\n- a) Consignées\n- b) Analysées\n- c) Exploitées\n- d) Communiquées",
