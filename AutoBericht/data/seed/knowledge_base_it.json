@@ -7206,14 +7206,42 @@
         "groupId": "9.6.2",
         "finding": "Le pause di lavoro non sono definite o comunicate in modo chiaro:\n- a) Mattino\n- b) Mezzogiorno\n- c) Pomeriggio\n- d) Pause di turno",
         "children": [],
-        "recommendation": ""
+        "recommendation": "L'azienda definisce in modo vincolante tutte le pause ufficiali (mattino, mezzogiorno, pomeriggio, turni) con durata e fascia oraria e le comunica per iscritto. I superiori garantiscono un'applicazione uniforme in tutti i team e la visibilità nei piani di turno. Dopo tre mesi un controllo a campione verifica il rispetto effettivo delle pause."
+      },
+      {
+        "id": "9.6.3",
+        "groupId": "9.6.3",
+        "finding": "I dipendenti non dispongono di una possibilità sufficiente di fare brevi pause in modo autonomo entro limiti ragionevoli.",
+        "children": [],
+        "recommendation": "La linea gerarchica definisce per ogni settore regole vincolanti per le micro-pause autonome (durata, frequenza, sostituzione) e le comunica per iscritto. Le regole vengono spiegate nelle prossime riunioni di team e integrate nella pianificazione operativa. Dopo tre mesi un controllo semplice verifica applicazione ed effetto su affaticamento e carico."
+      },
+      {
+        "id": "9.6.4",
+        "groupId": "9.6.4",
+        "finding": "Non è disponibile un locale adeguato per le pause.",
+        "children": [],
+        "recommendation": "L'azienda mette a disposizione almeno un locale pausa pulito, tranquillo e protetto per ogni area interessata, con posti a sedere e acqua potabile. Le responsabilità per pulizia e manutenzione vengono assegnate in modo chiaro e verificate mensilmente. Dopo tre mesi una breve rilevazione interna conferma il miglioramento percepito."
+      },
+      {
+        "id": "9.6.5",
+        "groupId": "9.6.5",
+        "finding": "Fumatori e non fumatori non dispongono di spazi pausa separati e adeguati.",
+        "children": [],
+        "recommendation": "Vengono predisposte aree pausa separate e chiaramente segnalate per fumatori e non fumatori. La regola è formalizzata nel regolamento interno e applicata in modo coerente dai superiori. Un controllo trimestrale verifica la riduzione di reclami legati al fumo e di conflitti."
       },
       {
         "id": "9.7.1",
         "groupId": "9.7.1",
         "finding": "Gli effetti della forma di retribuzione applicata sulla sicurezza e la salute non vengono valutati o discussi:\n- a) Salario a tempo\n- b) Salario a premio\n- c) Salario a rendimento\n- e) Cottimo in gruppo",
         "children": [],
-        "recommendation": ""
+        "recommendation": "La direzione valuta trimestralmente, insieme a HR e incaricato della sicurezza, l'impatto della forma retributiva sui comportamenti di sicurezza. L'analisi include indicatori come quasi infortuni, violazioni delle regole e pressione alla prestazione per reparto. Se gli incentivi favoriscono comportamenti rischiosi, il modello retributivo viene adeguato e comunicato in modo trasparente."
+      },
+      {
+        "id": "9.7.2",
+        "groupId": "9.7.2",
+        "finding": "Nel caso del salario a cottimo non è garantito un salario di base indipendente dal rendimento.",
+        "children": [],
+        "recommendation": "In caso di retribuzione a rendimento viene definito per iscritto un salario di base garantito e indipendente dalla performance. La regola retributiva è comunicata in modo trasparente e inserita nel regolamento del personale. Un monitoraggio trimestrale verifica se la misura riduce la pressione al rendimento critica per la sicurezza."
       },
       {
         "id": "11.2",

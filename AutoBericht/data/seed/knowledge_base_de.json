@@ -4344,7 +4344,8 @@
         "collapsedId": "8.2.1",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Ist in Ihrem Unternehmen ein Vorschlagswesen institutionalisiert?"
+        "question": "Ist in Ihrem Unternehmen ein Vorschlagswesen institutionalisiert?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.2",
@@ -4352,7 +4353,8 @@
         "collapsedId": "8.2.2",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Werden Vorschläge bezüglich Sicherheit und Gesundheitsschutz ausdrücklich gewünscht?"
+        "question": "Werden Vorschläge bezüglich Sicherheit und Gesundheitsschutz ausdrücklich gewünscht?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.3",
@@ -4360,7 +4362,8 @@
         "collapsedId": "8.2.3",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht? Wenn ja, wie viele?"
+        "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht? Wenn ja, wie viele?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.4",
@@ -4368,7 +4371,8 @@
         "collapsedId": "8.2.4",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht, welche im weitesten Sinne die Sicherheit und den Gesundheitsschutz betrafen? Wenn ja, wie viele?"
+        "question": "Wurden in den letzten 12 Monaten Vorschläge gemacht, welche im weitesten Sinne die Sicherheit und den Gesundheitsschutz betrafen? Wenn ja, wie viele?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.5",
@@ -4376,7 +4380,8 @@
         "collapsedId": "8.2.5",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Werden Vorschläge bezüglich der Verbesserung der Sicherheit honoriert? Wenn ja, wie?"
+        "question": "Werden Vorschläge bezüglich der Verbesserung der Sicherheit honoriert? Wenn ja, wie?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.6",
@@ -4384,7 +4389,8 @@
         "collapsedId": "8.2.6",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Kommt in Ihrem Unternehmen ein bestimmtes Anreizsystem zur Förderung der Sicherheit und Gesundheit zur Anwendung? Wenn ja, worin besteht dieses Anreizsystem?"
+        "question": "Kommt in Ihrem Unternehmen ein bestimmtes Anreizsystem zur Förderung der Sicherheit und Gesundheit zur Anwendung? Wenn ja, worin besteht dieses Anreizsystem?",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "8.2.7",
@@ -4392,7 +4398,8 @@
         "collapsedId": "8.2.7",
         "chapter": 8,
         "chapterLabel": "8. Mitwirkung",
-        "question": "Bestehen in Ihrem Unternehmen Qualitätszirkel* oder andere Mittel und Formen zur Nutzung des Kreativpotenzials der Mitarbeitenden? Wenn ja, welche?\n*Qualitätszirkel: Arbeitsgruppe für die kontinuierliche Qualitätsverbesserung."
+        "question": "Bestehen in Ihrem Unternehmen Qualitätszirkel* oder andere Mittel und Formen zur Nutzung des Kreativpotenzials der Mitarbeitenden? Wenn ja, welche?\n*Qualitätszirkel: Arbeitsgruppe für die kontinuierliche Qualitätsverbesserung.",
+        "sectionLabel": "8.2. Vorschlagswesen, Anreizsystem"
       },
       {
         "id": "9.1.1",
@@ -7181,14 +7188,42 @@
         "groupId": "9.6.2",
         "finding": "Die Pausenregelung ist nicht klar definiert oder kommuniziert:\n- a) Vormittagspause\n- b) Mittagspause\n- c) Nachmittagspause\n- d) Schichtpausen",
         "children": [],
-        "recommendation": ""
+        "recommendation": "Der Betrieb legt alle offiziellen Pausen (Vormittag, Mittag, Nachmittag, Schicht) mit Dauer und Zeitfenster verbindlich fest und kommuniziert sie schriftlich. Vorgesetzte stellen sicher, dass die Regel in allen Teams gleich angewendet wird und in Schichtplänen sichtbar ist. Nach drei Monaten wird stichprobenweise geprüft, ob die Pausen tatsächlich eingehalten werden."
+      },
+      {
+        "id": "9.6.3",
+        "groupId": "9.6.3",
+        "finding": "Für die Beschäftigten besteht keine ausreichende Möglichkeit, Kurzpausen in einem vernünftigen Rahmen selbständig einzuschalten.",
+        "children": [],
+        "recommendation": "Die Führung legt pro Bereich verbindliche Regeln für selbstständige Kurzpausen fest (Dauer, Häufigkeit, Vertretung) und informiert alle Mitarbeitenden schriftlich. Diese Regel wird in den nächsten Teammeetings erklärt und in der Einsatzplanung sichtbar hinterlegt. Nach drei Monaten wird anhand einer kurzen Rückmeldung geprüft, ob Belastungsspitzen und Ermüdung zurückgehen."
+      },
+      {
+        "id": "9.6.4",
+        "groupId": "9.6.4",
+        "finding": "Für die Pausenzeiten stehen keine geeigneten Räume zur Verfügung.",
+        "children": [],
+        "recommendation": "Das Unternehmen richtet mindestens einen sauberen, ruhigen und wettergeschützten Pausenraum pro betroffenen Bereich ein und stellt Sitzplätze sowie Trinkwasser bereit. Zuständigkeit für Reinigung und Unterhalt wird klar zugewiesen und monatlich kontrolliert. Die Wirksamkeit wird nach drei Monaten mit einer kurzen Mitarbeitendenbefragung überprüft."
+      },
+      {
+        "id": "9.6.5",
+        "groupId": "9.6.5",
+        "finding": "Für Raucher und Nichtraucher stehen keine getrennten, geeigneten Pausenräume zur Verfügung.",
+        "children": [],
+        "recommendation": "Für Raucher und Nichtraucher werden klar getrennte Pausenbereiche mit eindeutiger Kennzeichnung eingerichtet. Die Regelung wird in der Hausordnung dokumentiert und durch Vorgesetzte konsequent umgesetzt. Nach Einführung wird geprüft, ob Beschwerden zu Rauchbelastung und Konflikten zurückgehen."
       },
       {
         "id": "9.7.1",
         "groupId": "9.7.1",
         "finding": "Die Auswirkungen der im Betrieb angewendeten Lohnform auf Sicherheit und Gesundheit werden nicht bewertet oder reflektiert:\n- a) Zeitlohn\n- b) Prämienlohn (Zeitlohn plus Prämien)\n- c) Leistungslohn (Akkordlohn, Stücklohn)\n- e) Gruppenakkordlohn",
         "children": [],
-        "recommendation": ""
+        "recommendation": "Die Geschäftsleitung bewertet die Auswirkungen der Lohnform auf Sicherheitsverhalten in einem quartalsweisen Review mit HR und SiBe. Dabei werden Kennzahlen wie Beinaheunfälle, Regelverstösse und Leistungsdruck pro Bereich betrachtet. Falls Anreize zu riskantem Verhalten führen, wird das Vergütungsmodell angepasst und transparent kommuniziert."
+      },
+      {
+        "id": "9.7.2",
+        "groupId": "9.7.2",
+        "finding": "Bei Akkordlohn ist kein leistungsunabhängiger Grundlohn garantiert.",
+        "children": [],
+        "recommendation": "Bei leistungsabhängiger Entlöhnung wird ein garantierter, leistungsunabhängiger Grundlohn schriftlich festgelegt. Die Lohnregel wird allen Mitarbeitenden transparent erklärt und im Personalreglement verankert. Quartalsweise wird geprüft, ob die Regelung sicherheitskritischen Leistungsdruck reduziert."
       },
       {
         "id": "11.2",

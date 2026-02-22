@@ -7206,14 +7206,42 @@
         "groupId": "9.6.2",
         "finding": "Les pauses de travail ne sont pas clairement définies ou communiquées:\n- a) Dans la matinée\n- b) À midi\n- c) Dans l'après-midi\n- d) Dans le cadre du travail en équipe",
         "children": [],
-        "recommendation": ""
+        "recommendation": "L'entreprise définit de manière contraignante toutes les pauses officielles (matin, midi, après-midi, travail en équipe) avec durée et plage horaire, puis les communique par écrit. L'encadrement veille à une application uniforme dans toutes les équipes et à l'intégration dans les plannings. Après trois mois, un contrôle par échantillonnage vérifie le respect effectif des pauses."
+      },
+      {
+        "id": "9.6.3",
+        "groupId": "9.6.3",
+        "finding": "Les collaborateurs ne disposent pas d'une possibilité suffisante de prendre de courtes pauses individuelles dans une limite raisonnable.",
+        "children": [],
+        "recommendation": "La ligne hiérarchique définit par secteur des règles contraignantes pour les micro-pauses autonomes (durée, fréquence, remplacement) et les communique par écrit. Ces règles sont expliquées lors des prochaines réunions d'équipe et intégrées dans la planification. Après trois mois, un contrôle simple vérifie l'application et l'effet sur la fatigue."
+      },
+      {
+        "id": "9.6.4",
+        "groupId": "9.6.4",
+        "finding": "Aucun local approprié n'est disponible pour les temps de pause.",
+        "children": [],
+        "recommendation": "L'entreprise met à disposition au moins un local de pause propre, calme et protégé des intempéries par secteur concerné, avec places assises et eau potable. Les responsabilités pour l'entretien et le nettoyage sont attribuées clairement et contrôlées chaque mois. Une courte enquête interne après trois mois vérifie l'amélioration ressentie."
+      },
+      {
+        "id": "9.6.5",
+        "groupId": "9.6.5",
+        "finding": "Les fumeurs et les non-fumeurs ne disposent pas de locaux de pause séparés et appropriés.",
+        "children": [],
+        "recommendation": "Des zones de pause séparées pour fumeurs et non-fumeurs sont aménagées et signalées de manière claire. La règle est inscrite dans le règlement interne et appliquée de façon cohérente par l'encadrement. Un point de contrôle trimestriel mesure la baisse des plaintes liées à la fumée et des conflits."
       },
       {
         "id": "9.7.1",
         "groupId": "9.7.1",
         "finding": "Les effets de la forme de rémunération appliquée sur la sécurité et la santé ne sont pas évalués ou discutés:\n- a) Salaire au temps (mensuel ou horaire)\n- b) Salaire à la prime\n- c) Salaire au rendement\n- e) Salaire au forfait (par équipe)",
         "children": [],
-        "recommendation": ""
+        "recommendation": "La direction évalue chaque trimestre, avec les RH et le chargé de sécurité, l'impact du mode de rémunération sur les comportements de sécurité. L'analyse inclut des indicateurs comme les presque-accidents, les écarts aux règles et la pression de performance par secteur. Si des incitations favorisent des comportements à risque, le modèle de rémunération est ajusté et communiqué de façon transparente."
+      },
+      {
+        "id": "9.7.2",
+        "groupId": "9.7.2",
+        "finding": "En cas de rémunération à la pièce, aucun salaire de base indépendant du rendement n'est garanti.",
+        "children": [],
+        "recommendation": "En cas de rémunération au rendement, un salaire de base garanti et indépendant de la performance est défini par écrit. La règle salariale est expliquée de manière transparente et ancrée dans le règlement du personnel. Un suivi trimestriel vérifie que la mesure réduit la pression de rendement nuisible à la sécurité."
       },
       {
         "id": "11.2",
