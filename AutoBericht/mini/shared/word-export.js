@@ -1101,9 +1101,14 @@
 
     chapters.forEach((chapter) => {
       const marker = `CHAPTER${chapter.id}$$`;
-      const replacement = String(chapter.id) === "0"
-        ? buildChapter0Xml(chapter, toText, { numId: chapter0ListNumId })
-        : buildChapterTableXml(chapter, toText);
+      let replacement = "";
+      if (String(chapter.id) === "0") {
+        replacement = buildChapter0Xml(chapter, toText, { numId: chapter0ListNumId });
+      } else {
+        // Keep one explicit spacer paragraph before floating chapter tables.
+        // This mirrors the manual "space + paragraph break" workaround in templates.
+        replacement = `${paragraphXml(" ")}${buildChapterTableXml(chapter, toText)}`;
+      }
       const patched = replaceParagraphMarker(documentXml, marker, replacement);
       documentXml = patched.xml;
     });
