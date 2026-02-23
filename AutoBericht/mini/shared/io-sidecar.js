@@ -136,8 +136,49 @@
       return knowledgeBase;
     };
 
+    const findDirectoryCaseInsensitive = async (parentHandle, name) => {
+      if (!parentHandle) return null;
+      try {
+        return await parentHandle.getDirectoryHandle(name);
+      } catch (err) {
+        // probe entries case-insensitively
+      }
+      if (!parentHandle.entries) return null;
+      for await (const [entryName, handle] of parentHandle.entries()) {
+        if (handle.kind !== "directory") continue;
+        if (String(entryName).toLowerCase() === String(name).toLowerCase()) {
+          return handle;
+        }
+      }
+      return null;
+    };
+
+    const ensureProjectScaffold = async (projectHandle) => {
+      if (!projectHandle) return;
+      const ensureDir = async (parentHandle, name) => {
+        const existing = await findDirectoryCaseInsensitive(parentHandle, name);
+        if (existing) return existing;
+        return parentHandle.getDirectoryHandle(name, { create: true });
+      };
+
+      await ensureDir(projectHandle, "inputs");
+      await ensureDir(projectHandle, "outputs");
+      await ensureDir(projectHandle, "backup");
+      const photosDir = await ensureDir(projectHandle, "photos");
+      await ensureDir(photosDir, "raw");
+      await ensureDir(photosDir, "resized");
+      await ensureDir(photosDir, "export");
+    };
+
     const loadProjectFromFolder = async () => {
       if (!runtime.dirHandle) return { ok: false, source: "none" };
+      try {
+        await ensureProjectScaffold(runtime.dirHandle);
+      } catch (err) {
+        setStatus(`Project scaffold failed: ${err.message || err}`);
+        debug.logLine("error", `Project scaffold failed: ${err.message || err}`);
+        return { ok: false, source: "none" };
+      }
       let sidecarDoc = null;
       try {
         const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json");

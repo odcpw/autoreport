@@ -154,10 +154,10 @@
 
   const findRawFolder = async (projectHandle, getNestedDirectory) => {
     const candidates = [
-      ["Photos", "raw"],
-      ["Photos", "Raw"],
       ["photos", "raw"],
       ["photos", "Raw"],
+      ["Photos", "raw"],
+      ["Photos", "Raw"],
     ];
     for (const parts of candidates) {
       try {
@@ -332,7 +332,7 @@
 
     const raw = await findRawFolder(projectHandle, getNestedDirectory);
     if (!raw) {
-      setStatus?.("Missing Photos/raw. Expected Photos/raw/ABC folders.");
+      setStatus?.("Missing photos/raw. Expected photos/raw/ABC folders.");
       return null;
     }
     const tasks = await collectRawTasks(raw.handle, isImageFile);
@@ -342,7 +342,7 @@
     }
     const resizedHandle = await ensureResizedFolder(projectHandle, getNestedDirectory);
     if (await hasExistingResizedFiles(resizedHandle, isImageFile)) {
-      setStatus?.("Photos/resized is not empty. Clear it before importing to avoid breaking tags.");
+      setStatus?.("photos/resized is not empty. Clear it before importing to avoid breaking tags.");
       return null;
     }
     const counters = new Map();
@@ -389,7 +389,7 @@
     } = context || {};
     if (!projectHandle) throw new Error("Project folder is missing.");
     if (!Array.isArray(photos) || !photos.length) {
-      return { count: 0, exportRootName: "Photos/export" };
+      return { count: 0, exportRootName: "photos/export" };
     }
 
     setStatus?.("Preparing export...");

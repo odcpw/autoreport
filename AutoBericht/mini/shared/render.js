@@ -1558,7 +1558,7 @@
 
       const importCard = createToolCard({
         title: t("project_tool_import_title", "Import Selbstbeurteilung"),
-        hint: t("project_tool_import_hint", "Pick the Selbstbeurteilung file. It will be imported and copied into the project Inputs folder."),
+        hint: t("project_tool_import_hint", "Pick the Selbstbeurteilung file. It will be imported and copied into the project inputs folder."),
         buttonLabel: t("project_tool_import_self", "Import Selbstbeurteilung"),
         buttonClass: "",
         onClick: async () => {
@@ -1569,7 +1569,7 @@
 
       const exportCard = createToolCard({
         title: t("project_export_card_title", "Word Export"),
-        hint: t("project_export_card_hint", "Pick the DOCX template and create a report in Outputs using the current sidecar data."),
+        hint: t("project_export_card_hint", "Pick the DOCX template and create a report in outputs using the current sidecar data."),
         buttonLabel: t("project_export_no_vba", "Word Export (No VBA)"),
         buttonClass: "ghost",
         onClick: async (button) => {
@@ -1629,13 +1629,13 @@
       logoCard.appendChild(logoTitle);
       const logoHint = document.createElement("p");
       logoHint.className = "project-card__hint";
-      logoHint.textContent = t("project_logo_hint", "Place logo.png/logo.jpg in Inputs, then click to pick the logo file manually. The app writes Outputs/logo-large.png and Outputs/logo-small.png.");
+      logoHint.textContent = t("project_logo_hint", "Place logo.png/logo.jpg in inputs, then click to pick the logo file manually. The app writes outputs/logo-large.png and outputs/logo-small.png.");
       logoCard.appendChild(logoHint);
       const logoPaths = document.createElement("div");
       logoPaths.className = "project-logo-paths";
       const renderLogoPaths = () => {
-        const large = String(meta.logoLargePath || "Outputs/logo-large.png");
-        const small = String(meta.logoSmallPath || "Outputs/logo-small.png");
+        const large = String(meta.logoLargePath || "outputs/logo-large.png");
+        const small = String(meta.logoSmallPath || "outputs/logo-small.png");
         logoPaths.textContent = `Large: ${large}  |  Small: ${small}`;
       };
       renderLogoPaths();

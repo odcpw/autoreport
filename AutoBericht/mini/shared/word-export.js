@@ -5,7 +5,7 @@
  * - Read a user-selected `.docx` template and replace placeholder markers.
  * - Build chapter payloads from sidecar rows using report-ready filtering.
  * - Inject generated media (logos + spider chart) and per-chapter thermo tables.
- * - Write final output as `Outputs/YYYY-MM-DD_AutoBericht_NoVBA.docx`.
+ * - Write final output as `outputs/YYYY-MM-DD-company-Bericht-Ist-Aufnahme.docx`.
  *
  * Key dependencies:
  * - `window.AutoBerichtReportRows` for row projection/renumbering.
@@ -840,13 +840,9 @@
 
   const getOutputsDirectory = async (projectHandle) => {
     try {
-      return await getNestedDirectory(projectHandle, ["Outputs"], { create: false });
+      return await getNestedDirectory(projectHandle, ["outputs"], { create: false });
     } catch (err) {
-      try {
-        return await getNestedDirectory(projectHandle, ["outputs"], { create: false });
-      } catch (err2) {
-        return getNestedDirectory(projectHandle, ["Outputs"], { create: true });
-      }
+      return getNestedDirectory(projectHandle, ["outputs"], { create: true });
     }
   };
 
@@ -972,8 +968,8 @@
     await writeFileHandle(outputs, "logo-large.png", largeBlob);
     await writeFileHandle(outputs, "logo-small.png", smallBlob);
 
-    meta.logoLargePath = "Outputs/logo-large.png";
-    meta.logoSmallPath = "Outputs/logo-small.png";
+    meta.logoLargePath = "outputs/logo-large.png";
+    meta.logoSmallPath = "outputs/logo-small.png";
 
     return {
       logoLargePath: meta.logoLargePath,
@@ -1217,8 +1213,8 @@
       });
     };
 
-    const logoLargeFile = await tryReadProjectFile(projectHandle, project?.meta?.logoLargePath || "Outputs/logo-large.png");
-    const logoSmallFile = await tryReadProjectFile(projectHandle, project?.meta?.logoSmallPath || "Outputs/logo-small.png");
+    const logoLargeFile = await tryReadProjectFile(projectHandle, project?.meta?.logoLargePath || "outputs/logo-large.png");
+    const logoSmallFile = await tryReadProjectFile(projectHandle, project?.meta?.logoSmallPath || "outputs/logo-small.png");
 
     if (logoLargeFile) {
       await insertImageAtMarker({
@@ -1298,7 +1294,7 @@
     await writeFileHandle(outputs, outputName, outputBytes);
 
     return {
-      savedAs: `Outputs/${outputName}`,
+      savedAs: `outputs/${outputName}`,
     };
   };
 
