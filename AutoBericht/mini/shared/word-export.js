@@ -126,6 +126,16 @@
     return [address, cityLine].filter(Boolean).join(", ");
   };
 
+  const toFileSafeSlug = (value, fallback = "Company") => {
+    const raw = String(value || "").trim();
+    const hyphenated = raw.replace(/\s+/g, "-");
+    const cleaned = hyphenated
+      .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
+      .replace(/-+/g, "-")
+      .replace(/^[.\-\s]+|[.\-\s]+$/g, "");
+    return cleaned || fallback;
+  };
+
   const roundToNearestTen = (value) => {
     const raw = Number(value);
     if (!Number.isFinite(raw)) return 0;
@@ -1278,7 +1288,8 @@
     const outputs = await getOutputsDirectory(projectHandle);
     const now = new Date();
     const stamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
-    const outputName = `${stamp}_AutoBericht_NoVBA.docx`;
+    const companySlug = toFileSafeSlug(project?.meta?.company || project?.meta?.projectName || "", "Company");
+    const outputName = `${stamp}-${companySlug}-Bericht-Ist-Aufnahme.docx`;
     await writeFileHandle(outputs, outputName, outputBytes);
 
     return {
