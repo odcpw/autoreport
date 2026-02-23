@@ -881,6 +881,32 @@
     return dimensions;
   };
 
+  const extractSectionTextWidthEmu = (documentXml) => {
+    const source = String(documentXml || "");
+    if (!source) return 0;
+    const sectionMatches = [...source.matchAll(/<w:sectPr\b[\s\S]*?<\/w:sectPr>/g)];
+    if (!sectionMatches.length) return 0;
+    const sectPr = sectionMatches[sectionMatches.length - 1][0];
+    const pageSizeTag = sectPr.match(/<w:pgSz\b[^>]*\/>/)?.[0] || "";
+    const pageMarginTag = sectPr.match(/<w:pgMar\b[^>]*\/>/)?.[0] || "";
+
+    const readTwips = (tagXml, attrName, fallback = 0) => {
+      const regex = new RegExp(`\\bw:${attrName}="(\\d+)"`);
+      const raw = tagXml.match(regex)?.[1];
+      const value = Number(raw);
+      return Number.isFinite(value) ? value : fallback;
+    };
+
+    const pageWidthTwips = readTwips(pageSizeTag, "w", 0);
+    const marginLeftTwips = readTwips(pageMarginTag, "left", 0);
+    const marginRightTwips = readTwips(pageMarginTag, "right", 0);
+    const gutterTwips = readTwips(pageMarginTag, "gutter", 0);
+    const textWidthTwips = pageWidthTwips - marginLeftTwips - marginRightTwips - gutterTwips;
+    if (!(textWidthTwips > 0)) return 0;
+    // 1 twip = 635 EMU.
+    return Math.round(textWidthTwips * 635);
+  };
+
   const resizeImage = async (blob, maxLongSide) => {
     const bitmap = await createImageBitmap(blob);
     const longSide = Math.max(bitmap.width, bitmap.height);
@@ -1087,6 +1113,7 @@
       imageFile,
       mediaName,
       cmHeight,
+      fitToTextWidth = false,
       align = "",
     }) => {
       if (!imageFile) return false;
@@ -1105,8 +1132,23 @@
       });
 
       const dimensions = await getImageDimensions(imageFile);
-      const targetHeight = emuFromCm(cmHeight);
-      const targetWidth = Math.round((targetHeight * dimensions.width) / Math.max(1, dimensions.height));
+      let targetWidth = 0;
+      let targetHeight = 0;
+
+      if (fitToTextWidth && xmlPart === "word/document.xml") {
+        const textWidth = extractSectionTextWidthEmu(xml);
+        if (textWidth > 0) {
+          targetWidth = textWidth;
+          targetHeight = Math.round((textWidth * dimensions.height) / Math.max(1, dimensions.width));
+        }
+      }
+
+      if (!(targetWidth > 0 && targetHeight > 0)) {
+        const fallbackHeight = emuFromCm(cmHeight);
+        targetHeight = fallbackHeight;
+        targetWidth = Math.round((targetHeight * dimensions.width) / Math.max(1, dimensions.height));
+      }
+
       const relId = getNextRelId(relsXml);
       relsXml = appendRelationship(relsXml, relId, `media/${mediaName}`);
       setText(relPart, relsXml);
@@ -1209,6 +1251,7 @@
             marker: "SPIDER$$",
             imageFile: spiderBlob,
             mediaName: "autobericht_spider.png",
+            fitToTextWidth: true,
             cmHeight: 10.0,
             align: "center",
           });
