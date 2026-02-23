@@ -253,6 +253,8 @@
 
     const loadProjectSidecar = async () => {
       if (!state.projectHandle) return;
+      state.activeTagFilters = { report: [], observations: [], training: [] };
+      state.filterMode = "all";
       try {
         const handle = await state.projectHandle.getFileHandle("project_sidecar.json");
         const file = await handle.getFile();

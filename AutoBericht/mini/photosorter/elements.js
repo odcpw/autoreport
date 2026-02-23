@@ -29,6 +29,7 @@
     photoImageEl: document.getElementById("photo-image"),
     photoFilenameEl: document.getElementById("photo-filename"),
     photoUnsortedBtn: document.getElementById("photo-unsorted"),
+    photoClearFiltersBtn: document.getElementById("photo-clear-filters"),
     filterToggleBtn: document.getElementById("filter-toggle"),
     countToggleBtn: document.getElementById("count-toggle"),
     prevBtn: document.getElementById("prev-photo"),
@@ -41,10 +42,6 @@
       observations: document.getElementById("panel-observations"),
       training: document.getElementById("panel-training"),
     },
-    observationsSlot: document.getElementById("panel-observations-slot"),
-    viewerObservations: document.querySelector(".viewer__observations"),
-    panelTabButtons: Array.from(document.querySelectorAll("[data-panel-tab]")),
-    layoutToggleButtons: Array.from(document.querySelectorAll("[data-layout]")),
   });
 
   window.AutoBerichtPhotoSorterElements = { getElements };

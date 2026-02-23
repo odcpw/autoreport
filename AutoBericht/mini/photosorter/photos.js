@@ -89,11 +89,30 @@
       return !((report || []).length || (observations || []).length || (training || []).length);
     };
 
+    const hasActiveTagFilters = () => (
+      ["report", "observations", "training"].some(
+        (group) => (state.activeTagFilters?.[group] || []).length > 0
+      )
+    );
+
+    const photoMatchesActiveTagFilters = (photo) => (
+      ["report", "observations", "training"].every((group) => {
+        const active = state.activeTagFilters?.[group] || [];
+        if (!active.length) return true;
+        const assigned = new Set(photo?.tags?.[group] || []);
+        return active.every((tag) => assigned.has(tag));
+      })
+    );
+
     const getFilteredPhotos = () => {
+      let filtered = state.photos;
       if (state.filterMode === "unsorted") {
-        return state.photos.filter(isPhotoUnsorted);
+        filtered = filtered.filter(isPhotoUnsorted);
       }
-      return state.photos;
+      if (hasActiveTagFilters()) {
+        filtered = filtered.filter(photoMatchesActiveTagFilters);
+      }
+      return filtered;
     };
 
     const getCurrentPhoto = () => {
@@ -162,6 +181,8 @@
       maybeAutoScan,
       loadDemoPhotos,
       isPhotoUnsorted,
+      hasActiveTagFilters,
+      photoMatchesActiveTagFilters,
       getFilteredPhotos,
       getCurrentPhoto,
       serializePhotos,

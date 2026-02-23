@@ -17,12 +17,15 @@
   const config = stateHelpers.getLayoutConfig ? stateHelpers.getLayoutConfig() : {
     demoMode: false,
     demoPhotosMode: false,
-    layoutMode: "stacked",
   };
 
   const state = stateHelpers.createState
-    ? stateHelpers.createState(config.layoutMode)
-    : { layoutMode: "stacked", photos: [], tagFilters: { report: "", observations: "", training: "" } };
+    ? stateHelpers.createState()
+    : {
+      photos: [],
+      tagFilters: { report: "", observations: "", training: "" },
+      activeTagFilters: { report: [], observations: [], training: [] },
+    };
   const runtime = stateHelpers.createRuntime ? stateHelpers.createRuntime() : { autosaveTimer: null, saveQueue: Promise.resolve(), renderTimer: null };
   if (window.localStorage) {
     state.showTagCounts = window.localStorage.getItem("photosorterShowCounts") === "1";
@@ -71,6 +74,8 @@
 
   const actions = {
     toggleTag: () => {},
+    toggleFilterTag: () => {},
+    clearTagFilters: () => {},
     removeObservationTag: () => {},
     setPhotoUnsorted: () => {},
     persistTagOptions: () => {},
@@ -93,9 +98,32 @@
     ioApi.scheduleAutosave?.();
   };
 
+  const syncCurrentIndex = (preferredPath = "") => {
+    const filtered = photosApi.getFilteredPhotos?.() || [];
+    if (!filtered.length) {
+      state.currentIndex = 0;
+      return;
+    }
+    const wanted = String(preferredPath || "").trim();
+    if (wanted) {
+      const idx = filtered.findIndex((photo) => photo?.path === wanted);
+      if (idx >= 0) {
+        state.currentIndex = idx;
+        return;
+      }
+    }
+    if (state.currentIndex >= filtered.length) {
+      state.currentIndex = filtered.length - 1;
+    }
+    if (state.currentIndex < 0) {
+      state.currentIndex = 0;
+    }
+  };
+
   actions.toggleTag = (group, tag) => {
     const current = photosApi.getCurrentPhoto?.();
     if (!current) return;
+    const currentPath = current.path;
     const list = new Set(current.tags[group] || []);
     if (list.has(tag)) {
       list.delete(tag);
@@ -103,7 +131,29 @@
       list.add(tag);
     }
     current.tags[group] = Array.from(list);
+    syncCurrentIndex(currentPath);
     ioApi.scheduleAutosave?.();
+    renderApi.renderAll();
+  };
+
+  actions.toggleFilterTag = (group, tag) => {
+    if (!group || !tag) return;
+    const currentPath = photosApi.getCurrentPhoto?.()?.path || "";
+    const active = new Set(state.activeTagFilters?.[group] || []);
+    if (active.has(tag)) {
+      active.delete(tag);
+    } else {
+      active.add(tag);
+    }
+    state.activeTagFilters[group] = Array.from(active);
+    syncCurrentIndex(currentPath);
+    renderApi.renderAll();
+  };
+
+  actions.clearTagFilters = () => {
+    state.activeTagFilters = { report: [], observations: [], training: [] };
+    state.filterMode = "all";
+    syncCurrentIndex();
     renderApi.renderAll();
   };
 
@@ -156,10 +206,6 @@
       });
     const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
     renderApi.updateStatusVisibility?.(statusHidden);
-    renderApi.applyLayoutMode?.();
-    renderApi.placeObservationsPanel?.();
-    renderApi.updateLayoutToggle?.();
-    renderApi.setActivePanel?.(state.activePanel);
     bindApi.ensureFsAccess?.();
     actions.enableActions();
     if (!state.projectHandle && !config.demoPhotosMode) {

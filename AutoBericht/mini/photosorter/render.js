@@ -3,50 +3,6 @@
     const { state, runtime, setStatus } = ctx;
     const { elements, tagsApi, photosApi, actions } = deps;
 
-    const applyLayoutMode = () => {
-      document.body.classList.toggle("layout-tabs", state.layoutMode === "tabs");
-      document.body.classList.toggle("layout-stacked", state.layoutMode === "stacked");
-    };
-
-    const placeObservationsPanel = () => {
-      const panel = elements.panels?.observations;
-      if (!panel) return;
-      const target = state.layoutMode === "tabs" ? elements.observationsSlot : elements.viewerObservations;
-      if (!target || panel.parentElement === target) return;
-      target.appendChild(panel);
-    };
-
-    const updateLayoutToggle = () => {
-      elements.layoutToggleButtons?.forEach((button) => {
-        const isActive = button.dataset.layout === state.layoutMode;
-        button.classList.toggle("active", isActive);
-        button.setAttribute("aria-pressed", String(isActive));
-      });
-    };
-
-    const setLayoutMode = (mode) => {
-      if (mode !== "tabs" && mode !== "stacked") return;
-      state.layoutMode = mode;
-      if (window.localStorage) {
-        window.localStorage.setItem("photosorterLayout", mode);
-      }
-      applyLayoutMode();
-      placeObservationsPanel();
-      updateLayoutToggle();
-      renderPanels();
-    };
-
-    const setActivePanel = (group) => {
-      if (!elements.panels?.[group]) return;
-      state.activePanel = group;
-      elements.panelTabButtons?.forEach((btn) => {
-        const isActive = btn.dataset.panelTab === group;
-        btn.classList.toggle("active", isActive);
-        btn.setAttribute("aria-pressed", String(isActive));
-      });
-      renderPanels();
-    };
-
     const updateStatusVisibility = (isHidden) => {
       elements.statusEl?.classList.toggle("is-hidden", isHidden);
     };
@@ -86,6 +42,73 @@
       return counts;
     };
 
+    const hasAnyActiveFilters = () => (
+      state.filterMode !== "all" || !!photosApi.hasActiveTagFilters?.()
+    );
+
+    const createFilterIcon = (withSlash = false) => {
+      const ns = "http://www.w3.org/2000/svg";
+      const svg = document.createElementNS(ns, "svg");
+      svg.setAttribute("viewBox", "0 0 24 24");
+      svg.setAttribute("aria-hidden", "true");
+      svg.classList.add("filter-icon");
+
+      const funnel = document.createElementNS(ns, "path");
+      funnel.setAttribute("d", "M3 4h18l-7.2 8.4v6.5l-3.6-2.1v-4.4z");
+      svg.appendChild(funnel);
+
+      if (withSlash) {
+        const slash = document.createElementNS(ns, "path");
+        slash.setAttribute("d", "M4 20L20 4");
+        slash.setAttribute("class", "filter-icon__slash");
+        svg.appendChild(slash);
+      }
+
+      return svg;
+    };
+
+    const createSplitTagButton = ({
+      group,
+      option,
+      labelText,
+      selected,
+      filtered,
+      canTag = true,
+      chapter = false,
+    }) => {
+      const wrapper = document.createElement("div");
+      wrapper.className = `tag-split${chapter ? " tag-split--chapter" : ""}`;
+
+      const filterBtn = document.createElement("button");
+      filterBtn.type = "button";
+      filterBtn.className = "tag-split__filter";
+      filterBtn.setAttribute("aria-label", `Filter ${option.label}`);
+      filterBtn.setAttribute("aria-pressed", String(filtered));
+      filterBtn.title = filtered ? `Filter active: ${option.label}` : `Filter by ${option.label}`;
+      if (filtered) filterBtn.classList.add("is-active");
+      filterBtn.appendChild(createFilterIcon(false));
+      filterBtn.addEventListener("click", (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        actions.toggleFilterTag(group, option.value);
+      });
+
+      const tagBtn = document.createElement("button");
+      tagBtn.type = "button";
+      tagBtn.className = "tag-split__tag";
+      tagBtn.textContent = labelText;
+      tagBtn.title = labelText;
+      tagBtn.setAttribute("aria-pressed", String(selected));
+      if (selected) tagBtn.classList.add("active");
+      tagBtn.disabled = !canTag;
+      tagBtn.addEventListener("click", () => {
+        actions.toggleTag(group, option.value);
+      });
+
+      wrapper.append(filterBtn, tagBtn);
+      return wrapper;
+    };
+
     const renderViewer = () => {
       const current = photosApi.getCurrentPhoto();
       if (!current) {
@@ -101,6 +124,11 @@
         if (elements.photoUnsortedBtn) {
           elements.photoUnsortedBtn.classList.remove("active");
           elements.photoUnsortedBtn.disabled = true;
+        }
+        if (elements.photoClearFiltersBtn) {
+          const hasFilters = hasAnyActiveFilters();
+          elements.photoClearFiltersBtn.classList.toggle("active", hasFilters);
+          elements.photoClearFiltersBtn.disabled = !hasFilters;
         }
         updateMeta();
         return;
@@ -124,6 +152,11 @@
         elements.photoUnsortedBtn.classList.toggle("active", isUnsorted);
         elements.photoUnsortedBtn.disabled = false;
       }
+      if (elements.photoClearFiltersBtn) {
+        const hasFilters = hasAnyActiveFilters();
+        elements.photoClearFiltersBtn.classList.toggle("active", hasFilters);
+        elements.photoClearFiltersBtn.disabled = !hasFilters;
+      }
       updateMeta();
       photosApi.loadPhotoUrl(current).then((url) => {
         if (!url) return;
@@ -140,7 +173,6 @@
       const container = elements.panels?.[group];
       if (!container) return;
 
-      container.classList.toggle("is-active", state.activePanel === group);
       container.innerHTML = "";
       const title = document.createElement("h3");
       title.textContent = config.title;
@@ -182,6 +214,8 @@
 
       const current = photosApi.getCurrentPhoto();
       const selected = new Set(current?.tags?.[group] || []);
+      const filteredSet = new Set(state.activeTagFilters?.[group] || []);
+      const canTag = !!current;
       const filteredOptions = (state.tagOptions?.[group] || [])
         .filter((option) => option.label.toLowerCase().includes((config.filter || "").toLowerCase()));
 
@@ -199,19 +233,16 @@
         const chapterRow = document.createElement("div");
         chapterRow.className = "panel__chapters";
         chapters.forEach((option) => {
-          const button = document.createElement("button");
-          button.type = "button";
-          button.className = "tag-button tag-button--chapter";
           const labelText = formatLabel(option);
-          button.textContent = labelText;
-          button.title = labelText;
-          if (selected.has(option.value)) {
-            button.classList.add("active");
-          }
-          button.addEventListener("click", () => {
-            actions.toggleTag(group, option.value);
-          });
-          chapterRow.appendChild(button);
+          chapterRow.appendChild(createSplitTagButton({
+            group,
+            option,
+            labelText,
+            selected: selected.has(option.value),
+            filtered: filteredSet.has(option.value),
+            chapter: true,
+            canTag,
+          }));
         });
         container.append(chapterRow);
       }
@@ -220,19 +251,16 @@
       tagsEl.className = "panel__tags";
 
       rest.forEach((option) => {
-        const button = document.createElement("button");
-        button.type = "button";
-        button.className = "tag-button";
         const labelText = formatLabel(option);
-        button.textContent = labelText;
-        button.title = labelText;
-        if (selected.has(option.value)) {
-          button.classList.add("active");
-        }
-        button.addEventListener("click", () => {
-          actions.toggleTag(group, option.value);
-        });
-        tagsEl.appendChild(button);
+        tagsEl.appendChild(createSplitTagButton({
+          group,
+          option,
+          labelText,
+          selected: selected.has(option.value),
+          filtered: filteredSet.has(option.value),
+          chapter: false,
+          canTag,
+        }));
       });
 
       container.append(title, description, controls, tagsEl);
@@ -329,11 +357,6 @@
     };
 
     return {
-      applyLayoutMode,
-      placeObservationsPanel,
-      updateLayoutToggle,
-      setLayoutMode,
-      setActivePanel,
       updateStatusVisibility,
       setStatusHidden,
       renderViewer,

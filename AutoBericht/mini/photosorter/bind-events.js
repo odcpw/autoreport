@@ -20,6 +20,9 @@
     const enableActions = () => {
       const hasProject = !!state.projectHandle;
       const hasVisiblePhotos = photosApi.getFilteredPhotos().length > 0;
+      const hasFilters =
+        state.filterMode !== "all"
+        || ["report", "observations", "training"].some((group) => (state.activeTagFilters?.[group] || []).length > 0);
       if (elements.loadSidecarBtn) elements.loadSidecarBtn.disabled = !hasProject;
       if (elements.pickPhotosBtn) elements.pickPhotosBtn.disabled = !hasProject;
       if (elements.saveSidecarBtn) elements.saveSidecarBtn.disabled = !hasProject;
@@ -30,6 +33,7 @@
       if (elements.importActionBtn) elements.importActionBtn.disabled = !hasProject;
       if (elements.rescanPhotosBtn) elements.rescanPhotosBtn.disabled = !hasProject;
       if (elements.exportActionBtn) elements.exportActionBtn.disabled = !hasProject;
+      if (elements.photoClearFiltersBtn) elements.photoClearFiltersBtn.disabled = !hasFilters;
     };
 
     const openSettings = () => {
@@ -90,18 +94,6 @@
         renderApi.setStatusHidden(true);
       });
     }
-
-    elements.panelTabButtons?.forEach((button) => {
-      button.addEventListener("click", () => {
-        renderApi.setActivePanel(button.dataset.panelTab);
-      });
-    });
-
-    elements.layoutToggleButtons?.forEach((button) => {
-      button.addEventListener("click", () => {
-        renderApi.setLayoutMode(button.dataset.layout);
-      });
-    });
 
     const pickProjectFolder = async () => {
       if (!ensureFsAccess()) return;
@@ -268,6 +260,12 @@
       });
     }
 
+    if (elements.photoClearFiltersBtn) {
+      elements.photoClearFiltersBtn.addEventListener("click", () => {
+        actions.clearTagFilters();
+      });
+    }
+
     if (elements.filterToggleBtn) {
       elements.filterToggleBtn.addEventListener("click", () => {
         state.filterMode = state.filterMode === "all" ? "unsorted" : "all";
@@ -336,16 +334,6 @@
         renderApi.renderAll();
       });
     }
-
-    document.addEventListener("keydown", (event) => {
-      if (state.layoutMode !== "tabs") return;
-      const target = event.target;
-      const isInput = target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA");
-      if (isInput) return;
-      if (event.key === "1") renderApi.setActivePanel("report");
-      if (event.key === "2") renderApi.setActivePanel("observations");
-      if (event.key === "3") renderApi.setActivePanel("training");
-    });
 
     if (elements.notesEl) {
       elements.notesEl.addEventListener("input", () => {

@@ -76,14 +76,6 @@
   const getLayoutConfig = () => {
     const urlParams = new URLSearchParams(window.location.search);
     const demoMode = urlParams.get("demo") === "1" || urlParams.get("demo") === "true";
-    const layoutParam = urlParams.get("layout");
-    const storedLayout = window.localStorage?.getItem("photosorterLayout");
-    const layoutMode =
-      layoutParam === "tabs" || layoutParam === "stacked"
-        ? layoutParam
-        : storedLayout === "tabs"
-          ? "tabs"
-          : "stacked";
     const demoPhotosMode =
       urlParams.get("demoPhotos") === "1" ||
       urlParams.get("demoPhotos") === "true" ||
@@ -92,11 +84,10 @@
     return {
       demoMode,
       demoPhotosMode,
-      layoutMode,
     };
   };
 
-  const createState = (layoutMode) => ({
+  const createState = () => ({
     projectHandle: null,
     photoHandle: null,
     projectDoc: null,
@@ -104,11 +95,10 @@
     photoRootName: "",
     tagOptions: null,
     tagFilters: { report: "", observations: "", training: "" },
+    activeTagFilters: { report: [], observations: [], training: [] },
     photos: [],
     filterMode: "all",
     currentIndex: 0,
-    activePanel: "report",
-    layoutMode,
     currentPhotoUrl: "",
     currentPhotoToken: 0,
     showTagCounts: false,

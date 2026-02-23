@@ -15,10 +15,6 @@
         <a class="app-switcher__item is-active" href="./photosorter.html">PhotoSorter</a>
       </div>
       <div class="actions">
-        <div class="layout-toggle" role="group" aria-label="Layout">
-          <button type="button" data-layout="stacked">Stacked</button>
-          <button type="button" data-layout="tabs">Tabs (1/2/3)</button>
-        </div>
         <button id="pick-project">Open Project Folder</button>
         <button id="pick-photos" disabled>Import / Export Photos</button>
         <button id="save-sidecar" disabled>Save tags</button>
@@ -44,6 +40,18 @@
         </div>
         <div class="viewer__image">
           <img id="photo-image" alt="Selected photo preview" />
+          <button
+            type="button"
+            class="photo-clear-filters"
+            id="photo-clear-filters"
+            title="Clear all filters"
+            aria-label="Clear all filters"
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M3 4h18l-7.2 8.4v6.5l-3.6-2.1v-4.4z"></path>
+              <path class="filter-icon__slash" d="M4 20L20 4"></path>
+            </svg>
+          </button>
           <button type="button" class="photo-unsorted" id="photo-unsorted" title="Unsorted">U</button>
         </div>
         <div class="viewer__filename" id="photo-filename"></div>
@@ -55,14 +63,7 @@
       <div class="layout-splitter" id="layout-splitter" role="separator" aria-orientation="vertical" tabindex="0"></div>
 
       <aside class="sidebar">
-        <div class="panel-tabs" role="tablist" aria-label="Tag panels">
-          <button type="button" data-panel-tab="report">1 Bericht</button>
-          <button type="button" data-panel-tab="observations">2 Beobachtungen (Kapitel 4.8)</button>
-          <button type="button" data-panel-tab="training">3 Training</button>
-        </div>
-
         <div class="panel panel--report" id="panel-report"></div>
-        <div class="panel-slot" id="panel-observations-slot"></div>
         <div class="panel panel--training" id="panel-training"></div>
 
         <div class="notes">
