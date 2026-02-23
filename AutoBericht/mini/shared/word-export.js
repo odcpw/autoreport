@@ -255,8 +255,6 @@
     return [
       "<w:tbl>",
       "<w:tblPr>",
-      "<w:tblpPr w:vertAnchor=\"text\" w:horzAnchor=\"text\" w:leftFromText=\"141\" w:rightFromText=\"141\" w:tblpX=\"105\" w:tblpY=\"1\"/>",
-      "<w:tblOverlap w:val=\"never\"/>",
       "<w:tblW w:w=\"5000\" w:type=\"pct\"/>",
       "<w:jc w:val=\"start\"/>",
       "<w:tblInd w:w=\"0\" w:type=\"dxa\"/>",
