@@ -1662,7 +1662,7 @@
       const exportCard = createToolCard({
         title: t("project_export_card_title", "Word Export"),
         hint: t("project_export_card_hint", "Pick the DOCX template and create a report in outputs using the current sidecar data."),
-        buttonLabel: t("project_export_no_vba", "Word Export (No VBA)"),
+        buttonLabel: t("project_export_no_vba", "Word Export"),
         buttonClass: "ghost",
         onClick: async (button) => {
           if (!runtime.dirHandle) {
@@ -1671,7 +1671,7 @@
           }
           const exporter = window.AutoBerichtWordExport || {};
           if (!exporter.exportReportDocx) {
-            setStatus(t("project_export_missing", "No-VBA exporter not available."));
+            setStatus(t("project_export_missing", "Word exporter not available."));
             return;
           }
           button.disabled = true;
