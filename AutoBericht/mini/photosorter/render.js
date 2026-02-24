@@ -270,7 +270,7 @@
       const counts = buildTagCounts();
       renderTagPanel("report", {
         title: "Bericht",
-        description: "Kapitel & Unterkapitel (1.x / 1.2 / 4.8 etc.)",
+        description: "Kapitel & Unterkapitel (1.x / 1.2 usw.)",
         filter: state.tagFilters.report,
         splitChapters: true,
         allowAdd: false,

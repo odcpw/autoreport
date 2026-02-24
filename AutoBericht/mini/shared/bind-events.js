@@ -164,8 +164,10 @@
       state.project.meta.initials = state.project.meta.moderatorInitials; // legacy
       state.project.meta.company = elements.settingsCompanyEl.value.trim();
       state.project.meta.companyId = elements.settingsCompanyIdEl.value.trim();
-      state.project.meta.locale = elements.settingsLocaleEl.value || "de-CH";
-      i18n.setLocale(state.project.meta.locale);
+      state.project.meta.locale = elements.settingsLocaleEl.value || "";
+      if (state.project.meta.locale) {
+        i18n.setLocale(state.project.meta.locale);
+      }
       if (elements.settingsBackupMinutesEl) {
         const raw = Number(elements.settingsBackupMinutesEl.value);
         const minutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
@@ -175,6 +177,22 @@
         elements.settingsLibraryHintEl.textContent = `Library file: ${stateHelpers.getLibraryFileName(state.project.meta)} (timestamped backup on generate).`;
       }
       if (applyAutoBackup) applyAutoBackup();
+      const canBootstrapFromSettings = runtime.awaitingLocaleBootstrap
+        && Array.isArray(state.project?.chapters)
+        && state.project.chapters.length === 0
+        && typeof ioApi.bootstrapProjectFromSeed === "function"
+        && !!state.project.meta.locale;
+      if (canBootstrapFromSettings) {
+        try {
+          await ioApi.bootstrapProjectFromSeed(state.project.meta.locale, { deferSave: true });
+          setStatus("Settings saved. Seed content loaded (sidecar save deferred until you leave Project page).");
+          if (renderApi?.renderRows) renderApi.renderRows();
+        } catch (err) {
+          setStatus(`Settings saved, but seed bootstrap failed: ${err.message}`);
+          debug.logLine("error", `Seed bootstrap failed from settings: ${err.message || err}`);
+        }
+        return;
+      }
       if (runtime.dirHandle) {
         try {
           await ioApi.saveSidecar();

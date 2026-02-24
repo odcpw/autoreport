@@ -13,25 +13,12 @@
           training: [],
         })
     );
-    const getSortLocale = () => document.documentElement?.getAttribute("lang") || "de";
-    const resolveLocaleKey = (locale) => {
-      const value = String(locale || "de-CH").toLowerCase();
-      if (value.startsWith("fr")) return "fr";
-      if (value.startsWith("it")) return "it";
-      return "de";
-    };
-    const getPreferredLocale = () => (
-      state.sidecarDoc?.report?.project?.meta?.locale
-      || state.projectDoc?.meta?.locale
-      || document.documentElement?.getAttribute("lang")
-      || "de-CH"
+    const isPlainObject = (value) => (
+      !!value
+      && typeof value === "object"
+      && !Array.isArray(value)
     );
-    const getKnowledgeBaseTryPaths = () => {
-      const preferred = resolveLocaleKey(getPreferredLocale());
-      return [preferred, "de", "fr", "it"]
-        .filter((value, index, list) => list.indexOf(value) === index)
-        .map((key) => `../data/seed/knowledge_base_${key}.json`);
-    };
+    const getSortLocale = () => document.documentElement?.getAttribute("lang") || "de";
 
     const createEmptyProjectDoc = () => ({
       meta: {
@@ -44,13 +31,30 @@
     });
 
     const normalizePhotoDoc = (doc) => {
-      const base = doc && typeof doc === "object" ? structuredClone(doc) : {};
-      if (!base.meta) base.meta = { projectId: "", createdAt: new Date().toISOString() };
-      if (!base.photos) base.photos = {};
-      if (!base.photoTagOptions) base.photoTagOptions = createEmptyTagOptions();
-      if (!base.photoRoot) base.photoRoot = "";
-      return base;
+      const source = isPlainObject(doc) ? doc : {};
+      const meta = isPlainObject(source.meta) ? structuredClone(source.meta) : {};
+      if (!Object.prototype.hasOwnProperty.call(meta, "projectId")) meta.projectId = "";
+      if (!meta.createdAt) meta.createdAt = new Date().toISOString();
+      const photos = isPlainObject(source.photos) ? structuredClone(source.photos) : {};
+      const photoTagOptions = tagsApi.ensureTagOptions(source.photoTagOptions || createEmptyTagOptions());
+      const photoRoot = typeof source.photoRoot === "string" ? source.photoRoot : "";
+      return {
+        meta,
+        photos,
+        photoTagOptions,
+        photoRoot,
+      };
     };
+
+    const isLegacyPhotoDoc = (doc) => (
+      isPlainObject(doc)
+      && !isPlainObject(doc.report)
+      && (
+        Object.prototype.hasOwnProperty.call(doc, "photoRoot")
+        || Object.prototype.hasOwnProperty.call(doc, "photoTagOptions")
+        || isPlainObject(doc.photos)
+      )
+    );
 
     const getNestedDirectory = async (rootHandle, parts, options = {}) => {
       let current = rootHandle;
@@ -152,7 +156,6 @@
     };
 
     const readKnowledgeBase = async () => {
-      // 1) User library in project root
       if (state.projectHandle) {
         try {
           const options = await listLibraryFiles();
@@ -165,29 +168,9 @@
             }
           }
         } catch (err) {
-          debug.logLine("warn", `User library load failed; trying bundled seeds: ${err?.message || err}`);
+          debug.logLine("warn", `User library load failed: ${err?.message || err}`);
         }
       }
-
-      // 2) Bundled seed next to the app (served by the local server)
-      try {
-        const baseUrl = new URL(window.location.href);
-        const tryPaths = getKnowledgeBaseTryPaths();
-        for (const rel of tryPaths) {
-          try {
-            const url = new URL(rel, baseUrl);
-            const res = await fetch(url.toString());
-            if (!res.ok) continue;
-            const parsed = await res.json();
-            if (isValidKnowledgeBase(parsed, `Bundled seed (${rel})`)) return parsed;
-          } catch (err) {
-            debug.logLine("warn", `Failed loading bundled seed (${rel}): ${err?.message || err}`);
-          }
-        }
-      } catch (err) {
-        debug.logLine("error", `Failed to load bundled seed via fetch: ${err.message || err}`);
-      }
-
       return null;
     };
 
@@ -236,7 +219,7 @@
       }
     };
 
-    const fillMissingTagsFromSeed = async () => {
+    const fillMissingTagsFromLibrary = async () => {
       if (state.tagOptions?.report?.length && state.tagOptions?.observations?.length && state.tagOptions?.training?.length) return;
       const knowledgeBase = await readKnowledgeBase();
       if (!knowledgeBase?.tags) return;
@@ -261,7 +244,12 @@
         const text = await file.text();
         const sidecar = JSON.parse(text);
         state.sidecarDoc = sidecar;
-        const photoDoc = sidecar?.photos || sidecar;
+        let photoDoc = null;
+        if (isPlainObject(sidecar?.photos)) {
+          photoDoc = sidecar.photos;
+        } else if (isLegacyPhotoDoc(sidecar)) {
+          photoDoc = sidecar;
+        }
         state.projectDoc = normalizePhotoDoc(photoDoc);
         if (sidecar?.report?.project?.meta?.locale) {
           i18n.setLocale(sidecar.report.project.meta.locale);
@@ -272,7 +260,7 @@
           state.tagOptions.report = reportOptions;
           state.projectDoc.photoTagOptions.report = reportOptions;
         }
-        await fillMissingTagsFromSeed();
+        await fillMissingTagsFromLibrary();
         state.photoRootName = state.projectDoc.photoRoot || "";
         setStatus("Loaded project_sidecar.json");
         debug.logLine("info", "Loaded project_sidecar.json");
@@ -293,7 +281,7 @@
           }
           state.tagOptions = nextOptions;
           state.projectDoc.photoTagOptions = structuredClone(nextOptions);
-          await fillMissingTagsFromSeed();
+          await fillMissingTagsFromLibrary();
           if (seeds.buildProjectFromKnowledgeBase && normalizeHelpers.normalizeProject) {
             try {
               reportProject = seeds.buildProjectFromKnowledgeBase(knowledgeBase);
@@ -302,9 +290,10 @@
               debug.logLine("error", `Failed to build report project: ${projectErr.message || projectErr}`);
             }
           }
+          statusMessage = "Sidecar not found; loaded tags from library.";
         } else {
-          statusMessage = "Sidecar not found and knowledge base missing.";
-          debug.logLine("error", "Knowledge base not found. Tags unavailable.");
+          statusMessage = "Sidecar not found and no library found. Starting fresh.";
+          debug.logLine("warn", "Library not found. Tag options are empty.");
         }
         if (reportProject) {
           state.sidecarDoc = { report: { project: reportProject } };
@@ -312,7 +301,6 @@
         state.photoRootName = "";
         setStatus(statusMessage);
         debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
-        await saveProjectSidecar();
       }
       await setDefaultPhotoHandle();
       const didScan = await photosApi.maybeAutoScan();
@@ -349,6 +337,8 @@
         if (!sidecar.meta) sidecar.meta = {};
         sidecar.meta.updatedAt = new Date().toISOString();
         sidecar.photos = payload;
+        delete sidecar.photoRoot;
+        delete sidecar.photoTagOptions;
         const handle = await state.projectHandle.getFileHandle("project_sidecar.json", { create: true });
         const writable = await handle.createWritable();
         await writable.write(JSON.stringify(sidecar, null, 2));

@@ -30,6 +30,8 @@
     autosaveTimer: null,
     saveQueue: Promise.resolve(),
     backupTimer: null,
+    pendingBootstrapWrite: false,
+    awaitingLocaleBootstrap: false,
   };
 
   const setStatus = (message) => {
@@ -158,6 +160,12 @@
 
   if (renderApi.setScheduleAutosave) {
     renderApi.setScheduleAutosave(scheduleAutosave);
+  }
+  if (renderApi.setSeedBootstrapHandler) {
+    renderApi.setSeedBootstrapHandler(ioApi.bootstrapProjectFromSeed);
+  }
+  if (renderApi.setLibraryExcelExportHandler) {
+    renderApi.setLibraryExcelExportHandler(ioApi.exportLibraryExcel);
   }
 
   if (bindModule.bind) {

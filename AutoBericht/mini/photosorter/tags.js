@@ -76,6 +76,7 @@
     return !val.includes("."); // anything without a dot is treated as top-level and excluded
   };
   const isZeroChapterTag = (value) => String(value || "").trim().startsWith("0.");
+  const isObservationChapterTag = (value) => /^4\.8(?:\.|$)/.test(String(value || "").trim());
 
   const normalizeTagOptions = (options) => {
     const incoming = normalizeIncomingOptions(options);
@@ -85,7 +86,9 @@
       // Keep only 1.x style entries; drop anything without a dot (top-level)
       .filter((opt) => !isTopLevelChapterTag(opt.value))
       // Drop 0.x chapters (Management Summary) from tag options
-      .filter((opt) => !isZeroChapterTag(opt.value));
+      .filter((opt) => !isZeroChapterTag(opt.value))
+      // 4.8 belongs to observations, not report chapter tags.
+      .filter((opt) => !isObservationChapterTag(opt.value));
     return {
       report,
       observations: (incoming.observations || []).map(normalizeTagOption).filter(Boolean),
@@ -127,7 +130,9 @@
       const normalized = String(sectionId || "").trim();
       const topLevel = normalized.split(".")[0];
       // Skip top-level chapter IDs (no dot) and specific exclusion chapters.
-      return !normalized.includes(".") || ["11", "12", "13", "14"].includes(topLevel);
+      return !normalized.includes(".")
+        || ["11", "12", "13", "14"].includes(topLevel)
+        || isObservationChapterTag(normalized);
     };
     project.chapters.forEach((chapter) => {
       // Do not include whole-chapter tags; we only want 1.1-style sections
@@ -181,8 +186,9 @@
       if (!tags.has(val)) tags.set(val, lbl || val);
     };
     const shouldSkipSection = (sectionId) => {
-      const topLevel = String(sectionId || "").split(".")[0];
-      return ["11", "12", "13", "14"].includes(topLevel);
+      const normalized = String(sectionId || "").trim();
+      const topLevel = normalized.split(".")[0];
+      return ["11", "12", "13", "14"].includes(topLevel) || isObservationChapterTag(normalized);
     };
     items.forEach((item) => {
       if (!item) return;
@@ -194,9 +200,6 @@
         addTag(sectionId, item.sectionLabel);
       }
     });
-    if (!tags.has("4.8")) {
-      tags.set("4.8", "4.8 Beobachtungen");
-    }
     const options = Array.from(tags.entries()).map(([value, label]) => ({ value, label }));
     return sortOptionsForGroup("report", options);
   };

@@ -38,9 +38,19 @@
     } = elements;
 
     let scheduleAutosave = () => {};
+    let seedBootstrapHandler = null;
+    let libraryExcelExportHandler = null;
 
     const setScheduleAutosave = (fn) => {
       scheduleAutosave = typeof fn === "function" ? fn : () => {};
+    };
+
+    const setSeedBootstrapHandler = (fn) => {
+      seedBootstrapHandler = typeof fn === "function" ? fn : null;
+    };
+
+    const setLibraryExcelExportHandler = (fn) => {
+      libraryExcelExportHandler = typeof fn === "function" ? fn : null;
     };
 
     const autosizeTextarea = (textarea) => {
@@ -1384,7 +1394,25 @@
 
     const renderProjectPage = () => {
       rowsEl.innerHTML = "";
-      normalizeHelpers.ensureProjectMeta(state.project, ctx.i18n.setLocale);
+      if (runtime.awaitingLocaleBootstrap) {
+        if (!state.project.meta || typeof state.project.meta !== "object") state.project.meta = {};
+        const meta = state.project.meta;
+        if (!meta.createdAt) meta.createdAt = new Date().toISOString();
+        if (meta.moderator == null) meta.moderator = "";
+        if (meta.moderatorInitials == null) meta.moderatorInitials = "";
+        if (meta.coModerator == null) meta.coModerator = "";
+        if (meta.coModeratorInitials == null) meta.coModeratorInitials = "";
+        if (meta.company == null) meta.company = "";
+        if (meta.companyId == null) meta.companyId = "";
+        if (meta.address == null) meta.address = "";
+        if (meta.plz == null) meta.plz = "";
+        if (meta.city == null) meta.city = "";
+        if (meta.autobackupMinutes == null) meta.autobackupMinutes = 30;
+        meta.author = meta.moderator;
+        meta.initials = meta.moderatorInitials;
+      } else {
+        normalizeHelpers.ensureProjectMeta(state.project, ctx.i18n.setLocale);
+      }
       const meta = state.project.meta || {};
       const page = document.createElement("section");
       page.className = "project-page";
@@ -1450,8 +1478,21 @@
       const formTitle = document.createElement("h4");
       formTitle.textContent = t("project_meta_title", "Project Metadata");
       formCard.appendChild(formTitle);
+      if (runtime.awaitingLocaleBootstrap) {
+        const bootstrapHint = document.createElement("p");
+        bootstrapHint.className = "project-card__hint";
+        bootstrapHint.textContent = t(
+          "project_bootstrap_hint",
+          "This folder is empty. Select report language to load seed content."
+        );
+        formCard.appendChild(bootstrapHint);
+      }
       const formGrid = document.createElement("div");
       formGrid.className = "project-meta-grid";
+      const scheduleProjectAutosave = () => {
+        if (runtime.awaitingLocaleBootstrap) return;
+        scheduleAutosave();
+      };
 
       const createMetaField = (labelText, value, onInput, options = {}) => {
         const label = document.createElement("label");
@@ -1475,9 +1516,10 @@
           if (options.min != null) input.min = String(options.min);
           if (options.step != null) input.step = String(options.step);
         }
-        input.addEventListener("input", () => onInput(input.value));
         if (options.select) {
           input.addEventListener("change", () => onInput(input.value));
+        } else {
+          input.addEventListener("input", () => onInput(input.value));
         }
         label.appendChild(input);
         if (options.colSpan) {
@@ -1490,49 +1532,65 @@
       formGrid.appendChild(createMetaField(t("project_meta_moderator", "Moderator"), meta.moderator || "", (value) => {
         meta.moderator = String(value || "").trim();
         meta.author = meta.moderator;
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_moderator_initials", "Moderator initials"), meta.moderatorInitials || "", (value) => {
         meta.moderatorInitials = String(value || "").trim();
         meta.initials = meta.moderatorInitials;
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_co_moderator", "Co-moderator"), meta.coModerator || "", (value) => {
         meta.coModerator = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_co_initials", "Co-moderator initials"), meta.coModeratorInitials || "", (value) => {
         meta.coModeratorInitials = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 5 }));
       formGrid.appendChild(createMetaField(t("project_meta_company", "Company"), meta.company || "", (value) => {
         meta.company = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 3 }));
       formGrid.appendChild(createMetaField(t("project_meta_companyid", "Company ID"), meta.companyId || "", (value) => {
         meta.companyId = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 2 }));
       formGrid.appendChild(createMetaField(t("project_meta_address", "Address"), meta.address || "", (value) => {
         meta.address = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 2 }));
       formGrid.appendChild(createMetaField(t("project_meta_postal", "PLZ"), meta.plz || "", (value) => {
         meta.plz = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 1 }));
       formGrid.appendChild(createMetaField(t("project_meta_city", "City"), meta.city || "", (value) => {
         meta.city = String(value || "").trim();
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, { colSpan: 2 }));
-      formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "de-CH", (value) => {
-        meta.locale = value || "de-CH";
-        ctx.i18n.setLocale(meta.locale);
-        scheduleAutosave();
+      formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "", (value) => {
+        const nextLocale = String(value || "").trim();
+        meta.locale = nextLocale;
+        if (nextLocale) {
+          ctx.i18n.setLocale(nextLocale);
+        }
+        const shouldBootstrap = runtime.awaitingLocaleBootstrap
+          && Array.isArray(state.project?.chapters)
+          && state.project.chapters.length === 0
+          && typeof seedBootstrapHandler === "function"
+          && !!nextLocale;
+        if (shouldBootstrap) {
+          seedBootstrapHandler(nextLocale, { deferSave: true }).catch((err) => {
+            setStatus(`Seed bootstrap failed: ${err.message || err}`);
+            debug.logLine("error", `Seed bootstrap failed: ${err.message || err}`);
+          });
+          return;
+        }
+        scheduleProjectAutosave();
       }, {
         colSpan: 5,
         select: true,
         items: [
+          { value: "", label: t("project_meta_locale_select", "Select language") },
           { value: "de-CH", label: "DE" },
           { value: "fr-CH", label: "FR" },
           { value: "it-CH", label: "IT" },
@@ -1541,7 +1599,7 @@
       formGrid.appendChild(createMetaField(t("project_meta_backup", "Auto-backup (minutes)"), String(meta.autobackupMinutes ?? 30), (value) => {
         const raw = Number(value);
         meta.autobackupMinutes = Number.isFinite(raw) ? Math.max(0, Math.floor(raw)) : 30;
-        scheduleAutosave();
+        scheduleProjectAutosave();
       }, {
         colSpan: 5,
         type: "number",
@@ -1621,6 +1679,21 @@
         },
       });
       page.appendChild(libraryCard.card);
+
+      const libraryExcelCard = createToolCard({
+        title: t("project_tool_library_excel_title", "Library Excel Export"),
+        hint: t("project_tool_library_excel_hint", "Export the current library JSON into an Excel workbook (human-readable and machine-ingestible)."),
+        buttonLabel: t("project_tool_library_excel", "Export Library Excel"),
+        buttonClass: "ghost",
+        onClick: async () => {
+          if (typeof libraryExcelExportHandler !== "function") {
+            setStatus(t("project_tool_library_excel_missing", "Library Excel exporter is not available."));
+            return;
+          }
+          await libraryExcelExportHandler();
+        },
+      });
+      page.appendChild(libraryExcelCard.card);
 
       const logoCard = document.createElement("div");
       logoCard.className = "project-card";
@@ -1832,6 +1905,10 @@
         button.title = buttonLabel;
         button.className = chapter.id === state.selectedChapterId ? "active" : "";
         button.addEventListener("click", () => {
+          const leavingProject = state.selectedChapterId === PROJECT_VIEW_ID && chapter.id !== PROJECT_VIEW_ID;
+          if (leavingProject && runtime.pendingBootstrapWrite) {
+            scheduleAutosave();
+          }
           state.selectedChapterId = chapter.id;
           render();
         });
@@ -2557,6 +2634,8 @@
       renderRows,
       render,
       setScheduleAutosave,
+      setSeedBootstrapHandler,
+      setLibraryExcelExportHandler,
       renderPhotoOverlay,
     };
   };

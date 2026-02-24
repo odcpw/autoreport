@@ -16,6 +16,43 @@
       return null;
     };
 
+    const isPlainObject = (value) => (
+      !!value
+      && typeof value === "object"
+      && !Array.isArray(value)
+    );
+
+    const sanitizePhotoTagOptions = (value) => {
+      const normalized = typeof seeds.normalizeTagGroups === "function"
+        ? seeds.normalizeTagGroups(value)
+        : {
+          report: value?.report || [],
+          observations: value?.observations || [],
+          training: value?.training || [],
+        };
+      return {
+        report: Array.isArray(normalized.report) ? structuredClone(normalized.report) : [],
+        observations: Array.isArray(normalized.observations) ? structuredClone(normalized.observations) : [],
+        training: Array.isArray(normalized.training) ? structuredClone(normalized.training) : [],
+      };
+    };
+
+    const sanitizePhotosBranch = (photosBranch) => {
+      const source = isPlainObject(photosBranch) ? photosBranch : {};
+      const meta = isPlainObject(source.meta) ? structuredClone(source.meta) : {};
+      if (!meta.createdAt) meta.createdAt = new Date().toISOString();
+      if (meta.updatedAt == null) meta.updatedAt = "";
+      if (!Object.prototype.hasOwnProperty.call(meta, "projectId")) meta.projectId = "";
+      const photoRoot = typeof source.photoRoot === "string" ? source.photoRoot : "";
+      const photos = isPlainObject(source.photos) ? structuredClone(source.photos) : {};
+      return {
+        meta,
+        photoRoot,
+        photoTagOptions: sanitizePhotoTagOptions(source.photoTagOptions),
+        photos,
+      };
+    };
+
     const reorderChapterRows = (project, chapterId) => {
       if (!project?.chapters) return;
       const chapter = project.chapters.find((item) => item.id === chapterId);
@@ -41,6 +78,11 @@
       reorderChapterRows(projectCopy, "0");
       reorderChapterRows(projectCopy, "4.8");
       merged.report = { project: projectCopy };
+      if (Object.prototype.hasOwnProperty.call(merged, "photos")) {
+        merged.photos = sanitizePhotosBranch(merged.photos);
+      }
+      delete merged.photoRoot;
+      delete merged.photoTagOptions;
       if (spiderData) merged.spider = spiderData;
       return merged;
     };
@@ -195,6 +237,8 @@
         state.project = normalizeHelpers.normalizeProject(reportProject, ctx.i18n.setLocale);
         normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
         state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
+        runtime.awaitingLocaleBootstrap = false;
+        runtime.pendingBootstrapWrite = false;
         renderApi.buildPhotoIndex();
         state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
@@ -204,47 +248,57 @@
       }
 
       const knowledgeBase = await loadLibraryFromProject();
-      let source = "seed";
+      let source = "empty";
       let project = null;
       if (knowledgeBase) {
         source = "library";
         project = seeds.buildProjectFromKnowledgeBase(knowledgeBase);
-      } else {
-        const seedBase = await loadSeedKnowledgeBase(state.project?.meta?.locale);
-        if (seedBase) {
-          project = seeds.buildProjectFromKnowledgeBase(seedBase);
-          source = "seed";
-        }
       }
 
       if (!project) {
-        const locale = state.project?.meta?.locale || "de-CH";
         project = {
-          meta: { locale, createdAt: new Date().toISOString() },
+          meta: {
+            locale: "",
+            moderator: "",
+            moderatorInitials: "",
+            coModerator: "",
+            coModeratorInitials: "",
+            company: "",
+            companyId: "",
+            address: "",
+            plz: "",
+            city: "",
+            createdAt: new Date().toISOString(),
+          },
           chapters: [],
         };
         source = "empty";
       }
 
-      state.project = normalizeHelpers.normalizeProject(project, ctx.i18n.setLocale);
-      normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+      if (source === "empty") {
+        state.project = project;
+      } else {
+        state.project = normalizeHelpers.normalizeProject(project, ctx.i18n.setLocale);
+        normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+      }
       state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
       state.selectedChapterId = state.project.chapters[0]?.id || "";
+      if (source === "library" || source === "empty") {
+        state.selectedChapterId = "__project__";
+      }
       renderApi.buildPhotoIndex();
       renderApi.render();
+      runtime.awaitingLocaleBootstrap = source === "empty";
+      runtime.pendingBootstrapWrite = false;
 
       if (source === "library") {
         setStatus("Library loaded; initialized project.");
         debug.logLine("info", "Library loaded; initialized project.");
-      } else if (source === "seed") {
-        setStatus("Seed loaded; initialized project.");
-        debug.logLine("info", "Seed loaded; initialized project.");
       } else {
-        setStatus("Initialized empty project.");
-        debug.logLine("warn", "Initialized empty project.");
+        setStatus("Initialized empty project. Choose report language to bootstrap seed content.");
+        debug.logLine("warn", "Initialized empty project; waiting for explicit language bootstrap.");
       }
 
-      await saveSidecar();
       return { ok: true, source };
     };
 
@@ -283,6 +337,8 @@
         await writable.write(JSON.stringify(payload, null, 2));
         await writable.close();
         runtime.sidecarDoc = payload;
+        runtime.pendingBootstrapWrite = false;
+        runtime.awaitingLocaleBootstrap = false;
       }).catch((err) => {
         setStatus(`Autosave failed: ${err.message}`);
         debug.logLine("error", `Autosave failed: ${err.message || err}`);
@@ -327,6 +383,146 @@
       const archiveWritable = await archiveHandle.createWritable();
       await archiveWritable.write(JSON.stringify(library, null, 2));
       await archiveWritable.close();
+    };
+
+    const normalizeTagOption = (tag) => {
+      if (typeof tag === "string") {
+        const value = String(tag || "").trim();
+        if (!value) return null;
+        return { value, label: value };
+      }
+      if (!isPlainObject(tag)) return null;
+      const value = String(tag.value || tag.label || "").trim();
+      if (!value) return null;
+      const label = String(tag.label || value).trim() || value;
+      return { value, label };
+    };
+
+    const isObservationReportTag = (value) => /^4\.8(?:\.|$)/.test(String(value || "").trim());
+
+    const sortTagOptionsAlpha = (tags, locale = "de") => (
+      tags
+        .map(normalizeTagOption)
+        .filter(Boolean)
+        .sort((a, b) => String(a.label || a.value || "")
+          .localeCompare(String(b.label || b.value || ""), locale, { numeric: true }))
+    );
+
+    const toFlatText = (value) => stateHelpers.toText(value).replace(/\r\n/g, "\n");
+
+    const exportLibraryExcel = async () => {
+      if (!runtime.dirHandle) {
+        setStatus("Open project folder first.");
+        return;
+      }
+      if (!window.XLSX?.utils?.book_new) {
+        throw new Error("XLSX export library is not available.");
+      }
+      let library = await loadLibraryFile();
+      if (!library) {
+        library = await loadLibraryFromProject();
+      }
+      if (!library) {
+        throw new Error("Library file not found. Generate or update the library first.");
+      }
+      seeds.validateKnowledgeBase(library);
+      const locale = state.project?.meta?.locale || "de-CH";
+      const localeBase = String(locale).toLowerCase().split("-")[0] || "de";
+      const workbook = window.XLSX.utils.book_new();
+      const appendSheet = (name, rows) => {
+        const safeName = String(name || "Sheet").slice(0, 31);
+        const data = Array.isArray(rows) && rows.length ? rows : [{}];
+        const sheet = window.XLSX.utils.json_to_sheet(data);
+        window.XLSX.utils.book_append_sheet(workbook, sheet, safeName);
+      };
+
+      const structureRows = (library.structure?.items || []).map((item, index) => {
+        const itemId = String(item?.id || "");
+        const entryId = String(item?.collapsedId || item?.groupId || itemId);
+        return {
+          row: index + 1,
+          id: itemId,
+          entryId,
+          collapsedId: item?.collapsedId || "",
+          groupId: item?.groupId || "",
+          originalId: item?.originalId || "",
+          chapter: item?.chapter || "",
+          chapterLabel: item?.chapterLabel || "",
+          sectionLabel: item?.sectionLabel || "",
+          question: toFlatText(item?.question || ""),
+        };
+      });
+
+      const compareIds = typeof stateHelpers.compareIdSegments === "function"
+        ? stateHelpers.compareIdSegments
+        : ((a, b) => String(a || "").localeCompare(String(b || ""), "de", { numeric: true }));
+      const libraryRows = (library.library?.entries || [])
+        .map((entry) => ({
+          entryId: entry?.id || "",
+          finding: toFlatText(entry?.finding || ""),
+          recommendation: toFlatText(entry?.recommendation || ""),
+          lastUsed: entry?.lastUsed || "",
+        }))
+        .sort((a, b) => compareIds(a.entryId, b.entryId));
+
+      const chapterPositiveRows = Object.entries(library.library?.chapterPositives || {})
+        .map(([chapterId, value]) => {
+          if (typeof value === "string") {
+            return {
+              chapterId,
+              text: toFlatText(value),
+              lastUsed: "",
+            };
+          }
+          return {
+            chapterId,
+            text: toFlatText(value?.text || ""),
+            lastUsed: value?.lastUsed || "",
+          };
+        })
+        .sort((a, b) => compareIds(a.chapterId, b.chapterId));
+
+      const toTagRows = (tags, group) => {
+        const sorted = group === "observations"
+          ? sortTagOptionsAlpha(tags, localeBase)
+          : (tags || []).map(normalizeTagOption).filter(Boolean);
+        if (group === "report") {
+          sorted.sort((a, b) => compareIds(a.value, b.value));
+        }
+        return sorted.map((tag) => ({ value: tag.value, label: tag.label }));
+      };
+
+      const reportTagRows = toTagRows(library.tags?.report || [], "report")
+        .filter((tag) => !isObservationReportTag(tag.value));
+      const observationTagRows = toTagRows(library.tags?.observations || [], "observations");
+      const trainingTagRows = toTagRows(library.tags?.training || [], "training")
+        .sort((a, b) => a.label.localeCompare(b.label, localeBase, { numeric: true }));
+
+      const nowIso = new Date().toISOString();
+      appendSheet("Meta", [{
+        schemaVersion: library.schemaVersion || "",
+        locale: library.meta?.locale || "",
+        sourceLibrary: stateHelpers.getLibraryFileName(state.project.meta || {}),
+        exportedAt: nowIso,
+      }]);
+      appendSheet("Structure", structureRows);
+      appendSheet("LibraryEntries", libraryRows);
+      appendSheet("ChapterPositives", chapterPositiveRows);
+      appendSheet("TagsReport", reportTagRows);
+      appendSheet("TagsObservations", observationTagRows);
+      appendSheet("TagsTraining", trainingTagRows);
+
+      const stamp = nowIso.slice(0, 10);
+      const jsonName = stateHelpers.getLibraryFileName(state.project.meta || {});
+      const baseName = jsonName.replace(/\.json$/i, "");
+      const xlsxName = `${baseName}_${stamp}.xlsx`;
+      const arrayBuffer = window.XLSX.write(workbook, { type: "array", bookType: "xlsx" });
+      const handle = await runtime.dirHandle.getFileHandle(xlsxName, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(arrayBuffer);
+      await writable.close();
+      setStatus(`Library Excel exported: ${xlsxName}`);
+      debug.logLine("info", `Library Excel exported: ${xlsxName}`);
     };
 
     const generateLibrary = async () => {
@@ -464,31 +660,9 @@
       };
 
       const applyObservationTagOrder = () => {
-        const chapter = state.project.chapters.find((item) => item.id === "4.8");
-        if (!chapter || !Array.isArray(output.tags?.observations)) return;
-        const order = chapter.meta?.order;
-        if (!Array.isArray(order) || !order.length) return;
-        const tags = output.tags.observations;
-        const byKey = new Map();
-        tags.forEach((tag) => {
-          const value = String(tag?.value || tag?.label || "").trim();
-          const label = String(tag?.label || tag?.value || "").trim();
-          if (value) byKey.set(value, tag);
-          if (label) byKey.set(label, tag);
-        });
-        const ordered = [];
-        order.forEach((rowId) => {
-          const row = (chapter.rows || []).find((r) => r.id === rowId);
-          if (!row) return;
-          const key = String(row.tag || row.titleOverride || "").trim();
-          if (!key) return;
-          const tag = byKey.get(key);
-          if (tag && !ordered.includes(tag)) ordered.push(tag);
-        });
-        tags.forEach((tag) => {
-          if (!ordered.includes(tag)) ordered.push(tag);
-        });
-        output.tags.observations = ordered;
+        if (!Array.isArray(output.tags?.observations)) return;
+        const localeBase = String(state.project?.meta?.locale || "de-CH").toLowerCase().split("-")[0] || "de";
+        output.tags.observations = sortTagOptionsAlpha(output.tags.observations, localeBase);
       };
 
       let latestSidecar = runtime.sidecarDoc;
@@ -502,7 +676,10 @@
       const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
       if (photoTags) {
         const normalizedTags = seeds.normalizeTagGroups(photoTags);
-        output.tags.report = normalizedTags.report || output.tags.report || [];
+        output.tags.report = (normalizedTags.report || output.tags.report || [])
+          .map(normalizeTagOption)
+          .filter(Boolean)
+          .filter((tag) => !isObservationReportTag(tag.value));
         output.tags.observations = normalizedTags.observations || output.tags.observations || [];
         output.tags.training = normalizedTags.training || output.tags.training || [];
       }
@@ -520,6 +697,41 @@
       debug.logLine("info", `Library updated (${applied} changes).`);
     };
 
+    const bootstrapProjectFromSeed = async (locale, options = {}) => {
+      if (!runtime.dirHandle) {
+        throw new Error("Open project folder first.");
+      }
+      const requestedLocale = String(locale || "").trim();
+      if (!requestedLocale) {
+        throw new Error("Select a report language before loading seed content.");
+      }
+      const seedBase = await loadSeedKnowledgeBase(requestedLocale);
+      if (!seedBase) {
+        throw new Error(`Knowledge base seed not found for locale ${requestedLocale}.`);
+      }
+      let project = seeds.buildProjectFromKnowledgeBase(seedBase);
+      project = normalizeHelpers.normalizeProject(project, ctx.i18n.setLocale);
+      state.project = project;
+      normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
+      state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
+      if (!state.selectedChapterId) {
+        state.selectedChapterId = state.project.chapters[0]?.id || "";
+      }
+      runtime.awaitingLocaleBootstrap = false;
+      runtime.pendingBootstrapWrite = options.deferSave === true;
+      renderApi.buildPhotoIndex();
+      renderApi.render();
+      if (options.deferSave !== true) {
+        await saveSidecar();
+      }
+      const deferredMsg = options.deferSave === true
+        ? "Seed loaded from language. Sidecar will be saved when leaving Project page."
+        : "Seed loaded and saved to project_sidecar.json.";
+      setStatus(deferredMsg);
+      debug.logLine("info", deferredMsg);
+      return { ok: true, deferred: options.deferSave === true };
+    };
+
     return {
       extractReportProject,
       mergeSidecar,
@@ -529,6 +741,8 @@
       loadLibraryFile,
       saveLibraryFile,
       generateLibrary,
+      exportLibraryExcel,
+      bootstrapProjectFromSeed,
     };
   };
 
