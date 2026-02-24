@@ -264,9 +264,19 @@ button[disabled] {
   background: #fdfaf5;
   border-left: 1px solid #e5e0d7;
   display: grid;
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto auto 1fr auto;
   gap: 8px;
   min-height: 0;
+}
+
+.panel--project {
+  gap: 6px;
+}
+
+.project-tools__actions {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
 }
 
 .panel {
