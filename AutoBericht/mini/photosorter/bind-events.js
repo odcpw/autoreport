@@ -191,6 +191,7 @@
             setStatus,
             photos: state.photos,
             tagOptions: state.tagOptions,
+            locale: state.sidecarDoc?.report?.project?.meta?.locale || document.documentElement?.getAttribute("lang") || "de-CH",
           });
           if (result?.count !== undefined) {
             const copyCount = result.copyCount;

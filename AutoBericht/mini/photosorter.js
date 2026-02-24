@@ -58,7 +58,7 @@
       exportTaggedPhotos: photoImport.exportTaggedPhotos,
     },
     constants: {
-      RESIZE_MAX: stateHelpers.RESIZE_MAX || 1200,
+      RESIZE_MAX: stateHelpers.RESIZE_MAX || 1920,
       RESIZE_QUALITY: stateHelpers.RESIZE_QUALITY || 0.85,
     },
   };

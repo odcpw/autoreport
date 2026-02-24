@@ -321,7 +321,7 @@
       getNestedDirectory,
       isImageFile,
       setStatus,
-      resizeMax = 1200,
+      resizeMax = 1920,
       resizeQuality = 0.85,
     } = context || {};
 
@@ -332,7 +332,7 @@
 
     const raw = await findRawFolder(projectHandle, getNestedDirectory);
     if (!raw) {
-      setStatus?.("Missing photos/raw. Expected photos/raw/ABC folders.");
+      setStatus?.("Missing photos/raw. Expected photos/raw/pm1, pm2, pm3 folders.");
       return null;
     }
     const tasks = await collectRawTasks(raw.handle, isImageFile);
@@ -386,6 +386,7 @@
       setStatus,
       photos,
       tagOptions,
+      locale,
     } = context || {};
     if (!projectHandle) throw new Error("Project folder is missing.");
     if (!Array.isArray(photos) || !photos.length) {
@@ -393,8 +394,27 @@
     }
 
     setStatus?.("Preparing export...");
-    const labelMap = new Map();
-    const addOptionsToLabelMap = (options = []) => {
+    const resolveLocaleBase = (value) => {
+      const base = String(value || "").toLowerCase().split("-")[0];
+      if (base === "fr") return "fr";
+      if (base === "it") return "it";
+      return "de";
+    };
+    const localeBase = resolveLocaleBase(locale || document.documentElement?.getAttribute("lang"));
+    const OBSERVATION_FOLDER_BY_LOCALE = {
+      de: "4.8 Beobachtungen",
+      fr: "4.8 Observations",
+      it: "4.8 Osservazioni",
+    };
+    const TRAINING_FOLDER = "Training";
+    const observationsFolder = OBSERVATION_FOLDER_BY_LOCALE[localeBase] || OBSERVATION_FOLDER_BY_LOCALE.de;
+    const isObservationReportTag = (value) => /^4\.8(?:\.|$)/.test(String(value || "").trim());
+
+    const makeLabelMap = () => new Map();
+    const reportLabelMap = makeLabelMap();
+    const observationsLabelMap = makeLabelMap();
+    const trainingLabelMap = makeLabelMap();
+    const addOptionsToLabelMap = (labelMap, options = []) => {
       options.forEach((opt) => {
         if (!opt) return;
         const value = String(opt.value || opt.label || "").trim();
@@ -403,18 +423,16 @@
         if (!labelMap.has(value)) labelMap.set(value, label);
       });
     };
-    addOptionsToLabelMap(tagOptions?.report);
-    addOptionsToLabelMap(tagOptions?.observations);
-    addOptionsToLabelMap(tagOptions?.training);
+    addOptionsToLabelMap(reportLabelMap, tagOptions?.report);
+    addOptionsToLabelMap(observationsLabelMap, tagOptions?.observations);
+    addOptionsToLabelMap(trainingLabelMap, tagOptions?.training);
 
-    const tagMap = new Map();
-    const addPhotoToTag = (tag, photo) => {
-      const raw = String(tag || "").trim();
-      if (!raw) return;
-      const key = labelMap.get(raw) || raw;
-      if (!key) return;
-      if (!tagMap.has(key)) tagMap.set(key, []);
-      tagMap.get(key).push(photo);
+    const pathMap = new Map();
+    const addPhotoToPath = (relativePath, photo) => {
+      const cleanPath = String(relativePath || "").trim();
+      if (!cleanPath) return;
+      if (!pathMap.has(cleanPath)) pathMap.set(cleanPath, []);
+      pathMap.get(cleanPath).push(photo);
     };
 
     const isExportPath = (path) => {
@@ -428,15 +446,34 @@
     photos.forEach((photo) => {
       if (isExportPath(photo?.path)) return;
       const tags = photo?.tags || {};
-      const list = new Set([
-        ...(tags.report || []),
-        ...(tags.observations || []),
-        ...(tags.training || []),
-      ].map((tag) => String(tag || "").trim()).filter(Boolean));
-      if (!list.size) {
-        addPhotoToTag("unsorted", photo);
+      const assignedPaths = new Set();
+
+      (tags.report || []).forEach((tag) => {
+        const raw = String(tag || "").trim();
+        if (!raw || isObservationReportTag(raw)) return;
+        const label = reportLabelMap.get(raw) || raw;
+        if (!label) return;
+        assignedPaths.add(sanitizeFolderName(label));
+      });
+      (tags.observations || []).forEach((tag) => {
+        const raw = String(tag || "").trim();
+        if (!raw) return;
+        const label = observationsLabelMap.get(raw) || raw;
+        if (!label) return;
+        assignedPaths.add(`${sanitizeFolderName(observationsFolder)}/${sanitizeFolderName(label)}`);
+      });
+      (tags.training || []).forEach((tag) => {
+        const raw = String(tag || "").trim();
+        if (!raw) return;
+        const label = trainingLabelMap.get(raw) || raw;
+        if (!label) return;
+        assignedPaths.add(`${sanitizeFolderName(TRAINING_FOLDER)}/${sanitizeFolderName(label)}`);
+      });
+
+      if (!assignedPaths.size) {
+        addPhotoToPath("unsorted", photo);
       } else {
-        list.forEach((tag) => addPhotoToTag(tag, photo));
+        assignedPaths.forEach((path) => addPhotoToPath(path, photo));
       }
     });
 
@@ -446,7 +483,7 @@
 
     const uniquePhotos = new Set();
     let total = 0;
-    for (const items of tagMap.values()) {
+    for (const items of pathMap.values()) {
       total += items.length;
       items.forEach((photo) => {
         if (photo?.path) {
@@ -459,10 +496,21 @@
       });
     }
     let completed = 0;
+    const ensureNestedFolder = async (rootHandle, relativePath) => {
+      const parts = String(relativePath || "")
+        .split("/")
+        .map((part) => sanitizeFolderName(part))
+        .filter(Boolean);
+      if (!parts.length) return rootHandle;
+      let current = rootHandle;
+      for (const part of parts) {
+        current = await current.getDirectoryHandle(part, { create: true });
+      }
+      return current;
+    };
 
-    for (const [tag, items] of tagMap.entries()) {
-      const folderName = sanitizeFolderName(tag);
-      const tagHandle = await exportHandle.getDirectoryHandle(folderName, { create: true });
+    for (const [relativePath, items] of pathMap.entries()) {
+      const tagHandle = await ensureNestedFolder(exportHandle, relativePath);
       for (const photo of items) {
         const file = await getPhotoFile(photo, projectHandle);
         if (!file) continue;

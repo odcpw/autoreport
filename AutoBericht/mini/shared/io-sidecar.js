@@ -233,7 +233,10 @@
       await ensureDir(projectHandle, "outputs");
       await ensureDir(projectHandle, "backup");
       const photosDir = await ensureDir(projectHandle, "photos");
-      await ensureDir(photosDir, "raw");
+      const rawDir = await ensureDir(photosDir, "raw");
+      await ensureDir(rawDir, "pm1");
+      await ensureDir(rawDir, "pm2");
+      await ensureDir(rawDir, "pm3");
       await ensureDir(photosDir, "resized");
       await ensureDir(photosDir, "export");
     };

@@ -13,7 +13,7 @@
     ".heic",
     ".heif",
   ]);
-  const RESIZE_MAX = 1200;
+  const RESIZE_MAX = 1920;
   const RESIZE_QUALITY = 0.85;
   const DEFAULT_TAGS = {
     report: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],

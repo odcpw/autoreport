@@ -114,6 +114,37 @@ button.ghost {
   padding: 0 4px;
 }
 
+.mini-toast {
+  position: fixed;
+  top: 18px;
+  right: 18px;
+  z-index: 1200;
+  max-width: min(420px, 84vw);
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--ui-status-border);
+  background: var(--ui-status-bg);
+  color: var(--ui-status-text);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+  font-size: 0.86rem;
+  font-weight: 600;
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.2s ease, transform 0.2s ease;
+  pointer-events: none;
+}
+
+.mini-toast.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.mini-toast.is-error {
+  background: #ffe8e8;
+  border-color: #f0c3c3;
+  color: #7a1f1f;
+}
+
 .modal {
   position: fixed;
   inset: 0;

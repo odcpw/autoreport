@@ -41,6 +41,7 @@
     let seedBootstrapHandler = null;
     let libraryExcelExportHandler = null;
     let sidecarMigrationHandler = null;
+    let exportToastTimer = null;
 
     const setScheduleAutosave = (fn) => {
       scheduleAutosave = typeof fn === "function" ? fn : () => {};
@@ -56,6 +57,31 @@
 
     const setSidecarMigrationHandler = (fn) => {
       sidecarMigrationHandler = typeof fn === "function" ? fn : null;
+    };
+
+    const showExportToast = (message, mode = "info") => {
+      if (!message || typeof document === "undefined") return;
+      const existing = document.getElementById("word-export-toast");
+      if (existing) existing.remove();
+      if (exportToastTimer) {
+        window.clearTimeout(exportToastTimer);
+        exportToastTimer = null;
+      }
+      const toast = document.createElement("div");
+      toast.id = "word-export-toast";
+      toast.className = "mini-toast";
+      if (mode === "error") toast.classList.add("is-error");
+      toast.textContent = String(message);
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => {
+        toast.classList.add("is-visible");
+      });
+      exportToastTimer = window.setTimeout(() => {
+        toast.classList.remove("is-visible");
+        window.setTimeout(() => {
+          if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 220);
+      }, 2800);
     };
 
     const autosizeTextarea = (textarea) => {
@@ -1651,6 +1677,7 @@
           button.disabled = true;
           const previous = button.textContent;
           button.textContent = t("project_export_running", "Exporting ...");
+          showExportToast(t("project_export_running", "Exporting ..."));
           try {
             const result = await exporter.exportReportDocx({
               project: state.project,
@@ -1663,12 +1690,15 @@
             });
             if (result?.savedAs) {
               setStatus(`Exported ${result.savedAs}`);
+              showExportToast(`Exported ${result.savedAs}`);
             } else {
               setStatus(t("project_export_done", "Export complete."));
+              showExportToast(t("project_export_done", "Export complete."));
             }
           } catch (err) {
             setStatus(`Export failed: ${err.message || err}`);
             debug.logLine("error", `No-VBA export failed: ${err.message || err}`);
+            showExportToast(`Export failed: ${err.message || err}`, "error");
           } finally {
             button.disabled = false;
             button.textContent = previous;
@@ -2468,9 +2498,8 @@
       const includeMode = state.filters.include || "all";
       const doneMode = state.filters.done || "all";
       // `shouldFilterRow` returns true when the row should be hidden.
-      if (answerMode === "hide-yes") {
-        if (stateHelpers.getAnswerState(row) === 1) return true;
-      }
+      if (answerMode === "yes-only" && stateHelpers.getAnswerState(row) !== 1) return true;
+      if (answerMode === "no-only" && stateHelpers.getAnswerState(row) !== 0) return true;
       if (includeMode === "included" && ws.includeFinding !== true) return true;
       if (includeMode === "not-included" && ws.includeFinding === true) return true;
       if (doneMode === "done" && ws.done !== true) return true;
