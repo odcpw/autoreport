@@ -40,6 +40,7 @@
     let scheduleAutosave = () => {};
     let seedBootstrapHandler = null;
     let libraryExcelExportHandler = null;
+    let sidecarMigrationHandler = null;
 
     const setScheduleAutosave = (fn) => {
       scheduleAutosave = typeof fn === "function" ? fn : () => {};
@@ -51,6 +52,10 @@
 
     const setLibraryExcelExportHandler = (fn) => {
       libraryExcelExportHandler = typeof fn === "function" ? fn : null;
+    };
+
+    const setSidecarMigrationHandler = (fn) => {
+      sidecarMigrationHandler = typeof fn === "function" ? fn : null;
     };
 
     const autosizeTextarea = (textarea) => {
@@ -1416,6 +1421,9 @@
       const meta = state.project.meta || {};
       const page = document.createElement("section");
       page.className = "project-page";
+      const urlParams = new URLSearchParams(window.location.search || "");
+      const migrationFlag = String(urlParams.get("migration") || "").toLowerCase();
+      const migrationUiEnabled = ["1", "true", "yes", "on"].includes(migrationFlag);
 
       const createToolCard = ({
         title,
@@ -1694,6 +1702,31 @@
         },
       });
       page.appendChild(libraryExcelCard.card);
+
+      if (migrationUiEnabled) {
+        const migrationCard = createToolCard({
+          title: t("project_tool_migration_title", "Sidecar Migration"),
+          hint: t("project_tool_migration_hint", "Run one-time cleanup for legacy sidecar schema and save a backup in backup/."),
+          buttonLabel: t("project_tool_migration", "Migrate Legacy Sidecar"),
+          buttonClass: "ghost",
+          onClick: async (button) => {
+            if (typeof sidecarMigrationHandler !== "function") {
+              setStatus(t("project_tool_migration_missing", "Migration handler is not available."));
+              return;
+            }
+            button.disabled = true;
+            const prev = button.textContent;
+            button.textContent = t("project_tool_migration_running", "Migrating ...");
+            try {
+              await sidecarMigrationHandler();
+            } finally {
+              button.disabled = false;
+              button.textContent = prev;
+            }
+          },
+        });
+        page.appendChild(migrationCard.card);
+      }
 
       const logoCard = document.createElement("div");
       logoCard.className = "project-card";
@@ -2636,6 +2669,7 @@
       setScheduleAutosave,
       setSeedBootstrapHandler,
       setLibraryExcelExportHandler,
+      setSidecarMigrationHandler,
       renderPhotoOverlay,
     };
   };

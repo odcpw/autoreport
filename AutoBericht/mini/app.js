@@ -167,6 +167,9 @@
   if (renderApi.setLibraryExcelExportHandler) {
     renderApi.setLibraryExcelExportHandler(ioApi.exportLibraryExcel);
   }
+  if (renderApi.setSidecarMigrationHandler) {
+    renderApi.setSidecarMigrationHandler(ioApi.migrateLegacySidecar);
+  }
 
   if (bindModule.bind) {
     bindModule.bind(ctx, {
