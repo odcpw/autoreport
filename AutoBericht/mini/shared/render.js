@@ -1697,6 +1697,70 @@
           }
         },
       });
+
+      const runPptExport = async ({ button, mode }) => {
+        if (!runtime.dirHandle) {
+          setStatus(t("project_open_folder_first", "Open project folder first."));
+          return;
+        }
+        const exporter = window.AutoBerichtPptxExport || {};
+        const exportFn = mode === "training" ? exporter.exportTrainingPptx : exporter.exportReportPptx;
+        if (typeof exportFn !== "function") {
+          setStatus(t("project_export_ppt_missing", "PowerPoint exporter not available."));
+          return;
+        }
+        button.disabled = true;
+        const previous = button.textContent;
+        const runningLabel = mode === "training"
+          ? t("project_export_ppt_running_training", "Exporting training slides ...")
+          : t("project_export_ppt_running_report", "Exporting report slides ...");
+        button.textContent = runningLabel;
+        showExportToast(runningLabel);
+        try {
+          const result = await exportFn({
+            project: state.project,
+            sidecarDoc: runtime.sidecarDoc,
+            projectHandle: runtime.dirHandle,
+            spiderOverrides: state.spiderOverrides || {},
+            computeSpider: window.AutoBerichtSpider?.computeSpider,
+            compareIdSegments: stateHelpers.compareIdSegments,
+            toText: stateHelpers.toText,
+          });
+          if (result?.savedAs) {
+            setStatus(`Exported ${result.savedAs}`);
+            showExportToast(`Exported ${result.savedAs}`);
+          } else {
+            setStatus(t("project_export_ppt_done", "PowerPoint export complete."));
+            showExportToast(t("project_export_ppt_done", "PowerPoint export complete."));
+          }
+        } catch (err) {
+          setStatus(`Export failed: ${err.message || err}`);
+          debug.logLine("error", `PowerPoint export failed (${mode}): ${err.message || err}`);
+          showExportToast(`Export failed: ${err.message || err}`, "error");
+        } finally {
+          button.disabled = false;
+          button.textContent = previous;
+        }
+      };
+
+      const pptReportButton = document.createElement("button");
+      pptReportButton.type = "button";
+      pptReportButton.className = "ghost";
+      pptReportButton.textContent = t("project_export_ppt_report", "PowerPoint Export (Report)");
+      pptReportButton.addEventListener("click", async () => {
+        await runPptExport({ button: pptReportButton, mode: "report" });
+      });
+      exportCard.actions.appendChild(pptReportButton);
+
+      const pptTrainingButton = document.createElement("button");
+      pptTrainingButton.type = "button";
+      pptTrainingButton.className = "ghost";
+      pptTrainingButton.textContent = t("project_export_ppt_training", "PowerPoint Export (Training)");
+      pptTrainingButton.addEventListener("click", async () => {
+        await runPptExport({ button: pptTrainingButton, mode: "training" });
+      });
+      exportCard.actions.appendChild(pptTrainingButton);
+
       page.appendChild(exportCard.card);
 
       const libraryCard = createToolCard({
