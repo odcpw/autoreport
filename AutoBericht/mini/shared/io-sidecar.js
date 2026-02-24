@@ -735,7 +735,14 @@
       if (!seedBase) {
         throw new Error(`Knowledge base seed not found for locale ${requestedLocale}.`);
       }
+      const existingMeta = isPlainObject(state.project?.meta) ? structuredClone(state.project.meta) : {};
       let project = seeds.buildProjectFromKnowledgeBase(seedBase);
+      project.meta = {
+        ...(isPlainObject(project?.meta) ? project.meta : {}),
+        ...existingMeta,
+        locale: requestedLocale,
+        createdAt: existingMeta.createdAt || project?.meta?.createdAt || new Date().toISOString(),
+      };
       project = normalizeHelpers.normalizeProject(project, ctx.i18n.setLocale);
       state.project = project;
       normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
