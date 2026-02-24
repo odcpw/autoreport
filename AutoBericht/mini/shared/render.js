@@ -40,7 +40,6 @@
     let scheduleAutosave = () => {};
     let seedBootstrapHandler = null;
     let libraryExcelExportHandler = null;
-    let sidecarMigrationHandler = null;
     let exportToastTimer = null;
 
     const setScheduleAutosave = (fn) => {
@@ -53,10 +52,6 @@
 
     const setLibraryExcelExportHandler = (fn) => {
       libraryExcelExportHandler = typeof fn === "function" ? fn : null;
-    };
-
-    const setSidecarMigrationHandler = (fn) => {
-      sidecarMigrationHandler = typeof fn === "function" ? fn : null;
     };
 
     const showExportToast = (message, mode = "info") => {
@@ -1447,9 +1442,6 @@
       const meta = state.project.meta || {};
       const page = document.createElement("section");
       page.className = "project-page";
-      const urlParams = new URLSearchParams(window.location.search || "");
-      const migrationFlag = String(urlParams.get("migration") || "").toLowerCase();
-      const migrationUiEnabled = ["1", "true", "yes", "on"].includes(migrationFlag);
 
       const createToolCard = ({
         title,
@@ -1480,7 +1472,7 @@
         });
         actions.appendChild(button);
         card.appendChild(actions);
-        return { card, button };
+        return { card, button, actions };
       };
 
       const triggerImportSelf = () => {
@@ -1709,54 +1701,26 @@
 
       const libraryCard = createToolCard({
         title: t("project_tool_library_title", "Library Export"),
-        hint: t("project_tool_library_hint", "Generate or update the library from the current project content."),
+        hint: `${t("project_tool_library_hint", "Generate or update the library from the current project content.")} ${t("project_tool_library_excel_hint", "Export the current library JSON into an Excel workbook (human-readable and machine-ingestible).")}`,
         buttonLabel: t("project_tool_library", "Generate / Update Library"),
         buttonClass: "ghost",
         onClick: async () => {
           triggerGenerateLibrary();
         },
       });
-      page.appendChild(libraryCard.card);
-
-      const libraryExcelCard = createToolCard({
-        title: t("project_tool_library_excel_title", "Library Excel Export"),
-        hint: t("project_tool_library_excel_hint", "Export the current library JSON into an Excel workbook (human-readable and machine-ingestible)."),
-        buttonLabel: t("project_tool_library_excel", "Export Library Excel"),
-        buttonClass: "ghost",
-        onClick: async () => {
-          if (typeof libraryExcelExportHandler !== "function") {
-            setStatus(t("project_tool_library_excel_missing", "Library Excel exporter is not available."));
-            return;
-          }
-          await libraryExcelExportHandler();
-        },
+      const libraryExcelButton = document.createElement("button");
+      libraryExcelButton.type = "button";
+      libraryExcelButton.className = "ghost";
+      libraryExcelButton.textContent = t("project_tool_library_excel", "Export Library Excel");
+      libraryExcelButton.addEventListener("click", async () => {
+        if (typeof libraryExcelExportHandler !== "function") {
+          setStatus(t("project_tool_library_excel_missing", "Library Excel exporter is not available."));
+          return;
+        }
+        await libraryExcelExportHandler();
       });
-      page.appendChild(libraryExcelCard.card);
-
-      if (migrationUiEnabled) {
-        const migrationCard = createToolCard({
-          title: t("project_tool_migration_title", "Sidecar Migration"),
-          hint: t("project_tool_migration_hint", "Run one-time cleanup for legacy sidecar schema and save a backup in backup/."),
-          buttonLabel: t("project_tool_migration", "Migrate Legacy Sidecar"),
-          buttonClass: "ghost",
-          onClick: async (button) => {
-            if (typeof sidecarMigrationHandler !== "function") {
-              setStatus(t("project_tool_migration_missing", "Migration handler is not available."));
-              return;
-            }
-            button.disabled = true;
-            const prev = button.textContent;
-            button.textContent = t("project_tool_migration_running", "Migrating ...");
-            try {
-              await sidecarMigrationHandler();
-            } finally {
-              button.disabled = false;
-              button.textContent = prev;
-            }
-          },
-        });
-        page.appendChild(migrationCard.card);
-      }
+      libraryCard.actions.appendChild(libraryExcelButton);
+      page.appendChild(libraryCard.card);
 
       const logoCard = document.createElement("div");
       logoCard.className = "project-card";
@@ -2698,7 +2662,6 @@
       setScheduleAutosave,
       setSeedBootstrapHandler,
       setLibraryExcelExportHandler,
-      setSidecarMigrationHandler,
       renderPhotoOverlay,
     };
   };

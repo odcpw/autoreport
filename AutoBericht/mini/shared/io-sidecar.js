@@ -53,32 +53,6 @@
       };
     };
 
-    const hasOwn = (obj, key) => Object.prototype.hasOwnProperty.call(obj, key);
-
-    const looksCanonicalPhotosBranch = (value) => (
-      isPlainObject(value)
-      && (
-        hasOwn(value, "meta")
-        || hasOwn(value, "photoRoot")
-        || hasOwn(value, "photoTagOptions")
-        || hasOwn(value, "photos")
-      )
-    );
-
-    const buildMigrationPhotoCandidate = (doc) => {
-      const current = isPlainObject(doc?.photos) ? structuredClone(doc.photos) : {};
-      const candidate = looksCanonicalPhotosBranch(current)
-        ? current
-        : { photos: current };
-      if (hasOwn(doc || {}, "photoRoot") && !hasOwn(candidate, "photoRoot")) {
-        candidate.photoRoot = doc.photoRoot;
-      }
-      if (hasOwn(doc || {}, "photoTagOptions") && !hasOwn(candidate, "photoTagOptions")) {
-        candidate.photoTagOptions = structuredClone(doc.photoTagOptions);
-      }
-      return candidate;
-    };
-
     const reorderChapterRows = (project, chapterId) => {
       if (!project?.chapters) return;
       const chapter = project.chapters.find((item) => item.id === chapterId);
@@ -768,95 +742,6 @@
       return { ok: true, deferred: options.deferSave === true };
     };
 
-    const migrateLegacySidecar = async () => {
-      if (!runtime.dirHandle) {
-        throw new Error("Open project folder first.");
-      }
-      runtime.saveQueue = runtime.saveQueue.then(async () => {
-        let currentDoc = null;
-        let originalText = "";
-        const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
-        const file = await handle.getFile();
-        originalText = await file.text();
-        try {
-          currentDoc = JSON.parse(originalText);
-        } catch (err) {
-          throw new Error(`project_sidecar.json parse failed: ${err.message || err}`);
-        }
-        if (!isPlainObject(currentDoc)) {
-          throw new Error("project_sidecar.json root must be an object.");
-        }
-
-        const migrated = structuredClone(currentDoc);
-        const notes = [];
-        const hadTopPhotoRoot = hasOwn(migrated, "photoRoot");
-        const hadTopPhotoTagOptions = hasOwn(migrated, "photoTagOptions");
-        const hadPhotosBranch = hasOwn(migrated, "photos");
-        const hadPollutedPhotos = isPlainObject(migrated.photos)
-          && (hasOwn(migrated.photos, "report") || hasOwn(migrated.photos, "spider"));
-
-        const candidatePhotos = buildMigrationPhotoCandidate(migrated);
-        if (hadTopPhotoRoot || hadTopPhotoTagOptions || hadPhotosBranch) {
-          migrated.photos = sanitizePhotosBranch(candidatePhotos);
-        }
-        if (hadTopPhotoRoot) {
-          delete migrated.photoRoot;
-          notes.push("Removed legacy top-level photoRoot.");
-        }
-        if (hadTopPhotoTagOptions) {
-          delete migrated.photoTagOptions;
-          notes.push("Removed legacy top-level photoTagOptions.");
-        }
-        if (hadPollutedPhotos) {
-          notes.push("Removed non-photo payload from sidecar.photos branch.");
-        }
-
-        const before = JSON.stringify(currentDoc, null, 2);
-        const after = JSON.stringify(migrated, null, 2);
-        if (before === after) {
-          setStatus("Sidecar migration: no schema changes required.");
-          debug.logLine("info", "Sidecar migration: no schema changes required.");
-          return { changed: false, backupFile: "", notes: [] };
-        }
-
-        const backupDir = await runtime.dirHandle.getDirectoryHandle("backup", { create: true });
-        const stamp = new Date().toISOString().replace(/[:.]/g, "-");
-        const backupFile = `project_sidecar_before_migration_${stamp}.json`;
-        const backupHandle = await backupDir.getFileHandle(backupFile, { create: true });
-        const backupWritable = await backupHandle.createWritable();
-        await backupWritable.write(before);
-        await backupWritable.close();
-
-        const writable = await handle.createWritable();
-        await writable.write(after);
-        await writable.close();
-
-        runtime.sidecarDoc = migrated;
-        const reportProject = extractReportProject(migrated);
-        if (reportProject) {
-          state.project = normalizeHelpers.normalizeProject(reportProject, ctx.i18n.setLocale);
-          normalizeHelpers.syncObservationChapterRows(state.project, migrated);
-          state.spiderOverrides = migrated?.spider?.overrides || {};
-          if (!state.selectedChapterId) {
-            state.selectedChapterId = state.project.chapters[0]?.id || "__project__";
-          }
-        }
-        renderApi.buildPhotoIndex();
-        renderApi.render();
-
-        const noteText = notes.length ? ` ${notes.join(" ")}` : "";
-        const message = `Sidecar migrated. Backup: backup/${backupFile}.${noteText}`.replace(/\.\s*$/, "").trim();
-        setStatus(message);
-        debug.logLine("info", message);
-        return { changed: true, backupFile: `backup/${backupFile}`, notes };
-      }).catch((err) => {
-        setStatus(`Sidecar migration failed: ${err.message || err}`);
-        debug.logLine("error", `Sidecar migration failed: ${err.message || err}`);
-        throw err;
-      });
-      return runtime.saveQueue;
-    };
-
     return {
       extractReportProject,
       mergeSidecar,
@@ -868,7 +753,6 @@
       generateLibrary,
       exportLibraryExcel,
       bootstrapProjectFromSeed,
-      migrateLegacySidecar,
     };
   };
 
