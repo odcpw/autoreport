@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>FS Access Spike</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="page">
+    <header>
+      <h1>File System Access Spike</h1>
+      <p>Minimal test for folder pick + sidecar read/write + SheetJS Excel write.</p>
+    </header>
+
+    <section class="controls">
+      <button id="pick-folder">Pick Project Folder</button>
+      <button id="load-sidecar" disabled>Load sidecar</button>
+      <button id="save-sidecar" disabled>Save sidecar</button>
+      <button id="write-xlsx" disabled>Write project_db.xlsx</button>
+      <button id="save-log">Save debug log</button>
+    </section>
+
+    <section class="status" id="status"></section>
+
+    <section class="editor">
+      <label for="sidecar">project_sidecar.json</label>
+      <textarea id="sidecar" spellcheck="false"></textarea>
+    </section>
+  </main>
+
+  <script src="../../libs/sheetjs/xlsx.full.min.js"></script>
+  <script src="../../shared/debug-log.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

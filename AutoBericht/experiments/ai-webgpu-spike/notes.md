@@ -96,7 +96,7 @@ Date: 2026-01-07
 ### LiquidAI WebGPU failure (ORT 1.17.3 + 1.18.0)
 - The same `function signature mismatch` happens with both 1.17.3 and 1.18.0.
 - Investigation: the WebGPU bundle defaults to `ort-wasm-simd.wasm` (non‑JSEP) while WebGPU expects the JSEP wasm.
-- Fix applied in `ai-webgpu-spike.js`: when `bundle=webgpu`, map:
+- Fix applied in `app.js`: when `bundle=webgpu`, map:
   - `ort-wasm-simd.wasm` → `ort-wasm-simd.jsep.wasm`
   - `ort-wasm-simd-threaded.wasm` → `ort-wasm-simd-threaded.jsep.wasm`
 - Next step: reload and retry LiquidAI with this mapping; if it still fails, update ORT to a newer release or test a different model variant.
@@ -153,10 +153,10 @@ Date: 2026-01-08
 
 ### What the code does (network-wise)
 - The spike fetches **local** assets by default:
-  - `../AI/vendor/transformers.min.js`
-  - `../AI/vendor/ort-1.23.2/*`
-  - `../AI/models/**` (configs + ONNX + `.onnx_data`)
-- There are **no hard-coded external endpoints** in the runtime JS. All `fetch()` calls are relative to the local model path and local template/config files (see `ai-webgpu-spike.js`).
+  - `../../AI/vendor/transformers.min.js`
+  - `../../AI/vendor/ort-1.23.2/*`
+  - `../../AI/models/**` (configs + ONNX + `.onnx_data`)
+- There are **no hard-coded external endpoints** in the runtime JS. All `fetch()` calls are relative to the local model path and local template/config files (see `app.js`).
 - With `Allow remote models` unchecked, the app does not contact external servers for model or runtime assets.
 
 ### Positive security posture (local-only mode)

@@ -122,6 +122,25 @@ button:disabled {
   max-width: 520px;
 }
 
+.badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  padding: 6px 12px;
+  border: 1px solid var(--border);
+  background: #f8f4ed;
+  color: #3a352e;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.badge.warn {
+  background: #fff1ef;
+  border-color: #f3beb7;
+  color: #8c2d20;
+}
+
 .recording {
   margin-top: 16px;
   display: flex;
@@ -144,6 +163,52 @@ button:disabled {
 .hint {
   color: var(--muted);
   font-size: 0.9rem;
+}
+
+.meter {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 240px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  padding: 6px 10px;
+  background: #f8f5ef;
+}
+
+.meter-label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4a433a;
+}
+
+.meter-track {
+  width: 130px;
+  height: 10px;
+  background: #e6ddd0;
+  border-radius: 999px;
+  overflow: hidden;
+  position: relative;
+}
+
+.meter-fill {
+  height: 100%;
+  width: 0%;
+  background: linear-gradient(90deg, #2f5d3c 0%, #b6892d 65%, #b23a2f 100%);
+  border-radius: 999px;
+  transition: width 90ms linear;
+}
+
+.meter-value {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: #4a433a;
+  min-width: 32px;
+  text-align: right;
+}
+
+.meter.live {
+  box-shadow: 0 0 0 3px rgba(47, 93, 60, 0.14);
 }
 
 .two-col {

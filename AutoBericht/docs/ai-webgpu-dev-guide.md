@@ -23,14 +23,15 @@ AutoBericht/
 │       └── LiquidAI/
 │           └── LFM2.5-VL-1.6B-ONNX/
 └── experiments/
-    ├── ai-webgpu-spike.html
-    ├── ai-webgpu-spike.js
-    └── liquid-processor.js
+    └── ai-webgpu-spike/
+        ├── index.html
+        ├── app.js
+        └── liquid-processor.js
 ```
 
 Notes:
 - `AutoBericht/AI/` is **gitignored** and is intended to be copied in (or zipped) per machine.
-- The spike uses **relative paths**: `../AI/vendor/` and `../AI/models/`.
+- The spike uses **relative paths**: `../../AI/vendor/` and `../../AI/models/`.
 
 ## Local server (offline)
 Use the built-in launcher from the `AutoBericht/` folder:
@@ -42,7 +43,7 @@ This starts a local server bound to **127.0.0.1** and opens the UI.
 Important: `AutoBericht/tools/serve-autobericht.ps1` serves `.mjs` and `.wasm` with correct MIME types. This is required for ORT 1.23.2 asyncify.
 
 ## Running the spike
-1) Open: `http://127.0.0.1:<port>/AutoBericht/experiments/ai-webgpu-spike.html`
+1) Open: `http://127.0.0.1:<port>/AutoBericht/experiments/ai-webgpu-spike/index.html`
 2) Click **Load library**.
 3) Click **Check WebGPU**.
 4) Click **Load ONNX (WebGPU)**.

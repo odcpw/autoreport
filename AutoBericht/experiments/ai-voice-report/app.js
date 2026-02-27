@@ -1,12 +1,19 @@
 const byId = (id) => document.getElementById(id);
 
 const asrModelEl = byId("asr-model");
+const asrLanguageModeEl = byId("asr-language-mode");
+const asrInputModeEl = byId("asr-input-mode");
+const asrBackendModeEl = byId("asr-backend-mode");
 const loadAiBtn = byId("load-ai");
 const pickFolderBtn = byId("pick-folder");
 const loadSidecarBtn = byId("load-sidecar");
 const recordToggleBtn = byId("record-toggle");
 const recordTimerEl = byId("record-timer");
+const recordMeterEl = byId("record-meter");
+const recordMeterFillEl = byId("record-meter-fill");
+const recordMeterValueEl = byId("record-meter-value");
 const statusEl = byId("status");
+const asrLanguageEl = byId("asr-language");
 const transcriptEl = byId("transcript");
 const segmentsEl = byId("segments");
 const parseIdsBtn = byId("parse-ids");
@@ -18,10 +25,12 @@ const draftListEl = byId("draft-list");
 const logEl = byId("log");
 
 const DEFAULTS = {
-  transformersUrl: "../AI/vendor/transformers.min.js",
-  localModelPath: "../AI/models/",
+  transformersUrl: "../../AI/vendor/transformers.min.js",
+  localModelPath: "../../AI/models/",
   liquidModel: "LiquidAI/LFM2.5-VL-1.6B-ONNX",
 };
+const SOURCE_SIDECAR_FILENAME = "project_sidecar.json";
+const WORKING_SIDECAR_FILENAME = "project_sidecar.voice-report-working.json";
 
 const LARGE_EXTERNAL_DATA_THRESHOLD = 256 * 1024 * 1024;
 const ORT_PROVIDERS = {
@@ -59,6 +68,16 @@ const state = {
     stream: null,
     startedAtMs: 0,
     timer: null,
+    meterContext: null,
+    meterSource: null,
+    meterAnalyser: null,
+    meterData: null,
+    meterRaf: 0,
+    meterLevel: 0,
+    captureProcessor: null,
+    captureGain: null,
+    captureChunks: [],
+    captureSampleRate: 0,
   },
   run: {
     parsed: null,
@@ -119,6 +138,234 @@ function setRecordTimerText() {
   recordTimerEl.textContent = `Recording: ${formatTimerSeconds(elapsed)}`;
 }
 
+function setRecordMeter(levelPct, { live = false } = {}) {
+  const clamped = Math.max(0, Math.min(100, Math.round(levelPct || 0)));
+  if (recordMeterFillEl) {
+    recordMeterFillEl.style.width = `${clamped}%`;
+  }
+  if (recordMeterValueEl) {
+    recordMeterValueEl.textContent = `${clamped}%`;
+  }
+  if (recordMeterEl) {
+    const track = recordMeterEl.querySelector(".meter-track");
+    if (track) track.setAttribute("aria-valuenow", String(clamped));
+    if (live) recordMeterEl.classList.add("live");
+    else recordMeterEl.classList.remove("live");
+  }
+}
+
+function logAsrBackend(pipe) {
+  const info = {
+    device: pipe?.device ?? null,
+    modelDevice: pipe?.model?.device ?? null,
+    backend: state.env?.backends?.onnx?.backend ?? null,
+  };
+  const providers =
+    pipe?.model?.session?.executionProviders ||
+    pipe?.model?.session?._executionProviders ||
+    pipe?.model?.session?.sessionOptions?.executionProviders ||
+    pipe?.model?._session?.executionProviders ||
+    pipe?.model?.session?._session?.executionProviders;
+  if (providers) {
+    info.executionProviders = providers;
+  }
+  log(`ASR backend: ${JSON.stringify(info)}`);
+}
+
+function computeAudioSignalStats(audio) {
+  if (!audio?.length) return { samples: 0, rms: 0, peak: 0 };
+  let sum = 0;
+  let peak = 0;
+  for (let i = 0; i < audio.length; i += 1) {
+    const v = Math.abs(audio[i] || 0);
+    sum += v * v;
+    if (v > peak) peak = v;
+  }
+  return {
+    samples: audio.length,
+    rms: Math.sqrt(sum / audio.length),
+    peak,
+  };
+}
+
+function downmixInputBuffer(inputBuffer) {
+  const channels = inputBuffer.numberOfChannels || 1;
+  const frames = inputBuffer.length || 0;
+  const out = new Float32Array(frames);
+  if (channels <= 1) {
+    out.set(inputBuffer.getChannelData(0));
+    return out;
+  }
+  for (let c = 0; c < channels; c += 1) {
+    const data = inputBuffer.getChannelData(c);
+    for (let i = 0; i < frames; i += 1) {
+      out[i] += data[i];
+    }
+  }
+  for (let i = 0; i < frames; i += 1) {
+    out[i] /= channels;
+  }
+  return out;
+}
+
+function concatFloat32Chunks(chunks) {
+  const total = chunks.reduce((sum, chunk) => sum + (chunk?.length || 0), 0);
+  const out = new Float32Array(total);
+  let offset = 0;
+  chunks.forEach((chunk) => {
+    if (!chunk || !chunk.length) return;
+    out.set(chunk, offset);
+    offset += chunk.length;
+  });
+  return out;
+}
+
+function resampleLinear(input, srcRate, dstRate) {
+  if (!input?.length) return new Float32Array(0);
+  if (!Number.isFinite(srcRate) || !Number.isFinite(dstRate) || srcRate <= 0 || dstRate <= 0) {
+    return input;
+  }
+  if (srcRate === dstRate) return input;
+  const ratio = srcRate / dstRate;
+  const outLength = Math.max(1, Math.round(input.length / ratio));
+  const out = new Float32Array(outLength);
+  for (let i = 0; i < outLength; i += 1) {
+    const pos = i * ratio;
+    const lo = Math.floor(pos);
+    const hi = Math.min(lo + 1, input.length - 1);
+    const frac = pos - lo;
+    out[i] = input[lo] * (1 - frac) + input[hi] * frac;
+  }
+  return out;
+}
+
+function buildCapturedAudioPayload() {
+  const chunks = state.recording.captureChunks || [];
+  const srcRate = Number(state.recording.captureSampleRate || 0);
+  if (!chunks.length || !srcRate) return null;
+  const merged = concatFloat32Chunks(chunks);
+  const resampled = resampleLinear(merged, srcRate, 16000);
+  return { audio: resampled, sampling_rate: 16000, srcRate, frames: merged.length };
+}
+
+async function stopRecordMeter() {
+  if (state.recording.meterRaf) {
+    window.cancelAnimationFrame(state.recording.meterRaf);
+  }
+  state.recording.meterRaf = 0;
+  if (state.recording.meterSource) {
+    try {
+      state.recording.meterSource.disconnect();
+    } catch {
+      // no-op
+    }
+  }
+  state.recording.meterSource = null;
+  if (state.recording.captureProcessor) {
+    try {
+      state.recording.captureProcessor.disconnect();
+    } catch {
+      // no-op
+    }
+  }
+  state.recording.captureProcessor = null;
+  if (state.recording.captureGain) {
+    try {
+      state.recording.captureGain.disconnect();
+    } catch {
+      // no-op
+    }
+  }
+  state.recording.captureGain = null;
+  state.recording.meterAnalyser = null;
+  state.recording.meterData = null;
+  state.recording.meterLevel = 0;
+  if (state.recording.meterContext) {
+    try {
+      await state.recording.meterContext.close();
+    } catch {
+      // no-op
+    }
+  }
+  state.recording.meterContext = null;
+  setRecordMeter(0, { live: false });
+}
+
+async function startRecordMeter(stream) {
+  await stopRecordMeter();
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  if (!AudioCtx) {
+    log("Mic level meter unavailable: AudioContext not supported.");
+    return;
+  }
+
+  const meterContext = new AudioCtx();
+  if (meterContext.state === "suspended") {
+    try {
+      await meterContext.resume();
+    } catch {
+      // ignore
+    }
+  }
+
+  const meterSource = meterContext.createMediaStreamSource(stream);
+  const meterAnalyser = meterContext.createAnalyser();
+  meterAnalyser.fftSize = 1024;
+  meterAnalyser.smoothingTimeConstant = 0.8;
+  meterSource.connect(meterAnalyser);
+
+  let captureProcessor = null;
+  let captureGain = null;
+  state.recording.captureChunks = [];
+  state.recording.captureSampleRate = meterContext.sampleRate || 0;
+  if (typeof meterContext.createScriptProcessor === "function") {
+    captureProcessor = meterContext.createScriptProcessor(4096, 1, 1);
+    captureGain = meterContext.createGain();
+    captureGain.gain.value = 0;
+    meterSource.connect(captureProcessor);
+    captureProcessor.connect(captureGain);
+    captureGain.connect(meterContext.destination);
+    captureProcessor.onaudioprocess = (event) => {
+      if (!state.recording.isRecording) return;
+      const mixed = downmixInputBuffer(event.inputBuffer);
+      state.recording.captureChunks.push(mixed);
+    };
+  } else {
+    log("Live PCM capture unavailable: createScriptProcessor not supported. Use recorder decode input mode.");
+  }
+
+  const meterData = new Uint8Array(meterAnalyser.fftSize);
+  state.recording.meterContext = meterContext;
+  state.recording.meterSource = meterSource;
+  state.recording.captureProcessor = captureProcessor;
+  state.recording.captureGain = captureGain;
+  state.recording.meterAnalyser = meterAnalyser;
+  state.recording.meterData = meterData;
+  state.recording.meterLevel = 0;
+
+  const tick = () => {
+    if (!state.recording.isRecording || !state.recording.meterAnalyser || !state.recording.meterData) {
+      setRecordMeter(0, { live: false });
+      return;
+    }
+    state.recording.meterAnalyser.getByteTimeDomainData(state.recording.meterData);
+    let sum = 0;
+    for (let i = 0; i < state.recording.meterData.length; i += 1) {
+      const sample = (state.recording.meterData[i] - 128) / 128;
+      sum += sample * sample;
+    }
+    const rms = Math.sqrt(sum / state.recording.meterData.length);
+    const normalized = Math.min(1, rms * 3.2);
+    const smoothed = (state.recording.meterLevel * 0.7) + (normalized * 0.3);
+    state.recording.meterLevel = smoothed;
+    setRecordMeter(smoothed * 100, { live: true });
+    state.recording.meterRaf = window.requestAnimationFrame(tick);
+  };
+
+  setRecordMeter(0, { live: true });
+  state.recording.meterRaf = window.requestAnimationFrame(tick);
+}
+
 async function ensureWebGpuFeatures() {
   if (!("gpu" in navigator)) {
     state.webgpu.supportsFp16 = false;
@@ -142,11 +389,11 @@ function applyEnv() {
 }
 
 function getOrtConfig() {
-  const fallback = { version: "1.23.2", base: "../AI/vendor/ort-1.23.2/", bundle: "webgpu" };
+  const defaultConfig = { version: "1.23.2", base: "../../AI/vendor/ort-1.23.2/", bundle: "webgpu" };
   if (window.__ortConfig && window.__ortConfig.version && window.__ortConfig.base) {
     return window.__ortConfig;
   }
-  return fallback;
+  return defaultConfig;
 }
 
 async function ensureOrtLoaded() {
@@ -277,21 +524,8 @@ async function resolveAsrDtype() {
 
 async function pickAvailableAsrDtype(modelId) {
   const preferred = await resolveAsrDtype();
-  try {
-    await ensureAsrModelFiles(modelId, preferred);
-    return preferred;
-  } catch (err) {
-    if (preferred !== "fp16") {
-      try {
-        await ensureAsrModelFiles(modelId, "fp16");
-        log("ASR preferred dtype missing; falling back to fp16.");
-        return "fp16";
-      } catch {
-        // keep original error
-      }
-    }
-    throw err;
-  }
+  await ensureAsrModelFiles(modelId, preferred);
+  return preferred;
 }
 
 async function decodeAudioBlob(blob) {
@@ -311,23 +545,59 @@ async function decodeAudioBlob(blob) {
     source.start(0);
     buffer = await offline.startRendering();
   }
-  const channelData = buffer.getChannelData(0);
-  const audio = channelData instanceof Float32Array ? new Float32Array(channelData) : Float32Array.from(channelData);
+  const channels = Math.max(1, Number(buffer.numberOfChannels || 1));
+  const frames = Number(buffer.length || 0);
+  const mixed = new Float32Array(frames);
+  for (let c = 0; c < channels; c += 1) {
+    const channelData = buffer.getChannelData(c);
+    for (let i = 0; i < frames; i += 1) {
+      mixed[i] += channelData[i];
+    }
+  }
+  if (channels > 1) {
+    for (let i = 0; i < frames; i += 1) {
+      mixed[i] /= channels;
+    }
+  }
+  const audio = mixed;
   audioCtx.close();
   return { audio, sampling_rate: targetRate };
 }
 
 async function getPipeline(task, modelId, extraOptions = {}) {
-  const device = getDeviceOption();
-  const key = JSON.stringify({ task, modelId, device, extraOptions });
+  const defaultDevice = getDeviceOption();
+  const options = { ...extraOptions };
+  const preferAutoDevice = options.deviceAuto === true;
+  delete options.deviceAuto;
+  if (preferAutoDevice) {
+    delete options.device;
+  } else if (!options.device && defaultDevice) {
+    options.device = defaultDevice;
+  }
+  const key = JSON.stringify({ task, modelId, options, deviceMode: preferAutoDevice ? "auto" : "forced" });
   if (state.pipelines.has(key)) return state.pipelines.get(key);
   await ensureLibraryLoaded();
   applyEnv();
-  const options = { ...extraOptions };
-  if (device) options.device = device;
   const pipe = await state.pipeline(task, modelId, options);
   state.pipelines.set(key, pipe);
   return pipe;
+}
+
+function resolveAsrBackendMode() {
+  const mode = String(asrBackendModeEl?.value || "auto").trim();
+  if (mode === "auto" || mode === "wasm" || mode === "webgpu") return mode;
+  throw new Error(`Unsupported ASR backend mode: ${mode}`);
+}
+
+function buildAsrPipelineOptions(dtype) {
+  const backendMode = resolveAsrBackendMode();
+  const options = { dtype };
+  if (backendMode === "auto") {
+    options.deviceAuto = true;
+  } else {
+    options.device = backendMode;
+  }
+  return { backendMode, options };
 }
 
 function pickAudioMimeType() {
@@ -365,23 +635,37 @@ async function startRecording({ mode = "global", rowId = null, buttonEl = null }
   }
   const mimeType = pickAudioMimeType();
   const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-  const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
   state.recording.mode = mode;
   state.recording.rowId = rowId;
   state.recording.buttonEl = buttonEl;
   state.recording.stream = stream;
-  state.recording.recorder = recorder;
   state.recording.chunks = [];
-  recorder.addEventListener("dataavailable", (event) => {
-    if (event.data && event.data.size > 0) {
-      state.recording.chunks.push(event.data);
-    }
-  });
-  recorder.start();
   state.recording.isRecording = true;
-  state.recording.startedAtMs = performance.now();
-  state.recording.timer = window.setInterval(setRecordTimerText, 250);
-  setRecordTimerText();
+  try {
+    await startRecordMeter(stream);
+    const recorder = new MediaRecorder(stream, mimeType ? { mimeType } : undefined);
+    state.recording.recorder = recorder;
+    recorder.addEventListener("dataavailable", (event) => {
+      if (event.data && event.data.size > 0) {
+        state.recording.chunks.push(event.data);
+      }
+    });
+    recorder.start();
+    state.recording.startedAtMs = performance.now();
+    state.recording.timer = window.setInterval(setRecordTimerText, 250);
+    setRecordTimerText();
+  } catch (err) {
+    await stopRecordMeter();
+    stream.getTracks().forEach((t) => t.stop());
+    state.recording.isRecording = false;
+    state.recording.mode = null;
+    state.recording.rowId = null;
+    state.recording.buttonEl = null;
+    state.recording.stream = null;
+    state.recording.recorder = null;
+    state.recording.chunks = [];
+    throw err;
+  }
 
   if (mode === "global") {
     setButtonRecordingState(recordToggleBtn, true, { recordingText: "Stop recording" });
@@ -400,16 +684,34 @@ async function stopRecording() {
   const mode = state.recording.mode;
   const rowId = state.recording.rowId;
   const buttonEl = state.recording.buttonEl;
-  if (!recorder) return null;
+  if (!recorder) {
+    await stopRecordMeter();
+    if (stream) {
+      stream.getTracks().forEach((t) => t.stop());
+    }
+    state.recording.isRecording = false;
+    state.recording.mode = null;
+    state.recording.rowId = null;
+    state.recording.buttonEl = null;
+    state.recording.stream = null;
+    state.recording.chunks = [];
+    state.recording.captureChunks = [];
+    state.recording.captureSampleRate = 0;
+    setRecordTimerText();
+    ensureButtons();
+    return null;
+  }
   const stopped = new Promise((resolve) => {
     recorder.addEventListener("stop", () => resolve());
   });
   recorder.stop();
   await stopped;
+  await stopRecordMeter();
   if (stream) {
     stream.getTracks().forEach((t) => t.stop());
   }
   const blob = new Blob(state.recording.chunks, { type: recorder.mimeType || "audio/webm" });
+  const capturedAudio = buildCapturedAudioPayload();
   state.recording.isRecording = false;
   state.recording.mode = null;
   state.recording.rowId = null;
@@ -417,6 +719,8 @@ async function stopRecording() {
   state.recording.recorder = null;
   state.recording.stream = null;
   state.recording.chunks = [];
+  state.recording.captureChunks = [];
+  state.recording.captureSampleRate = 0;
   if (state.recording.timer) window.clearInterval(state.recording.timer);
   state.recording.timer = null;
   setRecordTimerText();
@@ -431,29 +735,70 @@ async function stopRecording() {
     setStatus("Recording stopped.");
   }
   ensureButtons();
-  return blob;
+  return { blob, capturedAudio };
 }
 
-async function runAsrFromBlob(blob) {
+async function runAsrFromBlob(blob, captureAudio = null) {
   const modelId = asrModelEl.value.trim();
   if (!modelId) {
     setStatus("Pick an ASR model.");
     return "";
   }
+  const languageMode = String(asrLanguageModeEl?.value || "auto").trim();
+  if (!state.fs.sidecarDoc && languageMode === "from-locale") {
+    throw new Error("Load sidecar before recording so ASR language can be resolved from locale.");
+  }
   const totalStart = performance.now();
   setStatus(`Loading ASR pipeline (${modelId}) ...`);
   const dtype = await pickAvailableAsrDtype(modelId);
-  const asr = await getPipeline("automatic-speech-recognition", modelId, { dtype });
-  setStatus("Decoding audio ...");
-  const decodeStart = performance.now();
-  const { audio } = await decodeAudioBlob(blob);
-  log(`ASR audio decode: ${formatMs(performance.now() - decodeStart)}`);
+  const { backendMode, options: pipelineOptions } = buildAsrPipelineOptions(dtype);
+  const asr = await getPipeline("automatic-speech-recognition", modelId, pipelineOptions);
+  log(`ASR backend mode: ${backendMode}`);
+  logAsrBackend(asr);
+  const inputMode = String(asrInputModeEl?.value || "blob").trim();
+  let audio;
+  if (inputMode === "pcm") {
+    if (!captureAudio?.audio?.length) {
+      throw new Error("Live PCM mode selected, but no PCM capture is available.");
+    }
+    audio = captureAudio.audio;
+    log(
+      `ASR using live PCM capture: samples=${audio.length}, srcRate=${captureAudio.srcRate}, targetRate=${captureAudio.sampling_rate}`
+    );
+  } else {
+    setStatus("Decoding audio ...");
+    const decodeStart = performance.now();
+    const decoded = await decodeAudioBlob(blob);
+    audio = decoded.audio;
+    log(`ASR audio decode: ${formatMs(performance.now() - decodeStart)}`);
+  }
+  const stats = computeAudioSignalStats(audio);
+  log(`ASR audio stats: samples=${stats.samples}, rms=${stats.rms.toFixed(6)}, peak=${stats.peak.toFixed(6)}`);
+  if (stats.rms < 0.002 && stats.peak < 0.02) {
+    throw new Error("Microphone signal is extremely low. Select the correct mic/input level and re-record.");
+  }
+  const durationSec = audio.length / 16000;
   setStatus("Transcribing ...");
   const inferStart = performance.now();
-  const options = { chunk_length_s: 30, stride_length_s: 5, task: "transcribe" };
+  const language = resolveAsrLanguageSetting();
+  const options = { task: "transcribe" };
+  if (durationSec > 30) {
+    options.chunk_length_s = 30;
+    options.stride_length_s = 5;
+    log(`ASR chunking enabled (duration=${durationSec.toFixed(2)}s).`);
+  } else {
+    log(`ASR single-pass decode (duration=${durationSec.toFixed(2)}s).`);
+  }
+  if (language) {
+    options.language = language;
+    log(`ASR language fixed to ${language} (locale=${state.fs.locale || "n/a"}).`);
+  } else {
+    log("ASR language mode set to auto-detect.");
+  }
   const result = await asr(audio, options);
   log(`ASR inference: ${formatMs(performance.now() - inferStart)}`);
   const text = typeof result === "string" ? result : result?.text || JSON.stringify(result, null, 2);
+  logBlock("ASR transcript (raw)", text, { maxChars: 4000 });
   log(`ASR total: ${formatMs(performance.now() - totalStart)}`);
   setStatus("Transcription complete.");
   return text;
@@ -465,6 +810,164 @@ function stripTranscriptArtifacts(text) {
 
 function normalizeNewlines(value) {
   return String(value || "").replace(/\r\n/g, "\n");
+}
+
+function resolveAsrLanguage(locale) {
+  const base = String(locale || "").trim().toLowerCase();
+  if (!base) throw new Error("Missing locale. Load sidecar before ASR.");
+  if (base.startsWith("fr")) return "fr";
+  if (base.startsWith("de")) return "de";
+  if (base.startsWith("it")) return "it";
+  if (base.startsWith("en")) return "en";
+  throw new Error(`Unsupported locale for ASR language routing: ${locale}`);
+}
+
+function resolveAsrLanguageSetting() {
+  const mode = String(asrLanguageModeEl?.value || "auto").trim();
+  if (mode === "auto") return null;
+  if (mode === "from-locale") return resolveAsrLanguage(state.fs.locale);
+  if (mode === "de" || mode === "fr" || mode === "it" || mode === "en") return mode;
+  throw new Error(`Unsupported ASR language mode: ${mode}`);
+}
+
+function updateAsrLanguageBadge() {
+  if (!asrLanguageEl) return;
+  const mode = String(asrLanguageModeEl?.value || "auto").trim();
+  if (mode === "auto") {
+    asrLanguageEl.textContent = "ASR language: auto-detect";
+    asrLanguageEl.classList.remove("warn");
+    return;
+  }
+  if (mode === "de" || mode === "fr" || mode === "it" || mode === "en") {
+    asrLanguageEl.textContent = `ASR language: ${mode} (manual)`;
+    asrLanguageEl.classList.remove("warn");
+    return;
+  }
+  const locale = String(state.fs.locale || "").trim();
+  if (!locale || !state.fs.sidecarDoc) {
+    asrLanguageEl.textContent = "ASR language: load sidecar";
+    asrLanguageEl.classList.remove("warn");
+    return;
+  }
+  try {
+    const lang = resolveAsrLanguage(locale);
+    asrLanguageEl.textContent = `ASR language: ${lang} (from ${locale})`;
+    asrLanguageEl.classList.remove("warn");
+  } catch (err) {
+    asrLanguageEl.textContent = `ASR language: unsupported (${locale})`;
+    asrLanguageEl.classList.add("warn");
+  }
+}
+
+function isRejectedFallbackText(value) {
+  const text = String(value || "").trim().toLowerCase();
+  if (!text) return false;
+  const patterns = [
+    /\binsufficient information\b/,
+    /\bnot enough information\b/,
+    /\bnot enough context\b/,
+    /\bcannot determine\b/,
+    /\bcan't determine\b/,
+    /\bcannot assess\b/,
+    /\bunable to assess\b/,
+    /\binformation insuffisante\b/,
+    /\bpas suffisamment d(?:'|\u2019)information\b/,
+    /\bimpossible de déterminer\b/,
+    /\binformazioni insufficienti\b/,
+    /\bnon abbastanza informazioni\b/,
+    /\bimpossibile determinare\b/,
+    /\bnicht genug information(?:en)?\b/,
+    /\bnicht ausreichend(?:e)? information(?:en)?\b/,
+    /\bnicht beurteilbar\b/,
+    /\bkeine ausreichenden information(?:en)?\b/,
+    /\bn\/a\b/,
+    /\bna\b/,
+  ];
+  return patterns.some((pattern) => pattern.test(text));
+}
+
+function normalizeExtractField(value, { rowId, field }) {
+  const text = String(value || "").trim();
+  if (!text) return "";
+  if (isRejectedFallbackText(text)) {
+    log(`Rejected ${field} boilerplate text for ${rowId}.`);
+    return "";
+  }
+  return text;
+}
+
+function evaluateTranscriptQuality(text) {
+  const t = String(text || "").trim();
+  if (!t) return { ok: false, reason: "transcript is empty", metrics: null };
+  if (/^[^\p{L}\p{N}]+$/u.test(t)) {
+    return { ok: false, reason: "transcript does not contain words", metrics: null };
+  }
+  const normalized = t
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}'-]+/gu, " ")
+    .trim();
+  const words = normalized ? normalized.split(/\s+/).filter(Boolean) : [];
+  if (t.length < 6 || words.length < 2) {
+    return { ok: false, reason: "transcript is too short", metrics: { words: words.length, chars: t.length } };
+  }
+
+  const wordCounts = new Map();
+  for (const word of words) {
+    wordCounts.set(word, (wordCounts.get(word) || 0) + 1);
+  }
+  const uniqueWordCount = wordCounts.size;
+  const maxWordCount = Math.max(...Array.from(wordCounts.values()));
+  const uniqueWordRatio = uniqueWordCount / words.length;
+  const topWordShare = maxWordCount / words.length;
+
+  let topBigramShare = 0;
+  if (words.length > 1) {
+    const bigramCounts = new Map();
+    for (let i = 0; i < words.length - 1; i += 1) {
+      const key = `${words[i]} ${words[i + 1]}`;
+      bigramCounts.set(key, (bigramCounts.get(key) || 0) + 1);
+    }
+    const maxBigramCount = Math.max(...Array.from(bigramCounts.values()));
+    topBigramShare = maxBigramCount / (words.length - 1);
+  }
+
+  const metrics = {
+    words: words.length,
+    chars: t.length,
+    uniqueWordRatio,
+    topWordShare,
+    topBigramShare,
+  };
+
+  if (words.length >= 20) {
+    const repetitiveWordPattern = uniqueWordRatio < 0.28 && topWordShare > 0.2;
+    const repetitiveBigramPattern = topBigramShare > 0.24;
+    if (repetitiveWordPattern || repetitiveBigramPattern) {
+      return {
+        ok: false,
+        reason: "transcript is highly repetitive and likely invalid ASR output",
+        metrics,
+      };
+    }
+  }
+
+  return { ok: true, reason: "", metrics };
+}
+
+function assertTranscriptQuality(text, { contextLabel = "ASR transcript" } = {}) {
+  const quality = evaluateTranscriptQuality(text);
+  if (quality.metrics) {
+    const m = quality.metrics;
+    const ratio = Number.isFinite(m.uniqueWordRatio) ? m.uniqueWordRatio.toFixed(3) : "n/a";
+    const topWord = Number.isFinite(m.topWordShare) ? m.topWordShare.toFixed(3) : "n/a";
+    const topBigram = Number.isFinite(m.topBigramShare) ? m.topBigramShare.toFixed(3) : "n/a";
+    log(
+      `ASR transcript quality: words=${m.words}, chars=${m.chars}, uniqueRatio=${ratio}, topWordShare=${topWord}, topBigramShare=${topBigram}`
+    );
+  }
+  if (!quality.ok) {
+    throw new Error(`${contextLabel} failed quality check: ${quality.reason}.`);
+  }
 }
 
 function safeSlugTimestamp() {
@@ -486,6 +989,56 @@ async function writeTextToHandle(fileHandle, text) {
   const writable = await fileHandle.createWritable();
   await writable.write(text);
   await writable.close();
+}
+
+async function tryGetFileHandle(dirHandle, filename) {
+  try {
+    return await dirHandle.getFileHandle(filename);
+  } catch (err) {
+    if (err?.name === "NotFoundError") return null;
+    throw err;
+  }
+}
+
+async function readSidecarForEditor(dirHandle) {
+  const workingHandle = await tryGetFileHandle(dirHandle, WORKING_SIDECAR_FILENAME);
+  if (workingHandle) {
+    return {
+      handle: workingHandle,
+      filename: WORKING_SIDECAR_FILENAME,
+      text: await readFileText(workingHandle),
+      source: "working",
+    };
+  }
+  const sourceHandle = await dirHandle.getFileHandle(SOURCE_SIDECAR_FILENAME);
+  return {
+    handle: sourceHandle,
+    filename: SOURCE_SIDECAR_FILENAME,
+    text: await readFileText(sourceHandle),
+    source: "source",
+  };
+}
+
+async function ensureWritableWorkingSidecar(dirHandle) {
+  const existing = await tryGetFileHandle(dirHandle, WORKING_SIDECAR_FILENAME);
+  if (existing) {
+    return {
+      handle: existing,
+      filename: WORKING_SIDECAR_FILENAME,
+      text: await readFileText(existing),
+      seeded: false,
+    };
+  }
+  const sourceHandle = await dirHandle.getFileHandle(SOURCE_SIDECAR_FILENAME);
+  const sourceText = await readFileText(sourceHandle);
+  const workingHandle = await dirHandle.getFileHandle(WORKING_SIDECAR_FILENAME, { create: true });
+  await writeTextToHandle(workingHandle, sourceText);
+  return {
+    handle: workingHandle,
+    filename: WORKING_SIDECAR_FILENAME,
+    text: sourceText,
+    seeded: true,
+  };
 }
 
 function extractReportProject(doc) {
@@ -600,6 +1153,30 @@ function mapDeNumberWord(token) {
   return null;
 }
 
+function mapFrNumberWord(token) {
+  const t = String(token || "").toLowerCase();
+  const table = {
+    un: 1,
+    une: 1,
+    deux: 2,
+    trois: 3,
+    quatre: 4,
+    cinq: 5,
+    six: 6,
+    sept: 7,
+    huit: 8,
+    neuf: 9,
+    dix: 10,
+    onze: 11,
+    douze: 12,
+    treize: 13,
+    quatorze: 14,
+  };
+  if (Object.prototype.hasOwnProperty.call(table, t)) return table[t];
+  if (/^\d{1,2}$/.test(t)) return Number(t);
+  return null;
+}
+
 function extractIdMentions(text, { rowsById, subIdToRowId, localeKey }) {
   const src = String(text || "");
   const candidates = [];
@@ -645,6 +1222,22 @@ function extractIdMentions(text, { rowsById, subIdToRowId, localeKey }) {
       const parts = [match[1], match[2], match[3], match[4]].map(mapDeNumberWord).filter((v) => v != null);
       if (parts.length < 2) continue;
       // Try 2..4 segments progressively (validate against known ids)
+      for (let n = 2; n <= Math.min(4, parts.length); n += 1) {
+        const candidate = buildMentionCandidate(parts.slice(0, n).map(String), "");
+        addIfResolvable(raw, start, end, candidate);
+      }
+    }
+  }
+
+  // 4) FR word-based patterns like "un un trois" or "onze sept"
+  if (localeKey === "fr") {
+    const words = /\b((?:un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|\d{1,2}))(?:\s+(?:point|\.)\s+|\s+)((?:un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|\d{1,2}))(?:\s+(?:point|\.)\s+|\s+)?((?:un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|\d{1,2}))?(?:\s+(?:point|\.)\s+|\s+)?((?:un|une|deux|trois|quatre|cinq|six|sept|huit|neuf|dix|onze|douze|treize|quatorze|\d{1,2}))?\b/gi;
+    for (let match; (match = words.exec(src)); ) {
+      const raw = match[0];
+      const start = match.index;
+      const end = start + raw.length;
+      const parts = [match[1], match[2], match[3], match[4]].map(mapFrNumberWord).filter((v) => v != null);
+      if (parts.length < 2) continue;
       for (let n = 2; n <= Math.min(4, parts.length); n += 1) {
         const candidate = buildMentionCandidate(parts.slice(0, n).map(String), "");
         addIfResolvable(raw, start, end, candidate);
@@ -724,10 +1317,10 @@ function buildSortedSegmentsText(groups, { rowsById }) {
 }
 
 function computeExtractMaxTokens(inputLength) {
-  // Keep somewhat bounded to avoid very long decode loops.
-  const cap = 1024;
-  const min = 128;
-  const scaled = Math.ceil(inputLength * 1.3);
+  // Keep bounded and shorter for small inputs to reduce rambly outputs.
+  const cap = 256;
+  const min = 32;
+  const scaled = Math.ceil(inputLength * 0.6);
   return Math.min(cap, Math.max(min, scaled));
 }
 
@@ -755,7 +1348,7 @@ function buildPositionIdsFromLength(length) {
   return data;
 }
 
-function resolveInputNames(inputMeta, inputNames, fallbackNames) {
+function resolveInputNames(inputMeta, inputNames, defaultNames) {
   const entries = inputMeta instanceof Map ? Array.from(inputMeta.entries()) : Object.entries(inputMeta || {});
   const keyNames = entries.map(([name]) => name);
   const namesFromSession = Array.isArray(inputNames) ? inputNames : [];
@@ -770,8 +1363,8 @@ function resolveInputNames(inputMeta, inputNames, fallbackNames) {
       ? namesFromSession
       : (!entries.length || numericOnly) && namesFromSession.length
         ? namesFromSession
-        : numericOnly && fallbackNames?.length
-          ? fallbackNames
+        : numericOnly && defaultNames?.length
+          ? defaultNames
           : keyNames;
   return { entries, keyNames, namesFromSession, numericOnly, useNames };
 }
@@ -1142,6 +1735,8 @@ async function buildExtractPrompt(tokenizer, modelId, localeKey, items) {
     `- Use the same language as the NOTE.\\n` +
     `- Do not invent details. Use only what is in the NOTE.\\n` +
     `- Do not invent IDs. Use exactly the given IDs.\\n` +
+    `- If the NOTE does not support a field, leave that field empty.\\n` +
+    `- Never output placeholder phrases like 'insufficient information', 'information insuffisante', 'informazioni insufficienti', 'nicht beurteilbar', 'N/A'.\\n` +
     `- Output strictly in this repeated format:\\n` +
     `ID: <id>\\nFINDING: <text or empty>\\nRECOMMENDATION: <text or empty>\\n\\n`;
 
@@ -1294,17 +1889,28 @@ function parseLiquidExtractOutput(text, rowIds) {
   const src = normalizeNewlines(text || "");
   const blocks = src.split(/\n(?=ID:\s*)/g).map((b) => b.trim()).filter(Boolean);
   const out = new Map();
+  const requested = new Set(rowIds);
+  const unexpectedIds = new Set();
   blocks.forEach((block) => {
     const idMatch = block.match(/^ID:\s*([0-9]{1,2}(?:\.[0-9]{1,2}){1,3}[a-z]?)\s*$/mi);
     if (!idMatch) return;
     const id = idMatch[1].trim();
-    if (!rowIds.includes(id)) return;
+    if (!requested.has(id)) {
+      unexpectedIds.add(id);
+      return;
+    }
+    if (out.has(id)) {
+      throw new Error(`Model output repeated ID ${id}. Expected exactly one block per ID.`);
+    }
     const findingMatch = block.match(/FINDING:\s*([\s\S]*?)(?:\nRECOMMENDATION:|$)/i);
     const recMatch = block.match(/RECOMMENDATION:\s*([\s\S]*)$/i);
-    const finding = findingMatch ? findingMatch[1].trim() : "";
-    const recommendation = recMatch ? recMatch[1].trim() : "";
+    const finding = normalizeExtractField(findingMatch ? findingMatch[1] : "", { rowId: id, field: "finding" });
+    const recommendation = normalizeExtractField(recMatch ? recMatch[1] : "", { rowId: id, field: "recommendation" });
     out.set(id, { id, finding, recommendation, raw: block });
   });
+  if (unexpectedIds.size) {
+    throw new Error(`Model output included unexpected IDs: ${Array.from(unexpectedIds).join(", ")}.`);
+  }
   return out;
 }
 
@@ -1316,8 +1922,8 @@ function upsertCard(rowId, payload) {
     currentRecommendation: payload.currentRecommendation || "",
     proposedFinding: "",
     proposedRecommendation: "",
-    actionFinding: "skip",
-    actionRecommendation: "skip",
+    actionFinding: "append",
+    actionRecommendation: "append",
     takes: [],
   };
   if (payload.title && !existing.title) existing.title = payload.title;
@@ -1411,12 +2017,12 @@ function renderCards() {
           return;
         }
 
-        const blob = await stopRecording();
-        if (!blob) return;
+        const capture = await stopRecording();
+        if (!capture?.blob) return;
         micBtn.disabled = true;
         micBtn.textContent = "Transcribing...";
         setStatus(`Transcribing ${card.rowId} ...`);
-        const text = await runAsrFromBlob(blob);
+        const text = await runAsrFromBlob(capture.blob, capture.capturedAudio);
         const note = stripTranscriptArtifacts(text);
         logBlock(`Card ${card.rowId} ASR (raw)`, text);
         logBlock(`Card ${card.rowId} ASR (cleaned)`, note);
@@ -1424,6 +2030,9 @@ function renderCards() {
           setStatus(`Transcript empty for ${card.rowId}.`);
           return;
         }
+        assertTranscriptQuality(note, {
+          contextLabel: `ASR transcript for ${card.rowId}`,
+        });
 
         micBtn.textContent = "Extracting...";
         setStatus(`Extracting finding + recommendation for ${card.rowId} ...`);
@@ -1432,7 +2041,10 @@ function renderCards() {
         const result = await runLiquidExtract([{ rowId: card.rowId, title: itemTitle, note }]);
         logBlock(`Card ${card.rowId} Liquid (raw output)`, result?.text || "");
         const parsedOut = parseLiquidExtractOutput(result.text, [card.rowId]);
-        const out = parsedOut.get(card.rowId) || { finding: "", recommendation: "", raw: result.text };
+        const out = parsedOut.get(card.rowId);
+        if (!out) {
+          throw new Error(`Model output did not include required ID ${card.rowId}. No auto-filled text was used.`);
+        }
         logBlock(`Card ${card.rowId} Parsed FINDING`, out.finding || "");
         logBlock(`Card ${card.rowId} Parsed RECOMMENDATION`, out.recommendation || "");
 
@@ -1592,11 +2204,14 @@ async function saveDraftJson() {
   setStatus(`Saved draft: ${filename}`);
 }
 
-async function backupSidecar(sidecarText) {
+async function backupSidecar(sidecarText, filenamePrefix) {
   const dir = state.fs.dirHandle;
   if (!dir) return null;
   const backupDir = await dir.getDirectoryHandle("backup", { create: true });
-  const filename = `project_sidecar_${safeSlugTimestamp()}.json`;
+  const safePrefix = String(filenamePrefix || "sidecar")
+    .replace(/\.json$/i, "")
+    .replace(/[^a-zA-Z0-9._-]/g, "_");
+  const filename = `${safePrefix}_${safeSlugTimestamp()}.json`;
   const handle = await backupDir.getFileHandle(filename, { create: true });
   await writeTextToHandle(handle, sidecarText);
   return `backup/${filename}`;
@@ -1616,10 +2231,10 @@ function mergeText(existing, next, action) {
 
 async function applyToSidecar() {
   if (!state.fs.dirHandle) return;
-  setStatus("Re-reading project_sidecar.json ...");
-  const sidecarHandle = await state.fs.dirHandle.getFileHandle("project_sidecar.json");
-  const currentText = await readFileText(sidecarHandle);
-  const backupPath = await backupSidecar(currentText);
+  setStatus(`Preparing working sidecar (${WORKING_SIDECAR_FILENAME}) ...`);
+  const writableSidecar = await ensureWritableWorkingSidecar(state.fs.dirHandle);
+  const currentText = writableSidecar.text;
+  const backupPath = await backupSidecar(currentText, writableSidecar.filename);
   if (backupPath) log(`Backup created: ${backupPath}`);
 
   const doc = JSON.parse(currentText);
@@ -1650,8 +2265,11 @@ async function applyToSidecar() {
 
   if (!doc.meta) doc.meta = {};
   doc.meta.updatedAt = new Date().toISOString();
-  await writeJsonToHandle(sidecarHandle, doc);
-  setStatus(`Applied ${applied} field updates to project_sidecar.json (backup: ${backupPath || "none"})`);
+  await writeJsonToHandle(writableSidecar.handle, doc);
+  const seedNote = writableSidecar.seeded ? `; seeded from ${SOURCE_SIDECAR_FILENAME}` : "";
+  setStatus(
+    `Applied ${applied} field updates to ${WORKING_SIDECAR_FILENAME}${seedNote} (backup: ${backupPath || "none"})`
+  );
 }
 
 async function pickFolder() {
@@ -1672,9 +2290,9 @@ async function pickFolder() {
 
 async function loadSidecar() {
   if (!state.fs.dirHandle) return;
-  setStatus("Loading project_sidecar.json ...");
-  const handle = await state.fs.dirHandle.getFileHandle("project_sidecar.json");
-  const text = await readFileText(handle);
+  setStatus(`Loading sidecar for editor (${WORKING_SIDECAR_FILENAME} preferred) ...`);
+  const loaded = await readSidecarForEditor(state.fs.dirHandle);
+  const text = loaded.text;
   const doc = JSON.parse(text);
   const project = extractReportProject(doc);
   if (!project) throw new Error("Could not find report project in sidecar.");
@@ -1697,7 +2315,9 @@ async function loadSidecar() {
   renderCards();
   updateApplyEnabled();
 
-  setStatus(`Loaded sidecar. Locale=${locale}. Rows=${rowsById.size}. Cards=${state.ui.cards.size}.`);
+  const sourceLabel = loaded.source === "working" ? WORKING_SIDECAR_FILENAME : SOURCE_SIDECAR_FILENAME;
+  setStatus(`Loaded ${sourceLabel}. Locale=${locale}. Rows=${rowsById.size}. Cards=${state.ui.cards.size}.`);
+  updateAsrLanguageBadge();
   recordToggleBtn.disabled = !state.pipeline; // require AI loaded
   parseIdsBtn.disabled = false;
   runExtractBtn.disabled = true;
@@ -1720,6 +2340,12 @@ function renderIdSummary(parsed) {
     parsed.warnings.forEach((w) => lines.push(`- ${w}`));
   }
   idSummaryEl.textContent = lines.join("\n");
+}
+
+function refreshCardsIfLoaded() {
+  if (!state.fs.sidecarDoc) return;
+  renderCards();
+  updateApplyEnabled();
 }
 
 function parseIdsFromTranscript() {
@@ -1752,6 +2378,13 @@ function parseIdsFromTranscript() {
   state.run.parsed = parsed;
   renderIdSummary(parsed);
   runExtractBtn.disabled = groups.length === 0;
+  if (groups.length === 0) {
+    setStatus(
+      `Transcript captured (${raw.length} chars). No row IDs detected yet. Say IDs like 'für 1.1.1 ...' or use per-card mic.`
+    );
+  } else {
+    setStatus(`Transcript captured (${raw.length} chars). Parsed ${mentions.length} mentions across ${groups.length} rows.`);
+  }
   return parsed;
 }
 
@@ -1773,6 +2406,18 @@ async function extractDrafts() {
     setStatus("No non-empty segments to extract.");
     return;
   }
+  const invalidNotes = [];
+  items.forEach((it) => {
+    const quality = evaluateTranscriptQuality(it.note);
+    if (!quality.ok) {
+      invalidNotes.push(`${it.rowId} (${quality.reason})`);
+    }
+  });
+  if (invalidNotes.length) {
+    throw new Error(
+      `Refusing extraction for low-quality transcript segments: ${invalidNotes.join(", ")}. Re-record those findings.`
+    );
+  }
   const start = performance.now();
   const batchSize = 6;
   for (let offset = 0; offset < items.length; offset += batchSize) {
@@ -1788,14 +2433,17 @@ async function extractDrafts() {
     const parsedOut = parseLiquidExtractOutput(result.text, rowIds);
     const missing = rowIds.filter((id) => !parsedOut.has(id));
     if (missing.length) {
-      log(`Extract parse warning: missing IDs from output: ${missing.join(", ")}`);
+      throw new Error(`Model output missing required IDs: ${missing.join(", ")}. No auto-filled text was used.`);
     }
 
     batch.forEach((it) => {
       const row = state.fs.rowsById.get(it.rowId);
       const currentFinding = row ? getRowCurrentFinding(row) : "";
       const currentRec = row ? getRowCurrentRecommendation(row) : "";
-      const out = parsedOut.get(it.rowId) || { finding: "", recommendation: "", raw: "" };
+      const out = parsedOut.get(it.rowId);
+      if (!out) {
+        throw new Error(`Internal parse contract failure for row ${it.rowId}.`);
+      }
       upsertCard(it.rowId, {
         title: row ? getRowTitle(row) : "",
         currentFinding,
@@ -1826,6 +2474,7 @@ function ensureButtons() {
   loadSidecarBtn.disabled = !state.fs.dirHandle;
   recordToggleBtn.disabled = isCardRecording || !hasAi || !state.fs.sidecarDoc;
   parseIdsBtn.disabled = !state.fs.sidecarDoc;
+  updateAsrLanguageBadge();
   updateApplyEnabled();
 }
 
@@ -1835,6 +2484,7 @@ loadAiBtn?.addEventListener("click", async () => {
     await ensureWebGpuFeatures();
     recordToggleBtn.disabled = !state.fs.sidecarDoc;
     ensureButtons();
+    refreshCardsIfLoaded();
   } catch {
     // status already set
   }
@@ -1858,18 +2508,27 @@ recordToggleBtn?.addEventListener("click", async () => {
   try {
     if (!state.recording.isRecording) {
       await startRecording();
+      refreshCardsIfLoaded();
       return;
     }
-    const blob = await stopRecording();
-    if (!blob) return;
+    const capture = await stopRecording();
+    if (!capture?.blob) return;
     setStatus("Transcribing recording ...");
-    const text = await runAsrFromBlob(blob);
-    transcriptEl.value = stripTranscriptArtifacts(text);
+    const text = await runAsrFromBlob(capture.blob, capture.capturedAudio);
+    const cleaned = stripTranscriptArtifacts(text);
+    transcriptEl.value = cleaned;
+    if (!cleaned) {
+      throw new Error("ASR returned empty transcript. Check mic input level and selected ASR model.");
+    }
+    assertTranscriptQuality(cleaned, {
+      contextLabel: "ASR transcript",
+    });
     parseIdsBtn.disabled = false;
     runExtractBtn.disabled = true;
     saveDraftBtn.disabled = true;
     applySidecarBtn.disabled = true;
     parseIdsFromTranscript();
+    refreshCardsIfLoaded();
   } catch (err) {
     setStatus(`Recording/transcribe failed: ${err.message}`);
   }
@@ -1877,6 +2536,18 @@ recordToggleBtn?.addEventListener("click", async () => {
 
 parseIdsBtn?.addEventListener("click", () => {
   parseIdsFromTranscript();
+});
+
+asrLanguageModeEl?.addEventListener("change", () => {
+  updateAsrLanguageBadge();
+});
+
+asrInputModeEl?.addEventListener("change", () => {
+  setStatus(`ASR input mode: ${asrInputModeEl.value}`);
+});
+
+asrBackendModeEl?.addEventListener("change", () => {
+  setStatus(`ASR backend mode: ${asrBackendModeEl.value}`);
 });
 
 runExtractBtn?.addEventListener("click", async () => {

@@ -191,7 +191,7 @@
   saveLogBtn.addEventListener("click", async () => {
     try {
       const result = await debug.saveLog({
-        suggestedName: `fs-access-spike-log-${new Date().toISOString().replace(/[:.]/g, \"-\")}.txt`,
+        suggestedName: `fs-access-spike-log-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`,
         dirHandle,
       });
       setStatus(`Saved log (${result.location}): ${result.filename}`);

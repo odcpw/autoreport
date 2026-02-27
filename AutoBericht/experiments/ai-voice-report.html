@@ -3,95 +3,13 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>AI Voice Report (Offline)</title>
-    <link rel="stylesheet" href="ai-voice-report.css" />
+    <title>ai-voice-report</title>
+    <meta http-equiv="refresh" content="0; url=./ai-voice-report/index.html" />
+    <link rel="canonical" href="./ai-voice-report/index.html" />
   </head>
   <body>
-    <main class="page">
-      <header class="header">
-        <h1>AI Voice Report</h1>
-        <p>
-          Offline workflow: record speech → transcribe (Whisper local) → extract finding/recommendation (LiquidAI local) →
-          review → apply (with backup) to <code>project_sidecar.json</code>. Use the global recorder (say IDs like
-          <code>für 1.1.1 ...</code>) or the per-card mic buttons (no IDs needed).
-        </p>
-      </header>
-
-      <section class="panel">
-        <div class="controls">
-          <label>
-            ASR model
-            <select id="asr-model">
-              <option value="Xenova/whisper-tiny">Xenova/whisper-tiny (multilingual)</option>
-              <option value="Xenova/whisper-base">Xenova/whisper-base (multilingual)</option>
-            </select>
-          </label>
-          <button id="load-ai" type="button">Load AI</button>
-          <button id="pick-folder" type="button">Pick Project Folder</button>
-          <button id="load-sidecar" type="button" disabled>Load project_sidecar.json</button>
-          <span id="status" class="status">Idle.</span>
-        </div>
-
-        <div class="recording">
-          <button id="record-toggle" type="button" class="record" disabled>Start recording</button>
-          <span id="record-timer" class="hint"></span>
-        </div>
-      </section>
-
-      <section class="panel">
-        <div class="two-col">
-          <label class="field">
-            Transcript (raw)
-            <textarea id="transcript" rows="10" placeholder="Transcription will appear here..."></textarea>
-          </label>
-          <label class="field">
-            Segments (sorted by ID)
-            <textarea id="segments" rows="10" placeholder="After parsing IDs, segments will appear here..."></textarea>
-          </label>
-        </div>
-
-        <div class="actions">
-          <button id="parse-ids" type="button" disabled>Parse IDs</button>
-          <button id="run-extract" type="button" disabled>Extract Finding + Recommendation</button>
-          <button id="save-draft" type="button" disabled>Save draft JSON</button>
-        </div>
-        <div id="id-summary" class="summary"></div>
-      </section>
-
-      <section class="panel">
-        <div class="panel-header">
-          <h2>Draft Cards</h2>
-          <div class="panel-actions">
-            <button id="apply-sidecar" type="button" disabled>Apply Selected to Sidecar</button>
-          </div>
-        </div>
-        <div id="draft-list" class="draft-list"></div>
-      </section>
-
-      <section class="panel">
-        <details>
-          <summary>Log</summary>
-          <pre id="log" class="log"></pre>
-        </details>
-      </section>
-    </main>
-
-    <script>
-      (function () {
-        const ortVersion = "1.23.2";
-        const base = "../AI/vendor/ort-1.23.2/";
-        const scriptName = "ort.webgpu.min.js";
-        window.__ortConfig = { version: ortVersion, base, bundle: "webgpu" };
-        window.__ortLoadPromise = new Promise((resolve, reject) => {
-          const script = document.createElement("script");
-          script.src = `${base}${scriptName}?v=${ortVersion}`;
-          script.async = true;
-          script.onload = () => resolve();
-          script.onerror = () => reject(new Error("Failed to load ORT script."));
-          document.head.appendChild(script);
-        });
-      })();
-    </script>
-    <script type="module" src="ai-voice-report.js"></script>
+    <p>
+      This experiment moved to <a href="./ai-voice-report/index.html">./ai-voice-report/index.html</a>.
+    </p>
   </body>
 </html>

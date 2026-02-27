@@ -72,8 +72,8 @@ const LIQUIDAI_MODELS = [
 ];
 
 const DEFAULTS = {
-  transformersUrl: "../AI/vendor/transformers.min.js",
-  localModelPath: "../AI/models/",
+  transformersUrl: "../../AI/vendor/transformers.min.js",
+  localModelPath: "../../AI/models/",
   allowRemote: false,
   asrModel: "Xenova/whisper-tiny",
   visionModel: "LiquidAI/LFM2.5-VL-1.6B-ONNX",
@@ -82,7 +82,7 @@ const DEFAULTS = {
 const WASM_MAGIC = ["00", "61", "73", "6d"];
 
 function getOrtConfig() {
-  const fallback = { version: "1.23.2", base: "../AI/vendor/ort-1.23.2/", bundle: "webgpu" };
+  const fallback = { version: "1.23.2", base: "../../AI/vendor/ort-1.23.2/", bundle: "webgpu" };
   if (window.__ortConfig && window.__ortConfig.version && window.__ortConfig.base) {
     return window.__ortConfig;
   }

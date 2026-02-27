@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Voice Box (Whisper)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>AI Voice Box</h1>
+        <p>Hold the button to record. Release to transcribe with Whisper (local).</p>
+      </header>
+
+      <section class="panel">
+        <div class="controls">
+          <label>
+            ASR model
+            <select id="asr-model">
+              <option value="Xenova/whisper-tiny">Xenova/whisper-tiny (multilingual)</option>
+              <option value="Xenova/whisper-base">Xenova/whisper-base (multilingual)</option>
+            </select>
+          </label>
+          <button id="load-lib" type="button">Load ASR</button>
+          <span id="status" class="status">Idle.</span>
+        </div>
+
+        <div class="recording">
+          <button id="hold-to-talk" type="button" class="record">Hold to talk</button>
+          <div class="hint">Tip: keep holding while you speak, release to transcribe.</div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <label class="field">
+          Transcript
+          <textarea id="transcript" rows="10" placeholder="Transcription will appear here..."></textarea>
+        </label>
+        <label class="field">
+          Cleaned output
+          <textarea id="cleaned" rows="10" placeholder="Cleaned text will appear here..."></textarea>
+        </label>
+      </section>
+
+      <section class="panel">
+        <details>
+          <summary>Log</summary>
+          <pre id="log" class="log"></pre>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const ortVersion = "1.23.2";
+        const base = "../../AI/vendor/ort-1.23.2/";
+        const scriptName = "ort.webgpu.min.js";
+        window.__ortConfig = { version: ortVersion, base, bundle: "webgpu" };
+        window.__ortLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${base}${scriptName}?v=${ortVersion}`;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load ORT script."));
+          document.head.appendChild(script);
+        });
+      })();
+    </script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>

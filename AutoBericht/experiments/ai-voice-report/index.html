@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>AI Voice Report (Offline)</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="page">
+      <header class="header">
+        <h1>AI Voice Report</h1>
+        <p>
+          Offline workflow: record speech → transcribe (Whisper local) → extract finding/recommendation (LiquidAI local) →
+          review → apply (with backup) to <code>project_sidecar.voice-report-working.json</code>. Use the global recorder (say IDs like
+          <code>für 1.1.1 ...</code>) or the per-card mic buttons (no IDs needed).
+        </p>
+      </header>
+
+      <section class="panel">
+        <div class="controls">
+          <label>
+            ASR model
+            <select id="asr-model">
+              <option value="Xenova/whisper-tiny">Xenova/whisper-tiny (multilingual)</option>
+              <option value="Xenova/whisper-base">Xenova/whisper-base (multilingual)</option>
+            </select>
+          </label>
+          <label>
+            ASR language
+            <select id="asr-language-mode">
+              <option value="auto">auto-detect</option>
+              <option value="from-locale">from sidecar locale</option>
+              <option value="de">de</option>
+              <option value="fr">fr</option>
+              <option value="it">it</option>
+              <option value="en">en</option>
+            </select>
+          </label>
+          <label>
+            ASR input
+            <select id="asr-input-mode">
+              <option value="blob">recorder decode</option>
+              <option value="pcm">live PCM capture</option>
+            </select>
+          </label>
+          <label>
+            ASR backend
+            <select id="asr-backend-mode">
+              <option value="auto">auto</option>
+              <option value="wasm">wasm</option>
+              <option value="webgpu">webgpu</option>
+            </select>
+          </label>
+          <button id="load-ai" type="button">Load AI</button>
+          <button id="pick-folder" type="button">Pick Project Folder</button>
+          <button id="load-sidecar" type="button" disabled>Load project_sidecar.json</button>
+          <span id="asr-language" class="badge">ASR language: load sidecar</span>
+          <span id="status" class="status">Idle.</span>
+        </div>
+
+        <div class="recording">
+          <button id="record-toggle" type="button" class="record" disabled>Start recording</button>
+          <span id="record-timer" class="hint"></span>
+          <div id="record-meter" class="meter" aria-live="polite">
+            <span class="meter-label">Mic</span>
+            <div class="meter-track" role="progressbar" aria-label="Microphone level" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0">
+              <div id="record-meter-fill" class="meter-fill"></div>
+            </div>
+            <span id="record-meter-value" class="meter-value">0%</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <div class="two-col">
+          <label class="field">
+            Transcript (raw)
+            <textarea id="transcript" rows="10" placeholder="Transcription will appear here..."></textarea>
+          </label>
+          <label class="field">
+            Segments (sorted by ID)
+            <textarea id="segments" rows="10" placeholder="After parsing IDs, segments will appear here..."></textarea>
+          </label>
+        </div>
+
+        <div class="actions">
+          <button id="parse-ids" type="button" disabled>Parse IDs</button>
+          <button id="run-extract" type="button" disabled>Extract Finding + Recommendation</button>
+          <button id="save-draft" type="button" disabled>Save draft JSON</button>
+        </div>
+        <div id="id-summary" class="summary"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-header">
+          <h2>Draft Cards</h2>
+          <div class="panel-actions">
+            <button id="apply-sidecar" type="button" disabled>Apply Selected to Working Sidecar</button>
+          </div>
+        </div>
+        <div id="draft-list" class="draft-list"></div>
+      </section>
+
+      <section class="panel">
+        <details>
+          <summary>Log</summary>
+          <pre id="log" class="log"></pre>
+        </details>
+      </section>
+    </main>
+
+    <script>
+      (function () {
+        const ortVersion = "1.23.2";
+        const base = "../../AI/vendor/ort-1.23.2/";
+        const scriptName = "ort.webgpu.min.js";
+        window.__ortConfig = { version: ortVersion, base, bundle: "webgpu" };
+        window.__ortLoadPromise = new Promise((resolve, reject) => {
+          const script = document.createElement("script");
+          script.src = `${base}${scriptName}?v=${ortVersion}`;
+          script.async = true;
+          script.onload = () => resolve();
+          script.onerror = () => reject(new Error("Failed to load ORT script."));
+          document.head.appendChild(script);
+        });
+      })();
+    </script>
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
