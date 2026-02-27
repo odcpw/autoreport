@@ -14,6 +14,8 @@
       project_export_card_hint: "Pick the DOCX template and create a report in outputs using the current sidecar data.",
       project_export_ppt_report: "PowerPoint Export (Report)",
       project_export_ppt_training: "PowerPoint Export (Training)",
+      project_export_ppt_card_title: "PowerPoint Export",
+      project_export_ppt_card_hint: "Pick the PPTX template and create slides in outputs using the current sidecar data.",
       project_export_ppt_missing: "PowerPoint exporter is not available.",
       project_export_ppt_running_report: "Exporting report slides ...",
       project_export_ppt_running_training: "Exporting training slides ...",

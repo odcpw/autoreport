@@ -1697,6 +1697,7 @@
           }
         },
       });
+      page.appendChild(exportCard.card);
 
       const runPptExport = async ({ button, mode }) => {
         if (!runtime.dirHandle) {
@@ -1743,14 +1744,15 @@
         }
       };
 
-      const pptReportButton = document.createElement("button");
-      pptReportButton.type = "button";
-      pptReportButton.className = "ghost";
-      pptReportButton.textContent = t("project_export_ppt_report", "PowerPoint Export (Report)");
-      pptReportButton.addEventListener("click", async () => {
-        await runPptExport({ button: pptReportButton, mode: "report" });
+      const pptCard = createToolCard({
+        title: t("project_export_ppt_card_title", "PowerPoint Export"),
+        hint: t("project_export_ppt_card_hint", "Pick the PPTX template and create slides in outputs using the current sidecar data."),
+        buttonLabel: t("project_export_ppt_report", "PowerPoint Export (Report)"),
+        buttonClass: "ghost",
+        onClick: async (button) => {
+          await runPptExport({ button, mode: "report" });
+        },
       });
-      exportCard.actions.appendChild(pptReportButton);
 
       const pptTrainingButton = document.createElement("button");
       pptTrainingButton.type = "button";
@@ -1759,9 +1761,8 @@
       pptTrainingButton.addEventListener("click", async () => {
         await runPptExport({ button: pptTrainingButton, mode: "training" });
       });
-      exportCard.actions.appendChild(pptTrainingButton);
-
-      page.appendChild(exportCard.card);
+      pptCard.actions.appendChild(pptTrainingButton);
+      page.appendChild(pptCard.card);
 
       const libraryCard = createToolCard({
         title: t("project_tool_library_title", "Library Export"),

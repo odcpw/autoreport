@@ -7654,51 +7654,51 @@
     "observations": [
       {
         "value": "Stapler",
-        "label": "Stapler"
+        "label": "Chariot élévateur"
       },
       {
         "value": "Leitern",
-        "label": "Leitern"
+        "label": "Échelles"
       },
       {
         "value": "Elektro",
-        "label": "Elektro"
+        "label": "Électricité"
       },
       {
         "value": "Palettenrolli",
-        "label": "Palettenrolli"
+        "label": "Transpalette"
       },
       {
         "value": "Absturzsicherung",
-        "label": "Absturzsicherung"
+        "label": "Protection antichute"
       },
       {
         "value": "Arbeiten in der Höhe",
-        "label": "Arbeiten in der Höhe"
+        "label": "Travaux en hauteur"
       },
       {
         "value": "Arbeitsmittelprüfung",
-        "label": "Arbeitsmittelprüfung"
+        "label": "Contrôle des équipements de travail"
       },
       {
         "value": "Beleuchtung",
-        "label": "Beleuchtung"
+        "label": "Éclairage"
       },
       {
         "value": "Brandschutz",
-        "label": "Brandschutz"
+        "label": "Protection incendie"
       },
       {
         "value": "Chemikalien",
-        "label": "Chemikalien"
+        "label": "Produits chimiques"
       },
       {
         "value": "Druckbehälter",
-        "label": "Druckbehälter"
+        "label": "Réservoirs sous pression"
       },
       {
         "value": "Elektrik",
-        "label": "Elektrik"
+        "label": "Installations électriques"
       },
       {
         "value": "Ergonomie",
@@ -7706,79 +7706,79 @@
       },
       {
         "value": "Erste Hilfe",
-        "label": "Erste Hilfe"
+        "label": "Premiers secours"
       },
       {
         "value": "Fluchtwege",
-        "label": "Fluchtwege"
+        "label": "Voies d'évacuation"
       },
       {
         "value": "Gefährdungsbeurteilung",
-        "label": "Gefährdungsbeurteilung"
+        "label": "Évaluation des risques"
       },
       {
         "value": "Handwerkzeuge",
-        "label": "Handwerkzeuge"
+        "label": "Outils manuels"
       },
       {
         "value": "Kennzeichnung",
-        "label": "Kennzeichnung"
+        "label": "Signalisation"
       },
       {
         "value": "Lagerung",
-        "label": "Lagerung"
+        "label": "Stockage"
       },
       {
         "value": "Lärm",
-        "label": "Lärm"
+        "label": "Bruit"
       },
       {
         "value": "Maschinenwartung",
-        "label": "Maschinenwartung"
+        "label": "Maintenance des machines"
       },
       {
         "value": "Maschinensicherung",
-        "label": "Maschinensicherung"
+        "label": "Sécurité des machines"
       },
       {
         "value": "Notfallorganisation",
-        "label": "Notfallorganisation"
+        "label": "Organisation des urgences"
       },
       {
         "value": "PSA",
-        "label": "PSA"
+        "label": "EPI"
       },
       {
         "value": "Rutschgefahr",
-        "label": "Rutschgefahr"
+        "label": "Risque de glissade"
       },
       {
         "value": "Sauberkeit",
-        "label": "Sauberkeit"
+        "label": "Propreté"
       },
       {
         "value": "Schulung / Unterweisung",
-        "label": "Schulung / Unterweisung"
+        "label": "Formation / instruction"
       },
       {
         "value": "Schweißarbeiten",
-        "label": "Schweißarbeiten"
+        "label": "Travaux de soudage"
       },
       {
         "value": "Sicherheitsdatenblätter",
-        "label": "Sicherheitsdatenblätter"
+        "label": "Fiches de données de sécurité"
       },
       {
         "value": "Staplerverkehr",
-        "label": "Staplerverkehr"
+        "label": "Circulation des chariots élévateurs"
       },
       {
         "value": "Verkehrswege",
-        "label": "Verkehrswege"
+        "label": "Voies de circulation"
       },
       {
         "value": "Werkstatt / Ordnung",
-        "label": "Werkstatt / Ordnung"
+        "label": "Atelier / ordre"
       }
     ],
     "training": [

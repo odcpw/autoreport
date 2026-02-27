@@ -7654,131 +7654,131 @@
     "observations": [
       {
         "value": "Stapler",
-        "label": "Stapler"
+        "label": "Carrello elevatore"
       },
       {
         "value": "Leitern",
-        "label": "Leitern"
+        "label": "Scale"
       },
       {
         "value": "Elektro",
-        "label": "Elektro"
+        "label": "Elettricità"
       },
       {
         "value": "Palettenrolli",
-        "label": "Palettenrolli"
+        "label": "Transpallet"
       },
       {
         "value": "Absturzsicherung",
-        "label": "Absturzsicherung"
+        "label": "Protezione anticaduta"
       },
       {
         "value": "Arbeiten in der Höhe",
-        "label": "Arbeiten in der Höhe"
+        "label": "Lavori in quota"
       },
       {
         "value": "Arbeitsmittelprüfung",
-        "label": "Arbeitsmittelprüfung"
+        "label": "Controllo delle attrezzature di lavoro"
       },
       {
         "value": "Beleuchtung",
-        "label": "Beleuchtung"
+        "label": "Illuminazione"
       },
       {
         "value": "Brandschutz",
-        "label": "Brandschutz"
+        "label": "Protezione antincendio"
       },
       {
         "value": "Chemikalien",
-        "label": "Chemikalien"
+        "label": "Sostanze chimiche"
       },
       {
         "value": "Druckbehälter",
-        "label": "Druckbehälter"
+        "label": "Recipienti in pressione"
       },
       {
         "value": "Elektrik",
-        "label": "Elektrik"
+        "label": "Impianti elettrici"
       },
       {
         "value": "Ergonomie",
-        "label": "Ergonomie"
+        "label": "Ergonomia"
       },
       {
         "value": "Erste Hilfe",
-        "label": "Erste Hilfe"
+        "label": "Primo soccorso"
       },
       {
         "value": "Fluchtwege",
-        "label": "Fluchtwege"
+        "label": "Vie di fuga"
       },
       {
         "value": "Gefährdungsbeurteilung",
-        "label": "Gefährdungsbeurteilung"
+        "label": "Valutazione dei rischi"
       },
       {
         "value": "Handwerkzeuge",
-        "label": "Handwerkzeuge"
+        "label": "Utensili manuali"
       },
       {
         "value": "Kennzeichnung",
-        "label": "Kennzeichnung"
+        "label": "Segnaletica"
       },
       {
         "value": "Lagerung",
-        "label": "Lagerung"
+        "label": "Stoccaggio"
       },
       {
         "value": "Lärm",
-        "label": "Lärm"
+        "label": "Rumore"
       },
       {
         "value": "Maschinenwartung",
-        "label": "Maschinenwartung"
+        "label": "Manutenzione delle macchine"
       },
       {
         "value": "Maschinensicherung",
-        "label": "Maschinensicherung"
+        "label": "Sicurezza delle macchine"
       },
       {
         "value": "Notfallorganisation",
-        "label": "Notfallorganisation"
+        "label": "Organizzazione delle emergenze"
       },
       {
         "value": "PSA",
-        "label": "PSA"
+        "label": "DPI"
       },
       {
         "value": "Rutschgefahr",
-        "label": "Rutschgefahr"
+        "label": "Rischio di scivolamento"
       },
       {
         "value": "Sauberkeit",
-        "label": "Sauberkeit"
+        "label": "Pulizia"
       },
       {
         "value": "Schulung / Unterweisung",
-        "label": "Schulung / Unterweisung"
+        "label": "Formazione / istruzione"
       },
       {
         "value": "Schweißarbeiten",
-        "label": "Schweißarbeiten"
+        "label": "Lavori di saldatura"
       },
       {
         "value": "Sicherheitsdatenblätter",
-        "label": "Sicherheitsdatenblätter"
+        "label": "Schede di dati di sicurezza"
       },
       {
         "value": "Staplerverkehr",
-        "label": "Staplerverkehr"
+        "label": "Circolazione dei carrelli elevatori"
       },
       {
         "value": "Verkehrswege",
-        "label": "Verkehrswege"
+        "label": "Vie di transito"
       },
       {
         "value": "Werkstatt / Ordnung",
-        "label": "Werkstatt / Ordnung"
+        "label": "Officina / ordine"
       }
     ],
     "training": [

@@ -174,6 +174,31 @@
       return null;
     };
 
+    const readSeedKnowledgeBase = async (localeHint = "") => {
+      if (!state.projectHandle) return null;
+      if (typeof seeds.getKnowledgeBaseFilename !== "function") return null;
+      const requestedLocale = String(localeHint || "").trim() || "de-CH";
+      const seedFilename = seeds.getKnowledgeBaseFilename(requestedLocale);
+      let knowledgeBase = null;
+      if (typeof seeds.readSeedFromProject === "function") {
+        try {
+          knowledgeBase = await seeds.readSeedFromProject(state.projectHandle, seedFilename);
+        } catch (err) {
+          knowledgeBase = null;
+        }
+      }
+      if (!knowledgeBase && typeof seeds.readSeedFromHttp === "function") {
+        try {
+          knowledgeBase = await seeds.readSeedFromHttp(seedFilename);
+        } catch (err) {
+          knowledgeBase = null;
+        }
+      }
+      if (!knowledgeBase) return null;
+      if (!isValidKnowledgeBase(knowledgeBase, `Seed (${seedFilename})`)) return null;
+      return knowledgeBase;
+    };
+
     const setDefaultPhotoHandle = async () => {
       if (!state.projectHandle) return;
       if (!state.photoHandle) {
@@ -221,7 +246,11 @@
 
     const fillMissingTagsFromLibrary = async () => {
       if (state.tagOptions?.report?.length && state.tagOptions?.observations?.length && state.tagOptions?.training?.length) return;
-      const knowledgeBase = await readKnowledgeBase();
+      let knowledgeBase = await readKnowledgeBase();
+      if (!knowledgeBase) {
+        const localeFromReport = state.sidecarDoc?.report?.project?.meta?.locale || "";
+        knowledgeBase = await readSeedKnowledgeBase(localeFromReport);
+      }
       if (!knowledgeBase?.tags) return;
       const seedOptions = tagsApi.ensureTagOptions(knowledgeBase.tags);
       state.tagOptions = {

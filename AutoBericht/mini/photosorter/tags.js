@@ -131,7 +131,7 @@
       const topLevel = normalized.split(".")[0];
       // Skip top-level chapter IDs (no dot) and specific exclusion chapters.
       return !normalized.includes(".")
-        || ["11", "12", "13", "14"].includes(topLevel)
+        || ["12", "13", "14"].includes(topLevel)
         || isObservationChapterTag(normalized);
     };
     project.chapters.forEach((chapter) => {
@@ -188,7 +188,7 @@
     const shouldSkipSection = (sectionId) => {
       const normalized = String(sectionId || "").trim();
       const topLevel = normalized.split(".")[0];
-      return ["11", "12", "13", "14"].includes(topLevel) || isObservationChapterTag(normalized);
+      return ["12", "13", "14"].includes(topLevel) || isObservationChapterTag(normalized);
     };
     items.forEach((item) => {
       if (!item) return;
