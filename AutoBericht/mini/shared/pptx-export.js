@@ -972,8 +972,16 @@
       .forEach((partName) => {
         const xml = getEntryText(templateMap, partName);
         const doc = parseXml(xml, partName);
+        const sldLayout = firstByLocalName(doc, "sldLayout");
         const cSld = firstByLocalName(doc, "cSld");
-        const layoutName = String(getAttr(cSld, "name") || "").trim();
+        // Different PPTX producers persist the user-visible layout name
+        // either on p:cSld@name or on p:sldLayout@matchingName / @name.
+        const layoutName = String(
+          getAttr(cSld, "name")
+          || getAttr(sldLayout, "matchingName")
+          || getAttr(sldLayout, "name")
+          || "",
+        ).trim();
         if (!layoutName) return;
 
         const placeholders = [];
@@ -1046,7 +1054,16 @@
       if (!getLayoutInfo(layoutInfos, name)) missing.push(name);
     });
     if (missing.length) {
-      throw new Error(`Template is missing required layout(s): ${missing.join(", ")}`);
+      const available = Array.from(layoutInfos.values())
+        .map((info) => String(info?.name || "").trim())
+        .filter(Boolean)
+        .sort(compareAlphaNumeric);
+      const preview = available.slice(0, 40);
+      const suffix = available.length > preview.length ? ", ..." : "";
+      throw new Error(
+        `Template is missing required layout(s): ${missing.join(", ")}. `
+        + `Detected layouts (${available.length}): ${preview.join(", ")}${suffix}`,
+      );
     }
   };
 
