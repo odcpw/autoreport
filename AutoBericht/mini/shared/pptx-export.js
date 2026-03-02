@@ -27,15 +27,15 @@
   const REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
 
   const REPORT_LAYOUTS = {
-    chapterSeparator: "chapterorange",
-    chapterSnapshot: "titleandpicture",
-    sectionText: "titleandtext",
-    sectionPhotoLow: "4pictures",
-    sectionPhotoHigh: "6pictures",
-    observationSeparator: "chapterorange",
-    observationTextPhotoLow: "textandpicture",
-    observationTextPhotoHigh: "6pictures",
-    summaryText: "titleandtext",
+    chapterSeparator: "ab_chapterorange",
+    chapterSnapshot: "ab_titleandpicture",
+    sectionText: "ab_titleandtext",
+    sectionPhotoLow: "ab_4pictures",
+    sectionPhotoHigh: "ab_6pictures",
+    observationSeparator: "ab_chapterorange",
+    observationTextPhotoLow: "ab_textandpicture",
+    observationTextPhotoHigh: "ab_6pictures",
+    summaryText: "ab_titleandtext",
   };
 
   const TRAINING_TAG_ORDER = [
@@ -54,14 +54,24 @@
   ];
 
   const TRAINING_LAYOUT_BY_TAG_BASE = {
-    unterlassen: "unterlassen",
-    dulden: "dulden",
-    handeln: "handeln",
-    vorbild: "vorbild",
-    verhindern: "verhindern",
-    audit: "audit",
-    risikobeurteilung: "risikobeurteilung",
-    aviva: "aviva",
+    unterlassen: "ab_unterlassen",
+    dulden: "ab_dulden",
+    handeln: "ab_handeln",
+    vorbild: "ab_vorbild",
+    verhindern: "ab_verhindern",
+    audit: "ab_audit",
+    risikobeurteilung: "ab_risikobeurteilung",
+    aviva: "ab_aviva",
+  };
+
+  const TRAINING_LAYOUTS = {
+    introBySuffix: {
+      d: "ab_title",
+      f: "ab_title",
+      i: "ab_title",
+    },
+    sectionSeparator: "ab_chapterorange",
+    defaultPhoto: "ab_picture",
   };
 
   const SNAPSHOT = {
@@ -1079,22 +1089,26 @@
   const trainingLayoutForTag = (tag, suffix) => {
     const normalized = normalizeTag(tag);
     const base = TRAINING_LAYOUT_BY_TAG_BASE[normalized];
-    if (!base) return "picture";
+    if (!base) return TRAINING_LAYOUTS.defaultPhoto;
     return `${base}_${suffix}`;
   };
 
   const validateTrainingTemplate = (layoutInfos, locale, tagList) => {
     const suffix = localeSuffix(locale);
-    const required = new Set([`seminar_${suffix}`, "chapterorange", "picture"]);
+    const introLayout = TRAINING_LAYOUTS.introBySuffix[suffix];
+    if (!introLayout) {
+      throw new Error(`Unsupported locale suffix for training template validation: ${suffix}`);
+    }
+    const required = new Set([introLayout, TRAINING_LAYOUTS.sectionSeparator, TRAINING_LAYOUTS.defaultPhoto]);
     (tagList || []).forEach((tag) => required.add(trainingLayoutForTag(tag, suffix)));
     requireLayouts(layoutInfos, Array.from(required));
 
-    const chapterPics = listPictureBounds(getLayoutInfo(layoutInfos, "chapterorange")).length;
+    const chapterPics = listPictureBounds(getLayoutInfo(layoutInfos, TRAINING_LAYOUTS.sectionSeparator)).length;
     if (chapterPics > 0) {
-      throw new Error("Layout chapterorange should not contain picture placeholders.");
+      throw new Error(`Layout ${TRAINING_LAYOUTS.sectionSeparator} should not contain picture placeholders.`);
     }
 
-    ["picture"].forEach((name) => {
+    [TRAINING_LAYOUTS.defaultPhoto].forEach((name) => {
       const count = listPictureBounds(getLayoutInfo(layoutInfos, name)).length;
       if (count < 1) throw new Error(`Layout ${name} has no picture placeholders.`);
     });
@@ -1532,6 +1546,10 @@
   const buildTrainingSlidePlan = ({ project, sidecarDoc }) => {
     const locale = String(project?.meta?.locale || "de-CH");
     const suffix = localeSuffix(locale);
+    const introLayout = TRAINING_LAYOUTS.introBySuffix[suffix];
+    if (!introLayout) {
+      throw new Error(`Unsupported locale for training export: ${locale}`);
+    }
     const { trainingMap } = buildPhotoFileMap(sidecarDoc);
 
     const orderedTags = [];
@@ -1550,7 +1568,7 @@
 
     const slides = [];
     slides.push({
-      layout: `seminar_${suffix}`,
+      layout: introLayout,
       title: "Seminar",
       body: "",
       images: [],
@@ -1560,7 +1578,7 @@
       const photos = ensureMapArray(trainingMap, tag);
       if (!photos.length) return;
       slides.push({
-        layout: "chapterorange",
+        layout: TRAINING_LAYOUTS.sectionSeparator,
         title: String(tag || "").trim(),
         body: "",
         images: [],
