@@ -135,7 +135,7 @@
       elements.settingsCoInitialsEl.value = state.project.meta?.coModeratorInitials || "";
       elements.settingsCompanyEl.value = state.project.meta?.company || "";
       elements.settingsCompanyIdEl.value = state.project.meta?.companyId || "";
-      elements.settingsLocaleEl.value = state.project.meta?.locale || "de-CH";
+      elements.settingsLocaleEl.value = state.project.meta?.locale || "";
       if (elements.settingsBackupMinutesEl) {
         const minutes = Number(state.project.meta?.autobackupMinutes);
         elements.settingsBackupMinutesEl.value = Number.isFinite(minutes) ? String(minutes) : "30";

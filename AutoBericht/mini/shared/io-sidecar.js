@@ -289,10 +289,10 @@
       if (source === "library" || source === "empty") {
         state.selectedChapterId = "__project__";
       }
-      renderApi.buildPhotoIndex();
-      renderApi.render();
       runtime.awaitingLocaleBootstrap = source === "empty";
       runtime.pendingBootstrapWrite = false;
+      renderApi.buildPhotoIndex();
+      renderApi.render();
 
       if (source === "library") {
         setStatus("Library loaded; initialized project.");
