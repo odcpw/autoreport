@@ -90,6 +90,11 @@
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&apos;");
 
+  const normalizePartName = (name) => String(name || "")
+    .replace(/\\/g, "/")
+    .replace(/^\/+/, "")
+    .replace(/^\.\//, "");
+
   const ensureZipHelpers = () => {
     if (typeof unzipAllEntries !== "function" || typeof buildZipStore !== "function") {
       throw new Error("ZIP helpers are not available (AutoBerichtWordDocxZip).");
@@ -968,7 +973,7 @@
   const getLayoutInfos = (templateMap) => {
     const infos = new Map();
     Array.from(templateMap.keys())
-      .filter((name) => /^ppt\/slideLayouts\/slideLayout\d+\.xml$/.test(name))
+      .filter((name) => /^ppt\/slidelayouts\/slidelayout\d+\.xml$/i.test(normalizePartName(name)))
       .forEach((partName) => {
         const xml = getEntryText(templateMap, partName);
         const doc = parseXml(xml, partName);
@@ -1751,6 +1756,19 @@
     const templateFile = await pickPptTemplate();
     const templateMap = await getTemplateMap(templateFile);
     const layoutInfos = getLayoutInfos(templateMap);
+    if (!layoutInfos.size) {
+      const allEntries = Array.from(templateMap.keys());
+      const xmlEntries = allEntries
+        .map((name) => normalizePartName(name))
+        .filter((name) => name.toLowerCase().endsWith(".xml"));
+      const layoutLikeEntries = xmlEntries.filter((name) => name.toLowerCase().includes("slidelayout"));
+      throw new Error(
+        `No slide layouts detected in template. `
+        + `Entries: ${allEntries.length}, XML entries: ${xmlEntries.length}, `
+        + `layout-like XML entries: ${layoutLikeEntries.length}. `
+        + `First layout-like entries: ${layoutLikeEntries.slice(0, 10).join(", ") || "(none)"}`,
+      );
+    }
 
     const locale = String(project?.meta?.locale || "de-CH");
 

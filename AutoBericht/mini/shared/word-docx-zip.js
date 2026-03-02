@@ -74,6 +74,10 @@
         && bytes[i + 2] === 0x05
         && bytes[i + 3] === 0x06
       ) {
+        if (i + minEocd > bytes.length) continue;
+        const commentLen = bytes[i + 20] | (bytes[i + 21] << 8);
+        // EOCD must end exactly at archive end (after optional comment).
+        if (i + minEocd + commentLen !== bytes.length) continue;
         return i;
       }
     }
@@ -97,7 +101,15 @@
 
     const centralDirSize = readU32(view, eocd + 12);
     const centralDirOffset = readU32(view, eocd + 16);
+
+    if (centralDirSize === 0xffffffff || centralDirOffset === 0xffffffff) {
+      throw new Error("Unsupported ZIP64 archive.");
+    }
+
     const centralDirEnd = centralDirOffset + centralDirSize;
+    if (centralDirOffset < 0 || centralDirSize < 0 || centralDirEnd > bytes.length) {
+      throw new Error("Invalid zip: central directory bounds are out of range.");
+    }
 
     const entries = [];
     let cursor = centralDirOffset;
