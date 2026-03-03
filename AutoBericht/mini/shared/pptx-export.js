@@ -82,12 +82,13 @@
   };
 
   const SNAPSHOT = {
-    width: 1920,
-    height: 1080,
-    margin: 56,
-    headerH: 110,
-    footerH: 52,
-    thermoH: 88,
+    // A4 portrait-like canvas to avoid wide-stretch artifacts on chapter snapshot slides.
+    width: 1400,
+    height: 1980,
+    margin: 52,
+    headerH: 120,
+    footerH: 56,
+    thermoH: 110,
   };
 
   const xmlEscape = (value) => String(value || "")
@@ -1533,6 +1534,26 @@
     ].join("");
   };
 
+  const fallbackPictureBounds = (layoutInfo) => {
+    const body = pickPlaceholderBounds(layoutInfo, ["body", "subTitle"]);
+    if (body) return body;
+    const title = pickPlaceholderBounds(layoutInfo, ["title", "ctrTitle"]);
+    if (title) {
+      const slideCx = 12192000;
+      const slideCy = 6858000;
+      const marginX = 551384;
+      const y = Math.max(0, Number(title.y || 0) + Number(title.cy || 0) + 180000);
+      const cy = Math.max(900000, slideCy - y - 240000);
+      return {
+        x: marginX,
+        y,
+        cx: Math.max(2000000, slideCx - marginX * 2),
+        cy,
+      };
+    }
+    return { x: 551384, y: 1557338, cx: 11089232, cy: 4608512 };
+  };
+
   const picturePlaceholderShapeXml = ({ id, name, relId, idxKey }) => [
     "<p:pic>",
     "<p:nvPicPr>",
@@ -1616,12 +1637,13 @@
         throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no picture placeholders.`);
       }
       const relId = `rId${index + 2}`;
-      if (slot.bounds) {
+      const bounds = slot.bounds || fallbackPictureBounds(layoutInfo);
+      if (bounds) {
         shapes.push(pictureShapeXml({
           id: nextShapeId,
           name: `Picture ${nextShapeId}`,
           relId,
-          bounds: slot.bounds,
+          bounds,
           imageW: img.width,
           imageH: img.height,
         }));
@@ -1675,7 +1697,8 @@
 
   const reportTitleForChapter = (chapter, locale = "de-CH") => {
     const cid = String(chapter?.id || "").trim();
-    const title = resolveLocalizedText(chapter?.title, locale).trim();
+    const title = stripLeadingNumber(resolveLocalizedText(chapter?.title, locale)).trim();
+    if (cid === "0") return title || "Management Summary";
     if (!cid) return title;
     if (!title) return cid;
     if (cid.includes(".")) return `${cid} ${title}`;
@@ -1733,9 +1756,10 @@
       const chapterTitle = resolveLocalizedText(chapter?.title, locale).trim();
 
       if (chapterId === "0") {
+        const summaryTitle = stripLeadingNumber(chapterTitle || "Management Summary");
         slides.push({
           layout: REPORT_LAYOUTS.chapterSeparator,
-          title: chapterTitle || "Management Summary",
+          title: summaryTitle,
           body: "",
           images: [],
         });
@@ -1744,7 +1768,7 @@
         chunkArray(lines, 3).forEach((chunk) => {
           slides.push({
             layout: REPORT_LAYOUTS.summaryText,
-            title: chapterTitle || "Management Summary",
+            title: summaryTitle,
             body: chunk.join("\n\n"),
             images: [],
           });
