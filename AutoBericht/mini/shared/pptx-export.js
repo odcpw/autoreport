@@ -139,6 +139,9 @@
 
   const serializeXml = (doc) => {
     const body = new XMLSerializer().serializeToString(doc);
+    // Browser XMLSerializer may already include a declaration for some docs.
+    // Emit exactly one declaration to keep package XML valid.
+    if (/^\s*<\?xml\b/i.test(body)) return body;
     return `<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n${body}`;
   };
 
