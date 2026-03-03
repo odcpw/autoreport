@@ -28,15 +28,21 @@
   const REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
 
   const REPORT_LAYOUTS = {
+    cover: "ab_title",
     chapterSeparator: "ab_chapterorange",
     chapterSnapshot: "ab_titleandpicture",
-    sectionText: "ab_titleandtext",
+    sectionText: "ab_textandpicture",
     sectionPhotoLow: "ab_4pictures",
     sectionPhotoHigh: "ab_6pictures",
     observationSeparator: "ab_chapterorange",
     observationTextPhotoLow: "ab_textandpicture",
     observationTextPhotoHigh: "ab_6pictures",
     summaryText: "ab_titleandtext",
+  };
+
+  const REPORT_OPTIONAL_LAYOUTS = {
+    sectionPhotoTwo: "ab_2pictures",
+    sectionPhotoThree: "ab_3pictures",
   };
 
   const TRAINING_TAG_ORDER = [
@@ -208,6 +214,41 @@
     return String(value);
   };
 
+  const localeBase = (locale) => String(locale || "").trim().toLowerCase().split("-")[0] || "de";
+
+  const resolveLocalizedText = (value, locale = "de-CH") => {
+    if (value == null) return "";
+    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
+      return String(value);
+    }
+    if (Array.isArray(value)) {
+      return value.map((item) => resolveLocalizedText(item, locale)).filter(Boolean).join("\n");
+    }
+    if (typeof value === "object") {
+      const exact = String(locale || "").trim();
+      const base = localeBase(locale);
+      const candidates = [
+        exact, exact.toLowerCase(), exact.toUpperCase(),
+        base, base.toLowerCase(), base.toUpperCase(),
+        "de-CH", "de", "fr-CH", "fr", "it-CH", "it", "en-GB", "en-US", "en",
+        "title", "label", "name", "text", "value",
+      ];
+      for (let i = 0; i < candidates.length; i += 1) {
+        const key = candidates[i];
+        if (!key || !Object.prototype.hasOwnProperty.call(value, key)) continue;
+        const text = resolveLocalizedText(value[key], locale);
+        if (text && text !== "[object Object]") return text;
+      }
+      const keys = Object.keys(value);
+      for (let i = 0; i < keys.length; i += 1) {
+        const text = resolveLocalizedText(value[keys[i]], locale);
+        if (text && text !== "[object Object]") return text;
+      }
+      return "";
+    }
+    return String(value);
+  };
+
   const stripLeadingNumber = (value) => {
     if (typeof reportRows.stripLeadingNumber === "function") return reportRows.stripLeadingNumber(value);
     return String(value || "").replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "").trim();
@@ -234,9 +275,13 @@
     return `${chapterId}.1`;
   };
 
-  const resolveSectionTitle = (row) => {
-    if (typeof reportRows.resolveSectionTitle === "function") return reportRows.resolveSectionTitle(row);
-    const rawTitle = String(row?.title || row?.id || "");
+  const resolveSectionTitle = (row, locale = "de-CH") => {
+    if (typeof reportRows.resolveSectionTitle === "function") {
+      const fromHelper = reportRows.resolveSectionTitle(row);
+      const helperText = resolveLocalizedText(fromHelper, locale);
+      if (helperText) return stripLeadingNumber(helperText) || helperText;
+    }
+    const rawTitle = resolveLocalizedText(row?.title, locale) || String(row?.id || "");
     const cleaned = stripLeadingNumber(rawTitle);
     return cleaned || rawTitle;
   };
@@ -315,12 +360,12 @@
     return Array.isArray(chapter?.rows) ? [...chapter.rows] : [];
   };
 
-  const buildChapterRows = (chapter, toText) => {
+  const buildChapterRows = (chapter, toText, locale = "de-CH") => {
     if (typeof reportRows.buildChapterRows === "function") {
       return reportRows.buildChapterRows(chapter, {
         toText,
         includeRow: isIncludedRow,
-        titleForFinding: (row, chapterId) => (chapterId === "4.8" ? String(row?.titleOverride || "").trim() : ""),
+        titleForFinding: (row, chapterId) => (chapterId === "4.8" ? resolveLocalizedText(row?.titleOverride, locale).trim() : ""),
       });
     }
     const chapterId = String(chapter?.id || "");
@@ -340,7 +385,7 @@
         out.push({
           kind: "section",
           id: resolveSectionDisplayId(sid, chapterId, sectionMap),
-          title: resolveSectionTitle(row),
+          title: resolveSectionTitle(row, locale),
         });
         return;
       }
@@ -349,7 +394,7 @@
       out.push({
         kind: "finding",
         id: rowMap.get(rid) || rid,
-        title: chapterId === "4.8" ? String(row?.titleOverride || "").trim() : "",
+        title: chapterId === "4.8" ? resolveLocalizedText(row?.titleOverride, locale).trim() : "",
         finding: resolveFindingText(row, toText),
         recommendation: resolveRecommendationText(row, toText),
         priority: resolvePriorityText(row),
@@ -516,22 +561,22 @@
 
   const ensureMapArray = (map, key) => map.get(String(key || "").trim()) || [];
 
-  const resolveObservationTag = (row) => {
-    const first = String(row?.tag || "").trim();
+  const resolveObservationTag = (row, locale = "de-CH") => {
+    const first = resolveLocalizedText(row?.tag, locale).trim();
     if (first) return first;
-    const second = String(row?.titleOverride || "").trim();
+    const second = resolveLocalizedText(row?.titleOverride, locale).trim();
     if (second) return second;
-    const third = String(row?.title || "").trim();
+    const third = resolveLocalizedText(row?.title, locale).trim();
     if (third) return third;
     return String(row?.id || "").trim();
   };
 
-  const resolveObservationTitle = (row, fallback) => {
-    const first = String(row?.titleOverride || "").trim();
+  const resolveObservationTitle = (row, fallback, locale = "de-CH") => {
+    const first = resolveLocalizedText(row?.titleOverride, locale).trim();
     if (first) return first;
-    const second = String(row?.title || "").trim();
+    const second = resolveLocalizedText(row?.title, locale).trim();
     if (second) return second;
-    return String(fallback || "").trim();
+    return resolveLocalizedText(fallback, locale).trim() || String(fallback || "").trim();
   };
 
   const resolveSpecial48DisplaySectionId = (chapters) => {
@@ -562,7 +607,7 @@
     return out;
   };
 
-  const buildSectionBlocks = (chapter, chapterId) => {
+  const buildSectionBlocks = (chapter, chapterId, locale = "de-CH") => {
     const rows = orderRowsForChapter(chapter);
     const { rowMap, sectionMap } = buildRenumberMap(rows, chapterId);
     const sections = [];
@@ -574,7 +619,7 @@
         current = {
           rawId: sectionId,
           displayId: resolveSectionDisplayId(sectionId, chapterId, sectionMap),
-          title: resolveSectionTitle(row),
+          title: resolveSectionTitle(row, locale),
           rows: [],
         };
         sections.push(current);
@@ -586,7 +631,7 @@
         current = {
           rawId: sid,
           displayId: resolveSectionDisplayId(sid, chapterId, sectionMap),
-          title: String(row?.sectionLabel || sid || "").trim(),
+          title: resolveLocalizedText(row?.sectionLabel, locale).trim() || String(sid || "").trim(),
           rows: [],
         };
         sections.push(current);
@@ -610,7 +655,17 @@
       if (!text) return;
       lines.push(text.replace(/\s+/g, " ").trim());
     });
-    return lines;
+    const alphaLabel = (index) => {
+      let n = Math.max(1, Number(index) || 1);
+      let out = "";
+      while (n > 0) {
+        const rem = (n - 1) % 26;
+        out = String.fromCharCode(65 + rem) + out;
+        n = Math.floor((n - 1) / 26);
+      }
+      return out;
+    };
+    return lines.map((line, index) => `${alphaLabel(index + 1)}. ${line}`);
   };
 
   const buildSectionFindingLines = (section, toText) => {
@@ -831,17 +886,6 @@
     ctx.font = "500 18px Arial";
     ctx.fillStyle = "#4b5967";
     ctx.fillText(String(company || "").trim() || "Company", SNAPSHOT.margin + 180, 82);
-
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#1f2933";
-    ctx.font = "600 18px Arial";
-    ctx.fillText(`${labels.date}: ${dateLabel}`, SNAPSHOT.width - SNAPSHOT.margin, 44);
-    if (moderator) {
-      ctx.fillStyle = "#4b5967";
-      ctx.font = "500 16px Arial";
-      ctx.fillText(`${labels.moderator}: ${moderator}`, SNAPSHOT.width - SNAPSHOT.margin, 72);
-    }
-    ctx.textAlign = "left";
 
     const thermoX = SNAPSHOT.margin;
     const thermoY = SNAPSHOT.headerH + 18;
@@ -1135,6 +1179,22 @@
     return null;
   };
 
+  const pickPlaceholderSlot = (layoutInfo, kinds, options = {}) => {
+    if (!layoutInfo) return null;
+    const want = Array.isArray(kinds) ? kinds : [kinds];
+    const requireBounds = options.requireBounds === true;
+    for (let i = 0; i < want.length; i += 1) {
+      const kind = String(want[i] || "").trim().toLowerCase();
+      const match = (layoutInfo.placeholders || []).find((ph) => {
+        if (String(ph?.type || "").toLowerCase() !== kind) return false;
+        if (!requireBounds) return true;
+        return !!ph?.bounds;
+      });
+      if (match) return match;
+    }
+    return null;
+  };
+
   const listPictureSlots = (layoutInfo) => {
     if (!layoutInfo) return [];
     return layoutInfo.placeholders
@@ -1194,6 +1254,7 @@
   const validateReportTemplate = (layoutInfos) => {
     const layouts = Object.values(REPORT_LAYOUTS);
     requireLayouts(layoutInfos, layouts);
+    requirePlaceholder(layoutInfos, REPORT_LAYOUTS.cover, ["title", "ctrTitle"], "cover title");
     requirePlaceholder(layoutInfos, REPORT_LAYOUTS.chapterSeparator, ["title", "ctrTitle"], "chapter separator title");
     requirePlaceholder(layoutInfos, REPORT_LAYOUTS.chapterSnapshot, ["title", "ctrTitle"], "chapter snapshot title");
     requirePlaceholder(layoutInfos, REPORT_LAYOUTS.chapterSnapshot, ["pic"], "chapter snapshot image");
@@ -1389,6 +1450,15 @@
     return `<p:txBody><a:bodyPr/><a:lstStyle/>${paragraphs}</p:txBody>`;
   };
 
+  const textBodyXmlInherit = (text) => {
+    const lines = String(text || "").split(/\r?\n/);
+    const paragraphs = (lines.length ? lines : [""]).map((line) => {
+      if (!line.trim()) return "<a:p><a:endParaRPr/></a:p>";
+      return `<a:p><a:r><a:t>${xmlEscape(line)}</a:t></a:r><a:endParaRPr/></a:p>`;
+    }).join("");
+    return `<p:txBody><a:bodyPr/><a:lstStyle/>${paragraphs}</p:txBody>`;
+  };
+
   const textShapeXml = ({ id, name, bounds, text, size = 1800, bold = false }) => {
     const x = toInt(bounds?.x, 0);
     const y = toInt(bounds?.y, 0);
@@ -1407,6 +1477,21 @@
       "<a:noFill/>",
       "</p:spPr>",
       textBodyXml(text, { size, bold }),
+      "</p:sp>",
+    ].join("");
+  };
+
+  const textPlaceholderShapeXml = ({ id, name, text, phType = "body", idxKey = "" }) => {
+    const idxAttr = idxKey ? ` idx=\"${xmlEscape(idxKey)}\"` : "";
+    return [
+      "<p:sp>",
+      "<p:nvSpPr>",
+      `<p:cNvPr id=\"${id}\" name=\"${xmlEscape(name)}\"/>`,
+      "<p:cNvSpPr/>",
+      `<p:nvPr><p:ph type=\"${xmlEscape(phType)}\"${idxAttr}/></p:nvPr>`,
+      "</p:nvSpPr>",
+      "<p:spPr/>",
+      textBodyXmlInherit(text),
       "</p:sp>",
     ].join("");
   };
@@ -1455,9 +1540,9 @@
     "<p:cNvPicPr><a:picLocks noChangeAspect=\"1\"/></p:cNvPicPr>",
     `<p:nvPr><p:ph type=\"pic\" idx=\"${xmlEscape(idxKey)}\"/></p:nvPr>`,
     "</p:nvPicPr>",
-    "<p:blipFill>",
+    "<p:blipFill rotWithShape=\"1\">",
     `<a:blip r:embed=\"${xmlEscape(relId)}\"/>`,
-    "<a:stretch><a:fillRect/></a:stretch>",
+    "<a:stretch/>",
     "</p:blipFill>",
     "<p:spPr/>",
     "</p:pic>",
@@ -1467,36 +1552,60 @@
     let nextShapeId = 2;
     const shapes = [];
 
-    const titleBounds = pickPlaceholderBounds(layoutInfo, ["title", "ctrTitle"]);
-    const bodyBounds = pickPlaceholderBounds(layoutInfo, ["body", "subTitle"]);
+    const titleSlot = pickPlaceholderSlot(layoutInfo, ["title", "ctrTitle"]);
+    const bodySlot = pickPlaceholderSlot(layoutInfo, ["body", "subTitle"]);
 
     if (String(title || "").trim()) {
-      if (!titleBounds) {
-        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no title/ctrTitle placeholder geometry.`);
+      if (!titleSlot) {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no title/ctrTitle placeholder.`);
       }
-      shapes.push(textShapeXml({
-        id: nextShapeId,
-        name: `Title ${nextShapeId}`,
-        bounds: titleBounds,
-        text: String(title || ""),
-        size: 2400,
-        bold: true,
-      }));
+      if (titleSlot.type) {
+        shapes.push(textPlaceholderShapeXml({
+          id: nextShapeId,
+          name: `Title ${nextShapeId}`,
+          text: String(title || ""),
+          phType: titleSlot.type,
+          idxKey: titleSlot.idxKey || "",
+        }));
+      } else if (titleSlot.bounds) {
+        shapes.push(textShapeXml({
+          id: nextShapeId,
+          name: `Title ${nextShapeId}`,
+          bounds: titleSlot.bounds,
+          text: String(title || ""),
+          size: 2400,
+          bold: true,
+        }));
+      } else {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} title placeholder is not renderable.`);
+      }
       nextShapeId += 1;
     }
 
     if (String(body || "").trim()) {
-      if (!bodyBounds) {
-        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no body/subTitle placeholder geometry.`);
+      if (!bodySlot) {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no body/subTitle placeholder.`);
       }
-      shapes.push(textShapeXml({
-        id: nextShapeId,
-        name: `Body ${nextShapeId}`,
-        bounds: bodyBounds,
-        text: String(body || ""),
-        size: 1800,
-        bold: false,
-      }));
+      if (bodySlot.type) {
+        shapes.push(textPlaceholderShapeXml({
+          id: nextShapeId,
+          name: `Body ${nextShapeId}`,
+          text: String(body || ""),
+          phType: bodySlot.type,
+          idxKey: bodySlot.idxKey || "",
+        }));
+      } else if (bodySlot.bounds) {
+        shapes.push(textShapeXml({
+          id: nextShapeId,
+          name: `Body ${nextShapeId}`,
+          bounds: bodySlot.bounds,
+          text: String(body || ""),
+          size: 1800,
+          bold: false,
+        }));
+      } else {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} body placeholder is not renderable.`);
+      }
       nextShapeId += 1;
     }
 
@@ -1564,19 +1673,33 @@
     return out;
   };
 
-  const reportTitleForChapter = (chapter) => {
+  const reportTitleForChapter = (chapter, locale = "de-CH") => {
     const cid = String(chapter?.id || "").trim();
-    const title = String(chapter?.title || "").trim();
+    const title = resolveLocalizedText(chapter?.title, locale).trim();
     if (!cid) return title;
     if (!title) return cid;
     if (cid.includes(".")) return `${cid} ${title}`;
     return `${cid}. ${title}`;
   };
 
+  const pickSectionPhotoLayout = (layoutInfos, count) => {
+    const c = Math.max(1, Number(count) || 1);
+    if (c <= 1) return REPORT_LAYOUTS.chapterSnapshot;
+    if (c === 2 && getLayoutInfo(layoutInfos, REPORT_OPTIONAL_LAYOUTS.sectionPhotoTwo)) {
+      return REPORT_OPTIONAL_LAYOUTS.sectionPhotoTwo;
+    }
+    if (c === 3 && getLayoutInfo(layoutInfos, REPORT_OPTIONAL_LAYOUTS.sectionPhotoThree)) {
+      return REPORT_OPTIONAL_LAYOUTS.sectionPhotoThree;
+    }
+    if (c <= 4) return REPORT_LAYOUTS.sectionPhotoLow;
+    return REPORT_LAYOUTS.sectionPhotoHigh;
+  };
+
   const buildReportSlidePlan = async ({
     project,
     sidecarDoc,
     projectHandle,
+    layoutInfos,
     toText,
     compareIdSegments,
     spiderScoreMap,
@@ -1596,11 +1719,18 @@
     const moderator = String(project?.meta?.moderator || "").trim();
     const locale = String(project?.meta?.locale || "de-CH");
 
+    slides.push({
+      layout: REPORT_LAYOUTS.cover,
+      title: company,
+      body: snapshotLabels(locale).reportType,
+      images: [],
+    });
+
     for (let i = 0; i < chapters.length; i += 1) {
       const chapter = chapters[i];
       const chapterId = String(chapter?.id || "").trim();
       if (!chapterId) continue;
-      const chapterTitle = String(chapter?.title || "").trim();
+      const chapterTitle = resolveLocalizedText(chapter?.title, locale).trim();
 
       if (chapterId === "0") {
         slides.push({
@@ -1638,8 +1768,8 @@
           const row = ordered[r];
           item += 1;
           const displayId = `${displaySectionId}.${item}`;
-          const obsTag = resolveObservationTag(row);
-          const obsTitle = resolveObservationTitle(row, obsTag);
+          const obsTag = resolveObservationTag(row, locale);
+          const obsTitle = resolveObservationTitle(row, obsTag, locale);
           const fullTitle = `${displayId} ${obsTitle}`.trim();
           const finding = String(resolveFindingText(row, toText) || "").trim();
 
@@ -1659,7 +1789,7 @@
           const remaining = photos.slice(firstSlots);
           const chunks = chunkArray(remaining, 6);
           chunks.forEach((chunk) => {
-            const layout = chunk.length <= 4 ? REPORT_LAYOUTS.sectionPhotoLow : REPORT_LAYOUTS.sectionPhotoHigh;
+            const layout = pickSectionPhotoLayout(layoutInfos, chunk.length);
             slides.push({
               layout,
               title: fullTitle,
@@ -1671,7 +1801,7 @@
         continue;
       }
 
-      const chapterLabel = reportTitleForChapter(chapter);
+      const chapterLabel = reportTitleForChapter(chapter, locale);
       slides.push({
         layout: REPORT_LAYOUTS.chapterSeparator,
         title: chapterLabel,
@@ -1679,7 +1809,7 @@
         images: [],
       });
 
-      const chapterRows = buildChapterRows(chapter, toText);
+      const chapterRows = buildChapterRows(chapter, toText, locale);
       const positivesText = chapter?.meta?.positivesInclude === true && chapter?.meta?.positivesDone === true
         ? String(chapter?.meta?.positivesText || "").trim()
         : "";
@@ -1705,7 +1835,7 @@
         images: [snapshot],
       });
 
-      const sections = buildSectionBlocks(chapter, chapterId);
+      const sections = buildSectionBlocks(chapter, chapterId, locale);
       for (let s = 0; s < sections.length; s += 1) {
         const section = sections[s];
         const sectionTitle = `${section.displayId || section.rawId || ""} ${section.title || ""}`.trim();
@@ -1721,7 +1851,7 @@
 
         const photos = ensureMapArray(reportMap, section.rawId);
         chunkArray(photos, 6).forEach((chunk) => {
-          const layout = chunk.length <= 4 ? REPORT_LAYOUTS.sectionPhotoLow : REPORT_LAYOUTS.sectionPhotoHigh;
+          const layout = pickSectionPhotoLayout(layoutInfos, chunk.length);
           slides.push({
             layout,
             title: sectionTitle,
@@ -1966,6 +2096,7 @@
         project,
         sidecarDoc,
         projectHandle,
+        layoutInfos,
         toText,
         compareIdSegments,
         spiderScoreMap,
