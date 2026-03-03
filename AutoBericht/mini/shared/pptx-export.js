@@ -1132,10 +1132,16 @@
     return null;
   };
 
-  const listPictureBounds = (layoutInfo) => {
+  const listPictureSlots = (layoutInfo) => {
     if (!layoutInfo) return [];
     return layoutInfo.placeholders
-      .filter((ph) => ph.type.toLowerCase() === "pic" && !!ph.bounds)
+      .filter((ph) => ph.type.toLowerCase() === "pic")
+      .filter((ph) => !!ph.bounds || !!ph.idxKey);
+  };
+
+  const listPictureBounds = (layoutInfo) => {
+    return listPictureSlots(layoutInfo)
+      .filter((ph) => !!ph.bounds)
       .map((ph) => ph.bounds);
   };
 
@@ -1171,6 +1177,12 @@
       const kinds = Array.isArray(kindSet) ? kindSet.join("/") : String(kindSet || "");
       throw new Error(`Layout ${layoutName} is missing required ${kinds} placeholder for ${label}.`);
     }
+    const wantsPic = want.some((kind) => String(kind || "").toLowerCase() === "pic");
+    if (wantsPic) {
+      if (matches.some((ph) => !!ph.bounds || !!ph.idxKey)) return;
+      const kinds = Array.isArray(kindSet) ? kindSet.join("/") : String(kindSet || "");
+      throw new Error(`Layout ${layoutName} has ${kinds} placeholder(s), but no geometry and no idx for ${label}.`);
+    }
     if (matches.some((ph) => !!ph.bounds)) return;
     const kinds = Array.isArray(kindSet) ? kindSet.join("/") : String(kindSet || "");
     throw new Error(`Layout ${layoutName} has ${kinds} placeholder(s), but no geometry (x/y/cx/cy) for ${label}.`);
@@ -1190,7 +1202,7 @@
       REPORT_LAYOUTS.observationTextPhotoLow,
       REPORT_LAYOUTS.observationTextPhotoHigh,
     ].forEach((layoutName) => {
-      const count = listPictureBounds(getLayoutInfo(layoutInfos, layoutName)).length;
+      const count = listPictureSlots(getLayoutInfo(layoutInfos, layoutName)).length;
       if (count < 1) throw new Error(`Layout ${layoutName} has no picture placeholders.`);
     });
   };
@@ -1219,19 +1231,19 @@
     (tagList || []).forEach((tag) => required.add(trainingLayoutForTag(tag, suffix)));
     requireLayouts(layoutInfos, Array.from(required));
 
-    const chapterPics = listPictureBounds(getLayoutInfo(layoutInfos, TRAINING_LAYOUTS.sectionSeparator)).length;
+    const chapterPics = listPictureSlots(getLayoutInfo(layoutInfos, TRAINING_LAYOUTS.sectionSeparator)).length;
     if (chapterPics > 0) {
       throw new Error(`Layout ${TRAINING_LAYOUTS.sectionSeparator} should not contain picture placeholders.`);
     }
 
     [TRAINING_LAYOUTS.defaultPhoto].forEach((name) => {
-      const count = listPictureBounds(getLayoutInfo(layoutInfos, name)).length;
+      const count = listPictureSlots(getLayoutInfo(layoutInfos, name)).length;
       if (count < 1) throw new Error(`Layout ${name} has no picture placeholders.`);
     });
 
     (tagList || []).forEach((tag) => {
       const layoutName = trainingLayoutForTag(tag, suffix);
-      const count = listPictureBounds(getLayoutInfo(layoutInfos, layoutName)).length;
+      const count = listPictureSlots(getLayoutInfo(layoutInfos, layoutName)).length;
       if (count < 1) throw new Error(`Layout ${layoutName} has no picture placeholders.`);
     });
   };
@@ -1406,6 +1418,21 @@
     ].join("");
   };
 
+  const picturePlaceholderShapeXml = ({ id, name, relId, idxKey }) => [
+    "<p:pic>",
+    "<p:nvPicPr>",
+    `<p:cNvPr id=\"${id}\" name=\"${xmlEscape(name)}\"/>`,
+    "<p:cNvPicPr><a:picLocks noChangeAspect=\"1\"/></p:cNvPicPr>",
+    `<p:nvPr><p:ph type=\"pic\" idx=\"${xmlEscape(idxKey)}\"/></p:nvPr>`,
+    "</p:nvPicPr>",
+    "<p:blipFill>",
+    `<a:blip r:embed=\"${xmlEscape(relId)}\"/>`,
+    "<a:stretch><a:fillRect/></a:stretch>",
+    "</p:blipFill>",
+    "<p:spPr/>",
+    "</p:pic>",
+  ].join("");
+
   const buildSlideXml = ({ layoutInfo, title, body, images }) => {
     let nextShapeId = 2;
     const shapes = [];
@@ -1443,21 +1470,33 @@
       nextShapeId += 1;
     }
 
-    const picBounds = listPictureBounds(layoutInfo);
+    const picSlots = listPictureSlots(layoutInfo);
     (images || []).forEach((img, index) => {
-      const box = picBounds[index] || picBounds[0];
-      if (!box) {
+      const slot = picSlots[index] || picSlots[0];
+      if (!slot) {
         throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no picture placeholders.`);
       }
       const relId = `rId${index + 2}`;
-      shapes.push(pictureShapeXml({
-        id: nextShapeId,
-        name: `Picture ${nextShapeId}`,
-        relId,
-        bounds: box,
-        imageW: img.width,
-        imageH: img.height,
-      }));
+      if (slot.bounds) {
+        shapes.push(pictureShapeXml({
+          id: nextShapeId,
+          name: `Picture ${nextShapeId}`,
+          relId,
+          bounds: slot.bounds,
+          imageW: img.width,
+          imageH: img.height,
+        }));
+      } else if (slot.idxKey) {
+        // Bind image to the placeholder identity; PowerPoint resolves geometry.
+        shapes.push(picturePlaceholderShapeXml({
+          id: nextShapeId,
+          name: `Picture Placeholder ${nextShapeId}`,
+          relId,
+          idxKey: slot.idxKey,
+        }));
+      } else {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} picture placeholder is not renderable (missing bounds and idx).`);
+      }
       nextShapeId += 1;
     });
 
@@ -1731,8 +1770,8 @@
         out.push({ ...slide, images: [] });
         return;
       }
-      const capacity = Math.max(1, listPictureBounds(layoutInfo).length);
-      chunkArray(photos, capacity).forEach((chunk) => {
+      const slotCapacity = Math.max(1, listPictureSlots(layoutInfo).length);
+      chunkArray(photos, slotCapacity).forEach((chunk) => {
         out.push({ ...slide, images: chunk });
       });
     });
