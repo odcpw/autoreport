@@ -1300,9 +1300,23 @@
       .filter((rel) => String(rel.getAttribute("Type") || "") === slideRelType)
       .forEach((rel) => rel.parentNode.removeChild(rel));
 
-    const sldIdLst = presentationDoc.getElementsByTagNameNS(NS_P, "sldIdLst")[0];
+    let sldIdLst = presentationDoc.getElementsByTagNameNS(NS_P, "sldIdLst")[0] || null;
     if (!sldIdLst) {
-      throw new Error("Template presentation.xml is missing p:sldIdLst.");
+      const root = presentationDoc.getElementsByTagNameNS(NS_P, "presentation")[0] || presentationDoc.documentElement;
+      if (!root) throw new Error("Template presentation.xml is invalid: missing p:presentation root.");
+      sldIdLst = presentationDoc.createElementNS(NS_P, "p:sldIdLst");
+      // Empty templates may not contain p:sldIdLst yet. Insert it in a stable position.
+      const children = Array.from(root.childNodes || []).filter((node) => node.nodeType === 1);
+      const masterList = children.find((node) => node.localName === "sldMasterIdLst") || null;
+      if (masterList && masterList.nextSibling) {
+        root.insertBefore(sldIdLst, masterList.nextSibling);
+      } else if (masterList) {
+        root.appendChild(sldIdLst);
+      } else if (children.length) {
+        root.insertBefore(sldIdLst, children[0]);
+      } else {
+        root.appendChild(sldIdLst);
+      }
     }
     while (sldIdLst.firstChild) sldIdLst.removeChild(sldIdLst.firstChild);
     return sldIdLst;
