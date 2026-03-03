@@ -1333,6 +1333,19 @@
     types.appendChild(node);
   };
 
+  const ensureContentTypeDefault = (contentTypesDoc, extension, contentType) => {
+    const ext = String(extension || "").replace(/^\./, "").trim().toLowerCase();
+    if (!ext) return;
+    const types = contentTypesDoc.getElementsByTagNameNS(NS_CT, "Types")[0];
+    const defaults = Array.from(contentTypesDoc.getElementsByTagNameNS(NS_CT, "Default"));
+    const exists = defaults.some((el) => String(el.getAttribute("Extension") || "").toLowerCase() === ext);
+    if (exists) return;
+    const node = contentTypesDoc.createElementNS(NS_CT, "Default");
+    node.setAttribute("Extension", ext);
+    node.setAttribute("ContentType", contentType);
+    types.appendChild(node);
+  };
+
   const createSlideRelDoc = (layoutPartName, imageTargets) => {
     const relsDoc = parseXml(`<Relationships xmlns="${NS_REL}"/>`, "slide rels");
     const root = relsDoc.documentElement;
@@ -1829,6 +1842,10 @@
 
   const writeSlidesToTemplate = ({ templateMap, layoutInfos, slides }) => {
     const docs = getPresentationDocs(templateMap);
+    // Some templates only declare jpeg. We emit png/jpg as needed.
+    ensureContentTypeDefault(docs.contentTypes, "png", "image/png");
+    ensureContentTypeDefault(docs.contentTypes, "jpg", "image/jpeg");
+    ensureContentTypeDefault(docs.contentTypes, "jpeg", "image/jpeg");
     const sldIdLst = clearExistingSlideLinks(docs.presentation, docs.presentationRels);
     let nextRel = nextRelNumeric(docs.presentationRels);
     let nextSlide = nextSlideIndex(templateMap);
