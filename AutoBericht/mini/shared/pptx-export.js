@@ -119,8 +119,8 @@
     if (!node) return [];
     const out = [];
     const walker = (current) => {
-      if (!current || current.nodeType !== 1) return;
-      if (current.localName === localName) out.push(current);
+      if (!current) return;
+      if (current.nodeType === 1 && current.localName === localName) out.push(current);
       const children = current.childNodes || [];
       for (let i = 0; i < children.length; i += 1) walker(children[i]);
     };
