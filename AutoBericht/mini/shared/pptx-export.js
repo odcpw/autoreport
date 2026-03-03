@@ -24,6 +24,7 @@
 
   const REL_SLIDE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slide";
   const REL_SLIDE_LAYOUT = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout";
+  const REL_SLIDE_MASTER = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster";
   const REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
 
   const REPORT_LAYOUTS = {
@@ -94,6 +95,32 @@
     .replace(/\\/g, "/")
     .replace(/^\/+/, "")
     .replace(/^\.\//, "");
+
+  const relsPartNameForPart = (partName) => {
+    const normalized = normalizePartName(partName);
+    const parts = normalized.split("/").filter(Boolean);
+    const file = parts.pop() || "";
+    const dir = parts.join("/");
+    return dir ? `${dir}/_rels/${file}.rels` : `_rels/${file}.rels`;
+  };
+
+  const resolveRelativePartName = (sourcePartName, target) => {
+    const rawTarget = String(target || "").trim();
+    if (!rawTarget) return "";
+    if (rawTarget.startsWith("/")) return normalizePartName(rawTarget);
+    const sourceParts = normalizePartName(sourcePartName).split("/").filter(Boolean);
+    sourceParts.pop();
+    rawTarget.replace(/\\/g, "/").split("/").forEach((segment) => {
+      const token = String(segment || "").trim();
+      if (!token || token === ".") return;
+      if (token === "..") {
+        sourceParts.pop();
+        return;
+      }
+      sourceParts.push(token);
+    });
+    return sourceParts.join("/");
+  };
 
   const ensureZipHelpers = () => {
     if (typeof unzipAllEntries !== "function" || typeof buildZipStore !== "function") {
@@ -970,7 +997,87 @@
     });
   };
 
+  const extractPlaceholdersFromDoc = (doc) => {
+    const cSld = firstByLocalName(doc, "cSld");
+    const spTree = firstByLocalName(cSld, "spTree");
+    const children = spTree ? Array.from(spTree.childNodes || []).filter((node) => node.nodeType === 1) : [];
+    const placeholders = [];
+    children.forEach((shapeEl) => {
+      const ph = firstByLocalName(shapeEl, "ph");
+      if (!ph) return;
+      let xfrm = null;
+      if (shapeEl.localName === "graphicFrame") {
+        xfrm = firstByLocalName(shapeEl, "xfrm");
+      } else {
+        const spPr = firstByLocalName(shapeEl, "spPr");
+        xfrm = firstByLocalName(spPr, "xfrm");
+      }
+      const off = firstByLocalName(xfrm, "off");
+      const ext = firstByLocalName(xfrm, "ext");
+      const typeRaw = String(getAttr(ph, "type") || "").trim();
+      const type = typeRaw || "body";
+      const idxRaw = String(getAttr(ph, "idx") || "").trim();
+      const idxKey = /^\d+$/.test(idxRaw) ? idxRaw : "";
+      placeholders.push({
+        type,
+        idxKey,
+        idxSort: idxKey ? Number(idxKey) : Number.MAX_SAFE_INTEGER,
+        bounds: (off && ext)
+          ? {
+            x: toInt(getAttr(off, "x"), 0),
+            y: toInt(getAttr(off, "y"), 0),
+            cx: Math.max(1, toInt(getAttr(ext, "cx"), 1)),
+            cy: Math.max(1, toInt(getAttr(ext, "cy"), 1)),
+          }
+          : null,
+      });
+    });
+    placeholders.sort((a, b) => (a.idxSort - b.idxSort) || compareAlphaNumeric(a.type, b.type));
+    return placeholders;
+  };
+
   const getLayoutInfos = (templateMap) => {
+    const keyByNormalized = new Map();
+    Array.from(templateMap.keys()).forEach((key) => {
+      keyByNormalized.set(normalizePartName(key).toLowerCase(), key);
+    });
+
+    const getEntryTextByNormalized = (normalizedPartName) => {
+      const actual = keyByNormalized.get(normalizePartName(normalizedPartName).toLowerCase());
+      if (!actual) return "";
+      return getEntryText(templateMap, actual);
+    };
+
+    const masterPlaceholderCache = new Map();
+    const resolveMasterPlaceholderMap = (layoutPartName) => {
+      const relsPart = relsPartNameForPart(layoutPartName);
+      const relsXml = getEntryTextByNormalized(relsPart);
+      if (!relsXml) return null;
+      const relsDoc = parseXml(relsXml, relsPart);
+      const relNodes = Array.from(relsDoc.getElementsByTagNameNS(NS_REL, "Relationship"));
+      const masterRel = relNodes.find((rel) => String(rel.getAttribute("Type") || "").trim() === REL_SLIDE_MASTER);
+      if (!masterRel) return null;
+      const masterPart = resolveRelativePartName(layoutPartName, masterRel.getAttribute("Target") || "");
+      if (!masterPart) return null;
+      if (masterPlaceholderCache.has(masterPart)) return masterPlaceholderCache.get(masterPart);
+      const masterXml = getEntryTextByNormalized(masterPart);
+      if (!masterXml) {
+        masterPlaceholderCache.set(masterPart, null);
+        return null;
+      }
+      const masterDoc = parseXml(masterXml, masterPart);
+      const masterMap = new Map();
+      extractPlaceholdersFromDoc(masterDoc).forEach((ph) => {
+        if (!ph.bounds) return;
+        const key = `${String(ph.type || "").toLowerCase()}|${ph.idxKey}`;
+        if (!masterMap.has(key)) {
+          masterMap.set(key, ph.bounds);
+        }
+      });
+      masterPlaceholderCache.set(masterPart, masterMap);
+      return masterMap;
+    };
+
     const infos = new Map();
     Array.from(templateMap.keys())
       .filter((name) => /^ppt\/slidelayouts\/slidelayout\d+\.xml$/i.test(normalizePartName(name)))
@@ -989,39 +1096,16 @@
         ).trim();
         if (!layoutName) return;
 
-        const placeholders = [];
-        const spTree = firstByLocalName(cSld, "spTree");
-        const children = spTree ? Array.from(spTree.childNodes || []).filter((node) => node.nodeType === 1) : [];
-        children.forEach((shapeEl) => {
-          const ph = firstByLocalName(shapeEl, "ph");
-          if (!ph) return;
-          let xfrm = null;
-          if (shapeEl.localName === "graphicFrame") {
-            xfrm = firstByLocalName(shapeEl, "xfrm");
-          } else {
-            const spPr = firstByLocalName(shapeEl, "spPr");
-            xfrm = firstByLocalName(spPr, "xfrm");
-          }
-          const off = firstByLocalName(xfrm, "off");
-          const ext = firstByLocalName(xfrm, "ext");
-          if (!off || !ext) return;
-          const typeRaw = String(getAttr(ph, "type") || "").trim();
-          const type = typeRaw || "body";
-          const idxRaw = String(getAttr(ph, "idx") || "").trim();
-          const idx = /^\d+$/.test(idxRaw) ? Number(idxRaw) : Number.MAX_SAFE_INTEGER;
-          placeholders.push({
-            type,
-            idx,
-            bounds: {
-              x: toInt(getAttr(off, "x"), 0),
-              y: toInt(getAttr(off, "y"), 0),
-              cx: Math.max(1, toInt(getAttr(ext, "cx"), 1)),
-              cy: Math.max(1, toInt(getAttr(ext, "cy"), 1)),
-            },
+        const placeholders = extractPlaceholdersFromDoc(doc);
+        const masterMap = resolveMasterPlaceholderMap(partName);
+        if (masterMap && masterMap.size) {
+          placeholders.forEach((ph) => {
+            if (ph.bounds) return;
+            const key = `${String(ph.type || "").toLowerCase()}|${ph.idxKey}`;
+            const inherited = masterMap.get(key);
+            if (inherited) ph.bounds = { ...inherited };
           });
-        });
-
-        placeholders.sort((a, b) => (a.idx - b.idx) || compareAlphaNumeric(a.type, b.type));
+        }
 
         infos.set(layoutName.toLowerCase(), {
           name: layoutName,
@@ -1029,6 +1113,7 @@
           placeholders,
         });
       });
+
     return infos;
   };
 
@@ -1039,7 +1124,9 @@
     const want = Array.isArray(kinds) ? kinds : [kinds];
     for (let i = 0; i < want.length; i += 1) {
       const kind = String(want[i] || "").trim();
-      const match = layoutInfo.placeholders.find((ph) => ph.type.toLowerCase() === kind.toLowerCase());
+      const match = layoutInfo.placeholders.find(
+        (ph) => ph.type.toLowerCase() === kind.toLowerCase() && !!ph.bounds,
+      );
       if (match) return match.bounds;
     }
     return null;
@@ -1048,7 +1135,7 @@
   const listPictureBounds = (layoutInfo) => {
     if (!layoutInfo) return [];
     return layoutInfo.placeholders
-      .filter((ph) => ph.type.toLowerCase() === "pic")
+      .filter((ph) => ph.type.toLowerCase() === "pic" && !!ph.bounds)
       .map((ph) => ph.bounds);
   };
 
@@ -1075,11 +1162,18 @@
   const requirePlaceholder = (layoutInfos, layoutName, kindSet, label) => {
     const info = getLayoutInfo(layoutInfos, layoutName);
     if (!info) throw new Error(`Template layout not found: ${layoutName}`);
-    const bounds = pickPlaceholderBounds(info, kindSet);
-    if (!bounds) {
+    const want = Array.isArray(kindSet) ? kindSet : [kindSet];
+    const matches = (info.placeholders || []).filter((ph) => {
+      const type = String(ph?.type || "").toLowerCase();
+      return want.some((kind) => type === String(kind || "").toLowerCase());
+    });
+    if (!matches.length) {
       const kinds = Array.isArray(kindSet) ? kindSet.join("/") : String(kindSet || "");
       throw new Error(`Layout ${layoutName} is missing required ${kinds} placeholder for ${label}.`);
     }
+    if (matches.some((ph) => !!ph.bounds)) return;
+    const kinds = Array.isArray(kindSet) ? kindSet.join("/") : String(kindSet || "");
+    throw new Error(`Layout ${layoutName} has ${kinds} placeholder(s), but no geometry (x/y/cx/cy) for ${label}.`);
   };
 
   const validateReportTemplate = (layoutInfos) => {
@@ -1316,12 +1410,13 @@
     let nextShapeId = 2;
     const shapes = [];
 
-    const titleBounds = pickPlaceholderBounds(layoutInfo, ["title", "ctrTitle"])
-      || { x: 551384, y: 476672, cx: 11089232, cy: 864096 };
-    const bodyBounds = pickPlaceholderBounds(layoutInfo, ["body", "subTitle"])
-      || { x: 551384, y: 1557338, cx: 10270800, cy: 4608000 };
+    const titleBounds = pickPlaceholderBounds(layoutInfo, ["title", "ctrTitle"]);
+    const bodyBounds = pickPlaceholderBounds(layoutInfo, ["body", "subTitle"]);
 
     if (String(title || "").trim()) {
+      if (!titleBounds) {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no title/ctrTitle placeholder geometry.`);
+      }
       shapes.push(textShapeXml({
         id: nextShapeId,
         name: `Title ${nextShapeId}`,
@@ -1334,6 +1429,9 @@
     }
 
     if (String(body || "").trim()) {
+      if (!bodyBounds) {
+        throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} has no body/subTitle placeholder geometry.`);
+      }
       shapes.push(textShapeXml({
         id: nextShapeId,
         name: `Body ${nextShapeId}`,
@@ -1608,7 +1706,7 @@
       const layout = trainingLayoutForTag(tag, suffix);
       slides.push({
         layout,
-        title: String(tag || "").trim(),
+        title: "",
         body: "",
         images: photos,
       });
