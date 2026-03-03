@@ -49,7 +49,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
    - Import customer self-assessment (Excel file)
 
 2. **Edit Content**
-   - Start the offline UI with `AutoBericht/start-autobericht.cmd` (opens the minimal editor)
+   - Start the offline UI with `start-autobericht.cmd` from repo root (opens the minimal editor)
    - Open the project folder (sidecar loads or is created automatically)
    - Edit findings and recommendations by chapter
    - Save the sidecar back to the project folder
@@ -99,6 +99,7 @@ AutoBericht streamlines the creation of safety culture assessment reports by aut
 ```
 autoreport/
 ├── README.md                    # You are here
+├── start-autobericht.cmd        # Windows launcher from repo root
 ├── AutoBericht/start-autobericht.cmd   # Windows launcher for the web UI
 ├── AutoBericht/start-autobericht.ps1   # PowerShell launcher for the web UI
 ├── sync-autobericht.ps1         # Macro sync helper
@@ -110,9 +111,10 @@ autoreport/
 │   ├── mini/                   # Minimal editor (current)
 │   ├── vba/                    # Word/PPT VBA export modules
 │   ├── data/                   # Seeds, checklists, weights
+│   ├── project-template/       # Scaffold copied into new project folders
 │   ├── libs/                   # Bundled third-party libraries (SheetJS)
 │   └── docs/                   # Canonical redesign documentation
-├── ProjectTemplate/             # Sample project folder (templates + structure)
+├── ProjectTemplate/             # Legacy sample project folder
 └── tools/                       # Local tooling scripts
     └── serve-autobericht.ps1    # Local server (offline-only)
 ```

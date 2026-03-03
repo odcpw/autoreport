@@ -195,6 +195,108 @@
       return null;
     };
 
+    const findFileCaseInsensitive = async (parentHandle, name) => {
+      if (!parentHandle) return null;
+      try {
+        return await parentHandle.getFileHandle(name);
+      } catch (err) {
+        // probe entries case-insensitively
+      }
+      if (!parentHandle.entries) return null;
+      for await (const [entryName, handle] of parentHandle.entries()) {
+        if (handle.kind !== "file") continue;
+        if (String(entryName).toLowerCase() === String(name).toLowerCase()) {
+          return handle;
+        }
+      }
+      return null;
+    };
+
+    const isDirectoryEmpty = async (dirHandle) => {
+      if (!dirHandle?.entries) return false;
+      // eslint-disable-next-line no-unused-vars
+      for await (const _entry of dirHandle.entries()) {
+        return false;
+      }
+      return true;
+    };
+
+    const parseRelativePath = (value) => {
+      const parts = String(value || "")
+        .split("/")
+        .map((part) => part.trim())
+        .filter(Boolean);
+      if (!parts.length) throw new Error("Invalid empty path in project template manifest.");
+      if (parts.some((part) => part === "." || part === "..")) {
+        throw new Error(`Invalid path in project template manifest: ${value}`);
+      }
+      return parts;
+    };
+
+    const loadBundledProjectTemplateManifest = async () => {
+      const manifestUrl = new URL("../project-template/manifest.json", window.location.href).toString();
+      const response = await fetch(manifestUrl, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Bundled project template manifest not found (${response.status}).`);
+      }
+      const manifest = await response.json();
+      if (!manifest || typeof manifest !== "object") {
+        throw new Error("Bundled project template manifest is invalid.");
+      }
+      if (!Array.isArray(manifest.directories) || !Array.isArray(manifest.files)) {
+        throw new Error("Bundled project template manifest must define directories and files.");
+      }
+      return manifest;
+    };
+
+    const copyBundledProjectTemplateToFolder = async (projectHandle, ensureDir) => {
+      const manifest = await loadBundledProjectTemplateManifest();
+
+      for (let i = 0; i < manifest.directories.length; i += 1) {
+        const dirParts = parseRelativePath(manifest.directories[i]);
+        let parent = projectHandle;
+        for (let p = 0; p < dirParts.length; p += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          parent = await ensureDir(parent, dirParts[p]);
+        }
+      }
+
+      for (let i = 0; i < manifest.files.length; i += 1) {
+        const entry = manifest.files[i];
+        const sourceRel = String(entry?.source || "").trim();
+        const targetRel = String(entry?.target || sourceRel).trim();
+        const sourceParts = parseRelativePath(sourceRel);
+        const targetParts = parseRelativePath(targetRel);
+        const fileName = targetParts[targetParts.length - 1];
+        if (!fileName) throw new Error(`Invalid target file path in project template manifest: ${targetRel}`);
+
+        const sourceUrl = new URL(`../project-template/${sourceParts.join("/")}`, window.location.href).toString();
+        // eslint-disable-next-line no-await-in-loop
+        const response = await fetch(sourceUrl, { cache: "no-store" });
+        if (!response.ok) {
+          throw new Error(`Bundled template file missing (${response.status}): ${sourceParts.join("/")}`);
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const bytes = new Uint8Array(await response.arrayBuffer());
+
+        let parent = projectHandle;
+        for (let p = 0; p < targetParts.length - 1; p += 1) {
+          // eslint-disable-next-line no-await-in-loop
+          parent = await ensureDir(parent, targetParts[p]);
+        }
+        // eslint-disable-next-line no-await-in-loop
+        const existingFile = await findFileCaseInsensitive(parent, fileName);
+        // eslint-disable-next-line no-await-in-loop
+        const fileHandle = existingFile || await parent.getFileHandle(fileName, { create: true });
+        // eslint-disable-next-line no-await-in-loop
+        const writable = await fileHandle.createWritable();
+        // eslint-disable-next-line no-await-in-loop
+        await writable.write(bytes);
+        // eslint-disable-next-line no-await-in-loop
+        await writable.close();
+      }
+    };
+
     const ensureProjectScaffold = async (projectHandle) => {
       if (!projectHandle) return;
       const ensureDir = async (parentHandle, name) => {
@@ -203,9 +305,14 @@
         return parentHandle.getDirectoryHandle(name, { create: true });
       };
 
+      if (await isDirectoryEmpty(projectHandle)) {
+        await copyBundledProjectTemplateToFolder(projectHandle, ensureDir);
+      }
+
       await ensureDir(projectHandle, "inputs");
       await ensureDir(projectHandle, "outputs");
       await ensureDir(projectHandle, "backup");
+      await ensureDir(projectHandle, "templates");
       const photosDir = await ensureDir(projectHandle, "photos");
       const rawDir = await ensureDir(photosDir, "raw");
       await ensureDir(rawDir, "pm1");

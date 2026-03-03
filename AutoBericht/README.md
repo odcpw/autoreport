@@ -2,8 +2,8 @@
 
 This folder defaults to the minimal, folder-first editor in `mini/`.
 
-> **Tip (recommended):** Use the launcher in this folder (`start-autobericht.cmd`). It starts
-> a local, offline-only server and opens the minimal editor without browser flags.
+> **Tip (recommended):** Start from repo root with `start-autobericht.cmd`. It calls this
+> folder's PowerShell launcher, starts a local offline-only server, and opens the minimal editor.
 
 ## Directory Layout
 

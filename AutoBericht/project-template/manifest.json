@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "directories": [
+    "inputs",
+    "outputs",
+    "backup",
+    "templates",
+    "photos",
+    "photos/raw",
+    "photos/raw/pm1",
+    "photos/raw/pm2",
+    "photos/raw/pm3",
+    "photos/resized",
+    "photos/export"
+  ],
+  "files": [
+    {
+      "source": "templates/Vorlage AutoBericht.pptx",
+      "target": "templates/Vorlage AutoBericht.pptx"
+    },
+    {
+      "source": "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx",
+      "target": "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx"
+    },
+    {
+      "source": "templates/Vorlage IST-Aufnahme-Bericht f.V01.docx",
+      "target": "templates/Vorlage IST-Aufnahme-Bericht f.V01.docx"
+    },
+    {
+      "source": "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx",
+      "target": "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx"
+    }
+  ]
+}
