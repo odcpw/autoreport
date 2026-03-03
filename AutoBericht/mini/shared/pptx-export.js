@@ -82,12 +82,11 @@
   };
 
   const SNAPSHOT = {
-    // A4 portrait-like canvas to avoid wide-stretch artifacts on chapter snapshot slides.
+    // Compact thermo snapshot canvas for chapter intro slides.
     width: 1400,
-    height: 1980,
+    height: 560,
     margin: 52,
     headerH: 120,
-    footerH: 56,
     thermoH: 110,
   };
 
@@ -359,49 +358,6 @@
   const orderRowsForChapter = (chapter) => {
     if (typeof reportRows.orderRowsForChapter === "function") return reportRows.orderRowsForChapter(chapter);
     return Array.isArray(chapter?.rows) ? [...chapter.rows] : [];
-  };
-
-  const buildChapterRows = (chapter, toText, locale = "de-CH") => {
-    if (typeof reportRows.buildChapterRows === "function") {
-      return reportRows.buildChapterRows(chapter, {
-        toText,
-        includeRow: isIncludedRow,
-        titleForFinding: (row, chapterId) => (chapterId === "4.8" ? resolveLocalizedText(row?.titleOverride, locale).trim() : ""),
-      });
-    }
-    const chapterId = String(chapter?.id || "");
-    const rows = orderRowsForChapter(chapter);
-    const includedSections = new Set();
-    rows.forEach((row) => {
-      if (isSectionRow(row) || !isIncludedRow(row)) return;
-      const sid = String(row?.sectionId || "").trim();
-      if (sid) includedSections.add(sid);
-    });
-    const { rowMap, sectionMap } = buildRenumberMap(rows, chapterId);
-    const out = [];
-    rows.forEach((row) => {
-      if (isSectionRow(row)) {
-        const sid = String(row?.id || "").trim();
-        if (!sid || !includedSections.has(sid)) return;
-        out.push({
-          kind: "section",
-          id: resolveSectionDisplayId(sid, chapterId, sectionMap),
-          title: resolveSectionTitle(row, locale),
-        });
-        return;
-      }
-      if (!isIncludedRow(row)) return;
-      const rid = String(row?.id || "").trim();
-      out.push({
-        kind: "finding",
-        id: rowMap.get(rid) || rid,
-        title: chapterId === "4.8" ? resolveLocalizedText(row?.titleOverride, locale).trim() : "",
-        finding: resolveFindingText(row, toText),
-        recommendation: resolveRecommendationText(row, toText),
-        priority: resolvePriorityText(row),
-      });
-    });
-    return out;
   };
 
   const getNestedDirectory = async (root, parts, options = { create: false }) => {
@@ -687,34 +643,6 @@
     return out;
   };
 
-  const drawWrappedText = (ctx, text, x, y, width, options = {}) => {
-    const lineHeight = Number(options.lineHeight || 24);
-    const maxLines = Number(options.maxLines || 999);
-    const words = String(text || "").split(/\s+/).filter(Boolean);
-    const lines = [];
-    let line = "";
-    words.forEach((word) => {
-      const candidate = line ? `${line} ${word}` : word;
-      if (ctx.measureText(candidate).width <= width) {
-        line = candidate;
-      } else {
-        if (line) lines.push(line);
-        line = word;
-      }
-    });
-    if (line) lines.push(line);
-
-    const renderLines = lines.slice(0, maxLines);
-    renderLines.forEach((ln, index) => {
-      ctx.fillText(ln, x, y + index * lineHeight);
-    });
-    return {
-      lines: renderLines.length,
-      consumedHeight: renderLines.length * lineHeight,
-      truncated: lines.length > renderLines.length,
-    };
-  };
-
   const thermoRows = (locale, companyName) => {
     const normalized = String(locale || "de-CH").toLowerCase();
     const company = String(companyName || "").trim() || "Company";
@@ -771,6 +699,20 @@
     };
   };
 
+  const coverReportTitle = (locale) => {
+    const normalized = String(locale || "de-CH").toLowerCase();
+    if (normalized.startsWith("fr")) return "Etat des lieux: Presentation du rapport";
+    if (normalized.startsWith("it")) return "Rilevazione stato attuale: Presentazione del rapporto";
+    return "Ist-Aufnahme: Bericht Besprechung";
+  };
+
+  const assessmentSummaryTitle = (locale) => {
+    const normalized = String(locale || "de-CH").toLowerCase();
+    if (normalized.startsWith("fr")) return "Synthese des evaluations";
+    if (normalized.startsWith("it")) return "Sintesi delle valutazioni";
+    return "Zusammenfassung der Beurteilungen";
+  };
+
   const roundToNearestTen = (value) => {
     const raw = Number(value);
     if (!Number.isFinite(raw)) return 0;
@@ -792,6 +734,41 @@
     addRows(spiderData?.effective?.chapters_1_14);
     addRows(spiderData?.effective?.chapters_1_11);
     return map;
+  };
+
+  const drawSpiderPng = async (spiderData, companyLabel = "Company", project = null) => {
+    const stateHelpers = window.AutoBerichtState || {};
+    const spiderChart = window.AutoBerichtSpiderChart || {};
+    if (typeof spiderChart.drawToBlob !== "function") {
+      throw new Error("Spider chart helper unavailable.");
+    }
+    const formatChapterLabel = typeof stateHelpers.formatChapterLabel === "function"
+      ? stateHelpers.formatChapterLabel
+      : null;
+    const locale = String(project?.meta?.locale || "de-CH");
+    const chapters = Array.isArray(project?.chapters) ? project.chapters : [];
+    const chapterById = new Map(chapters.map((chapter) => [String(chapter?.id || ""), chapter]));
+    const rows = Array.isArray(spiderData?.effective?.chapters_1_11) ? spiderData.effective.chapters_1_11 : [];
+    const displayRows = rows.map((row) => {
+      const id = String(row?.id || "");
+      const chapter = chapterById.get(id);
+      const displayLabel = chapter && formatChapterLabel
+        ? formatChapterLabel(chapter, locale)
+        : String(row?.label || row?.id || "");
+      return {
+        ...row,
+        displayLabel,
+      };
+    });
+    return spiderChart.drawToBlob(displayRows, {
+      width: 760,
+      height: 500,
+      dpr: 2,
+      companyLabel,
+      suvaLabel: "Suva",
+      type: "image/png",
+      quality: 0.95,
+    });
   };
 
   const drawThermoBars = (ctx, x, y, width, score, locale, companyName) => {
@@ -834,10 +811,7 @@
   };
 
   const drawChapterSnapshot = async ({
-    chapter,
     chapterLabel,
-    rows,
-    positivesText,
     score,
     locale,
     company,
@@ -882,133 +856,30 @@
     }
 
     ctx.fillStyle = "#1f2933";
-    ctx.font = "700 33px Arial";
-    ctx.fillText(chapterLabel, SNAPSHOT.margin + 180, 52);
+    ctx.font = "700 31px Arial";
+    ctx.fillText(chapterLabel, SNAPSHOT.margin + 180, 50);
     ctx.font = "500 18px Arial";
     ctx.fillStyle = "#4b5967";
     ctx.fillText(String(company || "").trim() || "Company", SNAPSHOT.margin + 180, 82);
 
+    ctx.textAlign = "right";
+    ctx.fillStyle = "#4b5967";
+    ctx.font = "600 16px Arial";
+    ctx.fillText(`${labels.date}: ${String(dateLabel || "").trim()}`, SNAPSHOT.width - SNAPSHOT.margin, 45);
+    ctx.fillText(`${labels.moderator}: ${String(moderator || "").trim() || "-"}`, SNAPSHOT.width - SNAPSHOT.margin, 73);
+    ctx.textAlign = "left";
+
     const thermoX = SNAPSHOT.margin;
-    const thermoY = SNAPSHOT.headerH + 18;
+    const thermoY = SNAPSHOT.headerH + 86;
     const thermoW = SNAPSHOT.width - SNAPSHOT.margin * 2;
     drawThermoBars(ctx, thermoX, thermoY, thermoW, score, locale, company);
-
-    const tableTop = thermoY + SNAPSHOT.thermoH;
-    const tableBottom = SNAPSHOT.height - SNAPSHOT.footerH - 12;
-    const tableH = tableBottom - tableTop;
-    const col1W = Math.round((SNAPSHOT.width - SNAPSHOT.margin * 2) * 0.35);
-    const col2W = Math.round((SNAPSHOT.width - SNAPSHOT.margin * 2) * 0.58);
-    const col3W = (SNAPSHOT.width - SNAPSHOT.margin * 2) - col1W - col2W;
-    const tableX = SNAPSHOT.margin;
-
-    const drawCellRect = (x, y, w, h, fill = "#ffffff") => {
-      ctx.fillStyle = fill;
-      ctx.fillRect(x, y, w, h);
-      ctx.strokeStyle = "#d7d0c7";
-      ctx.lineWidth = 1;
-      ctx.strokeRect(x, y, w, h);
-    };
-
-    let y = tableTop;
-
-    const topH = Math.max(36, positivesText ? 74 : 36);
-    drawCellRect(tableX, y, col1W + col2W, topH, "#ffffff");
-    drawCellRect(tableX + col1W + col2W, y, col3W, topH, "#ffffff");
-    ctx.fillStyle = "#1f2933";
-    ctx.font = "700 18px Arial";
-    ctx.textAlign = "center";
-    ctx.fillText("✓", tableX + col1W + col2W + col3W / 2, y + 24);
-    ctx.textAlign = "left";
-    if (positivesText) {
-      ctx.font = "500 15px Arial";
-      ctx.fillStyle = "#2e3a47";
-      drawWrappedText(ctx, positivesText.replace(/\s+/g, " "), tableX + 10, y + 22, col1W + col2W - 20, { lineHeight: 19, maxLines: 2 });
-    }
-    y += topH;
-
-    drawCellRect(tableX, y, col1W + col2W, 36, "#f8f5ef");
-    drawCellRect(tableX + col1W + col2W, y, col3W, 36, "#f8f5ef");
-    ctx.font = "700 17px Arial";
-    ctx.fillStyle = "#1f2933";
-    ctx.fillText(labels.potential, tableX + 10, y + 24);
-    y += 36;
-
-    drawCellRect(tableX, y, col1W, 34, "#f2ede5");
-    drawCellRect(tableX + col1W, y, col2W, 34, "#f2ede5");
-    drawCellRect(tableX + col1W + col2W, y, col3W, 34, "#f2ede5");
-    ctx.font = "700 15px Arial";
-    ctx.fillStyle = "#1f2933";
-    ctx.fillText(labels.finding, tableX + 8, y + 22);
-    ctx.fillText(labels.recommendation, tableX + col1W + 8, y + 22);
-    ctx.textAlign = "center";
-    ctx.fillText(labels.priority, tableX + col1W + col2W + col3W / 2, y + 22);
-    ctx.textAlign = "left";
-    y += 34;
-
-    const maxBodyHeight = tableTop + tableH;
-    for (let i = 0; i < rows.length; i += 1) {
-      const entry = rows[i];
-      if (entry.kind === "section") {
-        const rowH = 30;
-        if (y + rowH > maxBodyHeight) break;
-        drawCellRect(tableX, y, col1W + col2W + col3W, rowH, "#f8f5ef");
-        ctx.font = "700 14px Arial";
-        ctx.fillStyle = "#1f2933";
-        const sectionLabel = `${entry.id || ""}${entry.title ? ` ${entry.title}` : ""}`.trim();
-        ctx.fillText(sectionLabel, tableX + 8, y + 20);
-        y += rowH;
-        continue;
-      }
-
-      const finding = String(entry.finding || "").replace(/\s+/g, " ").trim();
-      const recommendation = String(entry.recommendation || "").replace(/\s+/g, " ").trim();
-      const findingTitle = String(entry.id || "").trim();
-
-      ctx.font = "500 14px Arial";
-      const findingLines = Math.max(1, drawWrappedText(ctx, `${findingTitle} ${finding}`.trim(), -9999, -9999, col1W - 16, { lineHeight: 18 }).lines);
-      const recLines = Math.max(1, drawWrappedText(ctx, recommendation, -9999, -9999, col2W - 16, { lineHeight: 18 }).lines);
-      const rowH = Math.max(36, Math.min(120, Math.max(findingLines, recLines) * 18 + 12));
-
-      if (y + rowH > maxBodyHeight) {
-        drawCellRect(tableX, y, col1W + col2W + col3W, 28, "#fff8e9");
-        ctx.font = "600 14px Arial";
-        ctx.fillStyle = "#6b5b3c";
-        ctx.fillText("...", tableX + 10, y + 19);
-        y += 28;
-        break;
-      }
-
-      drawCellRect(tableX, y, col1W, rowH, "#ffffff");
-      drawCellRect(tableX + col1W, y, col2W, rowH, "#ffffff");
-      drawCellRect(tableX + col1W + col2W, y, col3W, rowH, "#ffffff");
-
-      ctx.font = "500 14px Arial";
-      ctx.fillStyle = "#1f2933";
-      drawWrappedText(ctx, `${findingTitle} ${finding}`.trim(), tableX + 8, y + 19, col1W - 16, { lineHeight: 18, maxLines: 6 });
-      drawWrappedText(ctx, recommendation, tableX + col1W + 8, y + 19, col2W - 16, { lineHeight: 18, maxLines: 6 });
-
-      ctx.textAlign = "center";
-      ctx.font = "700 16px Arial";
-      ctx.fillText(String(entry.priority || ""), tableX + col1W + col2W + col3W / 2, y + 22);
-      ctx.textAlign = "left";
-      y += rowH;
-    }
-
-    const footY = SNAPSHOT.height - SNAPSHOT.footerH;
-    ctx.fillStyle = "#f8f5ef";
-    ctx.fillRect(0, footY, SNAPSHOT.width, SNAPSHOT.footerH);
+    const rulerY = Math.min(SNAPSHOT.height - 24, thermoY + SNAPSHOT.thermoH + 34);
     ctx.strokeStyle = "#d7d0c7";
+    ctx.lineWidth = 1;
     ctx.beginPath();
-    ctx.moveTo(0, footY + 0.5);
-    ctx.lineTo(SNAPSHOT.width, footY + 0.5);
+    ctx.moveTo(SNAPSHOT.margin, rulerY + 0.5);
+    ctx.lineTo(SNAPSHOT.width - SNAPSHOT.margin, rulerY + 0.5);
     ctx.stroke();
-
-    ctx.fillStyle = "#4b5967";
-    ctx.font = "500 15px Arial";
-    ctx.fillText(labels.reportType, SNAPSHOT.margin, footY + 32);
-    ctx.textAlign = "right";
-    ctx.fillText(chapterLabel, SNAPSHOT.width - SNAPSHOT.margin, footY + 32);
-    ctx.textAlign = "left";
 
     const blob = await new Promise((resolve) => {
       canvas.toBlob((result) => resolve(result), "image/png", 0.94);
@@ -1569,7 +1440,19 @@
     "</p:pic>",
   ].join("");
 
-  const buildSlideXml = ({ layoutInfo, title, body, images }) => {
+  const emptyPicturePlaceholderShapeXml = ({ id, name, idxKey }) => [
+    "<p:sp>",
+    "<p:nvSpPr>",
+    `<p:cNvPr id=\"${id}\" name=\"${xmlEscape(name)}\"/>`,
+    "<p:cNvSpPr/>",
+    `<p:nvPr><p:ph type=\"pic\" idx=\"${xmlEscape(idxKey)}\"/></p:nvPr>`,
+    "</p:nvSpPr>",
+    "<p:spPr/>",
+    "<p:txBody><a:bodyPr/><a:lstStyle/><a:p><a:endParaRPr/></a:p></p:txBody>",
+    "</p:sp>",
+  ].join("");
+
+  const buildSlideXml = ({ layoutInfo, title, body, images, preservePicPlaceholders = false }) => {
     let nextShapeId = 2;
     const shapes = [];
 
@@ -1661,6 +1544,18 @@
       nextShapeId += 1;
     });
 
+    if (preservePicPlaceholders === true && (!images || !images.length)) {
+      picSlots.forEach((slot) => {
+        if (!slot?.idxKey) return;
+        shapes.push(emptyPicturePlaceholderShapeXml({
+          id: nextShapeId,
+          name: `Picture Placeholder ${nextShapeId}`,
+          idxKey: slot.idxKey,
+        }));
+        nextShapeId += 1;
+      });
+    }
+
     return [
       `<p:sld xmlns:a=\"${NS_A}\" xmlns:r=\"${NS_R}\" xmlns:p=\"${NS_P}\">`,
       "<p:cSld><p:spTree>",
@@ -1721,11 +1616,11 @@
   const buildReportSlidePlan = async ({
     project,
     sidecarDoc,
-    projectHandle,
     layoutInfos,
     toText,
     compareIdSegments,
     spiderScoreMap,
+    spiderImage,
     logoSmall,
     logoLarge,
   }) => {
@@ -1744,9 +1639,10 @@
 
     slides.push({
       layout: REPORT_LAYOUTS.cover,
-      title: company,
-      body: snapshotLabels(locale).reportType,
+      title: coverReportTitle(locale),
+      body: `${dateLabel}\n${snapshotLabels(locale).moderator}: ${moderator || "-"}`,
       images: [],
+      preservePicPlaceholders: true,
     });
 
     for (let i = 0; i < chapters.length; i += 1) {
@@ -1772,6 +1668,23 @@
             body: chunk.join("\n\n"),
             images: [],
           });
+        });
+
+        const summaryAssessment = assessmentSummaryTitle(locale);
+        if (!(spiderImage instanceof Blob)) {
+          throw new Error("Spider chart image is missing for report summary section.");
+        }
+        slides.push({
+          layout: REPORT_LAYOUTS.chapterSeparator,
+          title: summaryAssessment,
+          body: "",
+          images: [],
+        });
+        slides.push({
+          layout: REPORT_LAYOUTS.chapterSnapshot,
+          title: summaryAssessment,
+          body: "",
+          images: [spiderImage],
         });
         continue;
       }
@@ -1833,16 +1746,9 @@
         images: [],
       });
 
-      const chapterRows = buildChapterRows(chapter, toText, locale);
-      const positivesText = chapter?.meta?.positivesInclude === true && chapter?.meta?.positivesDone === true
-        ? String(chapter?.meta?.positivesText || "").trim()
-        : "";
       const score = spiderScoreMap.get(chapterId) || { company: 0, consultant: 0 };
       const snapshot = await drawChapterSnapshot({
-        chapter,
         chapterLabel,
-        rows: chapterRows,
-        positivesText,
         score,
         locale,
         company,
@@ -2027,6 +1933,7 @@
         title: slide.title,
         body: slide.body,
         images: slide.images,
+        preservePicPlaceholders: slide.preservePicPlaceholders === true,
       });
       const slideRelXml = createSlideRelDoc(layoutInfo.partName, mediaTargets);
 
@@ -2115,15 +2022,20 @@
         overrides: spiderOverrides || {},
         dirHandle: projectHandle,
       });
+      const spiderImage = await drawSpiderPng(
+        spiderData,
+        String(project?.meta?.company || "").trim() || "Company",
+        project,
+      );
       const spiderScoreMap = buildSpiderScoreMap(spiderData);
       plannedSlides = await buildReportSlidePlan({
         project,
         sidecarDoc,
-        projectHandle,
         layoutInfos,
         toText,
         compareIdSegments,
         spiderScoreMap,
+        spiderImage,
         logoSmall,
         logoLarge,
       });
