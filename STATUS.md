@@ -14,7 +14,7 @@ This document tracks the **redesign** direction (2026).
 - Minimal editor exists in `AutoBericht/mini/` with sidecar load/save and autosave.
 - Project page is the main control center (project metadata, locale/autosave, tools, spider editor, logo pipeline, and debug log export).
 - No-VBA Word export is available from the Project page (DOCX template markers, logos, spider image, thermo bars, priority values, chapter table payloads).
-- Word export v1 contract is documented in `AutoBericht/mini/docs/word-export-v1.md`.
+- Word export v1 contract is documented in `docs/autobericht/mini/word-export-v1.md`.
 - PhotoSorter exists with stacked/tab layouts, observation tag add/remove, and filename display.
 - PhotoSorter hardening pass completed (autosave flush logging, safer defaults, stronger knowledge-base validation, locale-aware sorting).
 - 4.8 Beobachtungen is a special chapter (reorderable rows, tag‑driven cards, photo overlay per tag).
@@ -37,8 +37,7 @@ This document tracks the **redesign** direction (2026).
 2. Selects a project folder via File System Access API.
 3. Loads and edits `project_sidecar.json`.
 4. Exports directly to Word (`.docx`) from the browser using the project template placeholders.
-5. Optional: uses legacy Word/VBA pipeline where still required.
-6. Optional: materialize photo folders from tags.
+5. Optional: materialize photo folders from tags.
 
 ## Immediate Next Steps
 
@@ -46,7 +45,7 @@ This document tracks the **redesign** direction (2026).
 - [ ] Template hardening and governance (final placeholder map, style locks, and template QA pass).
 - [ ] Create FR and IT Word template variants (same placeholder/style contract as DE template).
 - [ ] Explicit UI locale policy (lock English UI vs project-locale-driven UI text).
-- [ ] Keep legacy VBA pipeline supported in parallel (no cleanup/retirement decision yet).
+- [x] Legacy VBA pipeline removed from repo.
 - [x] No File System Access fallback (removed by design).
 - [x] Seed recommendations expanded for chapters 1–14 in DE/FR/IT libraries.
 

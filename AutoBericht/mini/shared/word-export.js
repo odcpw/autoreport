@@ -848,7 +848,7 @@
 
   const resolveTemplatePickerStartDirectory = async (projectHandle) => {
     if (!projectHandle) return null;
-    const candidates = [["ProjectTemplate"], ["templates"]];
+    const candidates = [["templates"]];
     for (let i = 0; i < candidates.length; i += 1) {
       try {
         // eslint-disable-next-line no-await-in-loop

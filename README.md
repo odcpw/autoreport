@@ -1,182 +1,66 @@
 # AutoBericht System
 
-> Automated safety culture reporting system combining Word VBA and an offline web UI
-
-## Overview
-
-AutoBericht streamlines the creation of safety culture assessment reports by automating data ingestion, photo management, content editing, and multi-format export (PDF, PowerPoint). The system operates entirely offline to meet corporate security requirements.
-
-## Redesign Status (2026)
-
-- The minimal editor in `AutoBericht/mini/` is the current direction.
-- See `AutoBericht/docs/design-spec.md` for the interview-based spec.
-
-### System Components
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    AutoBericht (Redesign)                   │
-├─────────────────────────────────────────────────────────────┤
-│                                                               │
-│  ┌──────────────┐    ┌──────────────────┐    ┌──────────────┐ │
-│  │  Browser UI  │───▶│ project_sidecar  │───▶│  Exports     │ │
-│  │  (mini)      │◀───│ (canonical JSON) │    │ Word/PPT/PDF │ │
-│  └──────────────┘    └──────────────────┘    └──────────────┘ │
-│             ▲                    │                             │
-│             │ optional           ▼                             │
-│        ┌──────────────┐   ┌──────────────┐                      │
-│        │  SheetJS DB  │   │ Word/VBA    │                      │
-│        │ project_db   │   │ (thin export)│                      │
-│        └──────────────┘   └──────────────┘                      │
-│                                                               │
-└─────────────────────────────────────────────────────────────┘
-```
-
-### Key Features
-
-- **Browser-first editing** with sidecar JSON stored in the project folder.
-- **Offline, policy-safe** workflow (no flags, no installs).
-- **Thin Word/VBA export layer** for Word/PPT templates (optional).
-- **File System Access API** preferred for direct folder writes.
+Offline safety-culture reporting tool with a browser UI (`AutoBericht/mini`) and project-local data (`project_sidecar.json`, library JSON, photo folders).
 
 ## Quick Start
 
-### For Report Creators
+1. Place this repo on local disk.
+2. Run `start-autobericht.cmd` from repo root.
+3. In the UI, click **Open Project Folder** and choose an empty project folder.
+4. On **Project**, choose `Locale` to bootstrap seed content.
+5. Use:
+   - **PhotoSorter** for import/tag/export of photos
+   - **AutoBericht** for findings/recommendations + chapter workflow
+   - **Project** for Word/PPT export + library update/export
 
-1. **Prepare Data**
-   - Open Excel workbook (`project.xlsm`)
-   - Import master findings (Word document)
-   - Import customer self-assessment (Excel file)
-
-2. **Edit Content**
-   - Start the offline UI with `start-autobericht.cmd` from repo root (opens the minimal editor)
-   - Open the project folder (sidecar loads or is created automatically)
-   - Edit findings and recommendations by chapter
-   - Save the sidecar back to the project folder
-
-3. **Export Reports**
-   - Generate PDF report (print from browser)
-   - Export PowerPoint presentations
-   - Save project snapshot as JSON
-
-**See**: [Workflow](AutoBericht/docs/workflow.md)
-
-### For Developers
-
-1. **Clone Repository**
-   ```bash
-   git clone https://github.com/odcpw/autoreport.git
-   cd autoreport
-   ```
-
-2. **VBA Development**
-   - VBA modules live in `AutoBericht/vba/`
-   - See `AutoBericht/docs/ribbon-notes.md` for template notes
-
-3. **Web UI Development**
-   - Open `AutoBericht/mini/index.html` (current)
-   - Libraries bundled in `AutoBericht/libs/`
-   - See [AutoBericht README](AutoBericht/README.md)
-
-**See**: [Design Spec](AutoBericht/docs/design-spec.md)
+For onboarding guides, see:
+- `instructions.txt`
+- `docs/onboarding/AutoBericht-Schnellstart-DE.docx`
+- `docs/onboarding/AutoBericht-Guide-Rapide-FR.docx`
+- `docs/onboarding/AutoBericht-Guida-Rapida-IT.docx`
 
 ## Documentation
 
-📚 **[Status & Docs →](STATUS.md)**
+Primary redesign docs are in `docs/autobericht/`:
+- `docs/autobericht/design-spec.md`
+- `docs/autobericht/system-overview.md`
+- `docs/autobericht/workflow.md`
+- `docs/autobericht/project-template.md`
 
-### Key Documents
+Additional research/docs:
+- `docs/research_recommendations/`
+- `docs/oracle-browser.md`
 
-| Document | Description |
-|----------|-------------|
-| [System Architecture](AutoBericht/docs/system-overview.md) | Current redesign architecture |
-| [Design Spec](AutoBericht/docs/design-spec.md) | Interview-based requirements |
-| [Workflow](AutoBericht/docs/workflow.md) | Minimal editor workflow |
-| [Project Template](AutoBericht/docs/project-template.md) | Recommended project folder layout |
-| [Ribbon Notes](AutoBericht/docs/ribbon-notes.md) | Notes on Word ribbon + template setup |
+## Repo Structure
 
-## Project Structure
-
-```
+```text
 autoreport/
-├── README.md                    # You are here
-├── start-autobericht.cmd        # Windows launcher from repo root
-├── AutoBericht/start-autobericht.cmd   # Windows launcher for the web UI
-├── AutoBericht/start-autobericht.ps1   # PowerShell launcher for the web UI
-├── sync-autobericht.ps1         # Macro sync helper
-├── STATUS.md                    # Current state vs target
-├── docs/                        # Research / prompts / tooling notes
-│   └── research_recommendations
-├── AutoBericht/                 # Offline web UI + docs
-│   ├── index.html              # Entry point
-│   ├── mini/                   # Minimal editor (current)
-│   ├── vba/                    # Word/PPT VBA export modules
-│   ├── data/                   # Seeds, checklists, weights
-│   ├── project-template/       # Scaffold copied into new project folders
-│   ├── libs/                   # Bundled third-party libraries (SheetJS)
-│   └── docs/                   # Canonical redesign documentation
-├── ProjectTemplate/             # Legacy sample project folder
-└── tools/                       # Local tooling scripts
-    └── serve-autobericht.ps1    # Local server (offline-only)
+├── README.md
+├── instructions.txt
+├── start-autobericht.cmd
+├── AutoBericht/
+│   ├── mini/                 # main web app (AutoBericht + PhotoSorter)
+│   ├── data/                 # seeds, weights, checklists
+│   ├── project-template/     # scaffold copied into new project folders
+│   ├── libs/                 # bundled third-party libs (offline)
+│   ├── tools/
+│   └── experiments/
+├── docs/
+│   ├── autobericht/          # architecture/workflow docs
+│   ├── onboarding/           # DE/FR/IT onboarding guides + screenshots
+│   └── research_recommendations/
+├── sources/
+├── tools/
+└── sync-autobericht.ps1
 ```
 
-## Tech Stack
+## Current Data Contract
 
-### Word VBA
-- **Purpose**: Data import, structured sheet management, macro synchronization
-- **Key Libraries**: VBA-JSON, Microsoft Scripting Runtime
-- **Modules**: `AutoBericht/vba/`
-
-### HTML/JavaScript
-- **Purpose**: Offline editing interface
-- **Key Libraries**: SheetJS (bundled in `AutoBericht/libs/`)
-- **Entry Point**: `AutoBericht/mini/index.html` (current) or `AutoBericht/index.html` (landing)
-
-## Data Flow
-
-```
-Word/Excel Sources
-       │
-       ▼
-   VBA Import ──────────────┐
-       │                    │
-       ▼                    ▼
-Structured Sheets      project_sidecar.json
-       │                    │
-       ▼                    ▼
-   VBA Export          Web UI Load (project_sidecar.json)
-       │                    │
-       │◀───────────────────┘
-       │
-       ▼
-   Exports (PDF/PPTX/JSON)
-```
-
-1. **Import**: VBA reads Word/Excel sources, populates structured sheets
-2. **Edit**: Web UI loads `project_sidecar.json` and edits content
-3. **Export**: Generate reports and update `project_sidecar.json`
-
-**See**: [Design Spec](AutoBericht/docs/design-spec.md)
-
-**Canonical contract**: redesign uses `project_sidecar.json` as the working state (see `AutoBericht/docs/design-spec.md` and `STATUS.md`).
-
-## Contributing
-
-This is a private corporate project. For development guidelines:
-
-- VBA: Follow Rubberduck style guide
-- JavaScript: ES modules, no bundler
-- Documentation: Keep it simple and actionable
+- `project_sidecar.json`: project state (chapters, edits, filters, library action per row, photos state)
+- `library_user_*.json`: reusable knowledge library (cross-project text/tag base)
+- Library updates are applied when **Generate / Update Library** is run on Project page.
 
 ## Support
 
-- **Issues**: Check documentation first, then consult team
-- **VBA Help**: See `AutoBericht/docs/ribbon-notes.md` or `AutoBericht/vba/`
-- **Web UI Help**: See [AutoBericht README](AutoBericht/README.md)
-
-## License
-
-Internal use only. All rights reserved.
-
----
-
-**Next Steps**: Read the [Status](STATUS.md) or jump to [Workflow](AutoBericht/docs/workflow.md)
+- Use **Save debug log** in the UI when troubleshooting.
+- See `STATUS.md` for current state notes.

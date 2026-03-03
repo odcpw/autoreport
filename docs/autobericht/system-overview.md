@@ -1,11 +1,10 @@
 # AutoBericht System Overview (Redesign)
 
-This overview documents the **current redesign**: browser-first editing with a
-minimal Word/VBA export layer.
+Browser-first offline workflow with project-local state and direct Word/PPT export from the web app.
 
 ## High-Level Architecture
 
-```
+```text
 ┌──────────────────────────────────────────────────────────────┐
 │                          AutoBericht                          │
 └──────────────────────────────────────────────────────────────┘
@@ -15,67 +14,58 @@ minimal Word/VBA export layer.
 │  (AutoBericht/mini)  │ ◀───────────────────── │  (working state)        │
 └──────────────────────┘                        └────────────────────────┘
            │
-           │ optional
+           │ reads sidecar + templates
            ▼
-┌──────────────────────┐      reads             ┌────────────────────────┐
-│  Word/VBA Exporter  │ ─────────────────────▶ │  Word/PPT templates     │
-│  (thin layer)        │                        │  (in project root)      │
+┌──────────────────────┐                        ┌────────────────────────┐
+│  Export Engine       │ ─────────────────────▶ │  Word/PPT templates     │
+│  (in web app)        │                        │  (project/templates)    │
 └──────────────────────┘                        └────────────────────────┘
            │
            ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ Outputs: Word report, PPT deck, PDF, optional photo folders   │
+│ Outputs: Word report, PPT report deck, PPT training deck      │
 └──────────────────────────────────────────────────────────────┘
 ```
 
 ## Project Folder Layout
 
-```
+```text
 <Project>/
-  project_sidecar.json      # editor state (canonical)
-  project_db.xlsx           # optional readable archive
-  self_assessment.xlsx      # customer input (static)
-  photos/                   # raw photos (import uses photos/raw/pm1, pm2)
-  out/                      # Word/PPT/PDF outputs
-  cache/                    # optional materialized photo views
-```
-
-## Data Flow (Redesign)
-
-```
-Self-assessment + photos
-          │
-          ▼
-Minimal Editor (edit findings, recommendations, levels, tags)
-          │
-          ▼
-project_sidecar.json (canonical state)
-          │
-          ├── Optional: write project_db.xlsx (human-readable)
-          │
-          └── Word/VBA export → Word/PPT/PDF outputs
+  project_sidecar.json      # canonical project state
+  library_user_*.json       # reusable knowledge library
+  inputs/                   # customer docs + self-assessment
+  outputs/                  # generated reports and exports
+  templates/                # DOCX/PPTX templates
+  photos/
+    raw/pm1|pm2|pm3
+    resized/
+    export/
 ```
 
 ## Responsibilities
 
-- **Browser editor**
-  - Chapter-based editing.
-  - Recommendation text editing + scoring level selection.
-  - Photo tagging (virtual tags).
-  - Sidecar load/save.
-
-- **Word/VBA** (thin layer)
-  - Read sidecar/export JSON for report generation.
-  - Export Word/PPT/PDF using Word template macros.
-  - Optional photo folder materialization.
+- Browser editor
+  - chapter editing
+  - recommendation/finding text maintenance
+  - filters, scoring, include/done workflow
+  - 4.8 organization and checklist support
+- PhotoSorter
+  - raw import/rename/resize
+  - report/observation/training tagging
+  - tagged folder export
+- Project page
+  - locale bootstrap
+  - library update/export
+  - Word and PowerPoint exports
 
 ## Why This Split
 
-- Keeps daily work out of VBA (less friction).
-- Preserves template fidelity via Office automation.
-- Stays compliant with locked-down corporate IT.
+- Simple offline flow for engineers.
+- No Office add-ins/macros required for daily work.
+- Clear separation: sidecar = project state, library = reusable knowledge.
 
 ## Related
 
 - [Design Spec](design-spec.md)
-- [Redesign Workflow](../guides/redesign-workflow.md)
+- [Workflow](workflow.md)
+- [Project Template](project-template.md)

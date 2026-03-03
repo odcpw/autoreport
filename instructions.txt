@@ -1,0 +1,181 @@
+AUTO BERICHT - QUICK SETUP
+==========================
+
+DE (Deutsch)
+------------
+1) Vorbereitung
+- Lege zwei Ordner an, z. B. `C:\AutoBericht` (Repo) und `C:\Projekt_X` (leerer Projektordner).
+- Kopiere das komplette Repo in `C:\AutoBericht`.
+
+2) Start
+- Starte `start-autobericht.cmd` im Repo-Root.
+- Im Browser erscheint "Select project folder". Klicke `Open Project Folder` und wähle `C:\Projekt_X`.
+
+3) Erstes Initialisieren
+- Gehe auf die Seite `Project`.
+- Setze im Feld `Locale` die Sprache (`DE`, `FR`, `IT`).
+- Bei einem leeren Projektordner wird automatisch die Struktur erzeugt:
+  `inputs`, `outputs`, `backup`, `templates`, `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`, `photos/resized`, `photos/export`.
+
+4) Fotos vorbereiten
+- Lege Originalfotos in `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`.
+- Wechsle zu `PhotoSorter`.
+- Klicke `Import / Export Photos` -> `Import photos`.
+- Ergebnis: normalisierte Bilder liegen in `photos/resized` (lange Seite max. 1920 px).
+
+5) Fotos sortieren/taggen
+- In `PhotoSorter` Kategorien setzen (Bericht, 4.8 Beobachtungen, Training).
+- `Show Unsorted` zeigt nur ungetaggte Bilder.
+- Das kleine Filtersymbol unten am Bild löscht aktive Filter.
+- `U` setzt das aktuelle Bild auf "unsorted" (entfernt Tags).
+- `Edit tags` pflegt Beobachtungs-Tags.
+
+6) Bilder exportieren
+- `Import / Export Photos` -> `Export tagged folders`.
+- Ausgabe liegt unter `photos/export`:
+  - Kapitel-Tags als Ordner,
+  - `4.8 Beobachtungen` (bzw. lokalisiert) mit Unterordnern je Tag,
+  - `Training` mit Unterordnern je Tag,
+  - `unsorted` für ungetaggte Bilder.
+
+7) Bericht bearbeiten
+- Wechsle zu `AutoBericht`.
+- Kapitel links auswählen, Texte in `Finding`/`Recommendation` bearbeiten.
+- Mit `Include`, `Done`, Priorität und den Sidebar-Filtern arbeiten (`Show yes only`, `Show no only`, usw.).
+- Pro Zeile die Library-Aktion setzen:
+  - `Library Off`: keine Übernahme in die Library.
+  - `Append`: aktuellen Text an den bestehenden Library-Text anhängen.
+  - `Replace`: bestehenden Library-Text vollständig ersetzen.
+- Für Kapitel 4.8: `Organize 4.8` zum Sortieren/Ordnen, `Checklists` für Suva-Links.
+
+8) Spider + Exporte
+- In `Project`: `Spider Editor` für Override-Werte.
+- Word: `Word Export`.
+- PowerPoint: `PowerPoint Export (Report)` oder `PowerPoint Export (Training)`.
+
+9) Library
+- In `Project`: `Generate / Update Library` schreibt/aktualisiert die Library.
+- `Export Library Excel` erzeugt eine menschenlesbare + maschinenlesbare Excel-Version.
+- `project_sidecar.json` hält den Projektzustand (inkl. bearbeitete Texte und gewählte Library-Aktion je Zeile).
+- Die Library hält wiederverwendbare Textbausteine/Tags.
+- Wichtig: `Append`/`Replace` wirkt erst beim Klick auf `Generate / Update Library`.
+
+
+FR (Français)
+-------------
+1) Préparation
+- Crée deux dossiers, par exemple `C:\AutoBericht` (repo) et `C:\Projet_X` (dossier projet vide).
+- Copie le repo complet dans `C:\AutoBericht`.
+
+2) Démarrage
+- Lance `start-autobericht.cmd` à la racine du repo.
+- Dans le navigateur: "Select project folder". Clique `Open Project Folder` et choisis `C:\Projet_X`.
+
+3) Initialisation
+- Ouvre la page `Project`.
+- Dans `Locale`, choisis la langue (`DE`, `FR`, `IT`).
+- Si le dossier projet est vide, la structure est créée automatiquement:
+  `inputs`, `outputs`, `backup`, `templates`, `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`, `photos/resized`, `photos/export`.
+
+4) Préparer les photos
+- Place les photos originales dans `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`.
+- Passe à `PhotoSorter`.
+- Clique `Import / Export Photos` -> `Import photos`.
+- Résultat: images normalisées dans `photos/resized` (côté long max. 1920 px).
+
+5) Trier / taguer les photos
+- Dans `PhotoSorter`, assigne des catégories (Report, 4.8 observations, Training).
+- `Show Unsorted` affiche uniquement les photos non taguées.
+- La petite icône filtre en bas de l'image efface les filtres actifs.
+- `U` remet la photo courante en "unsorted" (supprime ses tags).
+- `Edit tags` sert à gérer les tags d'observation.
+
+6) Exporter les photos
+- `Import / Export Photos` -> `Export tagged folders`.
+- Sortie dans `photos/export`:
+  - dossiers par tags de chapitre,
+  - `4.8 Observations` (localisé) avec sous-dossiers par tag,
+  - `Training` avec sous-dossiers par tag,
+  - `unsorted` pour les photos sans tags.
+
+7) Éditer le rapport
+- Passe à `AutoBericht`.
+- Sélectionne les chapitres à gauche, édite `Finding` / `Recommendation`.
+- Utilise `Include`, `Done`, la priorité et les filtres de la sidebar (`Show yes only`, `Show no only`, etc.).
+- Pour chaque ligne, définir l'action library:
+  - `Library Off`: ne pas écrire dans la library.
+  - `Append`: ajouter le texte actuel à l'entrée existante.
+  - `Replace`: remplacer complètement l'entrée existante.
+- Pour le chapitre 4.8: `Organize 4.8` pour l'ordre, `Checklists` pour les liens Suva.
+
+8) Spider + exports
+- Dans `Project`: `Spider Editor` pour les overrides.
+- Word: `Word Export`.
+- PowerPoint: `PowerPoint Export (Report)` ou `PowerPoint Export (Training)`.
+
+9) Library
+- Dans `Project`: `Generate / Update Library` met à jour la library.
+- `Export Library Excel` crée une version Excel lisible et exploitable.
+- `project_sidecar.json` = état du projet (textes édités + action library choisie par ligne).
+- La library = contenus réutilisables (textes/tags).
+- Important: `Append`/`Replace` est appliqué uniquement lors de `Generate / Update Library`.
+
+
+IT (Italiano)
+-------------
+1) Preparazione
+- Crea due cartelle, ad esempio `C:\AutoBericht` (repo) e `C:\Progetto_X` (cartella progetto vuota).
+- Copia l'intero repo in `C:\AutoBericht`.
+
+2) Avvio
+- Avvia `start-autobericht.cmd` nella root del repo.
+- Nel browser appare "Select project folder". Clicca `Open Project Folder` e scegli `C:\Progetto_X`.
+
+3) Inizializzazione
+- Apri la pagina `Project`.
+- Nel campo `Locale` scegli la lingua (`DE`, `FR`, `IT`).
+- Se la cartella progetto è vuota, viene creata automaticamente la struttura:
+  `inputs`, `outputs`, `backup`, `templates`, `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`, `photos/resized`, `photos/export`.
+
+4) Preparare le foto
+- Copia le foto originali in `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`.
+- Passa a `PhotoSorter`.
+- Clicca `Import / Export Photos` -> `Import photos`.
+- Risultato: immagini normalizzate in `photos/resized` (lato lungo max. 1920 px).
+
+5) Ordinare / taggare le foto
+- In `PhotoSorter`, assegna categorie (Report, 4.8 osservazioni, Training).
+- `Show Unsorted` mostra solo foto non taggate.
+- La piccola icona filtro in basso sull'immagine rimuove i filtri attivi.
+- `U` imposta la foto corrente come "unsorted" (rimuove i tag).
+- `Edit tags` gestisce i tag di osservazione.
+
+6) Esportare le foto
+- `Import / Export Photos` -> `Export tagged folders`.
+- Output in `photos/export`:
+  - cartelle per i tag capitolo,
+  - `4.8 Osservazioni` (localizzato) con sottocartelle per tag,
+  - `Training` con sottocartelle per tag,
+  - `unsorted` per le foto senza tag.
+
+7) Modificare il rapporto
+- Passa ad `AutoBericht`.
+- Seleziona i capitoli a sinistra, modifica `Finding` / `Recommendation`.
+- Usa `Include`, `Done`, priorità e filtri sidebar (`Show yes only`, `Show no only`, ecc.).
+- Per ogni riga imposta l'azione library:
+  - `Library Off`: non scrivere nella library.
+  - `Append`: aggiunge il testo corrente alla voce esistente.
+  - `Replace`: sostituisce completamente la voce esistente.
+- Per il capitolo 4.8: `Organize 4.8` per ordinare, `Checklists` per i link Suva.
+
+8) Spider + export
+- In `Project`: `Spider Editor` per gli override.
+- Word: `Word Export`.
+- PowerPoint: `PowerPoint Export (Report)` o `PowerPoint Export (Training)`.
+
+9) Library
+- In `Project`: `Generate / Update Library` aggiorna la library.
+- `Export Library Excel` crea una versione Excel leggibile e machine-ingestible.
+- `project_sidecar.json` = stato progetto (testi modificati + azione library scelta per riga).
+- Library = contenuti riutilizzabili (testi/tag).
+- Importante: `Append`/`Replace` viene applicato solo con `Generate / Update Library`.

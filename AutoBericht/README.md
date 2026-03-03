@@ -1,32 +1,28 @@
-# AutoBericht UI (Redesign)
+# AutoBericht UI
 
-This folder defaults to the minimal, folder-first editor in `mini/`.
+This folder contains the offline web app.
 
-> **Tip (recommended):** Start from repo root with `start-autobericht.cmd`. It calls this
-> folder's PowerShell launcher, starts a local offline-only server, and opens the minimal editor.
+## Main Areas
 
-## Directory Layout
+- `mini/` — production UI (`index.html` for AutoBericht, `photosorter.html` for PhotoSorter)
+- `data/` — seeds, checklists, weights
+- `project-template/` — scaffold copied into a new empty project folder
+- `libs/` — bundled dependencies (offline)
+- `experiments/` — non-production spikes
 
-- `index.html` — landing page linking to the editor and experiments.
-- `mini/` — minimal chapter editor (current direction).
-- `experiments/` — focused spikes (FS Access, SheetJS, etc.).
-- `shared/` — shared utilities (debug logger).
-- `vba/` — Word/PPT VBA export modules.
-- `data/` — seeds, checklists, weights.
-- `libs/` — bundled third-party libraries (offline only).
+## Start
 
-## Getting Started (New)
+Recommended: run from repo root:
 
-1. Launch the local server:
-   ```
-   start-autobericht.cmd
-   ```
-2. The server opens the minimal editor at `/mini/`.
-3. Use **Open Project Folder** (sidecar loads or is created automatically).
-4. Save with **Save sidecar**. Use **Save debug log** for troubleshooting.
+```bash
+start-autobericht.cmd
+```
 
-## Related Documentation
+This calls `AutoBericht/start-autobericht.ps1`, starts a local server, and opens `mini/`.
 
-- **Design Spec:** `docs/design-spec.md`
-- **System Overview:** `docs/system-overview.md`
-- **Workflow:** `docs/workflow.md`
+## Related Docs
+
+- `../docs/autobericht/design-spec.md`
+- `../docs/autobericht/system-overview.md`
+- `../docs/autobericht/workflow.md`
+- `../docs/onboarding/`

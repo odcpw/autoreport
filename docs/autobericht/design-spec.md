@@ -138,7 +138,7 @@ Responsibilities:
            │ optional
            ▼
 ┌──────────────────────┐     reads sidecar     ┌────────────────────────┐
-│  Word/VBA Exporter  │ ───────────────────▶  │  Word/PPT Templates     │
+│  Export Engine      │ ───────────────────▶  │  Word/PPT Templates     │
 │  (thin layer)        │                       │  (corp branding)        │
 └──────────────────────┘                       └────────────────────────┘
            │
@@ -159,7 +159,7 @@ Minimal Editor (chapter editing, recommendations, tags)
           ▼
 project_sidecar.json (canonical state)
           │
-          └── Word/PPT VBA export → Word/PPT/PDF outputs
+          └── Word/PPT export → Word/PPT outputs
 ```
 
 ### 8c. Project Folder Layout
@@ -244,7 +244,7 @@ UI:
 - Field observations are exported as their own chapter (e.g., 4.8 Beobachtungen).
 - Spider chart uses consultant scores; company answers retained in data.
 
-## 11a. Export Path (Word Macro, Recommended)
+## 11a. Export Path (Web Export Engine, Recommended)
 
 Goal: remove Excel as an orchestration hop while keeping Word in charge of layout.
 
@@ -253,13 +253,12 @@ Phase A (browser)
 - Export uses the sidecar directly (or an optional lightweight “export.json” view).
 - Content is plain text + simple list markers (markdown-lite).
 
-Phase B (Word macro)
+Phase B (web export engine)
 - Word template contains one content control per chapter (e.g., `Chapter1`).
-- Optional: embed a RibbonX tab (“AutoBericht”) in the template for macro buttons.
-- Macro reads sidecar/export JSON and injects chapter content into the controls.
-- Macro applies styles (Heading 1/2/3, body, tables), converts list markers to
+- Exporter reads sidecar/export JSON and injects chapter content into the controls.
+- Exporter applies styles (Heading 1/2/3, body, tables), converts list markers to
   proper Word lists, inserts section breaks, and updates TOC/fields.
-- Macro is responsible for filtering, renumbering, and computing score values
+- Exporter is responsible for filtering, renumbering, and computing score values
   (no separate export file required).
 
 Benefits
@@ -274,8 +273,7 @@ Goal: generate two slide decks from the sidecar JSON.
 
 Inputs:
 - `project_sidecar.json` (report + photo tags)
-- PowerPoint templates in the project root (or `<Project>/<Templates>/` when
-  `AB_PPT_TEMPLATE_FOLDER` is set in the VBA config)
+- PowerPoint templates in `<Project>/templates/`
 - Active Word report (used to capture chapter screenshots)
 
 Outputs:
@@ -283,9 +281,8 @@ Outputs:
 - Training deck (`YYYY-MM-DD_Seminar_Slides_D/F.pptx`) in the project folder
 
 Template (current working file)
-- Report deck template: `<Project>/Vorlage AutoBericht.pptx`
-  (`AB_PPT_REPORT_TEMPLATE` in `AutoBericht/vba/autobericht_config.bas`)
-- Training decks: `<Project>/Training_D.pptx` and `<Project>/Training_F.pptx`
+- Report deck template: `<Project>/templates/Vorlage AutoBericht.pptx`
+- Training content is generated from the same template using training layouts.
 - Seed file: `test/AutoBericht_slides.pptx` (layout reference)
 
 ### Layout naming (in the template)
@@ -316,14 +313,14 @@ Training layouts:
 - French `*_f`: same names with `_f`
 
 ### Placeholder expectations
-The macro targets standard placeholders by type:
+The exporter targets standard placeholders by type:
 - `title` for slide title
 - `body` (largest non-title text box) for text
 - `pic` for image slots (3/6 grids and screenshot)
 
 ### Export logic (current implementation)
-1) Report deck export (Word ribbon “Bericht Besprechung”):
-   - Template: `AB_PPT_REPORT_TEMPLATE` (default `Vorlage AutoBericht.pptx`).
+1) Report deck export (Project page button “PowerPoint Export (Report)”):
+   - Template: `templates/Vorlage AutoBericht.pptx`.
    - Output: `<project>/<yyyy-mm-dd>_Bericht_Besprechung.pptx`.
    - Optional title slide: uses `report_title` and `meta.projectName` /
      `meta.company` (fallback: "Report").
@@ -351,8 +348,8 @@ The macro targets standard placeholders by type:
      - Additional photos spill to photo-only slides
        (`report_section_photo_3/6`) with the same title; no text.
 
-2) Training deck export (Word ribbon buttons “VG Seminar D/F”):
-   - Templates: `<project>/Training_D.pptx` and `Training_F.pptx`.
+2) Training deck export (Project page button “PowerPoint Export (Training)”):
+   - Template: `templates/Vorlage AutoBericht.pptx` (training layouts).
    - For each training tag with photos (order: known tags first, then others):
      - Insert a `chapterorange` divider slide titled with the tag.
      - Choose layout by tag name:
@@ -364,8 +361,7 @@ The macro targets standard placeholders by type:
        slots per slide (e.g., AVIVA with 6 placeholders packs up to 6 per slide).
      - Fill the tag name into the title placeholder if present; drop photos
        into picture placeholders in order.
-   - Optional seminar title slide: uses `seminar_d` if present and enabled in
-     VBA config.
+   - Optional seminar title slide: uses `seminar_d` if present.
    - Output: `<project>/<yyyy-mm-dd>_Seminar_Slides_D.pptx` (or `_F`).
 
 ### Training tag alignment
@@ -477,7 +473,7 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 - AutoBericht only reads/writes `project_sidecar.json`.
 - PhotoSorter only reads images and writes tags/notes into `project_sidecar.json`.
 - No files are moved, deleted, or rewritten by the browser.
-- Export to Word/PPT/PDF is performed locally via Office/VBA (no cloud services).
+- Export to Word/PPT is performed locally in the web app (no cloud services).
 
 ### Frontend module layout
 - `AutoBericht/mini/app.js` is the thin orchestrator (wiring only).
@@ -513,11 +509,11 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 1) Project folder + sidecar schema + minimal editor load/save.
 2) Chapter editor flow + recommendation library integration.
 3) Photo tagging + filtering + optional materialize.
-4) Word macro export (content controls → styled Word/PPT/PDF).
+4) Web export engine (content controls/placeholders → styled Word/PPT).
 5) Validation, logging, and error handling.
 
 ## 16. Open Decisions
 
 - Confirm File System Access API availability in locked-down Edge.
-- Decide final Word macro contract (content controls + JSON schema).
+- Decide final export contract (content controls/placeholders + JSON schema).
 - Decide default library storage location (user folder vs project).
