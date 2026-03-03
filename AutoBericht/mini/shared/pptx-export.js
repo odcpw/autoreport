@@ -1628,8 +1628,11 @@
           const finding = String(resolveFindingText(row, toText) || "").trim();
 
           const photos = ensureMapArray(reportMap, obsTag);
-          const firstLayout = photos.length > 3 ? REPORT_LAYOUTS.observationTextPhotoHigh : REPORT_LAYOUTS.observationTextPhotoLow;
-          const firstSlots = firstLayout === REPORT_LAYOUTS.observationTextPhotoHigh ? 6 : 4;
+          // Observation finding text needs a body placeholder.
+          // Use the text-capable layout for the first slide, then continue
+          // remaining photos on pure photo layouts.
+          const firstLayout = REPORT_LAYOUTS.observationTextPhotoLow;
+          const firstSlots = photos.length > 0 ? 1 : 0;
           slides.push({
             layout: firstLayout,
             title: fullTitle,
