@@ -396,6 +396,21 @@
     }
   };
 
+  const resolveTemplatePickerStartDirectory = async (projectHandle) => {
+    if (!projectHandle) return null;
+    const candidates = [["ProjectTemplate"], ["templates"]];
+    for (let i = 0; i < candidates.length; i += 1) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const dir = await getNestedDirectory(projectHandle, candidates[i], { create: false });
+        if (dir) return dir;
+      } catch (err) {
+        // Try next candidate.
+      }
+    }
+    return projectHandle;
+  };
+
   const getFileHandleFromPath = async (projectHandle, path) => {
     const parts = String(path || "").split("/").map((part) => part.trim()).filter(Boolean);
     if (!parts.length) return null;
@@ -436,13 +451,15 @@
     return handle;
   };
 
-  const pickPptTemplate = async () => {
+  const pickPptTemplate = async (projectHandle) => {
     if (!window.showOpenFilePicker) {
       throw new Error("File picker unavailable in this browser.");
     }
-    const picks = await window.showOpenFilePicker({
+    const templateStartDir = await resolveTemplatePickerStartDirectory(projectHandle);
+    const pickerOptions = {
       multiple: false,
       excludeAcceptAllOption: false,
+      id: "autobericht-pptx-template",
       types: [
         {
           description: "PowerPoint Template",
@@ -451,7 +468,9 @@
           },
         },
       ],
-    });
+    };
+    if (templateStartDir) pickerOptions.startIn = templateStartDir;
+    const picks = await window.showOpenFilePicker(pickerOptions);
     if (!picks?.length) throw new Error("No template selected.");
     return picks[0].getFile();
   };
@@ -1988,7 +2007,7 @@
       throw new Error("Sidecar data is missing.");
     }
 
-    const templateFile = await pickPptTemplate();
+    const templateFile = await pickPptTemplate(projectHandle);
     const templateMap = await getTemplateMap(templateFile);
     const layoutInfos = getLayoutInfos(templateMap);
     if (!layoutInfos.size) {

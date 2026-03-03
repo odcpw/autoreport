@@ -846,6 +846,21 @@
     }
   };
 
+  const resolveTemplatePickerStartDirectory = async (projectHandle) => {
+    if (!projectHandle) return null;
+    const candidates = [["ProjectTemplate"], ["templates"]];
+    for (let i = 0; i < candidates.length; i += 1) {
+      try {
+        // eslint-disable-next-line no-await-in-loop
+        const dir = await getNestedDirectory(projectHandle, candidates[i], { create: false });
+        if (dir) return dir;
+      } catch (err) {
+        // Try next candidate.
+      }
+    }
+    return projectHandle;
+  };
+
   const getFileHandleFromPath = async (projectHandle, path) => {
     const parts = String(path || "").split("/").map((part) => part.trim()).filter(Boolean);
     if (!parts.length) return null;
@@ -1036,9 +1051,11 @@
     if (!projectHandle) throw new Error("Project folder not selected.");
     if (!window.showOpenFilePicker) throw new Error("File picker unavailable in this browser.");
 
-    const picks = await window.showOpenFilePicker({
+    const templateStartDir = await resolveTemplatePickerStartDirectory(projectHandle);
+    const pickerOptions = {
       multiple: false,
       excludeAcceptAllOption: false,
+      id: "autobericht-word-template",
       types: [
         {
           description: "Word Template",
@@ -1047,7 +1064,10 @@
           },
         },
       ],
-    });
+    };
+    if (templateStartDir) pickerOptions.startIn = templateStartDir;
+
+    const picks = await window.showOpenFilePicker(pickerOptions);
     if (!picks || !picks.length) throw new Error("No template selected.");
     const templateFile = await picks[0].getFile();
     const entries = await unzipAllEntries(await templateFile.arrayBuffer());
