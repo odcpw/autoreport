@@ -2,7 +2,7 @@
   const init = (ctx, deps) => {
     const { stateHelpers, normalizeHelpers } = deps;
     const { elements, state, runtime, debug, setStatus } = ctx;
-    const { t } = ctx.i18n;
+    const { t, tHint = t } = ctx.i18n;
     const { escapeHtml = (value) => value, formatInlineMarkdown = (value) => value } = ctx.markdown || {};
     const reportRows = window.AutoBerichtReportRows || {};
 
@@ -40,8 +40,7 @@
     let scheduleAutosave = () => {};
     let seedBootstrapHandler = null;
     let libraryExcelExportHandler = null;
-    let exportToastTimer = null;
-
+    let actionPlanExportHandler = null;
     const setScheduleAutosave = (fn) => {
       scheduleAutosave = typeof fn === "function" ? fn : () => {};
     };
@@ -54,29 +53,15 @@
       libraryExcelExportHandler = typeof fn === "function" ? fn : null;
     };
 
-    const showExportToast = (message, mode = "info") => {
-      if (!message || typeof document === "undefined") return;
-      const existing = document.getElementById("word-export-toast");
-      if (existing) existing.remove();
-      if (exportToastTimer) {
-        window.clearTimeout(exportToastTimer);
-        exportToastTimer = null;
-      }
-      const toast = document.createElement("div");
-      toast.id = "word-export-toast";
-      toast.className = "mini-toast";
-      if (mode === "error") toast.classList.add("is-error");
-      toast.textContent = String(message);
-      document.body.appendChild(toast);
-      requestAnimationFrame(() => {
-        toast.classList.add("is-visible");
-      });
-      exportToastTimer = window.setTimeout(() => {
-        toast.classList.remove("is-visible");
-        window.setTimeout(() => {
-          if (toast.parentNode) toast.parentNode.removeChild(toast);
-        }, 220);
-      }, 2800);
+    const setActionPlanExportHandler = (fn) => {
+      actionPlanExportHandler = typeof fn === "function" ? fn : null;
+    };
+
+    const showExportToast = (message) => {
+      if (!message) return;
+      const next = String(message);
+      if (String(elements.statusEl?.textContent || "") === next) return;
+      setStatus(next);
     };
 
     const autosizeTextarea = (textarea) => {
@@ -319,45 +304,45 @@
     const getChecklistIndustries = () => ([
       {
         key: "transport",
-        label: t("checklist_industry_transport", "Transport und Lagerung"),
-        short: t("checklist_industry_transport_short", "Tr/Lg"),
+        label: t("checklist_industry_transport", "Transport & storage"),
+        short: t("checklist_industry_transport_short", "Tr/St"),
       },
       {
         key: "metall",
-        label: t("checklist_industry_metall", "Metall"),
+        label: t("checklist_industry_metall", "Metal"),
         short: t("checklist_industry_metall_short", "Met"),
       },
       {
         key: "buero",
-        label: t("checklist_industry_buero", "Büro"),
-        short: t("checklist_industry_buero_short", "Bü"),
+        label: t("checklist_industry_buero", "Office"),
+        short: t("checklist_industry_buero_short", "Off"),
       },
       {
         key: "forst",
-        label: t("checklist_industry_forst", "Forst"),
+        label: t("checklist_industry_forst", "Forestry"),
         short: t("checklist_industry_forst_short", "For"),
       },
       {
         key: "holz",
-        label: t("checklist_industry_holz", "Holz"),
+        label: t("checklist_industry_holz", "Wood"),
         short: t("checklist_industry_holz_short", "Holz"),
       },
       {
         key: "bau",
-        label: t("checklist_industry_bau", "Bau- und Installationsgewerbe"),
-        short: t("checklist_industry_bau_short", "Bau"),
+        label: t("checklist_industry_bau", "Construction & installations"),
+        short: t("checklist_industry_bau_short", "Constr."),
       },
       {
         key: "uebrige",
-        label: t("checklist_industry_uebrige", "Übrige"),
-        short: t("checklist_industry_uebrige_short", "Übr"),
+        label: t("checklist_industry_uebrige", "Other"),
+        short: t("checklist_industry_uebrige_short", "Other"),
       },
     ]);
 
     const getChecklistCategories = () => ([
       {
         key: "vital",
-        label: t("checklist_filter_vital", "Lebenswichtige Regeln"),
+        label: t("checklist_filter_vital", "Vital rules"),
       },
       {
         key: "ekas",
@@ -386,7 +371,7 @@
     };
 
     const formatChecklistMarkdown = (item) => {
-      const prefix = t("checklist_see_also", "Siehe auch");
+      const prefix = t("checklist_see_also", "See also");
       const title = formatChecklistTitle(item);
       const rawUrl = String(item.url || "").trim();
       const linkTarget = normalizeChecklistUrl(rawUrl);
@@ -475,12 +460,12 @@
       });
 
       if (checklistOverlayTitle) {
-        const baseTitle = t("checklist_overlay_title", "Suva-Checklisten");
+        const baseTitle = t("checklist_overlay_title", "Suva checklists");
         const localeLabel = formatChecklistLocaleLabel(source);
         checklistOverlayTitle.textContent = `${baseTitle} (${localeLabel})`;
       }
       if (checklistOverlayHint) {
-        const hint = t("checklist_overlay_hint", "Click ⧉ to copy “Siehe auch: … [link]”.");
+        const hint = tHint("checklist_overlay_hint", "Click Copy to copy \"See also: ... [link]\".");
         checklistOverlayHint.textContent = hint;
       }
       if (checklistSearchEl) {
@@ -1225,7 +1210,7 @@
       titleHeader.className = "chapter-preview-table__title";
       const titleMain = document.createElement("td");
       titleMain.colSpan = 2;
-      titleMain.textContent = "Systempunkte mit Verbesserungspotenzial";
+      titleMain.textContent = "System points with improvement potential";
       const titleSpacer = document.createElement("td");
       titleSpacer.textContent = "";
       titleHeader.appendChild(titleMain);
@@ -1234,7 +1219,7 @@
 
       const labelHeader = document.createElement("tr");
       labelHeader.className = "chapter-preview-table__labels";
-      ["Ist-Zustand", "Lösungsansätze", "Prio"].forEach((label, index) => {
+      ["Current state", "Recommendations", "Prio"].forEach((label, index) => {
         const th = document.createElement("th");
         th.scope = "col";
         th.textContent = label;
@@ -1507,7 +1492,7 @@
       if (runtime.awaitingLocaleBootstrap) {
         const bootstrapHint = document.createElement("p");
         bootstrapHint.className = "project-card__hint";
-        bootstrapHint.textContent = t(
+        bootstrapHint.textContent = tHint(
           "project_bootstrap_hint",
           "This folder is empty. Select report language to load seed content."
         );
@@ -1585,7 +1570,7 @@
         meta.address = String(value || "").trim();
         scheduleProjectAutosave();
       }, { colSpan: 2 }));
-      formGrid.appendChild(createMetaField(t("project_meta_postal", "PLZ"), meta.plz || "", (value) => {
+      formGrid.appendChild(createMetaField(t("project_meta_postal", "Postal code"), meta.plz || "", (value) => {
         meta.plz = String(value || "").trim();
         scheduleProjectAutosave();
       }, { colSpan: 1 }));
@@ -1641,9 +1626,9 @@
       page.appendChild(formCard);
 
       const importCard = createToolCard({
-        title: t("project_tool_import_title", "Import Selbstbeurteilung"),
-        hint: t("project_tool_import_hint", "Pick the Selbstbeurteilung file. It will be imported and copied into the project inputs folder."),
-        buttonLabel: t("project_tool_import_self", "Import Selbstbeurteilung"),
+        title: t("project_tool_import_title", "Import Self-Assessment"),
+        hint: tHint("project_tool_import_hint", "Pick the self-assessment file. It will be imported and copied into the project inputs folder."),
+        buttonLabel: t("project_tool_import_self", "Import Self-Assessment"),
         buttonClass: "",
         onClick: async () => {
           triggerImportSelf();
@@ -1653,7 +1638,7 @@
 
       const exportCard = createToolCard({
         title: t("project_export_card_title", "Word Export"),
-        hint: t("project_export_card_hint", "Pick the DOCX template and create a report in outputs using the current sidecar data."),
+        hint: tHint("project_export_card_hint", "Use the DOCX template in templates and create a report in outputs using the current sidecar data."),
         buttonLabel: t("project_export_no_vba", "Word Export"),
         buttonClass: "ghost",
         onClick: async (button) => {
@@ -1679,6 +1664,7 @@
               computeSpider: window.AutoBerichtSpider?.computeSpider,
               compareIdSegments: stateHelpers.compareIdSegments,
               toText: stateHelpers.toText,
+              notify: showExportToast,
             });
             if (result?.savedAs) {
               setStatus(`Exported ${result.savedAs}`);
@@ -1726,6 +1712,7 @@
             computeSpider: window.AutoBerichtSpider?.computeSpider,
             compareIdSegments: stateHelpers.compareIdSegments,
             toText: stateHelpers.toText,
+            notify: showExportToast,
           });
           if (result?.savedAs) {
             setStatus(`Exported ${result.savedAs}`);
@@ -1746,7 +1733,7 @@
 
       const pptCard = createToolCard({
         title: t("project_export_ppt_card_title", "PowerPoint Export"),
-        hint: t("project_export_ppt_card_hint", "Pick the PPTX template and create slides in outputs using the current sidecar data."),
+        hint: tHint("project_export_ppt_card_hint", "Use the PPTX template in templates and create slides in outputs using the current sidecar data."),
         buttonLabel: t("project_export_ppt_report", "PowerPoint Export (Report)"),
         buttonClass: "ghost",
         onClick: async (button) => {
@@ -1764,9 +1751,41 @@
       pptCard.actions.appendChild(pptTrainingButton);
       page.appendChild(pptCard.card);
 
+      const actionPlanCard = createToolCard({
+        title: t("project_tool_action_plan_title", "Action Plan Export"),
+        hint: tHint("project_tool_action_plan_hint", "Use the Excel template from the project templates folder and create the action-plan workbook in outputs from the current report items."),
+        buttonLabel: t("project_tool_action_plan", "Export Action Plan Excel"),
+        buttonClass: "ghost",
+        onClick: async (button) => {
+          button.disabled = true;
+          const previous = button.textContent;
+          const runningLabel = t("project_tool_action_plan_running", "Exporting action plan ...");
+          button.textContent = runningLabel;
+          showExportToast(runningLabel);
+          try {
+            const result = await actionPlanExportHandler();
+            if (result?.savedAs) {
+              setStatus(`Exported ${result.savedAs}`);
+              showExportToast(`Exported ${result.savedAs}`);
+            } else {
+              setStatus(t("project_tool_action_plan_done", "Action plan export complete."));
+              showExportToast(t("project_tool_action_plan_done", "Action plan export complete."));
+            }
+          } catch (err) {
+            setStatus(`Export failed: ${err.message || err}`);
+            debug.logLine("error", `Action plan export failed: ${err.message || err}`);
+            showExportToast(`Export failed: ${err.message || err}`, "error");
+          } finally {
+            button.disabled = false;
+            button.textContent = previous;
+          }
+        },
+      });
+      page.appendChild(actionPlanCard.card);
+
       const libraryCard = createToolCard({
         title: t("project_tool_library_title", "Library Export"),
-        hint: `${t("project_tool_library_hint", "Generate or update the library from the current project content.")} ${t("project_tool_library_excel_hint", "Export the current library JSON into an Excel workbook (human-readable and machine-ingestible).")}`,
+        hint: `${tHint("project_tool_library_hint", "Generate or update the library from the current project content.")} ${tHint("project_tool_library_excel_hint", "Export the current library JSON into an Excel workbook (human-readable and machine-ingestible).")}`,
         buttonLabel: t("project_tool_library", "Generate / Update Library"),
         buttonClass: "ghost",
         onClick: async () => {
@@ -1794,7 +1813,7 @@
       logoCard.appendChild(logoTitle);
       const logoHint = document.createElement("p");
       logoHint.className = "project-card__hint";
-      logoHint.textContent = t("project_logo_hint", "Place logo.png/logo.jpg in inputs, then click to pick the logo file manually. The app writes outputs/logo-large.png and outputs/logo-small.png.");
+      logoHint.textContent = tHint("project_logo_hint", "Place logo.png/logo.jpg in inputs, then click to pick the logo file manually. The app writes outputs/logo-large.png and outputs/logo-small.png.");
       logoCard.appendChild(logoHint);
       const logoPaths = document.createElement("div");
       logoPaths.className = "project-logo-paths";
@@ -1853,7 +1872,7 @@
       spiderCard.appendChild(spiderTitle);
       const spiderHint = document.createElement("p");
       spiderHint.className = "project-card__hint";
-      spiderHint.textContent = t("project_spider_hint", "Adjust chapter overrides and preview the live spider chart.");
+      spiderHint.textContent = tHint("project_spider_hint", "Adjust chapter overrides and preview the live spider chart.");
       spiderCard.appendChild(spiderHint);
       const canvas = document.createElement("canvas");
       canvas.className = "project-spider-canvas";
@@ -1873,7 +1892,7 @@
       };
       spiderTable.innerHTML = [
         "<thead><tr>",
-        "<th>Kapitel</th>",
+        "<th>Chapter</th>",
         `<th>${escapeHtml(getCompanyLegendLabel())} %</th>`,
         "<th>Override</th>",
         "<th>Use</th>",
@@ -1960,7 +1979,7 @@
 
       const debugCard = createToolCard({
         title: t("project_tool_log_title", "Debug Log"),
-        hint: t("project_tool_log_hint", "Save the current debug log to share diagnostics when troubleshooting."),
+        hint: tHint("project_tool_log_hint", "Save the current debug log to share diagnostics when troubleshooting."),
         buttonLabel: t("project_tool_log", "Save debug log"),
         buttonClass: "ghost",
         onClick: async () => {
@@ -2057,7 +2076,7 @@
         const checklistBtn = document.createElement("button");
         checklistBtn.type = "button";
         checklistBtn.className = "checklist-pill";
-        const label = t("checklist_button_label", "Checklisten");
+        const label = t("checklist_button_label", "Checklists");
         checklistBtn.textContent = `☑ ${label}`;
         const title = t("checklist_button_title", label);
         checklistBtn.title = title;
@@ -2160,7 +2179,7 @@
       const details = document.createElement("details");
       details.className = "self-details";
       const summary = document.createElement("summary");
-      summary.textContent = `Selbstbeurteilung (${selfItems.length})`;
+      summary.textContent = `Self-assessment (${selfItems.length})`;
       details.appendChild(summary);
       const list = document.createElement("ul");
       list.className = "self-list";
@@ -2279,13 +2298,13 @@
       const tooltip = document.createElement("span");
       tooltip.className = "hint__tooltip";
       tooltip.innerHTML = [
-        t("markdown_hint_title", "Markdown:"),
-        `<strong>${t("markdown_hint_bold", "**bold**")}</strong>,`,
-        `<em>${t("markdown_hint_italic", "*italic*")}</em>,`,
-        `<span class="hint__link">${t("markdown_hint_link", "[text](url)")}</span>`,
-        `<br>${t("markdown_hint_list", "- List item")}`,
-        `<br>${t("markdown_hint_paragraph", "Blank line = new paragraph")}`,
-        `<br>${t("markdown_hint_linebreak", "Line breaks kept")}`,
+        tHint("markdown_hint_title", "Markdown:"),
+        `<strong>${tHint("markdown_hint_bold", "**bold**")}</strong>,`,
+        `<em>${tHint("markdown_hint_italic", "*italic*")}</em>,`,
+        `<span class="hint__link">${tHint("markdown_hint_link", "[text](url)")}</span>`,
+        `<br>${tHint("markdown_hint_list", "- List item")}`,
+        `<br>${tHint("markdown_hint_paragraph", "Blank line = new paragraph")}`,
+        `<br>${tHint("markdown_hint_linebreak", "Line breaks kept")}`,
       ].join(" ");
       hint.appendChild(icon);
       hint.appendChild(tooltip);
@@ -2727,6 +2746,7 @@
       setScheduleAutosave,
       setSeedBootstrapHandler,
       setLibraryExcelExportHandler,
+      setActionPlanExportHandler,
       renderPhotoOverlay,
     };
   };

@@ -8,6 +8,30 @@
       spiderModule,
     } = deps;
     const { state, runtime, debug, setStatus, elements } = ctx;
+    const textDecoder = new TextDecoder();
+    const textEncoder = new TextEncoder();
+    const zipTools = window.AutoBerichtWordDocxZip || {};
+    const reportRows = window.AutoBerichtReportRows || {};
+    const unzipAllEntries = zipTools?.unzipAllEntries;
+    const buildZipStore = zipTools?.buildZipStore;
+    const XML_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+    const XML_NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+    const ACTION_PLAN_TEMPLATE_BY_LOCALE = {
+      de: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit d.V01.xlsx",
+      fr: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit f.V01.xlsx",
+      it: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit i.V01.xlsx",
+    };
+    const ACTION_PLAN_SHEET_NAMES = {
+      de: { plan: "Aktionsplan", report: "Berichtsbasis" },
+      fr: { plan: "Plan d'action", report: "Base du rapport" },
+      it: { plan: "Piano d'azione", report: "Base del rapporto" },
+    };
+    const ACTION_PLAN_TEMPLATE_MAX_QUARTERS = 11;
+    const ACTION_PLAN_PLAN_QUARTER_START_COL = 9; // J
+    const ACTION_PLAN_PLAN_YEAR_ROW = 4;
+    const ACTION_PLAN_PLAN_QUARTER_ROW = 5;
+    const ACTION_PLAN_REPORT_FIRST_DATA_ROW = 3;
+    const ACTION_PLAN_REPORT_EDITABLE_COLUMNS = ["A", "B", "C", "D", "E", "F", "G", "H", "J"];
 
     const extractReportProject = (doc) => {
       if (!doc || typeof doc !== "object") return null;
@@ -212,15 +236,6 @@
       return null;
     };
 
-    const isDirectoryEmpty = async (dirHandle) => {
-      if (!dirHandle?.entries) return false;
-      // eslint-disable-next-line no-unused-vars
-      for await (const _entry of dirHandle.entries()) {
-        return false;
-      }
-      return true;
-    };
-
     const parseRelativePath = (value) => {
       const parts = String(value || "")
         .split("/")
@@ -249,8 +264,19 @@
       return manifest;
     };
 
-    const copyBundledProjectTemplateToFolder = async (projectHandle, ensureDir) => {
+    const fetchBundledProjectTemplateBytes = async (relativePath) => {
+      const sourceParts = parseRelativePath(relativePath);
+      const sourceUrl = new URL(`../project-template/${sourceParts.join("/")}`, window.location.href).toString();
+      const response = await fetch(sourceUrl, { cache: "no-store" });
+      if (!response.ok) {
+        throw new Error(`Bundled template file missing (${response.status}): ${sourceParts.join("/")}`);
+      }
+      return new Uint8Array(await response.arrayBuffer());
+    };
+
+    const copyBundledProjectTemplateToFolder = async (projectHandle, ensureDir, options = {}) => {
       const manifest = await loadBundledProjectTemplateManifest();
+      const overwrite = options.overwrite === true;
 
       for (let i = 0; i < manifest.directories.length; i += 1) {
         const dirParts = parseRelativePath(manifest.directories[i]);
@@ -270,15 +296,6 @@
         const fileName = targetParts[targetParts.length - 1];
         if (!fileName) throw new Error(`Invalid target file path in project template manifest: ${targetRel}`);
 
-        const sourceUrl = new URL(`../project-template/${sourceParts.join("/")}`, window.location.href).toString();
-        // eslint-disable-next-line no-await-in-loop
-        const response = await fetch(sourceUrl, { cache: "no-store" });
-        if (!response.ok) {
-          throw new Error(`Bundled template file missing (${response.status}): ${sourceParts.join("/")}`);
-        }
-        // eslint-disable-next-line no-await-in-loop
-        const bytes = new Uint8Array(await response.arrayBuffer());
-
         let parent = projectHandle;
         for (let p = 0; p < targetParts.length - 1; p += 1) {
           // eslint-disable-next-line no-await-in-loop
@@ -286,6 +303,9 @@
         }
         // eslint-disable-next-line no-await-in-loop
         const existingFile = await findFileCaseInsensitive(parent, fileName);
+        if (existingFile && !overwrite) continue;
+        // eslint-disable-next-line no-await-in-loop
+        const bytes = await fetchBundledProjectTemplateBytes(sourceParts.join("/"));
         // eslint-disable-next-line no-await-in-loop
         const fileHandle = existingFile || await parent.getFileHandle(fileName, { create: true });
         // eslint-disable-next-line no-await-in-loop
@@ -305,10 +325,6 @@
         return parentHandle.getDirectoryHandle(name, { create: true });
       };
 
-      if (await isDirectoryEmpty(projectHandle)) {
-        await copyBundledProjectTemplateToFolder(projectHandle, ensureDir);
-      }
-
       await ensureDir(projectHandle, "inputs");
       await ensureDir(projectHandle, "outputs");
       await ensureDir(projectHandle, "backup");
@@ -320,6 +336,7 @@
       await ensureDir(rawDir, "pm3");
       await ensureDir(photosDir, "resized");
       await ensureDir(photosDir, "export");
+      await copyBundledProjectTemplateToFolder(projectHandle, ensureDir, { overwrite: false });
     };
 
     const loadProjectFromFolder = async () => {
@@ -520,6 +537,446 @@
 
     const toFlatText = (value) => stateHelpers.toText(value).replace(/\r\n/g, "\n");
 
+    const getLocaleBase = (locale) => {
+      const base = String(locale || "").toLowerCase().split("-")[0];
+      return ["de", "fr", "it"].includes(base) ? base : "de";
+    };
+
+    const toFileSafeSlug = (value, fallback = "Company") => {
+      const raw = String(value || "").trim();
+      const hyphenated = raw.replace(/\s+/g, "-");
+      const cleaned = hyphenated
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^[.\-\s]+|[.\-\s]+$/g, "");
+      return cleaned || fallback;
+    };
+
+    const getNestedDirectory = async (parentHandle, parts, options = {}) => {
+      let current = parentHandle;
+      const list = Array.isArray(parts) ? parts : String(parts || "").split("/").filter(Boolean);
+      for (let i = 0; i < list.length; i += 1) {
+        const name = String(list[i] || "").trim();
+        if (!name) continue;
+        // eslint-disable-next-line no-await-in-loop
+        current = options.create
+          ? await current.getDirectoryHandle(name, { create: true })
+          : await current.getDirectoryHandle(name);
+      }
+      return current;
+    };
+
+    const getFileHandleFromPath = async (projectHandle, relativePath) => {
+      const parts = String(relativePath || "").split("/").map((part) => part.trim()).filter(Boolean);
+      if (!parts.length) return null;
+      let dir = projectHandle;
+      for (let i = 0; i < parts.length - 1; i += 1) {
+        // eslint-disable-next-line no-await-in-loop
+        dir = await findDirectoryCaseInsensitive(dir, parts[i]);
+        if (!dir) return null;
+      }
+      const fileName = parts[parts.length - 1];
+      try {
+        return await dir.getFileHandle(fileName);
+      } catch (err) {
+        if (dir?.entries) {
+          for await (const [name, handle] of dir.entries()) {
+            if (handle.kind !== "file") continue;
+            if (name.toLowerCase() === fileName.toLowerCase()) return handle;
+          }
+        }
+        if (err?.name === "NotFoundError") return null;
+        throw err;
+      }
+    };
+
+    const readProjectBinaryFile = async (projectHandle, relativePath) => {
+      const handle = await getFileHandleFromPath(projectHandle, relativePath);
+      if (!handle) return null;
+      return handle.getFile();
+    };
+
+    const announceTemplateStatus = (message) => {
+      setStatus(message);
+      debug.logLine("info", message);
+    };
+
+    const resolveProjectOrBundledTemplateFile = async (projectHandle, relativePath, label, mimeType) => {
+      const projectFile = await readProjectBinaryFile(projectHandle, relativePath);
+      if (projectFile) {
+        announceTemplateStatus(`${label}: using project template ${relativePath}`);
+        return projectFile;
+      }
+
+      announceTemplateStatus(`${label}: project template missing, trying bundled template ${relativePath}`);
+      let bundledBytes;
+      try {
+        bundledBytes = await fetchBundledProjectTemplateBytes(relativePath);
+      } catch (err) {
+        throw new Error(`Missing ${label.toLowerCase()} template: ${relativePath}`);
+      }
+
+      try {
+        const pathParts = parseRelativePath(relativePath);
+        const fileName = pathParts[pathParts.length - 1];
+        const parent = await getNestedDirectory(projectHandle, pathParts.slice(0, -1), { create: true });
+        await writeBinaryFile(parent, fileName, bundledBytes);
+        const copiedFile = await readProjectBinaryFile(projectHandle, relativePath);
+        if (copiedFile) {
+          announceTemplateStatus(`${label}: copied bundled template to project templates and using it`);
+          return copiedFile;
+        }
+      } catch (err) {
+        announceTemplateStatus(`${label}: bundled template copy failed (${err.message || err}); using bundled template for this run`);
+      }
+
+      announceTemplateStatus(`${label}: using bundled template for this run`);
+      return new Blob([bundledBytes], { type: mimeType });
+    };
+
+    const writeBinaryFile = async (dirHandle, name, data) => {
+      const handle = await dirHandle.getFileHandle(name, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      return handle;
+    };
+
+    const getOutputsDirectory = async (projectHandle) => {
+      try {
+        return await getNestedDirectory(projectHandle, ["outputs"], { create: false });
+      } catch (err) {
+        return getNestedDirectory(projectHandle, ["outputs"], { create: true });
+      }
+    };
+
+    const normalizeZipPartName = (value) => String(value || "").replace(/^\/+/, "");
+
+    const resolveZipPartTarget = (baseDir, target) => {
+      const normalizedBase = `${normalizeZipPartName(baseDir).replace(/\/?$/, "/")}`;
+      const resolved = new URL(String(target || ""), `https://zip.invalid/${normalizedBase}`).pathname;
+      return normalizeZipPartName(resolved);
+    };
+
+    const getEntryText = (map, name) => {
+      const entry = map.get(normalizeZipPartName(name));
+      return entry ? textDecoder.decode(entry.data) : "";
+    };
+
+    const setEntryText = (map, name, xml) => {
+      const key = normalizeZipPartName(name);
+      map.set(key, {
+        name: key,
+        data: textEncoder.encode(xml),
+        flags: map.get(key)?.flags || 0,
+      });
+    };
+
+    const parseXml = (xml, label) => {
+      const doc = new DOMParser().parseFromString(String(xml || ""), "application/xml");
+      if (doc.getElementsByTagName("parsererror").length) {
+        throw new Error(`Invalid XML in ${label}.`);
+      }
+      return doc;
+    };
+
+    const serializeXml = (doc) => new XMLSerializer().serializeToString(doc);
+
+    const getChildElements = (node, localName) => Array.from(node?.getElementsByTagNameNS?.("*", localName) || []);
+
+    const getFirstChild = (node, localName) => getChildElements(node, localName)[0] || null;
+
+    const getAttributeByLocalName = (node, localName) => {
+      if (!node?.attributes) return "";
+      const attr = Array.from(node.attributes).find((item) => item.localName === localName);
+      return attr ? attr.value : "";
+    };
+
+    const colLetterToIndex = (value) => {
+      let out = 0;
+      const input = String(value || "").trim().toUpperCase();
+      for (let i = 0; i < input.length; i += 1) {
+        out = (out * 26) + (input.charCodeAt(i) - 64);
+      }
+      return out - 1;
+    };
+
+    const indexToColLetter = (index) => {
+      let n = Number(index);
+      if (!Number.isFinite(n) || n < 0) return "A";
+      let out = "";
+      while (n >= 0) {
+        out = String.fromCharCode((n % 26) + 65) + out;
+        n = Math.floor(n / 26) - 1;
+      }
+      return out;
+    };
+
+    const parseCellRef = (ref) => {
+      const match = String(ref || "").match(/^([A-Z]+)(\d+)$/i);
+      if (!match) return null;
+      return {
+        col: colLetterToIndex(match[1]),
+        row: Number(match[2]),
+      };
+    };
+
+    const compareCellRefs = (a, b) => {
+      const cellA = parseCellRef(a);
+      const cellB = parseCellRef(b);
+      if (!cellA || !cellB) return String(a || "").localeCompare(String(b || ""));
+      if (cellA.row !== cellB.row) return cellA.row - cellB.row;
+      return cellA.col - cellB.col;
+    };
+
+    const ensureSheetRow = (sheetDoc, rowNumber) => {
+      const sheetData = getFirstChild(sheetDoc.documentElement, "sheetData");
+      if (!sheetData) throw new Error("Worksheet is missing sheetData.");
+      const rows = Array.from(sheetData.getElementsByTagNameNS("*", "row"));
+      const existing = rows.find((row) => Number(row.getAttribute("r")) === Number(rowNumber));
+      if (existing) return existing;
+      const row = sheetDoc.createElementNS(XML_NS, "row");
+      row.setAttribute("r", String(rowNumber));
+      const insertBefore = rows.find((item) => Number(item.getAttribute("r")) > Number(rowNumber));
+      if (insertBefore) {
+        sheetData.insertBefore(row, insertBefore);
+      } else {
+        sheetData.appendChild(row);
+      }
+      return row;
+    };
+
+    const ensureSheetCell = (sheetDoc, rowNumber, colLetter) => {
+      const ref = `${String(colLetter || "").toUpperCase()}${Number(rowNumber)}`;
+      const row = ensureSheetRow(sheetDoc, rowNumber);
+      const cells = Array.from(row.getElementsByTagNameNS("*", "c"));
+      const existing = cells.find((cell) => String(cell.getAttribute("r") || "").toUpperCase() === ref);
+      if (existing) return existing;
+      const cell = sheetDoc.createElementNS(XML_NS, "c");
+      cell.setAttribute("r", ref);
+      const insertBefore = cells.find((item) => compareCellRefs(item.getAttribute("r"), ref) > 0);
+      if (insertBefore) {
+        row.insertBefore(cell, insertBefore);
+      } else {
+        row.appendChild(cell);
+      }
+      return cell;
+    };
+
+    const setInlineStringCellValue = (sheetDoc, rowNumber, colLetter, value) => {
+      const cell = ensureSheetCell(sheetDoc, rowNumber, colLetter);
+      Array.from(cell.childNodes).forEach((child) => cell.removeChild(child));
+      cell.setAttribute("t", "inlineStr");
+      const is = sheetDoc.createElementNS(XML_NS, "is");
+      const text = sheetDoc.createElementNS(XML_NS, "t");
+      text.setAttributeNS("http://www.w3.org/XML/1998/namespace", "xml:space", "preserve");
+      text.textContent = String(value == null ? "" : value);
+      is.appendChild(text);
+      cell.appendChild(is);
+      return cell;
+    };
+
+    const resolveSheetParts = (templateMap) => {
+      const workbookDoc = parseXml(getEntryText(templateMap, "xl/workbook.xml"), "xl/workbook.xml");
+      const relsDoc = parseXml(getEntryText(templateMap, "xl/_rels/workbook.xml.rels"), "xl/_rels/workbook.xml.rels");
+      const relMap = new Map(
+        getChildElements(relsDoc.documentElement, "Relationship").map((rel) => [
+          rel.getAttribute("Id"),
+          resolveZipPartTarget("xl/", getAttributeByLocalName(rel, "Target")),
+        ]),
+      );
+      const out = new Map();
+      const sheetsNode = getFirstChild(workbookDoc.documentElement, "sheets");
+      const sheets = sheetsNode ? Array.from(sheetsNode.children) : [];
+      sheets.forEach((sheet) => {
+        if (sheet.localName !== "sheet") return;
+        const name = sheet.getAttribute("name");
+        const relId = Array.from(sheet.attributes).find((attr) => attr.localName === "id")?.value || "";
+        const part = relMap.get(relId);
+        if (name && part) out.set(name, part);
+      });
+      return out;
+    };
+
+    const quarterWindowFromDate = (date = new Date()) => {
+      const currentQuarter = Math.floor(date.getMonth() / 3) + 1;
+      let year = date.getFullYear();
+      let quarter = currentQuarter + 1;
+      if (quarter === 5) {
+        quarter = 1;
+        year += 1;
+      }
+      const total = Math.max(0, 4 - currentQuarter) + 8;
+      const out = [];
+      for (let i = 0; i < total; i += 1) {
+        out.push({ year, quarter });
+        quarter += 1;
+        if (quarter === 5) {
+          quarter = 1;
+          year += 1;
+        }
+      }
+      return out;
+    };
+
+    const actionPlanOutputStem = (locale) => {
+      const base = getLocaleBase(locale);
+      if (base === "fr") return "Plan-Action-Securite-Integree";
+      if (base === "it") return "Piano-Azione-Sicurezza-Integrata";
+      return "Aktionsplan-Integrierte-Sicherheit";
+    };
+
+    const resolveActionPlanTemplatePath = (locale) => {
+      const base = getLocaleBase(locale);
+      return ACTION_PLAN_TEMPLATE_BY_LOCALE[base] || ACTION_PLAN_TEMPLATE_BY_LOCALE.de;
+    };
+
+    const resolveActionPlanSheetNames = (locale) => {
+      const base = getLocaleBase(locale);
+      return ACTION_PLAN_SHEET_NAMES[base] || ACTION_PLAN_SHEET_NAMES.de;
+    };
+
+    const buildActionPlanReportRows = () => {
+      const locale = String(state.project?.meta?.locale || "de-CH");
+      const compareIds = typeof stateHelpers.compareIdSegments === "function"
+        ? stateHelpers.compareIdSegments
+        : ((a, b) => String(a || "").localeCompare(String(b || ""), "de", { numeric: true }));
+      const chapters = [...(state.project?.chapters || [])].sort((a, b) => compareIds(a?.id, b?.id));
+      const formatChapterLabel = typeof stateHelpers.formatChapterLabel === "function"
+        ? stateHelpers.formatChapterLabel
+        : (chapter) => String(chapter?.id || "");
+      const out = [];
+
+      chapters.forEach((chapter) => {
+        const chapterId = String(chapter?.id || "").trim();
+        if (!chapterId || chapterId === "0") return;
+        const entries = typeof reportRows.buildChapterRows === "function"
+          ? reportRows.buildChapterRows(chapter, { toText: stateHelpers.toText })
+          : [];
+        let currentSection = "";
+        entries.forEach((entry) => {
+          if (entry?.kind === "section") {
+            currentSection = String(entry.title || "").trim();
+            return;
+          }
+          if (entry?.kind !== "finding") return;
+          out.push({
+            reportRef: String(entry.id || "").trim(),
+            chapter: formatChapterLabel(chapter, locale),
+            theme: chapterId === "4.8"
+              ? String(entry.title || currentSection || "").trim()
+              : String(currentSection || "").trim(),
+            finding: String(entry.finding || ""),
+            recommendation: String(entry.recommendation || ""),
+            priority: String(entry.priority || ""),
+          });
+        });
+      });
+
+      return out;
+    };
+
+    const updateQuarterHeaderMerges = (sheetDoc, quarterWindow) => {
+      const mergesNode = getFirstChild(sheetDoc.documentElement, "mergeCells");
+      if (!mergesNode) return;
+      const quarterStart = ACTION_PLAN_PLAN_QUARTER_START_COL;
+      const quarterEnd = ACTION_PLAN_PLAN_QUARTER_START_COL + ACTION_PLAN_TEMPLATE_MAX_QUARTERS - 1;
+      Array.from(mergesNode.getElementsByTagNameNS("*", "mergeCell")).forEach((mergeCell) => {
+        const ref = String(mergeCell.getAttribute("ref") || "");
+        const parts = ref.split(":");
+        const start = parseCellRef(parts[0]);
+        const end = parseCellRef(parts[1] || parts[0]);
+        if (!start || !end) return;
+        const isQuarterYearMerge = start.row === ACTION_PLAN_PLAN_YEAR_ROW
+          && end.row === ACTION_PLAN_PLAN_YEAR_ROW
+          && start.col >= quarterStart
+          && end.col <= quarterEnd;
+        if (isQuarterYearMerge) mergesNode.removeChild(mergeCell);
+      });
+
+      let previousYear = null;
+      let previousStart = 0;
+      const groups = [];
+      quarterWindow.forEach((item, index) => {
+        if (previousYear == null) {
+          previousYear = item.year;
+          previousStart = index;
+          return;
+        }
+        if (item.year !== previousYear) {
+          groups.push({ year: previousYear, start: previousStart, end: index - 1 });
+          previousYear = item.year;
+          previousStart = index;
+        }
+      });
+      if (previousYear != null) {
+        groups.push({ year: previousYear, start: previousStart, end: quarterWindow.length - 1 });
+      }
+
+      groups.forEach((group) => {
+        if (group.end <= group.start) return;
+        const mergeCell = sheetDoc.createElementNS(XML_NS, "mergeCell");
+        mergeCell.setAttribute(
+          "ref",
+          `${indexToColLetter(quarterStart + group.start)}${ACTION_PLAN_PLAN_YEAR_ROW}:${indexToColLetter(quarterStart + group.end)}${ACTION_PLAN_PLAN_YEAR_ROW}`,
+        );
+        mergesNode.appendChild(mergeCell);
+      });
+      mergesNode.setAttribute("count", String(mergesNode.getElementsByTagNameNS("*", "mergeCell").length));
+    };
+
+    const patchActionPlanWorkbook = (templateMap, sourceRows, locale) => {
+      const sheetNames = resolveActionPlanSheetNames(locale);
+      const sheetParts = resolveSheetParts(templateMap);
+      const reportPart = sheetParts.get(sheetNames.report);
+      const planPart = sheetParts.get(sheetNames.plan);
+      if (!reportPart) throw new Error(`Template sheet '${sheetNames.report}' was not found.`);
+      if (!planPart) throw new Error(`Template sheet '${sheetNames.plan}' was not found.`);
+
+      const reportDoc = parseXml(getEntryText(templateMap, reportPart), reportPart);
+      const planDoc = parseXml(getEntryText(templateMap, planPart), planPart);
+
+      const reportRows = getChildElements(getFirstChild(reportDoc.documentElement, "sheetData"), "row")
+        .map((row) => Number(row.getAttribute("r")))
+        .filter((rowNo) => Number.isFinite(rowNo) && rowNo >= ACTION_PLAN_REPORT_FIRST_DATA_ROW);
+      const reportCapacity = reportRows.length;
+      if (sourceRows.length > reportCapacity) {
+        throw new Error(`Action plan template supports ${reportCapacity} report rows, but ${sourceRows.length} are required.`);
+      }
+
+      reportRows.forEach((rowNo, index) => {
+        const source = sourceRows[index] || {
+          reportRef: "",
+          chapter: "",
+          theme: "",
+          finding: "",
+          recommendation: "",
+          priority: "",
+        };
+        setInlineStringCellValue(reportDoc, rowNo, "A", source.reportRef);
+        setInlineStringCellValue(reportDoc, rowNo, "B", source.chapter);
+        setInlineStringCellValue(reportDoc, rowNo, "C", source.theme);
+        setInlineStringCellValue(reportDoc, rowNo, "D", source.finding);
+        setInlineStringCellValue(reportDoc, rowNo, "E", source.recommendation);
+        setInlineStringCellValue(reportDoc, rowNo, "F", source.priority);
+        setInlineStringCellValue(reportDoc, rowNo, "G", "");
+        setInlineStringCellValue(reportDoc, rowNo, "H", "");
+        setInlineStringCellValue(reportDoc, rowNo, "J", "");
+      });
+
+      const quarterWindow = quarterWindowFromDate(new Date());
+      for (let i = 0; i < ACTION_PLAN_TEMPLATE_MAX_QUARTERS; i += 1) {
+        const item = quarterWindow[i];
+        const colLetter = indexToColLetter(ACTION_PLAN_PLAN_QUARTER_START_COL + i);
+        setInlineStringCellValue(planDoc, ACTION_PLAN_PLAN_YEAR_ROW, colLetter, item ? String(item.year) : "");
+        setInlineStringCellValue(planDoc, ACTION_PLAN_PLAN_QUARTER_ROW, colLetter, item ? `Q${item.quarter}` : "");
+      }
+      updateQuarterHeaderMerges(planDoc, quarterWindow);
+
+      setEntryText(templateMap, reportPart, serializeXml(reportDoc));
+      setEntryText(templateMap, planPart, serializeXml(planDoc));
+    };
+
     const exportLibraryExcel = async () => {
       if (!runtime.dirHandle) {
         setStatus("Open project folder first.");
@@ -633,6 +1090,46 @@
       await writable.close();
       setStatus(`Library Excel exported: ${xlsxName}`);
       debug.logLine("info", `Library Excel exported: ${xlsxName}`);
+    };
+
+    const exportActionPlanExcel = async () => {
+      if (!runtime.dirHandle) {
+        setStatus("Open project folder first.");
+        return null;
+      }
+      if (typeof unzipAllEntries !== "function" || typeof buildZipStore !== "function") {
+        throw new Error("ZIP workbook helpers are unavailable.");
+      }
+
+      const locale = String(state.project?.meta?.locale || "de-CH");
+      const templatePath = resolveActionPlanTemplatePath(locale);
+      const templateFile = await resolveProjectOrBundledTemplateFile(
+        runtime.dirHandle,
+        templatePath,
+        "Action plan",
+        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      );
+
+      const sourceRows = buildActionPlanReportRows();
+      if (!sourceRows.length) {
+        throw new Error("No included report items available for action plan export.");
+      }
+
+      const entries = await unzipAllEntries(await templateFile.arrayBuffer());
+      const templateMap = new Map(entries.map((entry) => [normalizeZipPartName(entry.name), entry]));
+      patchActionPlanWorkbook(templateMap, sourceRows, locale);
+
+      const outputBytes = buildZipStore(Array.from(templateMap.values()));
+      const outputsDir = await getOutputsDirectory(runtime.dirHandle);
+      const stamp = new Date().toISOString().slice(0, 10);
+      const companySlug = toFileSafeSlug(
+        state.project?.meta?.company || state.project?.meta?.projectName || "",
+        "Company",
+      );
+      const outName = `${stamp}-${companySlug}-${actionPlanOutputStem(locale)}.xlsx`;
+      await writeBinaryFile(outputsDir, outName, outputBytes);
+      debug.logLine("info", `Action plan exported: outputs/${outName}`);
+      return { savedAs: `outputs/${outName}` };
     };
 
     const generateLibrary = async () => {
@@ -859,6 +1356,7 @@
       saveLibraryFile,
       generateLibrary,
       exportLibraryExcel,
+      exportActionPlanExcel,
       bootstrapProjectFromSeed,
     };
   };

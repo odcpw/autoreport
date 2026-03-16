@@ -29,6 +29,10 @@
     {
       "source": "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx",
       "target": "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx"
+    },
+    {
+      "source": "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit d.V01.xlsx",
+      "target": "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit d.V01.xlsx"
     }
   ]
 }

@@ -2,7 +2,7 @@
  * No-VBA Word export orchestrator.
  *
  * Responsibilities:
- * - Read a user-selected `.docx` template and replace placeholder markers.
+ * - Read the project `.docx` template from `templates/` and replace placeholder markers.
  * - Build chapter payloads from sidecar rows using report-ready filtering.
  * - Inject generated media (logos + spider chart) and per-chapter thermo tables.
  * - Write final output as `outputs/YYYY-MM-DD-company-Bericht-Ist-Aufnahme.docx`.
@@ -42,6 +42,11 @@
   const emuFromCm = requireHelper("AutoBerichtWordDocxXml", xmlTools, "emuFromCm");
   const drawingXml = requireHelper("AutoBerichtWordDocxXml", xmlTools, "drawingXml");
   const ensureUpdateFieldsOnOpen = requireHelper("AutoBerichtWordDocxXml", xmlTools, "ensureUpdateFieldsOnOpen");
+  const WORD_TEMPLATE_BY_LOCALE = {
+    de: "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx",
+    fr: "templates/Vorlage IST-Aufnahme-Bericht f.V01.docx",
+    it: "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx",
+  };
 
   const stripLeadingNumber = typeof reportRows.stripLeadingNumber === "function"
     ? reportRows.stripLeadingNumber
@@ -140,6 +145,11 @@
     const raw = Number(value);
     if (!Number.isFinite(raw)) return 0;
     return Math.max(0, Math.min(100, Math.round(raw / 10) * 10));
+  };
+
+  const getLocaleBase = (locale) => {
+    const base = String(locale || "").trim().toLowerCase().split("-")[0];
+    return ["de", "fr", "it"].includes(base) ? base : "de";
   };
 
   const thermoTextByLocale = (locale, companyName) => {
@@ -846,21 +856,6 @@
     }
   };
 
-  const resolveTemplatePickerStartDirectory = async (projectHandle) => {
-    if (!projectHandle) return null;
-    const candidates = [["templates"]];
-    for (let i = 0; i < candidates.length; i += 1) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const dir = await getNestedDirectory(projectHandle, candidates[i], { create: false });
-        if (dir) return dir;
-      } catch (err) {
-        // Try next candidate.
-      }
-    }
-    return projectHandle;
-  };
-
   const getFileHandleFromPath = async (projectHandle, path) => {
     const parts = String(path || "").split("/").map((part) => part.trim()).filter(Boolean);
     if (!parts.length) return null;
@@ -891,6 +886,48 @@
     } catch (err) {
       return null;
     }
+  };
+
+  const resolveWordTemplatePath = (locale) => WORD_TEMPLATE_BY_LOCALE[getLocaleBase(locale)] || WORD_TEMPLATE_BY_LOCALE.de;
+
+  const fetchBundledTemplateBytes = async (relativePath) => {
+    const parts = String(relativePath || "").split("/").map((part) => part.trim()).filter(Boolean);
+    const sourceUrl = new URL(`../project-template/${parts.join("/")}`, window.location.href).toString();
+    const response = await fetch(sourceUrl, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Missing Word template: ${relativePath}`);
+    }
+    return new Uint8Array(await response.arrayBuffer());
+  };
+
+  const resolveWordTemplateFile = async (projectHandle, relativePath, notify = () => {}) => {
+    const projectFile = await tryReadProjectFile(projectHandle, relativePath);
+    if (projectFile) {
+      notify(`Word export: using project template ${relativePath}`);
+      return projectFile;
+    }
+
+    notify(`Word export: project template missing, trying bundled template ${relativePath}`);
+    const bundledBytes = await fetchBundledTemplateBytes(relativePath);
+    const fileName = String(relativePath || "").split("/").filter(Boolean).pop() || "template.docx";
+
+    try {
+      const templatesDir = await getNestedDirectory(projectHandle, ["templates"], { create: true });
+      await writeFileHandle(templatesDir, fileName, bundledBytes);
+      const copiedFile = await tryReadProjectFile(projectHandle, relativePath);
+      if (copiedFile) {
+        notify(`Word export: copied bundled template to project templates and using it`);
+        return copiedFile;
+      }
+    } catch (err) {
+      notify(`Word export: bundled template copy failed (${err.message || err}); using bundled template for this run`);
+    }
+
+    notify(`Word export: using bundled template for this run`);
+    return new Blob(
+      [bundledBytes],
+      { type: "application/vnd.openxmlformats-officedocument.wordprocessingml.document" },
+    );
   };
 
   const blobToUint8 = async (blob) => new Uint8Array(await blob.arrayBuffer());
@@ -1047,29 +1084,11 @@
     computeSpider,
     compareIdSegments,
     toText,
+    notify = () => {},
   }) => {
     if (!projectHandle) throw new Error("Project folder not selected.");
-    if (!window.showOpenFilePicker) throw new Error("File picker unavailable in this browser.");
-
-    const templateStartDir = await resolveTemplatePickerStartDirectory(projectHandle);
-    const pickerOptions = {
-      multiple: false,
-      excludeAcceptAllOption: false,
-      id: "autobericht-word-template",
-      types: [
-        {
-          description: "Word Template",
-          accept: {
-            "application/vnd.openxmlformats-officedocument.wordprocessingml.document": [".docx"],
-          },
-        },
-      ],
-    };
-    if (templateStartDir) pickerOptions.startIn = templateStartDir;
-
-    const picks = await window.showOpenFilePicker(pickerOptions);
-    if (!picks || !picks.length) throw new Error("No template selected.");
-    const templateFile = await picks[0].getFile();
+    const templatePath = resolveWordTemplatePath(project?.meta?.locale || "de-CH");
+    const templateFile = await resolveWordTemplateFile(projectHandle, templatePath, notify);
     const entries = await unzipAllEntries(await templateFile.arrayBuffer());
     const map = new Map(entries.map((entry) => [entry.name, entry]));
 

@@ -2,9 +2,9 @@
  * No-VBA PowerPoint export orchestrator.
  *
  * Responsibilities:
- * - Read a user-selected `.pptx` template and validate required layouts/placeholders.
+ * - Read the project `.pptx` template from `templates/` and validate required layouts/placeholders.
  * - Build report and training slide plans from sidecar/project data.
- * - Render chapter "page snapshot" images (header/footer/logos/thermo/table) for report chapters.
+ * - Render chapter snapshot images (header/footer/logos) for report chapters.
  * - Write final output as .pptx into outputs/.
  */
 (() => {
@@ -15,6 +15,7 @@
 
   const unzipAllEntries = zipTools?.unzipAllEntries;
   const buildZipStore = zipTools?.buildZipStore;
+  const PPT_TEMPLATE_PATH = "templates/Vorlage AutoBericht.pptx";
 
   const NS_REL = "http://schemas.openxmlformats.org/package/2006/relationships";
   const NS_P = "http://schemas.openxmlformats.org/presentationml/2006/main";
@@ -82,12 +83,11 @@
   };
 
   const SNAPSHOT = {
-    // Compact thermo snapshot canvas for chapter intro slides.
+    // Compact chapter snapshot canvas for chapter intro slides.
     width: 1400,
     height: 560,
     margin: 52,
     headerH: 120,
-    thermoH: 110,
   };
 
   const xmlEscape = (value) => String(value || "")
@@ -396,21 +396,6 @@
     }
   };
 
-  const resolveTemplatePickerStartDirectory = async (projectHandle) => {
-    if (!projectHandle) return null;
-    const candidates = [["templates"]];
-    for (let i = 0; i < candidates.length; i += 1) {
-      try {
-        // eslint-disable-next-line no-await-in-loop
-        const dir = await getNestedDirectory(projectHandle, candidates[i], { create: false });
-        if (dir) return dir;
-      } catch (err) {
-        // Try next candidate.
-      }
-    }
-    return projectHandle;
-  };
-
   const getFileHandleFromPath = async (projectHandle, path) => {
     const parts = String(path || "").split("/").map((part) => part.trim()).filter(Boolean);
     if (!parts.length) return null;
@@ -443,36 +428,52 @@
     }
   };
 
+  const fetchBundledTemplateBytes = async (relativePath) => {
+    const parts = String(relativePath || "").split("/").map((part) => part.trim()).filter(Boolean);
+    const sourceUrl = new URL(`../project-template/${parts.join("/")}`, window.location.href).toString();
+    const response = await fetch(sourceUrl, { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`Missing PowerPoint template: ${relativePath}`);
+    }
+    return new Uint8Array(await response.arrayBuffer());
+  };
+
+  const resolvePptTemplateFile = async (projectHandle, relativePath, notify = () => {}) => {
+    const projectFile = await tryReadProjectFile(projectHandle, relativePath);
+    if (projectFile) {
+      notify(`PowerPoint export: using project template ${relativePath}`);
+      return projectFile;
+    }
+
+    notify(`PowerPoint export: project template missing, trying bundled template ${relativePath}`);
+    const bundledBytes = await fetchBundledTemplateBytes(relativePath);
+    const fileName = String(relativePath || "").split("/").filter(Boolean).pop() || "template.pptx";
+
+    try {
+      const templatesDir = await getNestedDirectory(projectHandle, ["templates"], { create: true });
+      await writeFileHandle(templatesDir, fileName, bundledBytes);
+      const copiedFile = await tryReadProjectFile(projectHandle, relativePath);
+      if (copiedFile) {
+        notify("PowerPoint export: copied bundled template to project templates and using it");
+        return copiedFile;
+      }
+    } catch (err) {
+      notify(`PowerPoint export: bundled template copy failed (${err.message || err}); using bundled template for this run`);
+    }
+
+    notify("PowerPoint export: using bundled template for this run");
+    return new Blob(
+      [bundledBytes],
+      { type: "application/vnd.openxmlformats-officedocument.presentationml.presentation" },
+    );
+  };
+
   const writeFileHandle = async (dirHandle, name, data) => {
     const handle = await dirHandle.getFileHandle(name, { create: true });
     const writable = await handle.createWritable();
     await writable.write(data);
     await writable.close();
     return handle;
-  };
-
-  const pickPptTemplate = async (projectHandle) => {
-    if (!window.showOpenFilePicker) {
-      throw new Error("File picker unavailable in this browser.");
-    }
-    const templateStartDir = await resolveTemplatePickerStartDirectory(projectHandle);
-    const pickerOptions = {
-      multiple: false,
-      excludeAcceptAllOption: false,
-      id: "autobericht-pptx-template",
-      types: [
-        {
-          description: "PowerPoint Template",
-          accept: {
-            "application/vnd.openxmlformats-officedocument.presentationml.presentation": [".pptx"],
-          },
-        },
-      ],
-    };
-    if (templateStartDir) pickerOptions.startIn = templateStartDir;
-    const picks = await window.showOpenFilePicker(pickerOptions);
-    if (!picks?.length) throw new Error("No template selected.");
-    return picks[0].getFile();
   };
 
   const blobToUint8 = async (blob) => new Uint8Array(await blob.arrayBuffer());
@@ -662,27 +663,6 @@
     return out;
   };
 
-  const thermoRows = (locale, companyName) => {
-    const normalized = String(locale || "de-CH").toLowerCase();
-    const company = String(companyName || "").trim() || "Company";
-    if (normalized.startsWith("fr")) {
-      return {
-        companyLabel: `Autoevaluation de ${company}`,
-        consultantLabel: "Evaluation par Suva",
-      };
-    }
-    if (normalized.startsWith("it")) {
-      return {
-        companyLabel: `Autovalutazione di ${company}`,
-        consultantLabel: "Valutazione da parte di Suva",
-      };
-    }
-    return {
-      companyLabel: `Selbstbeurteilung von ${company}`,
-      consultantLabel: "Beurteilung durch Suva",
-    };
-  };
-
   const snapshotLabels = (locale) => {
     const normalized = String(locale || "de-CH").toLowerCase();
     if (normalized.startsWith("fr")) {
@@ -732,29 +712,6 @@
     return "Zusammenfassung der Beurteilungen";
   };
 
-  const roundToNearestTen = (value) => {
-    const raw = Number(value);
-    if (!Number.isFinite(raw)) return 0;
-    return Math.max(0, Math.min(100, Math.round(raw / 10) * 10));
-  };
-
-  const buildSpiderScoreMap = (spiderData) => {
-    const map = new Map();
-    const addRows = (rows) => {
-      (rows || []).forEach((row) => {
-        const id = String(row?.id || "").trim();
-        if (!id) return;
-        map.set(id, {
-          company: Number(row?.company || 0),
-          consultant: Number(row?.consultant || 0),
-        });
-      });
-    };
-    addRows(spiderData?.effective?.chapters_1_14);
-    addRows(spiderData?.effective?.chapters_1_11);
-    return map;
-  };
-
   const drawSpiderPng = async (spiderData, companyLabel = "Company", project = null) => {
     const stateHelpers = window.AutoBerichtState || {};
     const spiderChart = window.AutoBerichtSpiderChart || {};
@@ -790,48 +747,8 @@
     });
   };
 
-  const drawThermoBars = (ctx, x, y, width, score, locale, companyName) => {
-    const rows = thermoRows(locale, companyName);
-    const labelsW = Math.round(width * 0.42);
-    const barW = width - labelsW;
-    const segCount = 10;
-    const segGap = 4;
-    const segW = Math.floor((barW - (segCount - 1) * segGap) / segCount);
-    const segH = 18;
-    const startX = x + labelsW;
-    const companyFilled = Math.max(0, Math.min(segCount, Math.round(roundToNearestTen(score.company) / 10)));
-    const consultantFilled = Math.max(0, Math.min(segCount, Math.round(roundToNearestTen(score.consultant) / 10)));
-
-    ctx.save();
-    ctx.fillStyle = "#23303d";
-    ctx.font = "600 19px Arial";
-    ctx.fillText(rows.companyLabel, x, y + 26);
-    ctx.fillText(rows.consultantLabel, x, y + 58);
-
-    const drawRow = (rowY, filled, fill) => {
-      for (let i = 0; i < segCount; i += 1) {
-        const segX = startX + i * (segW + segGap);
-        ctx.fillStyle = i < filled ? fill : "#ffffff";
-        ctx.strokeStyle = "#667788";
-        ctx.lineWidth = 1;
-        ctx.fillRect(segX, rowY, segW, segH);
-        ctx.strokeRect(segX, rowY, segW, segH);
-      }
-    };
-
-    drawRow(y + 10, companyFilled, "#bdd7ee");
-    drawRow(y + 42, consultantFilled, "#f8cbad");
-
-    ctx.fillStyle = "#6f7b86";
-    ctx.font = "600 14px Arial";
-    ctx.fillText("-", startX - 14, y + 28);
-    ctx.fillText("+", startX + barW + 4, y + 28);
-    ctx.restore();
-  };
-
   const drawChapterSnapshot = async ({
     chapterLabel,
-    score,
     locale,
     company,
     moderator,
@@ -887,18 +804,6 @@
     ctx.fillText(`${labels.date}: ${String(dateLabel || "").trim()}`, SNAPSHOT.width - SNAPSHOT.margin, 45);
     ctx.fillText(`${labels.moderator}: ${String(moderator || "").trim() || "-"}`, SNAPSHOT.width - SNAPSHOT.margin, 73);
     ctx.textAlign = "left";
-
-    const thermoX = SNAPSHOT.margin;
-    const thermoY = SNAPSHOT.headerH + 86;
-    const thermoW = SNAPSHOT.width - SNAPSHOT.margin * 2;
-    drawThermoBars(ctx, thermoX, thermoY, thermoW, score, locale, company);
-    const rulerY = Math.min(SNAPSHOT.height - 24, thermoY + SNAPSHOT.thermoH + 34);
-    ctx.strokeStyle = "#d7d0c7";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(SNAPSHOT.margin, rulerY + 0.5);
-    ctx.lineTo(SNAPSHOT.width - SNAPSHOT.margin, rulerY + 0.5);
-    ctx.stroke();
 
     const blob = await new Promise((resolve) => {
       canvas.toBlob((result) => resolve(result), "image/png", 0.94);
@@ -1638,7 +1543,6 @@
     layoutInfos,
     toText,
     compareIdSegments,
-    spiderScoreMap,
     spiderImage,
     logoSmall,
     logoLarge,
@@ -1765,10 +1669,8 @@
         images: [],
       });
 
-      const score = spiderScoreMap.get(chapterId) || { company: 0, consultant: 0 };
       const snapshot = await drawChapterSnapshot({
         chapterLabel,
-        score,
         locale,
         company,
         moderator,
@@ -1998,6 +1900,7 @@
     toText,
     spiderOverrides,
     computeSpider,
+    notify = () => {},
   }) => {
     if (!projectHandle) throw new Error("Project folder not selected.");
     if (!project || !Array.isArray(project.chapters)) {
@@ -2007,7 +1910,7 @@
       throw new Error("Sidecar data is missing.");
     }
 
-    const templateFile = await pickPptTemplate(projectHandle);
+    const templateFile = await resolvePptTemplateFile(projectHandle, PPT_TEMPLATE_PATH, notify);
     const templateMap = await getTemplateMap(templateFile);
     const layoutInfos = getLayoutInfos(templateMap);
     if (!layoutInfos.size) {
@@ -2046,14 +1949,12 @@
         String(project?.meta?.company || "").trim() || "Company",
         project,
       );
-      const spiderScoreMap = buildSpiderScoreMap(spiderData);
       plannedSlides = await buildReportSlidePlan({
         project,
         sidecarDoc,
         layoutInfos,
         toText,
         compareIdSegments,
-        spiderScoreMap,
         spiderImage,
         logoSmall,
         logoLarge,
