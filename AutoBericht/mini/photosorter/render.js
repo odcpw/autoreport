@@ -2,6 +2,7 @@
   const init = (ctx, deps) => {
     const { state, runtime, setStatus } = ctx;
     const { elements, tagsApi, photosApi, actions } = deps;
+    const tHint = ctx.i18n?.tHint || ((key, fallback) => fallback || key);
 
     const updateStatusVisibility = (isHidden) => {
       elements.statusEl?.classList.toggle("is-hidden", isHidden);
@@ -269,23 +270,23 @@
     const renderPanels = () => {
       const counts = buildTagCounts();
       renderTagPanel("report", {
-        title: "Bericht",
-        description: "Kapitel & Unterkapitel (1.x / 1.2 usw.)",
+        title: "Report",
+        description: tHint("photosorter_report_description", "Chapters and subchapters (1.x / 1.2 etc.)"),
         filter: state.tagFilters.report,
         splitChapters: true,
         allowAdd: false,
         counts: counts.report,
       });
       renderTagPanel("observations", {
-        title: "4.8 Beobachtungen",
-        description: "Diese Tags werden als Kapitel 4.8 im Bericht verwendet.",
+        title: "4.8 Observations",
+        description: tHint("photosorter_observations_description", "These tags are used as Chapter 4.8 in the report."),
         filter: state.tagFilters.observations,
         allowAdd: true,
         counts: counts.observations,
       });
       renderTagPanel("training", {
         title: "Training",
-        description: "Seminar-/Schulungskategorien.",
+        description: tHint("photosorter_training_description", "Seminar/training categories."),
         filter: state.tagFilters.training,
         allowAdd: false,
         counts: counts.training,

@@ -46,7 +46,6 @@ Inputs:
 Outputs:
 - Word report (formatted via templates).
 - Report presentation (PPT).
-- Draft PDF for customer review.
 - Training slide pack for later training sessions.
 
 ## 6. Domain Notes and Rules
@@ -104,7 +103,12 @@ RecommendationLibrary (per engineer)
 
 - Implemented layout: single-page, scroll-free tagging workflow sized for 1920×1080 @125%.
 - Tag panes use uniform buttons with tooltips; photo preview and tagging controls stay visible.
-- Layout mode toggle is available (stacked and tabs), with the current choice persisted locally.
+- Tag pills are split actions: left side toggles filter, right side toggles tagging on the current photo.
+- Filters are cumulative (AND across active filters).
+- A clear-filters control is available in the photo viewer.
+- UI locale policy:
+  - UI controls/messages remain in English.
+  - Instructional hint text is localized by project language (DE/FR/IT).
 
 ## 9. Proposed Architecture (Policy-Safe)
 
@@ -112,15 +116,15 @@ Core principle: no unsafe flags, no implicit disk access.
 
 One project folder:
 - project_sidecar.json (editor state)
-- project_db.xlsx (optional readable archive)
-- self_assessment.xlsx
+- library_user_*.json (optional reusable knowledge base)
+- inputs/
+- outputs/
+- templates/
 - photos/
-- out/
-- cache/ (optional materialized views)
 
 Responsibilities:
 - Browser editor: edit report content, tag photos, autosave to sidecar JSON.
-- Word template macros: read sidecar/export JSON -> generate Word/PPT/PDF.
+- Web export engine (in app): read sidecar + template and generate Word/PPT.
 - Templates: updated centrally; exports use latest templates.
 
 ### 9a. System Diagram
@@ -144,7 +148,7 @@ Responsibilities:
            │
            ▼
 ┌──────────────────────────────────────────────────────────────┐
-│ Outputs: Word report, PPT deck, PDF, photo folder views       │
+│ Outputs: Word report, PPT decks, photo folder views            │
 └──────────────────────────────────────────────────────────────┘
 ```
 
@@ -162,17 +166,22 @@ project_sidecar.json (canonical state)
           └── Word/PPT export → Word/PPT outputs
 ```
 
-### 8c. Project Folder Layout
+### 9c. Project Folder Layout
 
-```
+```text
 <Project>/
-  AutoBericht/              # app bundle + seeds + docs
   project_sidecar.json      # editor state (canonical)
-  project_db.xlsx           # optional readable archive (future)
-  Inputs/                   # customer inputs (self-assessment + docs)
-  photos/                   # raw photos (pm1/pm2), resized, export
-  Outputs/                  # Word/PPT/PDF outputs
-  Photos/export/            # materialized tag folders (current export)
+  library_user_*.json       # optional reusable knowledge base
+  inputs/                   # customer inputs (self-assessment + docs)
+  outputs/                  # Word/PPT outputs
+  templates/                # DOCX/PPTX templates
+  photos/
+    raw/
+      pm1/
+      pm2/
+      pm3/
+    resized/
+    export/
 ```
 
 Access:
@@ -183,8 +192,8 @@ Access:
 
 Default: virtual tags stored in sidecar JSON, with fast filtering UI.
 Import/rename/resize pipeline is provided in the PhotoSorter UI; tags remain virtual.
-Optional: materialize folders via export into `Photos/export/`.
-Future: `Photos/_views/` for disk-based browsing (not implemented).
+Optional: materialize folders via export into `photos/export/`.
+Future: `photos/_views/` for disk-based browsing (not implemented).
 
 Tags are many-to-many. No primary tag requirement.
 Observation tags can be added by the user and removed via Settings.
@@ -196,23 +205,29 @@ Goal: a simple raw -> resized pipeline plus an explicit export that materializes
 folders for sharing or import into Office/PPT workflows.
 
 Import rules (PhotoSorter "Import Photos" modal):
-- Source: `Photos/raw/<pmCode>/` where `<pmCode>` is a 3-letter PM code (lowercase).
+- Source: `photos/raw/<owner>/` where `<owner>` is any 3-character folder name
+  (default scaffold: `pm1`, `pm2`, `pm3`).
 - Accept: all image files.
 - Timestamp: prefer EXIF `DateTimeOriginal`; fallback to file creation time if
   available; otherwise use the file timestamp exposed by the browser
   (`lastModified`).
-- Filename format: `YYYY-MM-DD-HH-MM-<pmCode>-0001.jpg` (4-digit sequence).
-  Sequence increments per (timestamp, pmCode) to avoid collisions.
-- Resize: longest side = 1200px, JPEG quality ~0.85.
-- Destination: `Photos/resized/` (lowercase) acts as the unsorted reservoir.
+- Filename format: `YYYY-MM-DD-HH-MM_<owner>_0001.jpg` (4-digit sequence).
+  Sequence increments per owner to avoid collisions.
+- Resize: longest side = 1920px, JPEG quality ~0.85.
+- Destination: `photos/resized/` (lowercase) acts as the unsorted reservoir.
 - Raw files are never deleted or moved.
 
 Export rules (PhotoSorter "Export" action in the same modal):
-- Source: the current photo root (typically `Photos/resized/`).
-- Destination: `Photos/export/` with subfolders:
+- Source: the current photo root (typically `photos/resized/`).
+- Destination: `photos/export/` with subfolders:
   - `unsorted/` for photos with no tags in any group.
-  - `<group>/<tag>/` where `<group>` is `report`, `observations`, or `training`.
-- Photos with multiple tags are copied into each group/tag folder (duplicates OK).
+  - report tags at root level (`<report-tag>/`).
+  - observations under localized 4.8 folder:
+    - DE: `4.8 Beobachtungen/<tag>/`
+    - FR: `4.8 Observations/<tag>/`
+    - IT: `4.8 Osservazioni/<tag>/`
+  - training under `Training/<tag>/`.
+- Photos with multiple tags are copied into each matching folder (duplicates OK).
 - Tag folder names are sanitized for filesystem safety (no slashes, reserved
   characters).
 - Existing files are not overwritten; append a numeric suffix if needed.
@@ -274,95 +289,103 @@ Goal: generate two slide decks from the sidecar JSON.
 Inputs:
 - `project_sidecar.json` (report + photo tags)
 - PowerPoint templates in `<Project>/templates/`
-- Active Word report (used to capture chapter screenshots)
 
 Outputs:
-- Report presentation (`YYYY-MM-DD_Bericht_Besprechung.pptx`)
-- Training deck (`YYYY-MM-DD_Seminar_Slides_D/F.pptx`) in the project folder
+- Report presentation (`YYYY-MM-DD-company-Bericht-Besprechung.pptx`)
+- Training deck (`YYYY-MM-DD-company-Seminar-Slides.pptx`) in `outputs/`
 
 Template (current working file)
 - Report deck template: `<Project>/templates/Vorlage AutoBericht.pptx`
 - Training content is generated from the same template using training layouts.
-- Seed file: `test/AutoBericht_slides.pptx` (layout reference)
 
 ### Layout naming (in the template)
-Report layouts:
-- `report_title`
-- `report_chapter_separator`
-- `report_chapter_screenshot`
-- `report_section_text`
-- `report_section_photo_3`
-- `report_section_photo_6`
-- `report_section_48_separator`
-- `report_section_48_text_photo_3`
-- `report_section_48_text_photo_6`
+Report layouts (required):
+- `ab_title`
+- `ab_chapterorange`
+- `ab_titleandpicture`
+- `ab_textandpicture`
+- `ab_4pictures`
+- `ab_6pictures`
+- `ab_titleandtext`
+
+Report layouts (optional):
+- `ab_2pictures`
+- `ab_3pictures`
 
 Training layouts:
-- `chapterorange` (tag divider)
-- `picture` (for Iceberg / Pyramide / STOP / SOS)
-- German `*_d`:
-  - `seminar_d` (title slide)
-  - `unterlassen_d`
-  - `dulden_d`
-  - `handeln_d`
-  - `verhindern_d`
-  - `audit_d`
-  - `risikobeurteilung_d`
-  - `aviva_d`
-  - `vorbild_d`
-- French `*_f`: same names with `_f`
+- `ab_title` (intro)
+- `ab_chapterorange` (tag divider)
+- `ab_picture` (default picture layout)
+- localized tag layouts:
+  - `ab_unterlassen_{d|f|i}`
+  - `ab_dulden_{d|f|i}`
+  - `ab_handeln_{d|f|i}`
+  - `ab_vorbild_{d|f|i}`
+  - `ab_verhindern_{d|f|i}`
+  - `ab_audit_{d|f|i}`
+  - `ab_risikobeurteilung_{d|f|i}`
+  - `ab_aviva_{d|f|i}`
 
 ### Placeholder expectations
 The exporter targets standard placeholders by type:
 - `title` for slide title
 - `body` (largest non-title text box) for text
-- `pic` for image slots (3/6 grids and screenshot)
+- `pic` for image slots
+
+Layout validation is strict: export fails with explicit errors if required layouts
+or placeholders are missing.
 
 ### Export logic (current implementation)
 1) Report deck export (Project page button “PowerPoint Export (Report)”):
    - Template: `templates/Vorlage AutoBericht.pptx`.
-   - Output: `<project>/<yyyy-mm-dd>_Bericht_Besprechung.pptx`.
-   - Optional title slide: uses `report_title` and `meta.projectName` /
-     `meta.company` (fallback: "Report").
+   - Output: `outputs/<yyyy-mm-dd>-<company>-Bericht-Besprechung.pptx`.
+   - Cover slide uses `ab_title`:
+     - title: localized report title
+     - body: date + moderator
+     - preserves image placeholder(s) for manual user image insertion
    - Chapter 0:
-     - Separator slide titled “Management Summary”.
-     - Recommendation slides: 3 per slide (blank line between), no screenshot.
+     - separator slide (Management Summary, localized)
+     - recommendation text slides in chunks of 3 items (`ab_titleandtext`)
+     - additional localized section for assessment summary:
+       - separator slide
+       - spider chart slide in `ab_titleandpicture`
    - Chapters 1..:
-     - Separator slide titled `1. <chapter title>`.
-     - Screenshot slide of the first page of the chapter from Word
-       (bookmark `Chapter<id>_start`, dots replaced with `_`).
+     - separator slide (`ab_chapterorange`)
+     - chapter snapshot slide (`ab_titleandpicture`) with generated thermo image
      - For each section (1.1 level):
-       - Text slides (`report_section_text`) with 3 findings per slide.
+       - text slides (`ab_textandpicture`) with 3 findings per slide.
          Each line: `1.2.1 Finding text` (renumbered IDs).
-       - Photo slides (`report_section_photo_3` or `_6`) with photos tagged
-         to the section id.
+       - photo slides with layout selection by chunk size:
+         - 1 image -> `ab_titleandpicture`
+         - 2 images -> `ab_2pictures` (if present)
+         - 3 images -> `ab_3pictures` (if present)
+         - up to 4 -> `ab_4pictures`
+         - up to 6 -> `ab_6pictures`
    - Renumbering: only included findings count; numbering is re-packed within
      each chapter and used in slide titles and finding lines.
    - Chapter 4.8 (field observations):
      - Display section number is `4.<next>` where `<next>` is the number of
        sections in chapter 4 after renumbering + 1 (e.g., if 4.3 is missing,
        4.8 becomes 4.7).
-     - Separator slide uses `report_section_48_separator`.
-     - Each observation row becomes a slide titled `4.x.y <tag label>` with
-       text + photos (`report_section_48_text_photo_3` or `_6`).
-     - Additional photos spill to photo-only slides
-       (`report_section_photo_3/6`) with the same title; no text.
+     - separator slide uses `ab_chapterorange`.
+     - each observation row starts with `ab_textandpicture` (finding text + first photo if available)
+     - remaining photos spill to photo-only slides using count-based layout selection.
 
 2) Training deck export (Project page button “PowerPoint Export (Training)”):
    - Template: `templates/Vorlage AutoBericht.pptx` (training layouts).
+   - Output: `outputs/<yyyy-mm-dd>-<company>-Seminar-Slides.pptx`.
+   - Intro slide: `ab_title`.
    - For each training tag with photos (order: known tags first, then others):
-     - Insert a `chapterorange` divider slide titled with the tag.
+     - Insert an `ab_chapterorange` divider slide titled with the tag.
      - Choose layout by tag name:
        - `unterlassen`, `dulden`, `handeln`, `vorbild`, `audit`,
-         `risikobeurteilung`, `aviva`, `verhindern` → `<tag>_d` or `<tag>_f`
-       - `iceberg`, `pyramide`, `stop`, `sos`, `stgb art. 230`, unknown →
-         `picture`
+         `risikobeurteilung`, `aviva`, `verhindern` -> `ab_<tag>_{d|f|i}`
+       - other tags -> `ab_picture`
      - Count picture placeholders in the layout; batch photos into that many
-       slots per slide (e.g., AVIVA with 6 placeholders packs up to 6 per slide).
+       slots per slide.
      - Fill the tag name into the title placeholder if present; drop photos
        into picture placeholders in order.
-   - Optional seminar title slide: uses `seminar_d` if present.
-   - Output: `<project>/<yyyy-mm-dd>_Seminar_Slides_D.pptx` (or `_F`).
+   - Locale suffix mapping: `de -> d`, `fr -> f`, `it -> i`.
 
 ### Training tag alignment
 Training tag names in the knowledge base must match the layout mapping above (case-insensitive).
@@ -514,6 +537,9 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 
 ## 16. Open Decisions
 
-- Confirm File System Access API availability in locked-down Edge.
-- Decide final export contract (content controls/placeholders + JSON schema).
-- Decide default library storage location (user folder vs project).
+- Template governance process:
+  - placeholder map ownership,
+  - style lock QA checklist before rollout.
+- Release regression scope:
+  - minimum export matrix per locale/template variant,
+  - sidecar compatibility checks for future schema updates.

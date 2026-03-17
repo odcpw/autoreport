@@ -5,7 +5,7 @@ This document describes the current no-VBA DOCX export contract used by `AutoBer
 ## Scope
 
 - Export target: `.docx` template selected by the user at export time.
-- Output file: `Outputs/YYYY-MM-DD_AutoBericht_NoVBA.docx`.
+- Output file: `outputs/YYYY-MM-DD-company-Bericht-Ist-Aufnahme.docx`.
 - Data source: current project sidecar state in memory.
 
 ## Export Rule
@@ -74,9 +74,9 @@ Chapter-level positives in chapter tables are exported only when both chapter fl
 2. Template ZIP parts are unpacked.
 3. Text markers are replaced in `word/document.xml` and headers.
 4. Chapter markers are replaced with generated XML payloads.
-5. Logos are injected if available from project Outputs paths.
+5. Logos are injected if available from project `outputs/` paths.
 6. Spider scores are computed and injected as image + thermos.
-7. Updated parts are repacked and written to `Outputs/`.
+7. Updated parts are repacked and written to `outputs/`.
 
 ## Notes for Template Editing
 

@@ -102,7 +102,7 @@
             <div class="settings-hint" id="settings-library-hint"></div>
           </div>
           <div class="modal__actions settings-actions">
-            <button id="import-self" type="button" disabled>Import Selbstbeurteilung</button>
+            <button id="import-self" type="button" disabled>Import Self-Assessment</button>
             <button id="open-spider" type="button" class="ghost" disabled>Edit Spider</button>
             <button id="save-log" type="button" class="ghost">Save debug log</button>
           </div>
@@ -153,16 +153,16 @@
       <div class="modal__backdrop" id="spider-close"></div>
       <div class="modal__content modal__content--wide" role="dialog" aria-modal="true" aria-labelledby="spider-title">
         <div class="modal__header">
-          <h3 id="spider-title">Spider Overrides (Kapitelwerte)</h3>
+          <h3 id="spider-title">Spider Overrides (Chapter Values)</h3>
           <button id="spider-close-btn" type="button" class="modal__close" aria-label="Close spider overrides">×</button>
         </div>
         <div class="modal__body">
-          <div class="spider-hint">Basiswerte werden aus Antworten und Gewichten berechnet. Optional kannst du Kapitelwerte überschreiben.</div>
+          <div class="spider-hint">Base values are computed from answers and weights. Optionally override chapter values.</div>
           <div class="spider-table-wrapper">
             <table class="spider-table">
               <thead>
                 <tr>
-                  <th>Kapitel</th>
+                  <th>Chapter</th>
                   <th>Company % (berechnet)</th>
                   <th>Override</th>
                   <th>Use</th>
