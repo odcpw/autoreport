@@ -17,9 +17,9 @@
     const XML_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
     const XML_NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const ACTION_PLAN_TEMPLATE_BY_LOCALE = {
-      de: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit d.V01.xlsx",
-      fr: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit f.V01.xlsx",
-      it: "templates/Vorlage Aktionsplan Basisprojekt Integrierte Sicherheit i.V01.xlsx",
+      de: "templates/Vorlage Aktionsplan d.xlsx",
+      fr: "templates/Vorlage Aktionsplan f.xlsx",
+      it: "templates/Vorlage Aktionsplan i.xlsx",
     };
     const ACTION_PLAN_SHEET_NAMES = {
       de: { plan: "Aktionsplan", report: "Berichtsbasis" },
@@ -28,10 +28,8 @@
     };
     const ACTION_PLAN_TEMPLATE_MAX_QUARTERS = 11;
     const ACTION_PLAN_PLAN_QUARTER_START_COL = 9; // J
-    const ACTION_PLAN_PLAN_YEAR_ROW = 4;
-    const ACTION_PLAN_PLAN_QUARTER_ROW = 5;
-    const ACTION_PLAN_REPORT_FIRST_DATA_ROW = 3;
-    const ACTION_PLAN_REPORT_EDITABLE_COLUMNS = ["A", "B", "C", "D", "E", "F", "G", "H", "J"];
+    const ACTION_PLAN_PLAN_YEAR_ROW = 3;
+    const ACTION_PLAN_PLAN_QUARTER_ROW = 4;
 
     const extractReportProject = (doc) => {
       if (!doc || typeof doc !== "object") return null;
@@ -776,6 +774,124 @@
       return cell;
     };
 
+    const setFormulaCellValue = (sheetDoc, rowNumber, colLetter, formula, styleId = "") => {
+      const cell = ensureSheetCell(sheetDoc, rowNumber, colLetter);
+      Array.from(cell.childNodes).forEach((child) => cell.removeChild(child));
+      cell.removeAttribute("t");
+      if (styleId) {
+        cell.setAttribute("s", styleId);
+      }
+      const formulaEl = sheetDoc.createElementNS(XML_NS, "f");
+      formulaEl.textContent = String(formula || "");
+      cell.appendChild(formulaEl);
+      const valueEl = sheetDoc.createElementNS(XML_NS, "v");
+      valueEl.textContent = "";
+      cell.appendChild(valueEl);
+      return cell;
+    };
+
+    const replaceCellRowNumber = (ref, rowNumber) => {
+      const parsed = parseCellRef(ref);
+      if (!parsed) return String(ref || "");
+      return `${indexToColLetter(parsed.col)}${Number(rowNumber)}`;
+    };
+
+    const rewriteRowNumber = (rowEl, rowNumber) => {
+      rowEl.setAttribute("r", String(rowNumber));
+      Array.from(rowEl.getElementsByTagNameNS("*", "c")).forEach((cell) => {
+        const currentRef = String(cell.getAttribute("r") || "");
+        if (currentRef) {
+          cell.setAttribute("r", replaceCellRowNumber(currentRef, rowNumber));
+        }
+      });
+      return rowEl;
+    };
+
+    const cloneSheetRow = (rowEl, rowNumber) => {
+      if (!rowEl) return null;
+      const clone = rowEl.cloneNode(true);
+      return rewriteRowNumber(clone, rowNumber);
+    };
+
+    const getSheetDataNode = (sheetDoc) => {
+      const sheetData = getFirstChild(sheetDoc.documentElement, "sheetData");
+      if (!sheetData) throw new Error("Worksheet is missing sheetData.");
+      return sheetData;
+    };
+
+    const getSheetRows = (sheetDoc) => Array.from(getSheetDataNode(sheetDoc).getElementsByTagNameNS("*", "row"));
+
+    const insertSheetRowSorted = (sheetDoc, rowEl) => {
+      const sheetData = getSheetDataNode(sheetDoc);
+      const rowNumber = Number(rowEl?.getAttribute("r"));
+      const insertBefore = getSheetRows(sheetDoc)
+        .find((item) => Number(item.getAttribute("r")) > rowNumber);
+      if (insertBefore) {
+        sheetData.insertBefore(rowEl, insertBefore);
+      } else {
+        sheetData.appendChild(rowEl);
+      }
+      return rowEl;
+    };
+
+    const shiftSheetRows = (sheetDoc, startRow, delta) => {
+      const start = Number(startRow);
+      const offset = Number(delta);
+      if (!Number.isFinite(start) || !Number.isFinite(offset) || !offset) return;
+      const rows = getSheetRows(sheetDoc)
+        .filter((row) => Number(row.getAttribute("r")) >= start)
+        .sort((a, b) => (
+          offset > 0
+            ? Number(b.getAttribute("r")) - Number(a.getAttribute("r"))
+            : Number(a.getAttribute("r")) - Number(b.getAttribute("r"))
+        ));
+      rows.forEach((row) => {
+        rewriteRowNumber(row, Number(row.getAttribute("r")) + offset);
+      });
+    };
+
+    const ensureReportRows = (sheetDoc, firstDataRow, currentLastDataRow, targetLastDataRow) => {
+      const sheetData = getSheetDataNode(sheetDoc);
+      const rows = getSheetRows(sheetDoc);
+      const templateRow = rows.find((row) => Number(row.getAttribute("r")) === Number(firstDataRow));
+      if (!templateRow) throw new Error(`Template worksheet is missing data row ${firstDataRow}.`);
+
+      const currentLast = Number(currentLastDataRow);
+      const targetLast = Number(targetLastDataRow);
+      if (!Number.isFinite(currentLast) || !Number.isFinite(targetLast)) {
+        throw new Error("Invalid report table bounds.");
+      }
+
+      if (targetLast > currentLast) {
+        shiftSheetRows(sheetDoc, currentLast + 1, targetLast - currentLast);
+        for (let rowNo = currentLast + 1; rowNo <= targetLast; rowNo += 1) {
+          const clone = cloneSheetRow(templateRow, rowNo);
+          if (!clone) continue;
+          insertSheetRowSorted(sheetDoc, clone);
+        }
+        return;
+      }
+
+      if (targetLast < currentLast) {
+        getSheetRows(sheetDoc).forEach((row) => {
+          const rowNo = Number(row.getAttribute("r"));
+          if (rowNo > targetLast && rowNo <= currentLast) {
+            sheetData.removeChild(row);
+          }
+        });
+        shiftSheetRows(sheetDoc, currentLast + 1, targetLast - currentLast);
+      }
+    };
+
+    const updateSheetDimension = (sheetDoc, ref) => {
+      let dimension = getFirstChild(sheetDoc.documentElement, "dimension");
+      if (!dimension) {
+        dimension = sheetDoc.createElementNS(XML_NS, "dimension");
+        sheetDoc.documentElement.insertBefore(dimension, sheetDoc.documentElement.firstChild);
+      }
+      dimension.setAttribute("ref", String(ref || "A1"));
+    };
+
     const resolveSheetParts = (templateMap) => {
       const workbookDoc = parseXml(getEntryText(templateMap, "xl/workbook.xml"), "xl/workbook.xml");
       const relsDoc = parseXml(getEntryText(templateMap, "xl/_rels/workbook.xml.rels"), "xl/_rels/workbook.xml.rels");
@@ -797,6 +913,59 @@
       });
       return out;
     };
+
+    const relsPartNameForPart = (partName) => {
+      const normalized = normalizeZipPartName(partName);
+      const parts = normalized.split("/").filter(Boolean);
+      const file = parts.pop() || "";
+      const dir = parts.join("/");
+      return dir ? `${dir}/_rels/${file}.rels` : `_rels/${file}.rels`;
+    };
+
+    const resolveWorksheetTablePart = (templateMap, sheetPart) => {
+      const sheetDoc = parseXml(getEntryText(templateMap, sheetPart), sheetPart);
+      const tablePartsNode = getFirstChild(sheetDoc.documentElement, "tableParts");
+      const tablePartNode = getChildElements(tablePartsNode, "tablePart")[0];
+      const relId = getAttributeByLocalName(tablePartNode, "id");
+      if (!relId) return "";
+      const relsPart = relsPartNameForPart(sheetPart);
+      if (!templateMap.has(relsPart)) return "";
+      const relsDoc = parseXml(getEntryText(templateMap, relsPart), relsPart);
+      const relNode = getChildElements(relsDoc.documentElement, "Relationship")
+        .find((rel) => rel.getAttribute("Id") === relId);
+      if (!relNode) return "";
+      const baseDir = `${normalizeZipPartName(sheetPart).split("/").slice(0, -1).join("/")}/`;
+      return resolveZipPartTarget(baseDir, getAttributeByLocalName(relNode, "Target"));
+    };
+
+    const parseRangeRef = (ref) => {
+      const raw = String(ref || "").trim();
+      if (!raw) return null;
+      const [startRef, endRef = startRef] = raw.split(":");
+      const start = parseCellRef(startRef);
+      const end = parseCellRef(endRef);
+      if (!start || !end) return null;
+      return { start, end };
+    };
+
+    const getMaxSheetRowNumber = (sheetDoc) => (
+      getSheetRows(sheetDoc).reduce((max, row) => {
+        const rowNo = Number(row.getAttribute("r"));
+        return Number.isFinite(rowNo) ? Math.max(max, rowNo) : max;
+      }, 1)
+    );
+
+    const toAbsoluteRangeRef = (range) => {
+      const parsed = typeof range === "string" ? parseRangeRef(range) : range;
+      if (!parsed) return "";
+      const start = `$${indexToColLetter(parsed.start.col)}$${parsed.start.row}`;
+      const end = `$${indexToColLetter(parsed.end.col)}$${parsed.end.row}`;
+      return start === end ? start : `${start}:${end}`;
+    };
+
+    const quoteSheetRangeRef = (sheetName, range) => (
+      `'${String(sheetName || "").replace(/'/g, "''")}'!${toAbsoluteRangeRef(range)}`
+    );
 
     const quarterWindowFromDate = (date = new Date()) => {
       const currentQuarter = Math.floor(date.getMonth() / 3) + 1;
@@ -925,6 +1094,76 @@
       mergesNode.setAttribute("count", String(mergesNode.getElementsByTagNameNS("*", "mergeCell").length));
     };
 
+    const updateActionPlanTableHeaders = (templateMap, tablePart, quarterWindow) => {
+      if (!tablePart || !templateMap.has(tablePart)) return;
+      const tableDoc = parseXml(getEntryText(templateMap, tablePart), tablePart);
+      const tableColumns = getFirstChild(tableDoc.documentElement, "tableColumns");
+      if (!tableColumns) return;
+      const cols = getChildElements(tableColumns, "tableColumn");
+      for (let i = 0; i < ACTION_PLAN_TEMPLATE_MAX_QUARTERS; i += 1) {
+        const col = cols[9 + i];
+        if (!col) continue;
+        const item = quarterWindow[i];
+        col.setAttribute("name", item ? `${item.year}-Q${item.quarter}` : "");
+      }
+      setEntryText(templateMap, tablePart, serializeXml(tableDoc));
+    };
+
+    const updateWorkbookFilterRanges = (templateMap, refsBySheetName) => {
+      const workbookPart = "xl/workbook.xml";
+      if (!templateMap.has(workbookPart)) return;
+      const workbookDoc = parseXml(getEntryText(templateMap, workbookPart), workbookPart);
+      let definedNames = getFirstChild(workbookDoc.documentElement, "definedNames");
+      if (!definedNames) {
+        definedNames = workbookDoc.createElementNS(XML_NS, "definedNames");
+        workbookDoc.documentElement.appendChild(definedNames);
+      }
+      const filterNames = getChildElements(definedNames, "definedName")
+        .filter((node) => node.getAttribute("name") === "_xlnm._FilterDatabase");
+      const sheetList = Array.from(getChildElements(getFirstChild(workbookDoc.documentElement, "sheets"), "sheet"));
+      Object.entries(refsBySheetName || {}).forEach(([sheetName, ref]) => {
+        if (!sheetName || !ref) return;
+        const sheetIndex = sheetList.findIndex((sheet) => sheet.getAttribute("name") === sheetName);
+        if (sheetIndex < 0) return;
+        let targetNode = filterNames.find((node) => Number(node.getAttribute("localSheetId")) === sheetIndex);
+        if (!targetNode) {
+          targetNode = workbookDoc.createElementNS(XML_NS, "definedName");
+          targetNode.setAttribute("name", "_xlnm._FilterDatabase");
+          targetNode.setAttribute("localSheetId", String(sheetIndex));
+          targetNode.setAttribute("hidden", "1");
+          definedNames.appendChild(targetNode);
+          filterNames.push(targetNode);
+        }
+        targetNode.textContent = quoteSheetRangeRef(sheetName, ref);
+      });
+      setEntryText(templateMap, workbookPart, serializeXml(workbookDoc));
+    };
+
+    const buildActionPlanLookupFormula = (planSheetName, rowNumber) => (
+      `IF($H${rowNumber}="","",IFERROR(INDEX('${String(planSheetName || "").replace(/'/g, "''")}'!$B:$B,MATCH($H${rowNumber},'${String(planSheetName || "").replace(/'/g, "''")}'!$A:$A,0)),""))`
+    );
+
+    const updateReportTableRange = (templateMap, tablePart, tableRange, lastDataRow, planSheetName) => {
+      if (!tablePart || !templateMap.has(tablePart) || !tableRange) return;
+      const tableDoc = parseXml(getEntryText(templateMap, tablePart), tablePart);
+      const endColLetter = indexToColLetter(tableRange.end.col);
+      const ref = `${indexToColLetter(tableRange.start.col)}${tableRange.start.row}:${endColLetter}${Number(lastDataRow)}`;
+      tableDoc.documentElement.setAttribute("ref", ref);
+      const autoFilter = getFirstChild(tableDoc.documentElement, "autoFilter");
+      if (autoFilter) autoFilter.setAttribute("ref", ref);
+      const tableColumns = getFirstChild(tableDoc.documentElement, "tableColumns");
+      const formulaColumn = getChildElements(tableColumns, "tableColumn")[8];
+      if (formulaColumn) {
+        let formulaNode = getFirstChild(formulaColumn, "calculatedColumnFormula");
+        if (!formulaNode) {
+          formulaNode = tableDoc.createElementNS(XML_NS, "calculatedColumnFormula");
+          formulaColumn.appendChild(formulaNode);
+        }
+        formulaNode.textContent = buildActionPlanLookupFormula(planSheetName, tableRange.start.row + 1);
+      }
+      setEntryText(templateMap, tablePart, serializeXml(tableDoc));
+    };
+
     const patchActionPlanWorkbook = (templateMap, sourceRows, locale) => {
       const sheetNames = resolveActionPlanSheetNames(locale);
       const sheetParts = resolveSheetParts(templateMap);
@@ -935,16 +1174,28 @@
 
       const reportDoc = parseXml(getEntryText(templateMap, reportPart), reportPart);
       const planDoc = parseXml(getEntryText(templateMap, planPart), planPart);
+      const planTablePart = resolveWorksheetTablePart(templateMap, planPart);
+      const reportTablePart = resolveWorksheetTablePart(templateMap, reportPart);
+      if (!planTablePart) throw new Error(`Template sheet '${sheetNames.plan}' is missing its table definition.`);
+      if (!reportTablePart) throw new Error(`Template sheet '${sheetNames.report}' is missing its table definition.`);
+      const planTableDoc = parseXml(getEntryText(templateMap, planTablePart), planTablePart);
+      const planTableRange = parseRangeRef(planTableDoc.documentElement.getAttribute("ref"));
+      const reportTableDoc = parseXml(getEntryText(templateMap, reportTablePart), reportTablePart);
+      const reportTableRange = parseRangeRef(reportTableDoc.documentElement.getAttribute("ref"));
+      if (!planTableRange) throw new Error(`Template sheet '${sheetNames.plan}' has an invalid table range.`);
+      if (!reportTableRange) throw new Error(`Template sheet '${sheetNames.report}' has an invalid table range.`);
+      const reportHeaderRow = Number(reportTableRange.start.row);
+      const reportFirstDataRow = reportHeaderRow + 1;
+      const currentLastReportRow = Number(reportTableRange.end.row);
+      const reportRowCount = Math.max(sourceRows.length, 1);
+      const lastReportRow = reportHeaderRow + reportRowCount;
 
-      const reportRows = getChildElements(getFirstChild(reportDoc.documentElement, "sheetData"), "row")
-        .map((row) => Number(row.getAttribute("r")))
-        .filter((rowNo) => Number.isFinite(rowNo) && rowNo >= ACTION_PLAN_REPORT_FIRST_DATA_ROW);
-      const reportCapacity = reportRows.length;
-      if (sourceRows.length > reportCapacity) {
-        throw new Error(`Action plan template supports ${reportCapacity} report rows, but ${sourceRows.length} are required.`);
-      }
+      ensureReportRows(reportDoc, reportFirstDataRow, currentLastReportRow, lastReportRow);
+      updateSheetDimension(reportDoc, `A1:${indexToColLetter(reportTableRange.end.col)}${getMaxSheetRowNumber(reportDoc)}`);
 
-      reportRows.forEach((rowNo, index) => {
+      const formulaStyleId = String(ensureSheetCell(reportDoc, reportFirstDataRow, "I").getAttribute("s") || "");
+      for (let rowNo = reportFirstDataRow; rowNo <= lastReportRow; rowNo += 1) {
+        const index = rowNo - reportFirstDataRow;
         const source = sourceRows[index] || {
           reportRef: "",
           chapter: "",
@@ -961,17 +1212,33 @@
         setInlineStringCellValue(reportDoc, rowNo, "F", source.priority);
         setInlineStringCellValue(reportDoc, rowNo, "G", "");
         setInlineStringCellValue(reportDoc, rowNo, "H", "");
+        setFormulaCellValue(
+          reportDoc,
+          rowNo,
+          "I",
+          buildActionPlanLookupFormula(sheetNames.plan, rowNo),
+          formulaStyleId,
+        );
         setInlineStringCellValue(reportDoc, rowNo, "J", "");
-      });
+      }
+      updateReportTableRange(templateMap, reportTablePart, reportTableRange, lastReportRow, sheetNames.plan);
 
       const quarterWindow = quarterWindowFromDate(new Date());
       for (let i = 0; i < ACTION_PLAN_TEMPLATE_MAX_QUARTERS; i += 1) {
         const item = quarterWindow[i];
         const colLetter = indexToColLetter(ACTION_PLAN_PLAN_QUARTER_START_COL + i);
         setInlineStringCellValue(planDoc, ACTION_PLAN_PLAN_YEAR_ROW, colLetter, item ? String(item.year) : "");
-        setInlineStringCellValue(planDoc, ACTION_PLAN_PLAN_QUARTER_ROW, colLetter, item ? `Q${item.quarter}` : "");
+        setInlineStringCellValue(planDoc, ACTION_PLAN_PLAN_QUARTER_ROW, colLetter, item ? `${item.year}-Q${item.quarter}` : "");
       }
       updateQuarterHeaderMerges(planDoc, quarterWindow);
+      updateActionPlanTableHeaders(templateMap, planTablePart, quarterWindow);
+      updateWorkbookFilterRanges(templateMap, {
+        [sheetNames.plan]: planTableRange,
+        [sheetNames.report]: {
+          start: reportTableRange.start,
+          end: { col: reportTableRange.end.col, row: lastReportRow },
+        },
+      });
 
       setEntryText(templateMap, reportPart, serializeXml(reportDoc));
       setEntryText(templateMap, planPart, serializeXml(planDoc));
