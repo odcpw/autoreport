@@ -680,6 +680,30 @@
 
     const serializeXml = (doc) => new XMLSerializer().serializeToString(doc);
 
+    const ensureWorkbookNamespaceAliases = (xml) => {
+      const source = String(xml || "");
+      if (!source.includes("<workbook")) return source;
+      const ignorableMatch = source.match(/\bmc:Ignorable="([^"]+)"/);
+      if (!ignorableMatch) return source;
+      const ignorable = new Set(
+        String(ignorableMatch[1] || "")
+          .split(/\s+/)
+          .map((item) => item.trim())
+          .filter(Boolean),
+      );
+      const aliasMap = {
+        x15: "http://schemas.microsoft.com/office/spreadsheetml/2010/11/ac",
+        xr6: "http://schemas.microsoft.com/office/spreadsheetml/2016/revision6",
+        xr10: "http://schemas.microsoft.com/office/spreadsheetml/2016/revision10",
+      };
+      const missing = Object.entries(aliasMap)
+        .filter(([alias]) => ignorable.has(alias) && !source.includes(`xmlns:${alias}=`))
+        .map(([alias, uri]) => ` xmlns:${alias}="${uri}"`)
+        .join("");
+      if (!missing) return source;
+      return source.replace("<workbook", `<workbook${missing}`);
+    };
+
     const getChildElements = (node, localName) => Array.from(node?.getElementsByTagNameNS?.("*", localName) || []);
 
     const getFirstChild = (node, localName) => getChildElements(node, localName)[0] || null;
@@ -1136,7 +1160,7 @@
         }
         targetNode.textContent = quoteSheetRangeRef(sheetName, ref);
       });
-      setEntryText(templateMap, workbookPart, serializeXml(workbookDoc));
+      setEntryText(templateMap, workbookPart, ensureWorkbookNamespaceAliases(serializeXml(workbookDoc)));
     };
 
     const buildActionPlanLookupFormula = (planSheetName, rowNumber) => (

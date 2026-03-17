@@ -5306,6 +5306,55 @@
   "library": {
     "entries": [
       {
+        "id": "0.1",
+        "groupId": "0.1",
+        "finding": "",
+        "children": [],
+        "recommendation": "Für den weiteren Aufbau der Sicherheitskultur ist es wichtig, Arbeitssicherheit und Gesundheitsschutz mit noch mehr Engagement an alle Arbeitsplätze zu bringen. Hier sind vor allem die Linienvorgesetzten von der Geschäftsleitung bis zum Schichtleiter gefordert. Nur wenn sie ihre Verantwortung und die Vorbildfunktion wahrnehmen, die wichtigen Aufgaben übernehmen und die Vorgaben durchsetzen, kann die Sicherheitskultur weiter verbessert werden."
+      },
+      {
+        "id": "0.2",
+        "groupId": "0.2",
+        "finding": "",
+        "children": [],
+        "recommendation": "Das Thema AS&GS wird in verschiedenen Sitzungen bei Bedarf angesprochen. An den Anschlagbrettern in den Produktionsbereichen ist AS&GS nicht vertreten. Für den Aufbau der Sicherheitskultur ist es wichtig, dass AS&GS für die Mitarbeitenden sichtbar wird in Form von Informationen zu: Stand Zielerreichung, Monatskampagne, Unfallschwerpunkte, Lehren aus Unfällen, Resultate aus Sicherheitsaudits u.a."
+      },
+      {
+        "id": "0.3",
+        "groupId": "0.3",
+        "finding": "",
+        "children": [],
+        "recommendation": "Das Sicherheitskonzept und die darin enthaltene Gefährdungsermittlung / Risikobeurteilung sind nicht vorhanden. Die Gefährdungsermittlung ist der Kern des Sicherheitssystems."
+      },
+      {
+        "id": "0.4",
+        "groupId": "0.4",
+        "finding": "",
+        "children": [],
+        "recommendation": "Verschiedene Maschinen und Anlagen weisen Gefährdungen auf, die nicht den geltenden Vorgaben bezüglich Sicherheit entsprechen. Das betrifft insbesondere Eigenentwicklungen. Für einzelne Reinigungsarbeiten bestehen gemäss unseren Gesprächen grössere Gefährdungen, die im Rahmen des Projekts noch verifiziert werden müssen."
+      },
+      {
+        "id": "0.5",
+        "groupId": "0.5",
+        "finding": "",
+        "children": [],
+        "recommendation": "Die Ereignisabklärung erfolgt durch den Sibe. Wichtig ist, dass jeder Unfall abgeklärt wird und immer Präventionsmassnahmen definiert werden. Das ist auch die Grundlage für die Kommunikation der Lehren aus den Unfällen. Aufgrund der Verantwortung gehört die Ereignisabklärung in die Obhut der direkten Vorgesetzten, die bei Bedarf durch die Sicherheitsbeauftragten unterstützt werden."
+      },
+      {
+        "id": "0.6",
+        "groupId": "0.6",
+        "finding": "",
+        "children": [],
+        "recommendation": "Die Schulung und Instruktion der Mitarbeitenden zu AS&GS ist ein Schlüsselpunkt für die Sicherheitskultur. Einiges wird bereits gemacht, so z.B. die Einführung neuer Mitarbeitender, die Qualifikationsmatrix, jährliche Sicherheitsschulung, u.a. Periodische Kurzinstruktionen z.B. zu Schwerpunkten aus der Gefährdungsermittlung, Lehren aus Ereignissen, neuen Sicherheitsregeln und -dokumenten sowie für den Refresh des Sicherheitswissens sind nicht institutionalisiert."
+      },
+      {
+        "id": "0.7",
+        "groupId": "0.7",
+        "finding": "",
+        "children": [],
+        "recommendation": "Sicherheitsaudits durch die Sicherheitsorganisation und durch die Vorgesetzten sind nicht eingeführt. Um die Sicherheitskultur auszubauen, das Bewusstsein für die grossen und kleinen Gefährdungen hoch zu halten und das Ansprechen und Korrigieren in der Führungstätigkeit zu fördern, sind geplante und spontane Sicherheitsaudits durch die Vorgesetzten und durch die Sicherheitsorganisation wichtig."
+      },
+      {
         "id": "1.1.1",
         "groupId": "1.1.1",
         "finding": "Das Unternehmen verfügt nicht über ein Unternehmensleitbild.",

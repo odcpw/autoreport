@@ -5361,6 +5361,55 @@
   "library": {
     "entries": [
       {
+        "id": "0.1",
+        "groupId": "0.1",
+        "finding": "",
+        "children": [],
+        "recommendation": "Pour poursuivre le développement de la culture sécurité, il est important d'ancrer avec encore plus d'engagement la sécurité au travail et la protection de la santé à tous les postes de travail. Les responsables hiérarchiques, de la direction au chef d'équipe, sont ici particulièrement concernés. Ce n'est que s'ils assument leurs responsabilités et leur rôle d'exemplarité, prennent en charge les tâches essentielles et font appliquer les consignes que la culture sécurité pourra continuer à progresser."
+      },
+      {
+        "id": "0.2",
+        "groupId": "0.2",
+        "finding": "",
+        "children": [],
+        "recommendation": "Le thème de la sécurité au travail et de la protection de la santé est abordé dans différentes séances lorsque nécessaire. Dans les zones de production, il n'est pas présent sur les tableaux d'affichage. Pour développer la culture sécurité, il est important que ce thème soit visible pour les collaborateurs sous forme d'informations sur : le niveau d'atteinte des objectifs, la campagne mensuelle, les principaux foyers d'accidents, les enseignements tirés des accidents, les résultats des audits sécurité, etc."
+      },
+      {
+        "id": "0.3",
+        "groupId": "0.3",
+        "finding": "",
+        "children": [],
+        "recommendation": "Le concept de sécurité et l'identification des dangers / l'évaluation des risques qu'il contient font défaut. L'identification des dangers constitue le cœur du système de sécurité."
+      },
+      {
+        "id": "0.4",
+        "groupId": "0.4",
+        "finding": "",
+        "children": [],
+        "recommendation": "Plusieurs machines et installations présentent des dangers qui ne sont pas conformes aux exigences de sécurité en vigueur. Cela concerne en particulier les développements propres. Selon nos entretiens, certains travaux de nettoyage comportent des risques plus importants, qui devront encore être vérifiés dans le cadre du projet."
+      },
+      {
+        "id": "0.5",
+        "groupId": "0.5",
+        "finding": "",
+        "children": [],
+        "recommendation": "L'analyse des événements est effectuée par le préposé à la sécurité (SiBe). Il est important que chaque accident fasse l'objet d'une analyse et que des mesures de prévention soient toujours définies. C'est aussi la base de la communication des enseignements tirés des accidents. Compte tenu des responsabilités en jeu, l'analyse des événements devrait relever des supérieurs hiérarchiques directs, avec le soutien des préposés à la sécurité si nécessaire."
+      },
+      {
+        "id": "0.6",
+        "groupId": "0.6",
+        "finding": "",
+        "children": [],
+        "recommendation": "La formation et l'instruction des collaborateurs en matière de sécurité au travail et de protection de la santé sont un point clé de la culture sécurité. Certaines mesures existent déjà, par exemple l'accueil des nouveaux collaborateurs, la matrice de qualification, la formation sécurité annuelle, etc. Des instructions brèves périodiques, par exemple sur les priorités issues de l'identification des dangers, les enseignements tirés des événements, les nouvelles règles et nouveaux documents de sécurité, ainsi que la remise à niveau des connaissances en sécurité, ne sont pas institutionnalisées."
+      },
+      {
+        "id": "0.7",
+        "groupId": "0.7",
+        "finding": "",
+        "children": [],
+        "recommendation": "Des audits sécurité menés par l'organisation sécurité et par les supérieurs hiérarchiques n'ont pas été introduits. Pour développer la culture sécurité, maintenir un niveau élevé de vigilance face aux risques majeurs comme mineurs et encourager le fait de signaler et corriger les écarts dans l'exercice du management, des audits sécurité planifiés et spontanés par les supérieurs hiérarchiques et par l'organisation sécurité sont importants."
+      },
+      {
         "id": "1.1.1",
         "groupId": "1.1.1",
         "finding": "L'entreprise ne dispose pas d'une charte d'entreprise.",

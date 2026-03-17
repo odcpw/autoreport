@@ -5361,6 +5361,55 @@
   "library": {
     "entries": [
       {
+        "id": "0.1",
+        "groupId": "0.1",
+        "finding": "",
+        "children": [],
+        "recommendation": "Per proseguire nello sviluppo della cultura della sicurezza, è importante portare la sicurezza sul lavoro e la tutela della salute con ancora maggiore impegno in tutti i posti di lavoro. In questo senso sono chiamati in causa soprattutto i responsabili di linea, dalla direzione fino ai capi turno. Solo se assumono le proprie responsabilità e il proprio ruolo di esempio, si fanno carico dei compiti essenziali e fanno rispettare le disposizioni, la cultura della sicurezza potrà continuare a migliorare."
+      },
+      {
+        "id": "0.2",
+        "groupId": "0.2",
+        "finding": "",
+        "children": [],
+        "recommendation": "Il tema della sicurezza sul lavoro e della tutela della salute viene affrontato, secondo necessità, in diverse riunioni. Nelle aree produttive non è presente sulle bacheche informative. Per sviluppare la cultura della sicurezza è importante che questo tema sia visibile ai collaboratori sotto forma di informazioni su: stato di raggiungimento degli obiettivi, campagna mensile, aree a maggiore incidenza di infortuni, insegnamenti tratti dagli infortuni, risultati degli audit di sicurezza, ecc."
+      },
+      {
+        "id": "0.3",
+        "groupId": "0.3",
+        "finding": "",
+        "children": [],
+        "recommendation": "Il concetto di sicurezza e la relativa individuazione dei pericoli / valutazione dei rischi non sono presenti. L'individuazione dei pericoli è il nucleo del sistema di sicurezza."
+      },
+      {
+        "id": "0.4",
+        "groupId": "0.4",
+        "finding": "",
+        "children": [],
+        "recommendation": "Diverse macchine e impianti presentano pericoli che non sono conformi ai requisiti di sicurezza vigenti. Ciò riguarda in particolare gli sviluppi interni. In base ai nostri colloqui, per alcune attività di pulizia sussistono rischi rilevanti che dovranno ancora essere verificati nell'ambito del progetto."
+      },
+      {
+        "id": "0.5",
+        "groupId": "0.5",
+        "finding": "",
+        "children": [],
+        "recommendation": "L'accertamento degli eventi è effettuato dall'addetto alla sicurezza (SiBe). È importante che ogni infortunio venga analizzato e che siano sempre definite misure di prevenzione. Questa è anche la base per comunicare gli insegnamenti tratti dagli infortuni. Per ragioni di responsabilità, l'accertamento degli eventi dovrebbe rientrare nella competenza dei superiori diretti, supportati, se necessario, dagli addetti alla sicurezza."
+      },
+      {
+        "id": "0.6",
+        "groupId": "0.6",
+        "finding": "",
+        "children": [],
+        "recommendation": "La formazione e l'istruzione dei collaboratori in materia di sicurezza sul lavoro e tutela della salute sono un punto chiave della cultura della sicurezza. Alcune attività sono già in atto, ad esempio l'inserimento dei nuovi collaboratori, la matrice delle qualifiche, la formazione annuale sulla sicurezza, ecc. Non sono però istituzionalizzate brevi istruzioni periodiche, ad esempio sui punti chiave emersi dall'individuazione dei pericoli, sugli insegnamenti tratti dagli eventi, sulle nuove regole e sui nuovi documenti di sicurezza, nonché sull'aggiornamento delle conoscenze in materia di sicurezza."
+      },
+      {
+        "id": "0.7",
+        "groupId": "0.7",
+        "finding": "",
+        "children": [],
+        "recommendation": "Non sono stati introdotti audit di sicurezza da parte dell'organizzazione della sicurezza e dei superiori. Per rafforzare la cultura della sicurezza, mantenere alta l'attenzione verso i rischi grandi e piccoli e promuovere, nell'attività di conduzione, l'abitudine a segnalare e correggere le situazioni, sono importanti audit di sicurezza pianificati e spontanei svolti dai superiori e dall'organizzazione della sicurezza."
+      },
+      {
         "id": "1.1.1",
         "groupId": "1.1.1",
         "finding": "L'azienda non dispone di una carta dei valori.",
