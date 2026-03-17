@@ -17,9 +17,9 @@
     const XML_NS = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
     const XML_NS_REL = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
     const ACTION_PLAN_TEMPLATE_BY_LOCALE = {
-      de: "templates/Vorlage Aktionsplan d.xlsx",
-      fr: "templates/Vorlage Aktionsplan f.xlsx",
-      it: "templates/Vorlage Aktionsplan i.xlsx",
+      de: "templates/Vorlage Aktionsplan d.V01.xlsx",
+      fr: "templates/Vorlage Aktionsplan f.V01.xlsx",
+      it: "templates/Vorlage Aktionsplan i.V01.xlsx",
     };
     const ACTION_PLAN_SHEET_NAMES = {
       de: { plan: "Aktionsplan", report: "Berichtsbasis" },

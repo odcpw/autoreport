@@ -19,6 +19,18 @@
       "target": "templates/Vorlage AutoBericht.pptx"
     },
     {
+      "source": "templates/Vorlage Bericht Besprechung d.V01.pptx",
+      "target": "templates/Vorlage Bericht Besprechung d.V01.pptx"
+    },
+    {
+      "source": "templates/Vorlage Bericht Besprechung f.V01.pptx",
+      "target": "templates/Vorlage Bericht Besprechung f.V01.pptx"
+    },
+    {
+      "source": "templates/Vorlage Bericht Besprechung i.V01.pptx",
+      "target": "templates/Vorlage Bericht Besprechung i.V01.pptx"
+    },
+    {
       "source": "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx",
       "target": "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx"
     },
@@ -31,16 +43,16 @@
       "target": "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx"
     },
     {
-      "source": "templates/Vorlage Aktionsplan d.xlsx",
-      "target": "templates/Vorlage Aktionsplan d.xlsx"
+      "source": "templates/Vorlage Aktionsplan d.V01.xlsx",
+      "target": "templates/Vorlage Aktionsplan d.V01.xlsx"
     },
     {
-      "source": "templates/Vorlage Aktionsplan f.xlsx",
-      "target": "templates/Vorlage Aktionsplan f.xlsx"
+      "source": "templates/Vorlage Aktionsplan f.V01.xlsx",
+      "target": "templates/Vorlage Aktionsplan f.V01.xlsx"
     },
     {
-      "source": "templates/Vorlage Aktionsplan i.xlsx",
-      "target": "templates/Vorlage Aktionsplan i.xlsx"
+      "source": "templates/Vorlage Aktionsplan i.V01.xlsx",
+      "target": "templates/Vorlage Aktionsplan i.V01.xlsx"
     }
   ]
 }

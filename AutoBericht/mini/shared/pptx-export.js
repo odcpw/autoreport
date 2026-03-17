@@ -15,7 +15,13 @@
 
   const unzipAllEntries = zipTools?.unzipAllEntries;
   const buildZipStore = zipTools?.buildZipStore;
-  const PPT_TEMPLATE_PATH = "templates/Vorlage AutoBericht.pptx";
+  const TRAINING_PPT_TEMPLATE_PATH = "templates/Vorlage AutoBericht.pptx";
+  const REPORT_PPT_TEMPLATE_BY_SUFFIX = {
+    d: "templates/Vorlage Bericht Besprechung d.V01.pptx",
+    f: "templates/Vorlage Bericht Besprechung f.V01.pptx",
+    i: "templates/Vorlage Bericht Besprechung i.V01.pptx",
+  };
+  const REPORT_PPT_ANCHOR = "EXPORT$$";
 
   const NS_REL = "http://schemas.openxmlformats.org/package/2006/relationships";
   const NS_P = "http://schemas.openxmlformats.org/presentationml/2006/main";
@@ -1154,6 +1160,13 @@
     return (nums.length ? Math.max(...nums) : 0) + 1;
   };
 
+  const nextPresentationSlideId = (presentationDoc) => {
+    const nums = Array.from(presentationDoc.getElementsByTagNameNS(NS_P, "sldId"))
+      .map((node) => Number(String(node.getAttribute("id") || "").trim()))
+      .filter((n) => Number.isFinite(n) && n > 0);
+    return (nums.length ? Math.max(...nums) : 255) + 1;
+  };
+
   const clearExistingSlideLinks = (presentationDoc, relsDoc) => {
     const slideRelType = REL_SLIDE;
     Array.from(relsDoc.getElementsByTagNameNS(NS_REL, "Relationship"))
@@ -1180,6 +1193,109 @@
     }
     while (sldIdLst.firstChild) sldIdLst.removeChild(sldIdLst.firstChild);
     return sldIdLst;
+  };
+
+  const ensureSlideIdList = (presentationDoc) => {
+    let sldIdLst = presentationDoc.getElementsByTagNameNS(NS_P, "sldIdLst")[0] || null;
+    if (sldIdLst) return sldIdLst;
+    const root = presentationDoc.getElementsByTagNameNS(NS_P, "presentation")[0] || presentationDoc.documentElement;
+    if (!root) throw new Error("Template presentation.xml is invalid: missing p:presentation root.");
+    sldIdLst = presentationDoc.createElementNS(NS_P, "p:sldIdLst");
+    const children = Array.from(root.childNodes || []).filter((node) => node.nodeType === 1);
+    const masterList = children.find((node) => node.localName === "sldMasterIdLst") || null;
+    if (masterList && masterList.nextSibling) {
+      root.insertBefore(sldIdLst, masterList.nextSibling);
+    } else if (masterList) {
+      root.appendChild(sldIdLst);
+    } else if (children.length) {
+      root.insertBefore(sldIdLst, children[0]);
+    } else {
+      root.appendChild(sldIdLst);
+    }
+    return sldIdLst;
+  };
+
+  const getActualPartName = (templateMap, partName) => {
+    const want = normalizePartName(partName).toLowerCase();
+    for (const key of templateMap.keys()) {
+      if (normalizePartName(key).toLowerCase() === want) return key;
+    }
+    return "";
+  };
+
+  const removeTemplatePart = (templateMap, partName) => {
+    const actual = getActualPartName(templateMap, partName);
+    if (actual) templateMap.delete(actual);
+  };
+
+  const removeContentTypeOverride = (contentTypesDoc, partName) => {
+    const want = `/${normalizePartName(partName)}`;
+    Array.from(contentTypesDoc.getElementsByTagNameNS(NS_CT, "Override"))
+      .filter((node) => String(node.getAttribute("PartName") || "") === want)
+      .forEach((node) => node.parentNode?.removeChild(node));
+  };
+
+  const slideTextContent = (templateMap, slidePartName) => {
+    const slideXml = getEntryText(templateMap, slidePartName);
+    if (!slideXml) return "";
+    const slideDoc = parseXml(slideXml, slidePartName);
+    return Array.from(slideDoc.getElementsByTagNameNS(NS_A, "t"))
+      .map((node) => String(node.textContent || "").trim())
+      .filter(Boolean)
+      .join("\n");
+  };
+
+  const getPresentationSlideEntries = (templateMap, presentationDoc, relsDoc) => {
+    const sldIdLst = ensureSlideIdList(presentationDoc);
+    const relById = new Map(
+      Array.from(relsDoc.getElementsByTagNameNS(NS_REL, "Relationship"))
+        .map((rel) => [String(rel.getAttribute("Id") || ""), rel]),
+    );
+    return Array.from(sldIdLst.childNodes || [])
+      .filter((node) => node.nodeType === 1 && node.localName === "sldId")
+      .map((node) => {
+        const relId = String(
+          node.getAttributeNS(NS_R, "id")
+          || node.getAttribute("r:id")
+          || "",
+        ).trim();
+        const relNode = relById.get(relId) || null;
+        const slidePartName = relNode
+          ? resolveRelativePartName("ppt/presentation.xml", relNode.getAttribute("Target") || "")
+          : "";
+        return {
+          node,
+          relId,
+          relNode,
+          slidePartName,
+          text: slidePartName ? slideTextContent(templateMap, slidePartName) : "",
+        };
+      });
+  };
+
+  const removeAnchorSlide = ({
+    templateMap,
+    contentTypesDoc,
+    anchorEntry,
+  }) => {
+    if (!anchorEntry?.slidePartName) return;
+    const slideRelPart = relsPartNameForPart(anchorEntry.slidePartName);
+    const slideRelsXml = getEntryText(templateMap, slideRelPart);
+    if (slideRelsXml) {
+      const slideRelsDoc = parseXml(slideRelsXml, slideRelPart);
+      Array.from(slideRelsDoc.getElementsByTagNameNS(NS_REL, "Relationship")).forEach((rel) => {
+        const type = String(rel.getAttribute("Type") || "").trim();
+        if (!/\/notesSlide$/i.test(type)) return;
+        const notesPart = resolveRelativePartName(anchorEntry.slidePartName, rel.getAttribute("Target") || "");
+        if (!notesPart) return;
+        removeTemplatePart(templateMap, relsPartNameForPart(notesPart));
+        removeTemplatePart(templateMap, notesPart);
+        removeContentTypeOverride(contentTypesDoc, notesPart);
+      });
+    }
+    removeTemplatePart(templateMap, slideRelPart);
+    removeTemplatePart(templateMap, anchorEntry.slidePartName);
+    removeContentTypeOverride(contentTypesDoc, anchorEntry.slidePartName);
   };
 
   const ensureContentTypeOverride = (contentTypesDoc, partName, contentType) => {
@@ -1560,14 +1676,6 @@
     const moderator = String(project?.meta?.moderator || "").trim();
     const locale = String(project?.meta?.locale || "de-CH");
 
-    slides.push({
-      layout: REPORT_LAYOUTS.cover,
-      title: coverReportTitle(locale),
-      body: `${dateLabel}\n${snapshotLabels(locale).moderator}: ${moderator || "-"}`,
-      images: [],
-      preservePicPlaceholders: true,
-    });
-
     for (let i = 0; i < chapters.length; i += 1) {
       const chapter = chapters[i];
       const chapterId = String(chapter?.id || "").trim();
@@ -1824,17 +1932,22 @@
     return out;
   };
 
-  const writeSlidesToTemplate = ({ templateMap, layoutInfos, slides }) => {
-    const docs = getPresentationDocs(templateMap);
+  const appendSlidesToPresentation = ({
+    templateMap,
+    docs,
+    layoutInfos,
+    slides,
+    insertBeforeNode = null,
+  }) => {
     // Some templates only declare jpeg. We emit png/jpg as needed.
     ensureContentTypeDefault(docs.contentTypes, "png", "image/png");
     ensureContentTypeDefault(docs.contentTypes, "jpg", "image/jpeg");
     ensureContentTypeDefault(docs.contentTypes, "jpeg", "image/jpeg");
-    const sldIdLst = clearExistingSlideLinks(docs.presentation, docs.presentationRels);
+    const sldIdLst = ensureSlideIdList(docs.presentation);
     let nextRel = nextRelNumeric(docs.presentationRels);
     let nextSlide = nextSlideIndex(templateMap);
     let nextMedia = nextMediaIndex(templateMap);
-    let nextSlideId = 256;
+    let nextSlideId = nextPresentationSlideId(docs.presentation);
 
     slides.forEach((slide) => {
       const layoutInfo = getLayoutInfo(layoutInfos, slide.layout);
@@ -1883,12 +1996,66 @@
       sldNode.setAttribute("id", String(nextSlideId));
       nextSlideId += 1;
       sldNode.setAttributeNS(NS_R, "r:id", relId);
-      sldIdLst.appendChild(sldNode);
+      if (insertBeforeNode && insertBeforeNode.parentNode === sldIdLst) {
+        sldIdLst.insertBefore(sldNode, insertBeforeNode);
+      } else {
+        sldIdLst.appendChild(sldNode);
+      }
     });
 
     setEntryText(templateMap, "ppt/presentation.xml", serializeXml(docs.presentation));
     setEntryText(templateMap, "ppt/_rels/presentation.xml.rels", serializeXml(docs.presentationRels));
     setEntryText(templateMap, "[Content_Types].xml", serializeXml(docs.contentTypes));
+  };
+
+  const writeSlidesToTemplate = ({ templateMap, layoutInfos, slides }) => {
+    const docs = getPresentationDocs(templateMap);
+    clearExistingSlideLinks(docs.presentation, docs.presentationRels);
+    appendSlidesToPresentation({
+      templateMap,
+      docs,
+      layoutInfos,
+      slides,
+    });
+  };
+
+  const insertReportSlidesAtAnchor = ({
+    templateMap,
+    layoutInfos,
+    slides,
+    anchorText = REPORT_PPT_ANCHOR,
+  }) => {
+    const docs = getPresentationDocs(templateMap);
+    const entries = getPresentationSlideEntries(templateMap, docs.presentation, docs.presentationRels);
+    const matches = entries.filter((entry) => String(entry.text || "").includes(anchorText));
+    if (!matches.length) {
+      throw new Error(`Report template anchor not found: ${anchorText}`);
+    }
+    if (matches.length > 1) {
+      throw new Error(`Report template anchor is ambiguous: ${anchorText}`);
+    }
+    const anchorEntry = matches[0];
+    const insertBeforeNode = anchorEntry.node.nextSibling;
+
+    if (anchorEntry.node.parentNode) {
+      anchorEntry.node.parentNode.removeChild(anchorEntry.node);
+    }
+    if (anchorEntry.relNode?.parentNode) {
+      anchorEntry.relNode.parentNode.removeChild(anchorEntry.relNode);
+    }
+    removeAnchorSlide({
+      templateMap,
+      contentTypesDoc: docs.contentTypes,
+      anchorEntry,
+    });
+
+    appendSlidesToPresentation({
+      templateMap,
+      docs,
+      layoutInfos,
+      slides,
+      insertBeforeNode,
+    });
   };
 
   const exportPptx = async ({
@@ -1910,7 +2077,12 @@
       throw new Error("Sidecar data is missing.");
     }
 
-    const templateFile = await resolvePptTemplateFile(projectHandle, PPT_TEMPLATE_PATH, notify);
+    const locale = String(project?.meta?.locale || "de-CH");
+    const suffix = localeSuffix(locale);
+    const templatePath = mode === "report"
+      ? (REPORT_PPT_TEMPLATE_BY_SUFFIX[suffix] || REPORT_PPT_TEMPLATE_BY_SUFFIX.d)
+      : TRAINING_PPT_TEMPLATE_PATH;
+    const templateFile = await resolvePptTemplateFile(projectHandle, templatePath, notify);
     const templateMap = await getTemplateMap(templateFile);
     const layoutInfos = getLayoutInfos(templateMap);
     if (!layoutInfos.size) {
@@ -1926,8 +2098,6 @@
         + `First layout-like entries: ${layoutLikeEntries.slice(0, 10).join(", ") || "(none)"}`,
       );
     }
-
-    const locale = String(project?.meta?.locale || "de-CH");
 
     const logoSmall = await maybeLoadLogo(projectHandle, project?.meta?.logoSmallPath || "outputs/logo-small.png");
     const logoLarge = await maybeLoadLogo(projectHandle, project?.meta?.logoLargePath || "outputs/logo-large.png");
@@ -1979,11 +2149,19 @@
       binaryCache,
     });
 
-    writeSlidesToTemplate({
-      templateMap,
-      layoutInfos,
-      slides: materializedSlides,
-    });
+    if (mode === "report") {
+      insertReportSlidesAtAnchor({
+        templateMap,
+        layoutInfos,
+        slides: materializedSlides,
+      });
+    } else {
+      writeSlidesToTemplate({
+        templateMap,
+        layoutInfos,
+        slides: materializedSlides,
+      });
+    }
 
     const outputBytes = buildZipStore(Array.from(templateMap.values()));
     const outputs = await getOutputsDirectory(projectHandle);
