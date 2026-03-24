@@ -157,7 +157,7 @@
     const company = String(companyName || "").trim() || "Company";
     if (normalized.startsWith("fr")) {
       return {
-        companyLabel: `Autoevaluation de ${company}`,
+        companyLabel: `Autoévaluation de ${company}`,
         consultantLabel: "Evaluation par Suva",
       };
     }
@@ -650,7 +650,33 @@
     return "";
   };
 
-  const buildChapterTableXml = (chapter, toText) => {
+  const chapterTableHeaderLabels = (locale = "de-CH") => {
+    const base = getLocaleBase(locale);
+    if (base === "fr") {
+      return {
+        potential: "Éléments du système avec potentiel d'amélioration",
+        finding: "État des lieux",
+        recommendation: "Approches de solution",
+        priority: "Prio",
+      };
+    }
+    if (base === "it") {
+      return {
+        potential: "Elementi del sistema con potenziale di miglioramento",
+        finding: "Stato attuale",
+        recommendation: "Possibili soluzioni",
+        priority: "Prio",
+      };
+    }
+    return {
+      potential: "Systempunkte mit Verbesserungspotenzial",
+      finding: "Ist-Zustand",
+      recommendation: "Lösungsansätze",
+      priority: "Prio",
+    };
+  };
+
+  const buildChapterTableXml = (chapter, toText, locale = "de-CH") => {
     const rows = buildChapterRows(chapter, toText);
     const chapterMeta = chapter?.meta || {};
     const positivesText = chapterMeta.positivesInclude === true && chapterMeta.positivesDone === true
@@ -663,6 +689,7 @@
     const widthCol3 = 630;
     const widthLeftBlock = widthCol1 + widthCol2;
     const widthTotal = widthLeftBlock + widthCol3;
+    const headerLabels = chapterTableHeaderLabels(locale);
 
     const tableRows = [];
     tableRows.push(
@@ -692,7 +719,7 @@
         `<w:tcW w:w="${widthLeftBlock}" w:type="dxa"/>`,
         "<w:gridSpan w:val=\"2\"/>",
         "</w:tcPr>",
-        paragraphXml("Systempunkte mit Verbesserungspotenzial", { bold: true }),
+        paragraphXml(headerLabels.potential, { bold: true }),
         "</w:tc>",
         "<w:tc><w:tcPr>",
         `<w:tcW w:w="${widthCol3}" w:type="dxa"/>`,
@@ -709,17 +736,17 @@
         "<w:tc><w:tcPr>",
         `<w:tcW w:w="${widthCol1}" w:type="dxa"/>`,
         "</w:tcPr>",
-        paragraphXml("Ist-Zustand", { bold: true }),
+        paragraphXml(headerLabels.finding, { bold: true }),
         "</w:tc>",
         "<w:tc><w:tcPr>",
         `<w:tcW w:w="${widthCol2}" w:type="dxa"/>`,
         "</w:tcPr>",
-        paragraphXml("Lösungsansätze", { bold: true }),
+        paragraphXml(headerLabels.recommendation, { bold: true }),
         "</w:tc>",
         "<w:tc><w:tcPr>",
         `<w:tcW w:w="${widthCol3}" w:type="dxa"/>`,
         "</w:tcPr>",
-        paragraphXml("Prio", { bold: true, align: "center" }),
+        paragraphXml(headerLabels.priority, { bold: true, align: "center" }),
         "</w:tc>",
         "</w:tr>",
       ].join(""),
@@ -1142,7 +1169,7 @@
       } else {
         // Keep one explicit spacer paragraph before floating chapter tables.
         // This mirrors the manual "space + paragraph break" workaround in templates.
-        replacement = `${paragraphXml(" ")}${buildChapterTableXml(chapter, toText)}`;
+        replacement = `${paragraphXml(" ")}${buildChapterTableXml(chapter, toText, project?.meta?.locale || "de-CH")}`;
       }
       const patched = replaceParagraphMarker(documentXml, marker, replacement);
       documentXml = patched.xml;

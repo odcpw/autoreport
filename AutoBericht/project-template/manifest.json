@@ -53,6 +53,18 @@
     {
       "source": "templates/Vorlage Aktionsplan i.V01.xlsx",
       "target": "templates/Vorlage Aktionsplan i.V01.xlsx"
+    },
+    {
+      "source": "templates/Selbstbeurteilung Integrierte Sicherheit d.V14.xlsx",
+      "target": "templates/Selbstbeurteilung Integrierte Sicherheit d.V14.xlsx"
+    },
+    {
+      "source": "templates/Selbstbeurteilung Integrierte Sicherheit f.V15.xlsx",
+      "target": "templates/Selbstbeurteilung Integrierte Sicherheit f.V15.xlsx"
+    },
+    {
+      "source": "templates/Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx",
+      "target": "templates/Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx"
     }
   ]
 }
