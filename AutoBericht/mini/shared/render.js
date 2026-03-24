@@ -1691,7 +1691,11 @@
           return;
         }
         const exporter = window.AutoBerichtPptxExport || {};
-        const exportFn = mode === "training" ? exporter.exportTrainingPptx : exporter.exportReportPptx;
+        const exportFn = mode === "training"
+          ? exporter.exportTrainingPptx
+          : mode === "report-idms"
+            ? exporter.exportReportPptxIdms
+            : exporter.exportReportPptx;
         if (typeof exportFn !== "function") {
           setStatus(t("project_export_ppt_missing", "PowerPoint exporter not available."));
           return;
@@ -1700,7 +1704,9 @@
         const previous = button.textContent;
         const runningLabel = mode === "training"
           ? t("project_export_ppt_running_training", "Exporting training slides ...")
-          : t("project_export_ppt_running_report", "Exporting report slides ...");
+          : mode === "report-idms"
+            ? t("project_export_ppt_running_report_idms", "Exporting report slides for IDMS ...")
+            : t("project_export_ppt_running_report", "Exporting report slides ...");
         button.textContent = runningLabel;
         showExportToast(runningLabel);
         try {
@@ -1740,6 +1746,15 @@
           await runPptExport({ button, mode: "report" });
         },
       });
+
+      const pptIdmsButton = document.createElement("button");
+      pptIdmsButton.type = "button";
+      pptIdmsButton.className = "ghost";
+      pptIdmsButton.textContent = t("project_export_ppt_report_idms", "PowerPoint Export (Report IDMS)");
+      pptIdmsButton.addEventListener("click", async () => {
+        await runPptExport({ button: pptIdmsButton, mode: "report-idms" });
+      });
+      pptCard.actions.appendChild(pptIdmsButton);
 
       const pptTrainingButton = document.createElement("button");
       pptTrainingButton.type = "button";

@@ -1662,6 +1662,7 @@
     spiderImage,
     logoSmall,
     logoLarge,
+    omitReportPhotos = false,
   }) => {
     const chapters = [...(project?.chapters || [])].sort((a, b) => {
       if (typeof compareIdSegments === "function") return compareIdSegments(a?.id, b?.id);
@@ -1741,7 +1742,7 @@
           const fullTitle = `${displayId} ${obsTitle}`.trim();
           const finding = String(resolveFindingText(row, toText) || "").trim();
 
-          const photos = ensureMapArray(reportMap, obsTag);
+          const photos = omitReportPhotos ? [] : ensureMapArray(reportMap, obsTag);
           // Observation finding text needs a body placeholder.
           // Use the text-capable layout for the first slide, then continue
           // remaining photos on pure photo layouts.
@@ -1808,7 +1809,7 @@
           });
         });
 
-        const photos = ensureMapArray(reportMap, section.rawId);
+        const photos = omitReportPhotos ? [] : ensureMapArray(reportMap, section.rawId);
         chunkArray(photos, 6).forEach((chunk) => {
           const layout = pickSectionPhotoLayout(layoutInfos, chunk.length);
           slides.push({
@@ -2063,6 +2064,7 @@
     sidecarDoc,
     projectHandle,
     mode,
+    reportVariant = "standard",
     compareIdSegments,
     toText,
     spiderOverrides,
@@ -2128,6 +2130,7 @@
         spiderImage,
         logoSmall,
         logoLarge,
+        omitReportPhotos: reportVariant === "idms",
       });
     } else if (mode === "training") {
       const training = buildTrainingSlidePlan({ project, sidecarDoc });
@@ -2169,7 +2172,9 @@
     const companySlug = toFileSafeSlug(project?.meta?.company || project?.meta?.projectName || "", "Company");
 
     const outName = mode === "report"
-      ? `${stamp}-${companySlug}-Bericht-Besprechung.pptx`
+      ? reportVariant === "idms"
+        ? `${stamp}-${companySlug}-Bericht-Besprechung-IDMS.pptx`
+        : `${stamp}-${companySlug}-Bericht-Besprechung.pptx`
       : `${stamp}-${companySlug}-Seminar-Slides.pptx`;
 
     await writeFileHandle(outputs, outName, outputBytes);
@@ -2181,10 +2186,16 @@
   };
 
   const exportReportPptx = async (args) => exportPptx({ ...args, mode: "report" });
+  const exportReportPptxIdms = async (args) => exportPptx({
+    ...args,
+    mode: "report",
+    reportVariant: "idms",
+  });
   const exportTrainingPptx = async (args) => exportPptx({ ...args, mode: "training" });
 
   window.AutoBerichtPptxExport = {
     exportReportPptx,
+    exportReportPptxIdms,
     exportTrainingPptx,
   };
 })();
