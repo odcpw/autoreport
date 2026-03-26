@@ -370,9 +370,10 @@ body {
 }
 
 .priority-group {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
+  display: inline-grid;
+  grid-auto-flow: row;
+  gap: 4px;
+  align-items: start;
 }
 
 .priority-group__label {
@@ -384,14 +385,23 @@ body {
   color: #55606d;
 }
 
+.priority-group__options {
+  display: inline-grid;
+  grid-auto-flow: row;
+  gap: 2px;
+}
+
 .priority-radio {
+  display: inline-flex;
+  align-items: center;
   flex: 0 0 auto;
+  justify-content: flex-start;
 }
 
 .recommendation-controls {
   margin-left: auto;
   display: inline-flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
   flex-wrap: wrap;
   justify-content: flex-end;

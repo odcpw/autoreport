@@ -81,7 +81,11 @@
     if (ws.recommendationText == null) {
       ws.recommendationText = toText(row.master?.recommendation);
     }
-    if (!ws.libraryAction) ws.libraryAction = "off";
+    const findingAction = String(ws.findingLibraryAction || "off").toLowerCase();
+    ws.findingLibraryAction = ["off", "append", "replace"].includes(findingAction) ? findingAction : "off";
+    if (ws.findingLibraryHash == null) ws.findingLibraryHash = "";
+    const recommendationAction = String(ws.libraryAction || "off").toLowerCase();
+    ws.libraryAction = ["off", "append", "replace"].includes(recommendationAction) ? recommendationAction : "off";
     if (ws.libraryHash == null) ws.libraryHash = "";
 
     if (!ws.scoreTouched && row?.type !== "field_observation" && row?.type !== "summary") {
@@ -223,6 +227,8 @@
           done: false,
           findingText: getObservationFindingText(project?.meta?.locale || "de-CH"),
           recommendationText: "",
+          findingLibraryAction: "off",
+          findingLibraryHash: "",
           libraryAction: "off",
           libraryHash: "",
         },
@@ -272,6 +278,8 @@
           done: false,
           findingText: "",
           recommendationText: "",
+          findingLibraryAction: "off",
+          findingLibraryHash: "",
           libraryAction: "off",
           libraryHash: "",
         },
@@ -363,6 +371,8 @@
       done: false,
       findingText: getObservationFindingText("de-CH"),
       recommendationText: "",
+      findingLibraryAction: "off",
+      findingLibraryHash: "",
       libraryAction: "off",
       libraryHash: "",
     },

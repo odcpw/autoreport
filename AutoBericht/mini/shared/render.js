@@ -2258,6 +2258,8 @@
       title.className = "priority-group__label";
       title.textContent = "Prio";
       group.appendChild(title);
+      const optionsWrap = document.createElement("div");
+      optionsWrap.className = "priority-group__options";
       const current = Number(ws.priority);
       const hasPriority = Number.isFinite(current) && current >= 0 && current <= 4;
       const options = [1, 2, 3, 4, 0];
@@ -2275,20 +2277,21 @@
         });
         label.appendChild(input);
         label.appendChild(document.createTextNode(String(value)));
-        group.appendChild(label);
+        optionsWrap.appendChild(label);
       });
+      group.appendChild(optionsWrap);
       return group;
     };
 
-    const createLibraryGroup = (currentAction, onSelect, labelText = "Library") => {
+    const createLibraryGroup = (currentAction, onSelect, labelText = "Library", actions = null) => {
       const libraryGroup = document.createElement("div");
       libraryGroup.className = "library-group";
       const libraryLabel = document.createElement("span");
       libraryLabel.textContent = labelText;
       libraryGroup.appendChild(libraryLabel);
-      const actionButtons = [
+      const actionButtons = actions || [
         { key: "off", label: "Off" },
-        { key: "append", label: "Append" },
+        { key: "append", label: "Add" },
         { key: "replace", label: "Replace" },
       ];
       actionButtons.forEach((option) => {
@@ -2364,7 +2367,15 @@
       findingControls.className = "field-controls finding-controls";
       findingControls.appendChild(includeToggle);
       findingControls.appendChild(doneToggle);
-      findingControls.appendChild(createPriorityControls(row, ws));
+      findingControls.appendChild(createLibraryGroup(
+        ws.findingLibraryAction || "off",
+        (nextAction) => {
+          ws.findingLibraryAction = nextAction;
+          scheduleAutosave();
+          renderRows();
+        },
+        "Library",
+      ));
 
       const findingArea = document.createElement("textarea");
       applyEditorLocale(findingArea);
@@ -2419,6 +2430,7 @@
       const recControls = document.createElement("div");
       recControls.className = "field-controls";
       recControls.appendChild(levelGroup);
+      recControls.appendChild(createPriorityControls(row, ws));
 
       const libraryGroup = createLibraryGroup(
         ws.libraryAction || "off",

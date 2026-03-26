@@ -1465,26 +1465,55 @@
           if (row.kind === "section") return;
           normalizeHelpers.ensureWorkstateDefaults(row);
           const ws = row.workstate;
-          const action = ws.libraryAction || "off";
-          if (action === "off") return;
-          const text = stateHelpers.getRecommendationText(row).trim();
-          if (!text) return;
-          const currentHash = stateHelpers.hashText(text);
-          if (ws.libraryHash === currentHash) return;
           const entry = entriesMap.get(row.id) || { id: row.id };
-          if (action === "replace") {
-            entry.recommendation = text;
-          } else if (action === "append") {
-            const existing = stateHelpers.toText(entry.recommendation).trim();
-            entry.recommendation = existing ? `${existing}\n\n${text}` : text;
+          let rowApplied = false;
+
+          const findingAction = ws.findingLibraryAction || "off";
+          if (findingAction !== "off") {
+            const findingText = stateHelpers.getFindingText(row).trim();
+            if (findingText) {
+              const findingHash = stateHelpers.hashText(findingText);
+              if (ws.findingLibraryHash !== findingHash) {
+                if (findingAction === "replace") {
+                  entry.finding = findingText;
+                } else if (findingAction === "append") {
+                  const existing = stateHelpers.toText(entry.finding).trim();
+                  entry.finding = existing ? `${existing}\n\n${findingText}` : findingText;
+                }
+                ws.findingLibraryHash = findingHash;
+                rowApplied = true;
+              }
+            }
           }
+
+          const action = ws.libraryAction || "off";
+          if (action !== "off") {
+            const text = stateHelpers.getRecommendationText(row).trim();
+            if (text) {
+              const currentHash = stateHelpers.hashText(text);
+              if (ws.libraryHash !== currentHash) {
+                if (action === "replace") {
+                  entry.recommendation = text;
+                } else if (action === "append") {
+                  const existing = stateHelpers.toText(entry.recommendation).trim();
+                  entry.recommendation = existing ? `${existing}\n\n${text}` : text;
+                }
+                ws.libraryHash = currentHash;
+                rowApplied = true;
+              }
+            }
+          }
+
           if (entry.finding == null && row.master?.finding) {
             entry.finding = row.master.finding;
           }
-          entry.lastUsed = lastUsedAt;
-          entriesMap.set(row.id, entry);
-          ws.libraryHash = currentHash;
-          applied += 1;
+          if (rowApplied) {
+            entry.lastUsed = lastUsedAt;
+            entriesMap.set(row.id, entry);
+            applied += 1;
+          } else if (!entriesMap.has(row.id) && (entry.finding != null || entry.recommendation != null)) {
+            entriesMap.set(row.id, entry);
+          }
         });
 
         if (typeof normalizeHelpers.ensureChapterMetaDefaults === "function") {
