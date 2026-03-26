@@ -726,6 +726,31 @@
       return source.replace("<workbook", `<workbook${missing}`);
     };
 
+    const ensureWorksheetNamespaceAliases = (xml) => {
+      const source = String(xml || "");
+      if (!source.includes("<worksheet")) return source;
+      const ignorableMatch = source.match(/\bmc:Ignorable="([^"]+)"/);
+      if (!ignorableMatch) return source;
+      const ignorable = new Set(
+        String(ignorableMatch[1] || "")
+          .split(/\s+/)
+          .map((item) => item.trim())
+          .filter(Boolean),
+      );
+      const aliasMap = {
+        x14ac: "http://schemas.microsoft.com/office/spreadsheetml/2009/9/ac",
+        xr: "http://schemas.microsoft.com/office/spreadsheetml/2014/revision",
+        xr2: "http://schemas.microsoft.com/office/spreadsheetml/2015/revision2",
+        xr3: "http://schemas.microsoft.com/office/spreadsheetml/2016/revision3",
+      };
+      const missing = Object.entries(aliasMap)
+        .filter(([alias]) => ignorable.has(alias) && !source.includes(`xmlns:${alias}=`))
+        .map(([alias, uri]) => ` xmlns:${alias}="${uri}"`)
+        .join("");
+      if (!missing) return source;
+      return source.replace("<worksheet", `<worksheet${missing}`);
+    };
+
     const getChildElements = (node, localName) => Array.from(node?.getElementsByTagNameNS?.("*", localName) || []);
 
     const getFirstChild = (node, localName) => getChildElements(node, localName)[0] || null;
@@ -1185,6 +1210,40 @@
       setEntryText(templateMap, workbookPart, ensureWorkbookNamespaceAliases(serializeXml(workbookDoc)));
     };
 
+    const removeCalcChain = (templateMap) => {
+      const calcChainPart = "xl/calcChain.xml";
+      templateMap.delete(calcChainPart);
+
+      const workbookRelsPart = "xl/_rels/workbook.xml.rels";
+      if (templateMap.has(workbookRelsPart)) {
+        const relsDoc = parseXml(getEntryText(templateMap, workbookRelsPart), workbookRelsPart);
+        const root = relsDoc.documentElement;
+        Array.from(root.childNodes || []).forEach((node) => {
+          if (node.nodeType !== 1) return;
+          const type = node.getAttribute("Type") || "";
+          const target = node.getAttribute("Target") || "";
+          if (type.endsWith("/calcChain") || target === "calcChain.xml") {
+            root.removeChild(node);
+          }
+        });
+        setEntryText(templateMap, workbookRelsPart, serializeXml(relsDoc));
+      }
+
+      const contentTypesPart = "[Content_Types].xml";
+      if (templateMap.has(contentTypesPart)) {
+        const contentTypesDoc = parseXml(getEntryText(templateMap, contentTypesPart), contentTypesPart);
+        const root = contentTypesDoc.documentElement;
+        Array.from(root.childNodes || []).forEach((node) => {
+          if (node.nodeType !== 1) return;
+          if (node.localName !== "Override") return;
+          if ((node.getAttribute("PartName") || "") === "/xl/calcChain.xml") {
+            root.removeChild(node);
+          }
+        });
+        setEntryText(templateMap, contentTypesPart, serializeXml(contentTypesDoc));
+      }
+    };
+
     const buildActionPlanLookupFormula = (planSheetName, rowNumber) => (
       `IF($H${rowNumber}="","",IFERROR(INDEX('${String(planSheetName || "").replace(/'/g, "''")}'!$B:$B,MATCH($H${rowNumber},'${String(planSheetName || "").replace(/'/g, "''")}'!$A:$A,0)),""))`
     );
@@ -1285,9 +1344,10 @@
           end: { col: reportTableRange.end.col, row: lastReportRow },
         },
       });
+      removeCalcChain(templateMap);
 
-      setEntryText(templateMap, reportPart, serializeXml(reportDoc));
-      setEntryText(templateMap, planPart, serializeXml(planDoc));
+      setEntryText(templateMap, reportPart, ensureWorksheetNamespaceAliases(serializeXml(reportDoc)));
+      setEntryText(templateMap, planPart, ensureWorksheetNamespaceAliases(serializeXml(planDoc)));
     };
 
     const exportLibraryExcel = async () => {
