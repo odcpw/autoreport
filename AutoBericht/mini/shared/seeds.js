@@ -15,6 +15,20 @@
     return "de";
   };
 
+  const OBS_CHAPTER_TITLE = {
+    de: "Beobachtungen",
+    fr: "Observations",
+    it: "Osservazioni",
+  };
+  const OBS_FINDING_TEXT = {
+    de: "Folgende unsichere Situationen wurden beobachtet:",
+    fr: "Les situations dangereuses suivantes ont ete observees:",
+    it: "Sono state osservate le seguenti situazioni pericolose:",
+  };
+  const getObservationChapterTitle = (locale) => OBS_CHAPTER_TITLE[resolveLocaleKey(locale)] || OBS_CHAPTER_TITLE.de;
+  const getObservationSectionLabel = (locale) => `4.8 ${getObservationChapterTitle(locale)}`;
+  const getObservationFindingText = (locale) => OBS_FINDING_TEXT[resolveLocaleKey(locale)] || OBS_FINDING_TEXT.de;
+
   const getKnowledgeBaseFilename = (locale) => `knowledge_base_${resolveLocaleKey(locale)}.json`;
 
   const seedPathCandidates = (filename) => ([
@@ -113,6 +127,7 @@
 
   const buildProjectFromKnowledgeBase = (knowledgeBase) => {
     validateKnowledgeBase(knowledgeBase);
+    const locale = knowledgeBase?.meta?.locale || "de-CH";
     const libraryMap = buildLibraryMap(knowledgeBase);
     const chapterPositivesMap = knowledgeBase?.library?.chapterPositives;
     const getChapterPositivesText = (chapterId) => {
@@ -149,11 +164,18 @@
     const chaptersById = new Map();
     groups.forEach((group) => {
       const chapterId = group.chapterId || "0";
+      const isObservationChapter = chapterId === "4.8";
       const chapter = chaptersById.get(chapterId) || {
         id: chapterId,
-        title: {
-          de: group.chapterLabel || (chapterId === "4.8" ? "Beobachtungen" : `Kapitel ${chapterId}`),
-        },
+        title: isObservationChapter
+          ? {
+            de: OBS_CHAPTER_TITLE.de,
+            fr: OBS_CHAPTER_TITLE.fr,
+            it: OBS_CHAPTER_TITLE.it,
+          }
+          : {
+            de: group.chapterLabel || `Kapitel ${chapterId}`,
+          },
         rows: [],
         meta: {
           positivesText: getChapterPositivesText(chapterId),
@@ -164,7 +186,9 @@
         chapter.meta.positivesText = getChapterPositivesText(chapterId);
       }
       const master = libraryMap.get(group.id) || null;
-      const sectionLabel = group.items.find((item) => item.sectionLabel)?.sectionLabel || "";
+      const sectionLabel = isObservationChapter
+        ? getObservationSectionLabel(locale)
+        : (group.items.find((item) => item.sectionLabel)?.sectionLabel || "");
       const sectionId = String(group.id).split(".").slice(0, 2).join(".");
       chapter.rows.push({
         id: group.id,
@@ -183,7 +207,7 @@
           includeFinding: false,
           includeRecommendation: true,
           done: false,
-          findingText: toText(master?.finding),
+          findingText: isObservationChapter ? getObservationFindingText(locale) : toText(master?.finding),
           recommendationText: toText(master?.recommendation),
           libraryAction: "off",
           libraryHash: "",
@@ -211,8 +235,6 @@
       chapter.rows = withSections;
     });
 
-    const OBS_FINDING_TEXT = "Folgende unsichere Situationen wurden beobachtet:";
-
     // Inject 4.8 Beobachtungen rows from tag list if none exist
     const obsTags = knowledgeBase?.tags?.observations || [];
     const obsChapterExisting = chapters.find((c) => c.id === "4.8");
@@ -223,7 +245,7 @@
         id: `4.8.${idx + 1}`,
         type: "field_observation",
         sectionId: "4.8",
-        sectionLabel: "4.8 Beobachtungen",
+        sectionLabel: getObservationSectionLabel(locale),
         titleOverride: tag.label || tag.value || `4.8.${idx + 1}`,
         master: null,
         customer: { answer: null, remark: "", items: [] },
@@ -232,7 +254,7 @@
           includeFinding: false,
           includeRecommendation: true,
           done: false,
-          findingText: OBS_FINDING_TEXT,
+          findingText: getObservationFindingText(locale),
           recommendationText: "",
           libraryAction: "off",
           libraryHash: "",
@@ -240,7 +262,11 @@
       }));
       obsChapter = obsChapterExisting || {
         id: "4.8",
-        title: { de: "Beobachtungen" },
+        title: {
+          de: OBS_CHAPTER_TITLE.de,
+          fr: OBS_CHAPTER_TITLE.fr,
+          it: OBS_CHAPTER_TITLE.it,
+        },
         rows: [],
         meta: {
           positivesText: getChapterPositivesText("4.8"),

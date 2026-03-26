@@ -6,7 +6,25 @@
     if (value == null) return "";
     return String(value);
   });
-  const OBS_FINDING_TEXT = "Folgende unsichere Situationen wurden beobachtet:";
+  const getLocaleBase = (locale) => {
+    const base = String(locale || "de-CH").toLowerCase().split("-")[0];
+    return ["de", "fr", "it"].includes(base) ? base : "de";
+  };
+  const OBS_CHAPTER_TITLE = {
+    de: "Beobachtungen",
+    fr: "Observations",
+    it: "Osservazioni",
+  };
+  const OBS_FINDING_TEXT = {
+    de: "Folgende unsichere Situationen wurden beobachtet:",
+    fr: "Les situations dangereuses suivantes ont ete observees:",
+    it: "Sono state osservate le seguenti situazioni pericolose:",
+  };
+  const getObservationChapterTitle = (locale) => OBS_CHAPTER_TITLE[getLocaleBase(locale)] || OBS_CHAPTER_TITLE.de;
+  const getObservationSectionLabel = (locale) => `4.8 ${getObservationChapterTitle(locale)}`;
+  const getObservationFindingText = (locale) => OBS_FINDING_TEXT[getLocaleBase(locale)] || OBS_FINDING_TEXT.de;
+  const OBS_DEFAULT_SECTION_LABELS = new Set(Object.values(OBS_CHAPTER_TITLE).map((title) => `4.8 ${title}`));
+  const OBS_DEFAULT_FINDING_TEXTS = new Set(Object.values(OBS_FINDING_TEXT));
   const clampSelectedLevel = (value) => {
     const parsed = Number(value);
     if (!Number.isFinite(parsed)) return 1;
@@ -55,7 +73,7 @@
     ws.autoScoreLevel = clampSelectedLevel(ws.autoScoreLevel == null ? ws.selectedLevel : ws.autoScoreLevel);
     if (ws.findingText == null) {
       if (row.type === "field_observation") {
-        ws.findingText = OBS_FINDING_TEXT;
+        ws.findingText = getObservationFindingText("de-CH");
       } else {
         ws.findingText = toText(row.master?.finding);
       }
@@ -136,11 +154,47 @@
     if (!hasObservation) {
       project.chapters.push({
         id: "4.8",
-        title: { de: "Beobachtungen" },
+        title: { de: OBS_CHAPTER_TITLE.de },
         rows: [],
       });
     }
     project.chapters.sort((a, b) => compareIdSegments(a.id, b.id));
+    return project;
+  };
+
+  const localizeObservationChapter = (project) => {
+    if (!project?.chapters) return project;
+    const chapter = project.chapters.find((item) => item.id === "4.8");
+    if (!chapter) return project;
+    const locale = project?.meta?.locale || "de-CH";
+    chapter.title = {
+      de: OBS_CHAPTER_TITLE.de,
+      fr: OBS_CHAPTER_TITLE.fr,
+      it: OBS_CHAPTER_TITLE.it,
+    };
+    (chapter.rows || []).forEach((row) => {
+      if (!row || row.kind === "section") {
+        if (row?.id === "4.8" || row?.sectionId === "4.8") {
+          row.title = getObservationSectionLabel(locale);
+        }
+        return;
+      }
+      row.sectionId = "4.8";
+      row.sectionLabel = getObservationSectionLabel(locale);
+      const ws = row.workstate || {};
+      const master = row.master || {};
+      if (!String(row.titleOverride || "").trim()) {
+        row.titleOverride = row.tag || row.id || "";
+      }
+      if (!String(master.finding || "").trim() || OBS_DEFAULT_FINDING_TEXTS.has(String(master.finding || "").trim())) {
+        master.finding = getObservationFindingText(locale);
+      }
+      row.master = master;
+      if (!String(ws.findingText || "").trim() || OBS_DEFAULT_FINDING_TEXTS.has(String(ws.findingText || "").trim())) {
+        ws.findingText = getObservationFindingText(locale);
+      }
+      row.workstate = ws;
+    });
     return project;
   };
 
@@ -158,7 +212,7 @@
         id: rowId,
         type: "field_observation",
         sectionId: "4.8",
-        sectionLabel: "4.8 Beobachtungen",
+        sectionLabel: getObservationSectionLabel(project?.meta?.locale || "de-CH"),
         titleOverride: tag.label || tag.value || rowId,
         master: null,
         customer: { answer: null, remark: "", items: [] },
@@ -167,7 +221,7 @@
           includeFinding: false,
           includeRecommendation: true,
           done: false,
-          findingText: OBS_FINDING_TEXT,
+          findingText: getObservationFindingText(project?.meta?.locale || "de-CH"),
           recommendationText: "",
           libraryAction: "off",
           libraryHash: "",
@@ -263,6 +317,7 @@
     ensureObservationChapter(project);
     ensureManagementSummaryChapter(project);
     ensureProjectMeta(project, setLocale);
+    localizeObservationChapter(project);
     (project.chapters || []).forEach((chapter) => {
       ensureChapterMetaDefaults(chapter);
       (chapter.rows || []).forEach((row) => {
@@ -293,7 +348,7 @@
     tag,
     titleOverride: tag,
     master: {
-      finding: OBS_FINDING_TEXT,
+      finding: getObservationFindingText("de-CH"),
       recommendation: "",
     },
     customer: {
@@ -306,7 +361,7 @@
       includeFinding: false,
       includeRecommendation: true,
       done: false,
-      findingText: OBS_FINDING_TEXT,
+      findingText: getObservationFindingText("de-CH"),
       recommendationText: "",
       libraryAction: "off",
       libraryHash: "",
@@ -328,6 +383,7 @@
     if (!project?.chapters) return;
     const chapter = project.chapters.find((item) => item.id === "4.8");
     if (!chapter) return;
+    const locale = project?.meta?.locale || "de-CH";
     const tags = getObservationTagsFromSidecar(doc);
     if (!tags.length) return;
 
@@ -351,7 +407,12 @@
       }
       const rowId = `4.8.${nextIndex}`;
       nextIndex += 1;
-      return buildObservationRow(tag, rowId);
+      const row = buildObservationRow(tag, rowId);
+      row.sectionId = "4.8";
+      row.sectionLabel = getObservationSectionLabel(locale);
+      row.master.finding = getObservationFindingText(locale);
+      row.workstate.findingText = getObservationFindingText(locale);
+      return row;
     });
 
     if (!chapter.meta) chapter.meta = {};
@@ -401,6 +462,7 @@
     ensureProjectMeta,
     ensureChapterMetaDefaults,
     ensureObservationChapter,
+    localizeObservationChapter,
     ensureManagementSummaryChapter,
     normalizeProject,
     slugifyTag,

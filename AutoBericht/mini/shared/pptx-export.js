@@ -4,7 +4,6 @@
  * Responsibilities:
  * - Read the project `.pptx` template from `templates/` and validate required layouts/placeholders.
  * - Build report and training slide plans from sidecar/project data.
- * - Render chapter snapshot images (header/footer/logos) for report chapters.
  * - Write final output as .pptx into outputs/.
  */
 (() => {
@@ -86,14 +85,6 @@
     },
     sectionSeparator: "ab_chapterorange",
     defaultPhoto: "ab_picture",
-  };
-
-  const SNAPSHOT = {
-    // Compact chapter snapshot canvas for chapter intro slides.
-    width: 1400,
-    height: 560,
-    margin: 52,
-    headerH: 120,
   };
 
   const xmlEscape = (value) => String(value || "")
@@ -491,14 +482,6 @@
     return out;
   };
 
-  const maybeLoadLogo = async (projectHandle, path) => {
-    if (!path) return null;
-    const file = await tryReadProjectFile(projectHandle, path);
-    if (!file) return null;
-    const dims = await imageDimensions(file);
-    return { file, width: dims.width, height: dims.height };
-  };
-
   const buildPhotoFileMap = (sidecarDoc) => {
     const reportMap = new Map();
     const trainingMap = new Map();
@@ -669,48 +652,6 @@
     return out;
   };
 
-  const snapshotLabels = (locale) => {
-    const normalized = String(locale || "de-CH").toLowerCase();
-    if (normalized.startsWith("fr")) {
-      return {
-        date: "Date",
-        moderator: "Moderateur",
-        potential: "Points systeme avec potentiel d'amelioration",
-        finding: "Etat actuel",
-        recommendation: "Pistes de solution",
-        priority: "Prio",
-        reportType: "Etat des lieux",
-      };
-    }
-    if (normalized.startsWith("it")) {
-      return {
-        date: "Data",
-        moderator: "Moderatore",
-        potential: "Punti di sistema con potenziale di miglioramento",
-        finding: "Stato attuale",
-        recommendation: "Possibili soluzioni",
-        priority: "Prio",
-        reportType: "Rilevazione stato attuale",
-      };
-    }
-    return {
-      date: "Datum",
-      moderator: "Moderator",
-      potential: "Systempunkte mit Verbesserungspotenzial",
-      finding: "Ist-Zustand",
-      recommendation: "Loesungsansaetze",
-      priority: "Prio",
-      reportType: "Ist-Aufnahme",
-    };
-  };
-
-  const coverReportTitle = (locale) => {
-    const normalized = String(locale || "de-CH").toLowerCase();
-    if (normalized.startsWith("fr")) return "Etat des lieux: Presentation du rapport";
-    if (normalized.startsWith("it")) return "Rilevazione stato attuale: Presentazione del rapporto";
-    return "Ist-Aufnahme: Bericht Besprechung";
-  };
-
   const assessmentSummaryTitle = (locale) => {
     const normalized = String(locale || "de-CH").toLowerCase();
     if (normalized.startsWith("fr")) return "Synthese des evaluations";
@@ -751,71 +692,6 @@
       type: "image/png",
       quality: 0.95,
     });
-  };
-
-  const drawChapterSnapshot = async ({
-    chapterLabel,
-    locale,
-    company,
-    moderator,
-    dateLabel,
-    logoSmall,
-    logoLarge,
-  }) => {
-    const canvas = document.createElement("canvas");
-    canvas.width = SNAPSHOT.width;
-    canvas.height = SNAPSHOT.height;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) throw new Error("Canvas context unavailable for chapter snapshot.");
-    const labels = snapshotLabels(locale);
-
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(0, 0, SNAPSHOT.width, SNAPSHOT.height);
-
-    const headY = 0;
-    const headH = SNAPSHOT.headerH;
-    ctx.fillStyle = "#f8f5ef";
-    ctx.fillRect(0, headY, SNAPSHOT.width, headH);
-    ctx.strokeStyle = "#d7d0c7";
-    ctx.lineWidth = 1;
-    ctx.beginPath();
-    ctx.moveTo(0, headH + 0.5);
-    ctx.lineTo(SNAPSHOT.width, headH + 0.5);
-    ctx.stroke();
-
-    if (logoSmall?.file) {
-      const bmp = await createImageBitmap(logoSmall.file);
-      const targetH = 56;
-      const targetW = Math.round((targetH * bmp.width) / Math.max(1, bmp.height));
-      ctx.drawImage(bmp, SNAPSHOT.margin, 24, targetW, targetH);
-      bmp.close();
-    } else if (logoLarge?.file) {
-      const bmp = await createImageBitmap(logoLarge.file);
-      const targetH = 56;
-      const targetW = Math.round((targetH * bmp.width) / Math.max(1, bmp.height));
-      ctx.drawImage(bmp, SNAPSHOT.margin, 24, targetW, targetH);
-      bmp.close();
-    }
-
-    ctx.fillStyle = "#1f2933";
-    ctx.font = "700 31px Arial";
-    ctx.fillText(chapterLabel, SNAPSHOT.margin + 180, 50);
-    ctx.font = "500 18px Arial";
-    ctx.fillStyle = "#4b5967";
-    ctx.fillText(String(company || "").trim() || "Company", SNAPSHOT.margin + 180, 82);
-
-    ctx.textAlign = "right";
-    ctx.fillStyle = "#4b5967";
-    ctx.font = "600 16px Arial";
-    ctx.fillText(`${labels.date}: ${String(dateLabel || "").trim()}`, SNAPSHOT.width - SNAPSHOT.margin, 45);
-    ctx.fillText(`${labels.moderator}: ${String(moderator || "").trim() || "-"}`, SNAPSHOT.width - SNAPSHOT.margin, 73);
-    ctx.textAlign = "left";
-
-    const blob = await new Promise((resolve) => {
-      canvas.toBlob((result) => resolve(result), "image/png", 0.94);
-    });
-    if (!blob) throw new Error("Failed to render chapter snapshot image.");
-    return blob;
   };
 
   const getTemplateMap = async (templateFile) => {
@@ -1660,8 +1536,6 @@
     toText,
     compareIdSegments,
     spiderImage,
-    logoSmall,
-    logoLarge,
     omitReportPhotos = false,
   }) => {
     const chapters = [...(project?.chapters || [])].sort((a, b) => {
@@ -1672,9 +1546,6 @@
     const { reportMap } = buildPhotoFileMap(sidecarDoc);
     const slides = [];
 
-    const dateLabel = formatDateLabel(project?.meta?.createdAt);
-    const company = String(project?.meta?.company || "").trim() || "Company";
-    const moderator = String(project?.meta?.moderator || "").trim();
     const locale = String(project?.meta?.locale || "de-CH");
 
     for (let i = 0; i < chapters.length; i += 1) {
@@ -1701,7 +1572,6 @@
             images: [],
           });
         });
-
         const summaryAssessment = assessmentSummaryTitle(locale);
         if (!(spiderImage instanceof Blob)) {
           throw new Error("Spider chart image is missing for report summary section.");
@@ -1776,23 +1646,6 @@
         title: chapterLabel,
         body: "",
         images: [],
-      });
-
-      const snapshot = await drawChapterSnapshot({
-        chapterLabel,
-        locale,
-        company,
-        moderator,
-        dateLabel,
-        logoSmall,
-        logoLarge,
-      });
-
-      slides.push({
-        layout: REPORT_LAYOUTS.chapterSnapshot,
-        title: chapterLabel,
-        body: "",
-        images: [snapshot],
       });
 
       const sections = buildSectionBlocks(chapter, chapterId, locale);
@@ -2101,9 +1954,6 @@
       );
     }
 
-    const logoSmall = await maybeLoadLogo(projectHandle, project?.meta?.logoSmallPath || "outputs/logo-small.png");
-    const logoLarge = await maybeLoadLogo(projectHandle, project?.meta?.logoLargePath || "outputs/logo-large.png");
-
     let plannedSlides = [];
 
     if (mode === "report") {
@@ -2128,8 +1978,6 @@
         toText,
         compareIdSegments,
         spiderImage,
-        logoSmall,
-        logoLarge,
         omitReportPhotos: reportVariant === "idms",
       });
     } else if (mode === "training") {
