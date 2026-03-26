@@ -407,6 +407,25 @@ body {
   justify-content: flex-end;
 }
 
+.recommendation-header-controls {
+  align-items: center;
+}
+
+.recommendation-body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: start;
+}
+
+.recommendation-body textarea {
+  min-width: 0;
+}
+
+.recommendation-priority {
+  justify-self: end;
+}
+
 .hint {
   display: inline-flex;
   align-items: center;

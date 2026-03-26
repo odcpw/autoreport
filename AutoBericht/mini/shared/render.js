@@ -2397,7 +2397,7 @@
 
     const createRecommendationField = (row, ws, onChange) => {
       const recField = document.createElement("div");
-      recField.className = "field";
+      recField.className = "field recommendation-field";
       const recHeader = document.createElement("div");
       recHeader.className = "field-header";
       const recLabel = document.createElement("label");
@@ -2428,9 +2428,8 @@
       });
 
       const recControls = document.createElement("div");
-      recControls.className = "field-controls";
+      recControls.className = "field-controls recommendation-header-controls";
       recControls.appendChild(levelGroup);
-      recControls.appendChild(createPriorityControls(row, ws));
 
       const libraryGroup = createLibraryGroup(
         ws.libraryAction || "off",
@@ -2454,15 +2453,23 @@
       });
       requestAnimationFrame(() => autosizeTextarea(recommendationInput));
 
+      const priorityGroup = createPriorityControls(row, ws);
+      priorityGroup.classList.add("recommendation-priority");
+
       const recommendationControls = document.createElement("div");
       recommendationControls.className = "recommendation-controls";
       recommendationControls.appendChild(recControls);
       recommendationControls.appendChild(libraryGroup);
 
+      const recommendationBody = document.createElement("div");
+      recommendationBody.className = "recommendation-body";
+      recommendationBody.appendChild(recommendationInput);
+      recommendationBody.appendChild(priorityGroup);
+
       recHeader.appendChild(recLabel);
       recHeader.appendChild(recommendationControls);
       recField.appendChild(recHeader);
-      recField.appendChild(recommendationInput);
+      recField.appendChild(recommendationBody);
       return recField;
     };
 
