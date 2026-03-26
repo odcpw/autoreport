@@ -633,12 +633,33 @@
       return new Blob([bundledBytes], { type: mimeType });
     };
 
-    const writeBinaryFile = async (dirHandle, name, data) => {
-      const handle = await dirHandle.getFileHandle(name, { create: true });
-      const writable = await handle.createWritable();
-      await writable.write(data);
-      await writable.close();
-      return handle;
+    const isLikelyLockedFileError = (err) => {
+      const errorName = String(err?.name || "");
+      if (errorName === "NoModificationAllowedError") return true;
+      const message = String(err?.message || err || "").toLowerCase();
+      return [
+        "used by another process",
+        "being used by another process",
+        "cannot access the file",
+        "currently in use",
+        "file is locked",
+        "resource busy",
+      ].some((fragment) => message.includes(fragment));
+    };
+
+    const writeBinaryFile = async (dirHandle, name, data, label = name) => {
+      try {
+        const handle = await dirHandle.getFileHandle(name, { create: true });
+        const writable = await handle.createWritable();
+        await writable.write(data);
+        await writable.close();
+        return handle;
+      } catch (err) {
+        if (isLikelyLockedFileError(err)) {
+          throw new Error(`Could not write '${label}'. Close the file if it is open in Excel, then try again.`);
+        }
+        throw err;
+      }
     };
 
     const getOutputsDirectory = async (projectHandle) => {
@@ -1376,10 +1397,7 @@
       const baseName = jsonName.replace(/\.json$/i, "");
       const xlsxName = `${baseName}_${stamp}.xlsx`;
       const arrayBuffer = window.XLSX.write(workbook, { type: "array", bookType: "xlsx" });
-      const handle = await runtime.dirHandle.getFileHandle(xlsxName, { create: true });
-      const writable = await handle.createWritable();
-      await writable.write(arrayBuffer);
-      await writable.close();
+      await writeBinaryFile(runtime.dirHandle, xlsxName, arrayBuffer, xlsxName);
       setStatus(`Library Excel exported: ${xlsxName}`);
       debug.logLine("info", `Library Excel exported: ${xlsxName}`);
     };
@@ -1419,7 +1437,7 @@
         "Company",
       );
       const outName = `${stamp}-${companySlug}-${actionPlanOutputStem(locale)}.xlsx`;
-      await writeBinaryFile(outputsDir, outName, outputBytes);
+      await writeBinaryFile(outputsDir, outName, outputBytes, `outputs/${outName}`);
       debug.logLine("info", `Action plan exported: outputs/${outName}`);
       return { savedAs: `outputs/${outName}` };
     };

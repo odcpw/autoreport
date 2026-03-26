@@ -465,12 +465,33 @@
     );
   };
 
-  const writeFileHandle = async (dirHandle, name, data) => {
-    const handle = await dirHandle.getFileHandle(name, { create: true });
-    const writable = await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-    return handle;
+  const isLikelyLockedFileError = (err) => {
+    const errorName = String(err?.name || "");
+    if (errorName === "NoModificationAllowedError") return true;
+    const message = String(err?.message || err || "").toLowerCase();
+    return [
+      "used by another process",
+      "being used by another process",
+      "cannot access the file",
+      "currently in use",
+      "file is locked",
+      "resource busy",
+    ].some((fragment) => message.includes(fragment));
+  };
+
+  const writeFileHandle = async (dirHandle, name, data, label = name) => {
+    try {
+      const handle = await dirHandle.getFileHandle(name, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      return handle;
+    } catch (err) {
+      if (isLikelyLockedFileError(err)) {
+        throw new Error(`Could not write '${label}'. Close the file if it is open in PowerPoint, then try again.`);
+      }
+      throw err;
+    }
   };
 
   const blobToUint8 = async (blob) => new Uint8Array(await blob.arrayBuffer());
@@ -2025,7 +2046,7 @@
         : `${stamp}-${companySlug}-Bericht-Besprechung.pptx`
       : `${stamp}-${companySlug}-Seminar-Slides.pptx`;
 
-    await writeFileHandle(outputs, outName, outputBytes);
+    await writeFileHandle(outputs, outName, outputBytes, `outputs/${outName}`);
 
     return {
       savedAs: `outputs/${outName}`,

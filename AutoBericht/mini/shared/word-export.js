@@ -1011,12 +1011,33 @@
     return outputBlob;
   };
 
-  const writeFileHandle = async (dirHandle, name, data) => {
-    const handle = await dirHandle.getFileHandle(name, { create: true });
-    const writable = await handle.createWritable();
-    await writable.write(data);
-    await writable.close();
-    return handle;
+  const isLikelyLockedFileError = (err) => {
+    const errorName = String(err?.name || "");
+    if (errorName === "NoModificationAllowedError") return true;
+    const message = String(err?.message || err || "").toLowerCase();
+    return [
+      "used by another process",
+      "being used by another process",
+      "cannot access the file",
+      "currently in use",
+      "file is locked",
+      "resource busy",
+    ].some((fragment) => message.includes(fragment));
+  };
+
+  const writeFileHandle = async (dirHandle, name, data, label = name) => {
+    try {
+      const handle = await dirHandle.getFileHandle(name, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(data);
+      await writable.close();
+      return handle;
+    } catch (err) {
+      if (isLikelyLockedFileError(err)) {
+        throw new Error(`Could not write '${label}'. Close the file if it is open in Word, then try again.`);
+      }
+      throw err;
+    }
   };
 
   const pickLogoFile = async () => {
@@ -1357,7 +1378,7 @@
     const stamp = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}-${String(now.getDate()).padStart(2, "0")}`;
     const companySlug = toFileSafeSlug(project?.meta?.company || project?.meta?.projectName || "", "Company");
     const outputName = `${stamp}-${companySlug}-Bericht-Ist-Aufnahme.docx`;
-    await writeFileHandle(outputs, outputName, outputBytes);
+    await writeFileHandle(outputs, outputName, outputBytes, `outputs/${outputName}`);
 
     return {
       savedAs: `outputs/${outputName}`,
