@@ -905,53 +905,53 @@
       return rowEl;
     };
 
-    const shiftSheetRows = (sheetDoc, startRow, delta) => {
-      const start = Number(startRow);
-      const offset = Number(delta);
-      if (!Number.isFinite(start) || !Number.isFinite(offset) || !offset) return;
-      const rows = getSheetRows(sheetDoc)
-        .filter((row) => Number(row.getAttribute("r")) >= start)
-        .sort((a, b) => (
-          offset > 0
-            ? Number(b.getAttribute("r")) - Number(a.getAttribute("r"))
-            : Number(a.getAttribute("r")) - Number(b.getAttribute("r"))
-        ));
-      rows.forEach((row) => {
-        rewriteRowNumber(row, Number(row.getAttribute("r")) + offset);
-      });
-    };
-
-    const ensureReportRows = (sheetDoc, firstDataRow, currentLastDataRow, targetLastDataRow) => {
+    const rebuildReportRows = (sheetDoc, firstDataRow, currentLastDataRow, targetLastDataRow) => {
       const sheetData = getSheetDataNode(sheetDoc);
-      const rows = getSheetRows(sheetDoc);
-      const templateRow = rows.find((row) => Number(row.getAttribute("r")) === Number(firstDataRow));
-      if (!templateRow) throw new Error(`Template worksheet is missing data row ${firstDataRow}.`);
-
       const currentLast = Number(currentLastDataRow);
       const targetLast = Number(targetLastDataRow);
       if (!Number.isFinite(currentLast) || !Number.isFinite(targetLast)) {
         throw new Error("Invalid report table bounds.");
       }
 
-      if (targetLast > currentLast) {
-        shiftSheetRows(sheetDoc, currentLast + 1, targetLast - currentLast);
-        for (let rowNo = currentLast + 1; rowNo <= targetLast; rowNo += 1) {
-          const clone = cloneSheetRow(templateRow, rowNo);
-          if (!clone) continue;
-          insertSheetRowSorted(sheetDoc, clone);
-        }
-        return;
+      const rows = getSheetRows(sheetDoc);
+      const templateRows = rows
+        .filter((row) => {
+          const rowNo = Number(row.getAttribute("r"));
+          return rowNo >= Number(firstDataRow) && rowNo <= currentLast;
+        })
+        .sort((a, b) => Number(a.getAttribute("r")) - Number(b.getAttribute("r")));
+      if (!templateRows.length) {
+        throw new Error(`Template worksheet is missing data row ${firstDataRow}.`);
       }
 
-      if (targetLast < currentLast) {
-        getSheetRows(sheetDoc).forEach((row) => {
-          const rowNo = Number(row.getAttribute("r"));
-          if (rowNo > targetLast && rowNo <= currentLast) {
-            sheetData.removeChild(row);
-          }
-        });
-        shiftSheetRows(sheetDoc, currentLast + 1, targetLast - currentLast);
+      const genericTemplates = templateRows.length > 1 ? templateRows.slice(0, -1) : templateRows;
+      const finalTemplate = templateRows[templateRows.length - 1];
+      const delta = targetLast - currentLast;
+      const trailingRows = rows
+        .filter((row) => Number(row.getAttribute("r")) > currentLast)
+        .sort((a, b) => Number(a.getAttribute("r")) - Number(b.getAttribute("r")))
+        .map((row) => cloneSheetRow(row, Number(row.getAttribute("r")) + delta))
+        .filter(Boolean);
+
+      getSheetRows(sheetDoc).forEach((row) => {
+        if (Number(row.getAttribute("r")) >= Number(firstDataRow)) {
+          sheetData.removeChild(row);
+        }
+      });
+
+      for (let rowNo = Number(firstDataRow); rowNo <= targetLast; rowNo += 1) {
+        const offset = rowNo - Number(firstDataRow);
+        const templateRow = rowNo === targetLast
+          ? finalTemplate
+          : genericTemplates[Math.min(offset, genericTemplates.length - 1)];
+        const clone = cloneSheetRow(templateRow, rowNo);
+        if (!clone) continue;
+        insertSheetRowSorted(sheetDoc, clone);
       }
+
+      trailingRows.forEach((row) => {
+        insertSheetRowSorted(sheetDoc, row);
+      });
     };
 
     const updateSheetDimension = (sheetDoc, ref) => {
@@ -961,6 +961,30 @@
         sheetDoc.documentElement.insertBefore(dimension, sheetDoc.documentElement.firstChild);
       }
       dimension.setAttribute("ref", String(ref || "A1"));
+    };
+
+    const updateIgnoredErrorsRange = (sheetDoc, sqref) => {
+      const worksheet = sheetDoc.documentElement;
+      let ignoredErrors = getFirstChild(worksheet, "ignoredErrors");
+      if (!sqref) {
+        if (ignoredErrors?.parentNode === worksheet) {
+          worksheet.removeChild(ignoredErrors);
+        }
+        return;
+      }
+      if (!ignoredErrors) {
+        ignoredErrors = sheetDoc.createElementNS(XML_NS, "ignoredErrors");
+        const tableParts = getFirstChild(worksheet, "tableParts");
+        const beforeNode = tableParts || null;
+        worksheet.insertBefore(ignoredErrors, beforeNode);
+      }
+      Array.from(ignoredErrors.childNodes || []).forEach((child) => {
+        ignoredErrors.removeChild(child);
+      });
+      const ignoredError = sheetDoc.createElementNS(XML_NS, "ignoredError");
+      ignoredError.setAttribute("sqref", String(sqref));
+      ignoredError.setAttribute("numberStoredAsText", "1");
+      ignoredErrors.appendChild(ignoredError);
     };
 
     const resolveSheetParts = (templateMap) => {
@@ -1295,8 +1319,10 @@
       const reportRowCount = Math.max(sourceRows.length, 1);
       const lastReportRow = reportHeaderRow + reportRowCount;
 
-      ensureReportRows(reportDoc, reportFirstDataRow, currentLastReportRow, lastReportRow);
-      updateSheetDimension(reportDoc, `A1:${indexToColLetter(reportTableRange.end.col)}${getMaxSheetRowNumber(reportDoc)}`);
+      rebuildReportRows(reportDoc, reportFirstDataRow, currentLastReportRow, lastReportRow);
+      const maxReportSheetRow = getMaxSheetRowNumber(reportDoc);
+      updateSheetDimension(reportDoc, `A1:${indexToColLetter(reportTableRange.end.col)}${maxReportSheetRow}`);
+      updateIgnoredErrorsRange(reportDoc, `A1:${indexToColLetter(reportTableRange.end.col)}${maxReportSheetRow}`);
 
       const formulaStyleId = String(ensureSheetCell(reportDoc, reportFirstDataRow, "I").getAttribute("s") || "");
       for (let rowNo = reportFirstDataRow; rowNo <= lastReportRow; rowNo += 1) {
