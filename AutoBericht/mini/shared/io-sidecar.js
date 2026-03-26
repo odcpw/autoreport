@@ -333,6 +333,7 @@
       await ensureDir(rawDir, "pm2");
       await ensureDir(rawDir, "pm3");
       await ensureDir(photosDir, "resized");
+      await ensureDir(photosDir, "videos");
       await ensureDir(photosDir, "export");
       await copyBundledProjectTemplateToFolder(projectHandle, ensureDir, { overwrite: false });
     };

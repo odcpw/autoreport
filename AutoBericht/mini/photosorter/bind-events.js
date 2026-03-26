@@ -151,13 +151,23 @@
             resizeQuality: ctx.constants.RESIZE_QUALITY,
           });
           if (!result?.resizedHandle) return;
-          state.photoHandle = result.resizedHandle;
           state.photoRootName = result.photoRootName || "";
+          state.photoHandle = state.photoRootName && typeof ioApi.getDirectoryFromPath === "function"
+            ? await ioApi.getDirectoryFromPath(state.projectHandle, state.photoRootName)
+            : result.resizedHandle;
           if (state.projectDoc) {
             state.projectDoc.photoRoot = state.photoRootName;
           }
           await ioApi.saveProjectSidecar();
           await photosApi.scanPhotos();
+          const imported = Number(result.importedCount) || 0;
+          const skipped = Number(result.skippedCount) || 0;
+          const movedVideos = Number(result.movedVideoCount) || 0;
+          const parts = [];
+          parts.push(`Imported ${imported} photos`);
+          if (skipped > 0) parts.push(`skipped ${skipped} already present`);
+          if (movedVideos > 0) parts.push(`moved ${movedVideos} videos to photos/videos`);
+          setStatus(`${parts.join(", ")}.`);
         } catch (err) {
           setStatus(`Import failed: ${err.message}`);
         }

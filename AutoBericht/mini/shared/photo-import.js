@@ -1,4 +1,20 @@
 (() => {
+  const VIDEO_EXTENSIONS = new Set([
+    ".mov",
+    ".mp4",
+    ".m4v",
+    ".avi",
+    ".mkv",
+    ".mts",
+    ".m2ts",
+    ".mpeg",
+    ".mpg",
+    ".wmv",
+    ".3gp",
+    ".webm",
+    ".hevc",
+  ]);
+
   const getAscii = (view, offset, length) => {
     let out = "";
     for (let i = 0; i < length; i += 1) {
@@ -119,13 +135,15 @@
 
   const padSequence = (value) => String(value).padStart(4, "0");
 
-  const hasExistingResizedFiles = async (resizedHandle, isImageFile) => {
-    if (!resizedHandle?.values) return false;
+  const listImageFileNames = async (resizedHandle, isImageFile) => {
+    const names = new Set();
+    if (!resizedHandle?.values) return names;
     for await (const entry of resizedHandle.values()) {
       if (entry.kind !== "file") continue;
-      if (!isImageFile || isImageFile(entry.name)) return true;
+      if (isImageFile && !isImageFile(entry.name)) continue;
+      names.add(entry.name);
     }
-    return false;
+    return names;
   };
 
   const sortTasksByOwnerAndName = (tasks) => {
@@ -185,18 +203,45 @@
       throw new Error(`Raw folder names must be 3 chars: ${invalidFolders.join(", ")}`);
     }
     const tasks = [];
+    const videoTasks = [];
     for (const folder of folders) {
       for await (const entry of folder.values()) {
         if (entry.kind !== "file") continue;
-        if (!isImageFile(entry.name)) continue;
-        const file = await entry.getFile();
-        tasks.push({
+        if (isImageFile(entry.name)) {
+          const file = await entry.getFile();
+          tasks.push({
+            owner: folder.name,
+            file,
+          });
+          continue;
+        }
+        const lower = entry.name.toLowerCase();
+        const dot = lower.lastIndexOf(".");
+        const ext = dot === -1 ? "" : lower.slice(dot);
+        if (!VIDEO_EXTENSIONS.has(ext)) continue;
+        videoTasks.push({
           owner: folder.name,
-          file,
+          fileHandle: entry,
+          fileName: entry.name,
         });
       }
     }
-    return tasks;
+    return { imageTasks: tasks, videoTasks };
+  };
+
+  const buildImportPlan = async (tasks) => {
+    const counters = new Map();
+    const plan = [];
+    for (const task of tasks) {
+      const timestamp = formatTimestamp(await getPhotoTimestamp(task.file));
+      const counter = (counters.get(task.owner) || 0) + 1;
+      counters.set(task.owner, counter);
+      plan.push({
+        ...task,
+        filename: `${timestamp}_${task.owner}_${padSequence(counter)}.jpg`,
+      });
+    }
+    return plan;
   };
 
   const ensureResizedFolder = async (projectHandle, getNestedDirectory) => {
@@ -205,6 +250,14 @@
       || (await getNestedDirectory(projectHandle, ["Photos"], { create: true }));
     return getNestedDirectory(photosHandle, ["resized"], { create: true }).catch(async () =>
       getNestedDirectory(photosHandle, ["Resized"], { create: true }));
+  };
+
+  const ensureVideosFolder = async (projectHandle, getNestedDirectory) => {
+    const photosHandle =
+      (await getNestedDirectory(projectHandle, ["photos"], { create: true }).catch(() => null))
+      || (await getNestedDirectory(projectHandle, ["Photos"], { create: true }));
+    return getNestedDirectory(photosHandle, ["videos"], { create: true }).catch(async () =>
+      getNestedDirectory(photosHandle, ["Videos"], { create: true }));
   };
 
   const fileExists = async (dirHandle, name) => {
@@ -238,6 +291,22 @@
     return `${stem}-${Date.now()}${ext}`;
   };
 
+  const isStaleHandleError = (err) => /state cached in an interface object/i.test(String(err?.message || ""));
+
+  const withFreshDirectoryHandle = async (resolveHandle, action) => {
+    let lastErr = null;
+    for (let attempt = 0; attempt < 3; attempt += 1) {
+      const handle = await resolveHandle();
+      try {
+        return await action(handle);
+      } catch (err) {
+        if (!isStaleHandleError(err)) throw err;
+        lastErr = err;
+      }
+    }
+    throw lastErr || new Error("Directory handle refresh failed.");
+  };
+
   const getFileHandleFromPath = async (projectHandle, path) => {
     const parts = String(path || "")
       .split("/")
@@ -249,6 +318,29 @@
       current = await current.getDirectoryHandle(parts[i]);
     }
     return current.getFileHandle(parts[parts.length - 1]);
+  };
+
+  const moveRawVideos = async (projectHandle, getNestedDirectory, videoTasks = []) => {
+    if (!videoTasks.length) return 0;
+    const resolveVideosHandle = () => ensureVideosFolder(projectHandle, getNestedDirectory);
+    let movedCount = 0;
+    for (const task of videoTasks) {
+      const sourceFile = await task.fileHandle.getFile();
+      const prefixedName = `${String(task.owner || "").trim()}_${String(task.fileName || "").trim()}`;
+      await withFreshDirectoryHandle(resolveVideosHandle, async (videosHandle) => {
+        const safeName = await ensureUniqueFileName(videosHandle, prefixedName);
+        const target = await videosHandle.getFileHandle(safeName, { create: true });
+        const writable = await target.createWritable();
+        await writable.write(sourceFile);
+        await writable.close();
+      });
+      const raw = await findRawFolder(projectHandle, getNestedDirectory);
+      if (!raw) throw new Error("Missing photos/raw while moving videos.");
+      const ownerHandle = await getNestedDirectory(raw.handle, [task.owner]);
+      await ownerHandle.removeEntry(task.fileName);
+      movedCount += 1;
+    }
+    return movedCount;
   };
 
   const getPhotoFile = async (photo, projectHandle) => {
@@ -332,51 +424,80 @@
 
     const raw = await findRawFolder(projectHandle, getNestedDirectory);
     if (!raw) {
-      setStatus?.("Missing photos/raw. Expected photos/raw/pm1, pm2, pm3 folders.");
+      setStatus?.("Missing photos/raw. Expected 3-letter subfolders such as pm1, pm2, pm3 or abc.");
       return null;
     }
-    const tasks = await collectRawTasks(raw.handle, isImageFile);
-    if (!tasks.length) {
+    const { imageTasks, videoTasks } = await collectRawTasks(raw.handle, isImageFile);
+    const movedVideoCount = await moveRawVideos(projectHandle, getNestedDirectory, videoTasks);
+    if (!imageTasks.length) {
+      if (movedVideoCount > 0) {
+        return {
+          resizedHandle: await ensureResizedFolder(projectHandle, getNestedDirectory),
+          photoRootName: "photos/resized",
+          count: 0,
+          importedCount: 0,
+          skippedCount: 0,
+          movedVideoCount,
+        };
+      }
       setStatus?.("No raw images found.");
       return null;
     }
     const resizedHandle = await ensureResizedFolder(projectHandle, getNestedDirectory);
-    if (await hasExistingResizedFiles(resizedHandle, isImageFile)) {
-      setStatus?.("photos/resized is not empty. Clear it before importing to avoid breaking tags.");
-      return null;
-    }
-    const counters = new Map();
-    let completed = 0;
+    const resolveResizedHandle = () => ensureResizedFolder(projectHandle, getNestedDirectory);
 
-    const orderedTasks = sortTasksByOwnerAndName(tasks);
-    for (const task of orderedTasks) {
-      const timestamp = formatTimestamp(await getPhotoTimestamp(task.file));
-      let counter = (counters.get(task.owner) || 0) + 1;
-      let filename = "";
-      while (true) {
-        filename = `${timestamp}_${task.owner}_${padSequence(counter)}.jpg`;
-        if (!(await fileExists(resizedHandle, filename))) break;
-        counter += 1;
+    const orderedTasks = sortTasksByOwnerAndName(imageTasks);
+    const importPlan = await buildImportPlan(orderedTasks);
+    const expectedNames = new Set(importPlan.map((task) => task.filename));
+    const existingNames = await withFreshDirectoryHandle(
+      resolveResizedHandle,
+      (handle) => listImageFileNames(handle, isImageFile),
+    );
+    const unexpected = Array.from(existingNames).filter((name) => !expectedNames.has(name));
+    if (unexpected.length) {
+      throw new Error(
+        `photos/resized contains unrelated files. Resume only works for interrupted runs. `
+        + `Unexpected files: ${unexpected.slice(0, 8).join(", ")}${unexpected.length > 8 ? " ..." : ""}`,
+      );
+    }
+
+    let importedCount = 0;
+    let skippedCount = 0;
+    let processedCount = 0;
+
+    for (const task of importPlan) {
+      if (existingNames.has(task.filename)) {
+        skippedCount += 1;
+        processedCount += 1;
+        const pct = Math.round((processedCount / importPlan.length) * 100);
+        setStatus?.(`Importing photos ${processedCount}/${importPlan.length} (${pct}%) • skipped ${skippedCount}`);
+        continue;
       }
-      counters.set(task.owner, counter);
       const blob = await resizePhoto(task.file, resizeMax, resizeQuality);
       if (!blob) {
         throw new Error(`Failed to resize ${task.file.name}`);
       }
-      const handle = await resizedHandle.getFileHandle(filename, { create: true });
-      const writable = await handle.createWritable();
-      await writable.write(blob);
-      await writable.close();
+      await withFreshDirectoryHandle(resolveResizedHandle, async (handle) => {
+        const fileHandle = await handle.getFileHandle(task.filename, { create: true });
+        const writable = await fileHandle.createWritable();
+        await writable.write(blob);
+        await writable.close();
+      });
+      existingNames.add(task.filename);
 
-      completed += 1;
-      const pct = Math.round((completed / tasks.length) * 100);
-      setStatus?.(`Importing photos ${completed}/${tasks.length} (${pct}%)`);
+      importedCount += 1;
+      processedCount += 1;
+      const pct = Math.round((processedCount / importPlan.length) * 100);
+      setStatus?.(`Importing photos ${processedCount}/${importPlan.length} (${pct}%) • skipped ${skippedCount}`);
     }
 
     return {
-      resizedHandle,
+      resizedHandle: await resolveResizedHandle(),
       photoRootName: "photos/resized",
-      count: tasks.length,
+      count: importPlan.length,
+      importedCount,
+      skippedCount,
+      movedVideoCount,
     };
   };
 
