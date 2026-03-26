@@ -420,6 +420,7 @@ body {
 
 .recommendation-body textarea {
   min-width: 0;
+  grid-row: auto;
 }
 
 .recommendation-priority {
