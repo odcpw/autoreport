@@ -410,6 +410,33 @@
     return max + 1;
   };
 
+  const getObservationPhotoTagKeys = (doc) => {
+    const keys = new Set();
+    const photos = doc?.photos?.photos || {};
+    Object.values(photos).forEach((photo) => {
+      const tags = photo?.tags?.observations || [];
+      tags.forEach((tag) => {
+        const key = String(tag || "").trim();
+        if (key) keys.add(key);
+      });
+    });
+    return keys;
+  };
+
+  // Legacy sidecars are inconsistent here: some still use the original seed
+  // value as the observation key, others already carry a localized key because
+  // they were patched manually. Keep whichever key is actually referenced by
+  // the photo assignments today; once sidecars are migrated to a canonical
+  // observation-key schema, this branch can be removed entirely.
+  const resolveObservationStorageKey = (existingRow, option, usedKeys) => {
+    const existingKey = String(existingRow?.tag || "").trim();
+    if (existingKey && usedKeys.has(existingKey)) return existingKey;
+    if (usedKeys.has(option.value)) return option.value;
+    if (usedKeys.has(option.label)) return option.label;
+    if (existingKey) return existingKey;
+    return option.value;
+  };
+
   const syncObservationChapterRows = (project, doc) => {
     if (!project?.chapters) return;
     const chapter = project.chapters.find((item) => item.id === "4.8");
@@ -417,6 +444,7 @@
     const locale = project?.meta?.locale || "de-CH";
     const tagOptions = getObservationTagOptionsFromSidecar(doc);
     if (!tagOptions.length) return;
+    const usedKeys = getObservationPhotoTagKeys(doc);
 
     const existingRows = (chapter.rows || []).filter((row) => row.kind !== "section");
     let nextIndex = getNextObservationIndex(existingRows);
@@ -437,7 +465,7 @@
       const label = String(option?.label || value).trim() || value;
       const existing = byTag.get(value) || byTag.get(label);
       if (existing) {
-        existing.tag = value;
+        existing.tag = resolveObservationStorageKey(existing, { value, label }, usedKeys);
         existing.titleOverride = label;
         return existing;
       }
