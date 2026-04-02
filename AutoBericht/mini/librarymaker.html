@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>AutoBericht LibraryMaker</title>
+  <link rel="stylesheet" href="shared/ui.css" />
+  <link rel="stylesheet" href="librarymaker.css" />
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <div class="app-switcher">
+        <a class="app-switcher__item" href="./index.html">AutoBericht</a>
+        <a class="app-switcher__item" href="./photosorter.html">PhotoSorter</a>
+        <a class="app-switcher__item is-active" href="./librarymaker.html">LibraryMaker</a>
+      </div>
+      <div class="actions">
+        <button id="lm-open-project" type="button">Open Project Folder</button>
+        <button id="lm-load-source" type="button" disabled>Load Other Library</button>
+        <button id="lm-undo" type="button" class="ghost" disabled>Undo</button>
+        <button id="lm-redo" type="button" class="ghost" disabled>Redo</button>
+        <button id="lm-save" type="button" disabled>Save My Library</button>
+      </div>
+    </header>
+
+    <section class="status" id="status"></section>
+
+    <div class="lm-layout">
+      <aside class="lm-sidebar">
+        <h2>Chapters</h2>
+        <nav id="lm-chapter-list"></nav>
+      </aside>
+
+      <main class="lm-content">
+        <div class="lm-toolbar">
+          <div>
+            <h1 id="lm-title">LibraryMaker</h1>
+            <div class="lm-subtitle" id="lm-subtitle">Open a project folder to load your library.</div>
+          </div>
+          <div class="lm-save-state" id="lm-save-state">Idle</div>
+        </div>
+
+        <div class="lm-library-heads">
+          <section class="lm-library-head lm-library-head--mine">
+            <div class="lm-library-head__label">My Library</div>
+            <div class="lm-library-head__title" id="lm-target-name">Not loaded</div>
+            <div class="lm-library-head__meta" id="lm-target-meta"></div>
+          </section>
+          <section class="lm-library-head lm-library-head--other">
+            <div class="lm-library-head__label">Other Library</div>
+            <div class="lm-library-head__title" id="lm-source-name">Not loaded</div>
+            <div class="lm-library-head__meta" id="lm-source-meta"></div>
+          </section>
+        </div>
+
+        <div class="lm-empty" id="lm-empty"></div>
+        <div class="lm-rows" id="lm-rows"></div>
+      </main>
+    </div>
+
+    <div class="modal" id="first-run-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="first-run-title">
+        <div class="modal__header">
+          <h3 id="first-run-title">Select project folder</h3>
+        </div>
+        <div class="modal__body">
+          <p>Pick the current project folder. LibraryMaker edits the library file stored in that project.</p>
+          <div class="modal__actions">
+            <button id="first-run-pick" type="button">Open Project Folder</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal" id="library-choice-modal" aria-hidden="true">
+      <div class="modal__backdrop"></div>
+      <div class="modal__content" role="dialog" aria-modal="true" aria-labelledby="library-choice-title">
+        <div class="modal__header">
+          <h3 id="library-choice-title">Choose My Library</h3>
+        </div>
+        <div class="modal__body">
+          <p>The project folder contains multiple library files. Pick the one LibraryMaker should edit.</p>
+          <div class="library-list" id="lm-library-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="../shared/debug-log.js"></script>
+  <script src="shared/i18n.js"></script>
+  <script src="shared/fs-handle.js"></script>
+  <script src="shared/state.js"></script>
+  <script src="shared/normalize.js"></script>
+  <script src="shared/seeds.js"></script>
+  <script src="librarymaker.js"></script>
+</body>
+</html>

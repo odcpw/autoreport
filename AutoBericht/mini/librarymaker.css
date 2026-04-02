@@ -1,0 +1,265 @@
+body {
+  margin: 0;
+}
+
+.lm-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  min-height: calc(100vh - 102px);
+}
+
+.lm-sidebar {
+  border-right: 1px solid var(--ui-border);
+  background: #f2ede7;
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+  align-content: start;
+}
+
+.lm-sidebar h2 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+#lm-chapter-list {
+  display: grid;
+  gap: 6px;
+}
+
+#lm-chapter-list button {
+  width: 100%;
+  text-align: left;
+  background: #fff9f2;
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  color: var(--ui-text-strong);
+}
+
+#lm-chapter-list button.active {
+  background: var(--ui-accent);
+}
+
+.lm-content {
+  padding: 18px;
+  display: grid;
+  gap: 16px;
+  align-content: start;
+}
+
+.lm-toolbar {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.lm-toolbar h1 {
+  margin: 0;
+  font-size: 1.35rem;
+}
+
+.lm-subtitle,
+.lm-library-head__meta,
+.lm-save-state,
+.lm-empty {
+  color: #5b6570;
+  font-size: 0.9rem;
+}
+
+.lm-save-state {
+  min-width: 140px;
+  text-align: right;
+  padding-top: 4px;
+}
+
+.lm-library-heads {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.lm-library-head {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 16px;
+  padding: 14px 16px;
+  display: grid;
+  gap: 4px;
+}
+
+.lm-library-head__label {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #7b5d22;
+  font-weight: 700;
+}
+
+.lm-library-head__title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--ui-text-strong);
+}
+
+.lm-empty {
+  display: none;
+  padding: 24px;
+  border: 1px dashed var(--ui-border);
+  border-radius: 16px;
+  background: #fffaf4;
+}
+
+.lm-empty.is-visible {
+  display: block;
+}
+
+.lm-rows {
+  display: grid;
+  gap: 14px;
+}
+
+.lm-row {
+  background: var(--ui-surface);
+  border: 1px solid var(--ui-border);
+  border-radius: 18px;
+  padding: 16px;
+  display: grid;
+  gap: 14px;
+}
+
+.lm-row__header {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.lm-row__title {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  font-weight: 700;
+  color: var(--ui-text-strong);
+  min-width: 0;
+}
+
+.lm-row__title-text {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.lm-row__context {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+  color: #67727d;
+  font-size: 0.86rem;
+}
+
+.lm-row__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  background: transparent;
+  border: 2px solid #b8c5b1;
+  flex: 0 0 auto;
+}
+
+.lm-row__dot.is-touched {
+  background: #4ca66a;
+  border-color: #4ca66a;
+}
+
+.lm-row__badge {
+  border-radius: 999px;
+  background: #ecf0f3;
+  color: #52606d;
+  padding: 4px 8px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.lm-row__badge.is-new {
+  background: #e7f2ff;
+  color: #204e74;
+}
+
+.lm-field {
+  display: grid;
+  grid-template-columns: 1fr 96px 1fr;
+  gap: 12px;
+  align-items: stretch;
+}
+
+.lm-field__panel {
+  display: grid;
+  gap: 6px;
+}
+
+.lm-field__panel label {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #4f5d6a;
+}
+
+.lm-field textarea {
+  width: 100%;
+  min-height: 150px;
+  resize: vertical;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  padding: 12px;
+  font: inherit;
+  line-height: 1.45;
+  background: #fffefb;
+  color: var(--ui-text);
+}
+
+.lm-field textarea[readonly] {
+  background: #f7f3ee;
+}
+
+.lm-field__actions {
+  display: grid;
+  gap: 8px;
+  align-content: center;
+}
+
+.lm-field__actions button {
+  width: 100%;
+}
+
+@media (max-width: 1100px) {
+  .lm-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .lm-sidebar {
+    border-right: none;
+    border-bottom: 1px solid var(--ui-border);
+  }
+
+  #lm-chapter-list {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  }
+
+  .lm-library-heads,
+  .lm-field {
+    grid-template-columns: 1fr;
+  }
+
+  .lm-field__actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lm-save-state {
+    text-align: left;
+  }
+
+  .lm-toolbar,
+  .lm-row__header {
+    flex-direction: column;
+  }
+}

@@ -536,6 +536,31 @@
 
     const toFlatText = (value) => stateHelpers.toText(value).replace(/\r\n/g, "\n");
 
+    const normalizeObservationLibraryEntry = (entry) => {
+      const helper = normalizeHelpers?.normalizeObservationTagOption;
+      const option = typeof helper === "function"
+        ? helper(entry)
+        : normalizeTagOption(entry);
+      if (!option) return null;
+      return {
+        value: option.value,
+        label: option.label,
+        finding: toFlatText(entry?.finding || ""),
+        recommendation: toFlatText(entry?.recommendation || ""),
+      };
+    };
+
+    const buildObservationLibraryMap = (entries = []) => {
+      const map = new Map();
+      (entries || []).forEach((entry) => {
+        const normalized = normalizeObservationLibraryEntry(entry);
+        if (!normalized || map.has(normalized.value)) return;
+        map.set(normalized.value, normalized);
+        if (!map.has(normalized.label)) map.set(normalized.label, normalized);
+      });
+      return map;
+    };
+
     const getLocaleBase = (locale) => {
       const base = String(locale || "").toLowerCase().split("-")[0];
       return ["de", "fr", "it"].includes(base) ? base : "de";
@@ -1458,6 +1483,11 @@
       const reportTagRows = toTagRows(library.tags?.report || [], "report")
         .filter((tag) => !isObservationReportTag(tag.value));
       const observationTagRows = toTagRows(library.tags?.observations || [], "observations");
+      const observationLibraryRows = (library.library?.observations || [])
+        .map(normalizeObservationLibraryEntry)
+        .filter(Boolean)
+        .sort((a, b) => String(a.label || a.value || "")
+          .localeCompare(String(b.label || b.value || ""), localeBase, { numeric: true }));
       const trainingTagRows = toTagRows(library.tags?.training || [], "training")
         .sort((a, b) => a.label.localeCompare(b.label, localeBase, { numeric: true }));
 
@@ -1470,6 +1500,7 @@
       }]);
       appendSheet("Structure", structureRows);
       appendSheet("LibraryEntries", libraryRows);
+      appendSheet("Observations", observationLibraryRows);
       appendSheet("ChapterPositives", chapterPositiveRows);
       appendSheet("TagsReport", reportTagRows);
       appendSheet("TagsObservations", observationTagRows);
@@ -1550,8 +1581,27 @@
         return;
       }
 
-      const existingEntries = knowledgeBase.library?.entries || [];
+      let latestSidecar = runtime.sidecarDoc;
+      try {
+        const existingHandle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
+        const existingFile = await existingHandle.getFile();
+        latestSidecar = JSON.parse(await existingFile.text());
+      } catch (err) {
+        // Keep last loaded sidecar snapshot.
+      }
+
+      const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
+      const normalizedPhotoTags = photoTags ? seeds.normalizeTagGroups(photoTags) : null;
+      const localeBase = String(locale).toLowerCase().split("-")[0] || "de";
+      const observationTagOptions = sortTagOptionsAlpha(
+        normalizedPhotoTags?.observations || knowledgeBase.tags?.observations || [],
+        localeBase,
+      );
+
+      const existingEntries = (knowledgeBase.library?.entries || [])
+        .filter((entry) => !String(entry?.id || "").startsWith("4.8."));
       const entriesMap = new Map(existingEntries.map((entry) => [entry.id, entry]));
+      const observationEntriesMap = buildObservationLibraryMap(knowledgeBase.library?.observations || []);
       const existingChapterPositives = (
         knowledgeBase.library
         && typeof knowledgeBase.library.chapterPositives === "object"
@@ -1563,6 +1613,7 @@
       state.project.chapters.forEach((chapter) => {
         chapter.rows.forEach((row) => {
           if (row.kind === "section") return;
+          if (String(chapter?.id || "") === "4.8") return;
           normalizeHelpers.ensureWorkstateDefaults(row);
           const ws = row.workstate;
           const entry = entriesMap.get(row.id) || { id: row.id };
@@ -1642,7 +1693,7 @@
       });
 
       const output = structuredClone(knowledgeBase);
-      output.schemaVersion = output.schemaVersion || "1.0";
+      output.schemaVersion = "1.1";
       output.meta = {
         ...(output.meta || {}),
         author: state.project.meta.moderator || state.project.meta.author || "",
@@ -1659,6 +1710,64 @@
         const cleanEntry = structuredClone(entry);
         delete cleanEntry.lastUsed;
         return cleanEntry;
+      });
+      const observationChapter = state.project.chapters.find((chapter) => String(chapter?.id || "") === "4.8");
+      const observationRows = (observationChapter?.rows || []).filter((row) => row?.kind !== "section");
+      const observationRowByKey = new Map();
+      observationRows.forEach((row) => {
+        const keys = [row?.tag, row?.titleOverride];
+        keys.forEach((key) => {
+          const normalized = String(key || "").trim();
+          if (!normalized || observationRowByKey.has(normalized)) return;
+          observationRowByKey.set(normalized, row);
+        });
+      });
+      output.library.observations = observationTagOptions.map((option) => {
+        const existing = observationEntriesMap.get(option.value) || observationEntriesMap.get(option.label) || {
+          value: option.value,
+          label: option.label,
+          finding: "",
+          recommendation: "",
+        };
+        const next = {
+          value: option.value,
+          label: option.label,
+          finding: existing.finding || "",
+          recommendation: existing.recommendation || "",
+        };
+        const row = observationRowByKey.get(option.value) || observationRowByKey.get(option.label);
+        if (!row) return next;
+        normalizeHelpers.ensureWorkstateDefaults(row);
+        const ws = row.workstate || {};
+        const findingAction = String(ws.findingLibraryAction || "off").toLowerCase();
+        if (findingAction !== "off") {
+          const findingText = stateHelpers.getFindingText(row).trim();
+          if (findingText) {
+            if (findingAction === "replace") {
+              next.finding = findingText;
+            } else if (findingAction === "append") {
+              const existingFinding = String(next.finding || "").trim();
+              next.finding = existingFinding ? `${existingFinding}\n\n${findingText}` : findingText;
+            }
+            ws.findingLibraryHash = stateHelpers.hashText(findingText);
+            applied += 1;
+          }
+        }
+        const recommendationAction = String(ws.libraryAction || "off").toLowerCase();
+        if (recommendationAction !== "off") {
+          const recommendationText = stateHelpers.getRecommendationText(row).trim();
+          if (recommendationText) {
+            if (recommendationAction === "replace") {
+              next.recommendation = recommendationText;
+            } else if (recommendationAction === "append") {
+              const existingRecommendation = String(next.recommendation || "").trim();
+              next.recommendation = existingRecommendation ? `${existingRecommendation}\n\n${recommendationText}` : recommendationText;
+            }
+            ws.libraryHash = stateHelpers.hashText(recommendationText);
+            applied += 1;
+          }
+        }
+        return next;
       });
       output.library.chapterPositives = Object.fromEntries(
         Object.entries(existingChapterPositives).map(([chapterId, value]) => [
@@ -1694,27 +1803,15 @@
 
       const applyObservationTagOrder = () => {
         if (!Array.isArray(output.tags?.observations)) return;
-        const localeBase = String(state.project?.meta?.locale || "de-CH").toLowerCase().split("-")[0] || "de";
         output.tags.observations = sortTagOptionsAlpha(output.tags.observations, localeBase);
       };
-
-      let latestSidecar = runtime.sidecarDoc;
-      try {
-        const existingHandle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
-        const existingFile = await existingHandle.getFile();
-        latestSidecar = JSON.parse(await existingFile.text());
-      } catch (err) {
-        // Keep last loaded sidecar snapshot.
-      }
-      const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
       if (photoTags) {
-        const normalizedTags = seeds.normalizeTagGroups(photoTags);
-        output.tags.report = (normalizedTags.report || output.tags.report || [])
+        output.tags.report = (normalizedPhotoTags.report || output.tags.report || [])
           .map(normalizeTagOption)
           .filter(Boolean)
           .filter((tag) => !isObservationReportTag(tag.value));
-        output.tags.observations = normalizedTags.observations || output.tags.observations || [];
-        output.tags.training = normalizedTags.training || output.tags.training || [];
+        output.tags.observations = normalizedPhotoTags.observations || output.tags.observations || [];
+        output.tags.training = normalizedPhotoTags.training || output.tags.training || [];
       }
 
       applySummaryOrder();

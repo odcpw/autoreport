@@ -125,10 +125,46 @@
     return new Map(entries.map((entry) => [entry.id, entry]));
   };
 
+  const normalizeObservationTagOption = (option) => {
+    if (!option) return null;
+    if (typeof option === "string") {
+      const value = String(option || "").trim();
+      if (!value) return null;
+      return { value, label: value };
+    }
+    const helper = normalizeHelpers?.normalizeObservationTagOption;
+    if (typeof helper === "function") return helper(option);
+    const value = String(option.value || option.label || "").trim();
+    if (!value) return null;
+    const label = String(option.label || value).trim() || value;
+    return { value, label };
+  };
+
+  const buildObservationLibraryMap = (knowledgeBase) => {
+    const entries = Array.isArray(knowledgeBase?.library?.observations)
+      ? knowledgeBase.library.observations
+      : [];
+    const map = new Map();
+    entries.forEach((entry) => {
+      const option = normalizeObservationTagOption(entry);
+      if (!option || map.has(option.value)) return;
+      const normalized = {
+        value: option.value,
+        label: option.label,
+        finding: toText(entry?.finding || ""),
+        recommendation: toText(entry?.recommendation || ""),
+      };
+      map.set(option.value, normalized);
+      if (!map.has(option.label)) map.set(option.label, normalized);
+    });
+    return map;
+  };
+
   const buildProjectFromKnowledgeBase = (knowledgeBase) => {
     validateKnowledgeBase(knowledgeBase);
     const locale = knowledgeBase?.meta?.locale || "de-CH";
     const libraryMap = buildLibraryMap(knowledgeBase);
+    const observationLibraryMap = buildObservationLibraryMap(knowledgeBase);
     const chapterPositivesMap = knowledgeBase?.library?.chapterPositives;
     const getChapterPositivesText = (chapterId) => {
       if (!chapterPositivesMap || typeof chapterPositivesMap !== "object" || Array.isArray(chapterPositivesMap)) return "";
@@ -243,27 +279,37 @@
     const needObsRows = !obsChapterExisting || (obsChapterExisting.rows || []).length === 0;
     let obsChapter = obsChapterExisting;
     if (needObsRows && obsTags.length) {
-      const obsRows = obsTags.map((tag, idx) => ({
-        id: `4.8.${idx + 1}`,
-        type: "field_observation",
-        sectionId: "4.8",
-        sectionLabel: getObservationSectionLabel(locale),
-        titleOverride: tag.label || tag.value || `4.8.${idx + 1}`,
-        master: null,
-        customer: { answer: null, remark: "", items: [] },
-        workstate: {
-          selectedLevel: 1,
-          includeFinding: false,
-          includeRecommendation: true,
-          done: false,
-          findingText: getObservationFindingText(locale),
-          recommendationText: "",
-          findingLibraryAction: "off",
-          findingLibraryHash: "",
-          libraryAction: "off",
-          libraryHash: "",
-        },
-      }));
+      const obsRows = obsTags.map((tag, idx) => {
+        const option = normalizeObservationTagOption(tag) || { value: String(tag || "").trim(), label: String(tag || "").trim() };
+        const observationEntry = observationLibraryMap.get(option.value)
+          || observationLibraryMap.get(option.label)
+          || null;
+        return {
+          id: `4.8.${idx + 1}`,
+          type: "field_observation",
+          tag: option.value,
+          sectionId: "4.8",
+          sectionLabel: getObservationSectionLabel(locale),
+          titleOverride: option.label || `4.8.${idx + 1}`,
+          master: {
+            finding: observationEntry?.finding || getObservationFindingText(locale),
+            recommendation: observationEntry?.recommendation || "",
+          },
+          customer: { answer: null, remark: "", items: [] },
+          workstate: {
+            selectedLevel: 1,
+            includeFinding: false,
+            includeRecommendation: true,
+            done: false,
+            findingText: observationEntry?.finding || getObservationFindingText(locale),
+            recommendationText: observationEntry?.recommendation || "",
+            findingLibraryAction: "off",
+            findingLibraryHash: "",
+            libraryAction: "off",
+            libraryHash: "",
+          },
+        };
+      });
       obsChapter = obsChapterExisting || {
         id: "4.8",
         title: {
@@ -335,6 +381,7 @@
     normalizeTagGroups,
     validateKnowledgeBase,
     buildLibraryMap,
+    buildObservationLibraryMap,
     buildProjectFromKnowledgeBase,
     loadSeedsForProject,
   };
