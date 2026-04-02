@@ -1427,7 +1427,6 @@
           entryId: entry?.id || "",
           finding: toFlatText(entry?.finding || ""),
           recommendation: toFlatText(entry?.recommendation || ""),
-          lastUsed: entry?.lastUsed || "",
         }))
         .sort((a, b) => compareIds(a.entryId, b.entryId));
 
@@ -1437,13 +1436,11 @@
             return {
               chapterId,
               text: toFlatText(value),
-              lastUsed: "",
             };
           }
           return {
             chapterId,
             text: toFlatText(value?.text || ""),
-            lastUsed: value?.lastUsed || "",
           };
         })
         .sort((a, b) => compareIds(a.chapterId, b.chapterId));
@@ -1561,7 +1558,6 @@
         && !Array.isArray(knowledgeBase.library.chapterPositives)
       ) ? structuredClone(knowledgeBase.library.chapterPositives) : {};
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
-      const lastUsedAt = new Date().toISOString();
       let applied = 0;
 
       state.project.chapters.forEach((chapter) => {
@@ -1612,7 +1608,6 @@
             entry.finding = row.master.finding;
           }
           if (rowApplied) {
-            entry.lastUsed = lastUsedAt;
             entriesMap.set(row.id, entry);
             applied += 1;
           } else if (!entriesMap.has(row.id) && (entry.finding != null || entry.recommendation != null)) {
@@ -1641,10 +1636,7 @@
           const existing = previousText.trim();
           nextText = existing ? `${existing}\n\n${text}` : text;
         }
-        existingChapterPositives[chapterId] = {
-          text: nextText,
-          lastUsed: lastUsedAt,
-        };
+        existingChapterPositives[chapterId] = nextText;
         chapterMeta.positivesLibraryHash = currentHash;
         applied += 1;
       });
@@ -1663,8 +1655,17 @@
         updatedAt: new Date().toISOString(),
       };
       output.library = output.library || { entries: [] };
-      output.library.entries = Array.from(entriesMap.values());
-      output.library.chapterPositives = existingChapterPositives;
+      output.library.entries = Array.from(entriesMap.values()).map((entry) => {
+        const cleanEntry = structuredClone(entry);
+        delete cleanEntry.lastUsed;
+        return cleanEntry;
+      });
+      output.library.chapterPositives = Object.fromEntries(
+        Object.entries(existingChapterPositives).map(([chapterId, value]) => [
+          chapterId,
+          typeof value === "string" ? value : stateHelpers.toText(value?.text),
+        ]),
+      );
       output.tags = output.tags || { report: [], observations: [], training: [] };
 
       const applySummaryOrder = () => {
