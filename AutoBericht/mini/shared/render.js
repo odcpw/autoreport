@@ -673,11 +673,15 @@
     };
 
     const getObservationTagLabel = (row) => (
+      String(row?.titleOverride || row?.tag || row?.id || "").trim()
+    );
+
+    const getObservationMatchTag = (row) => (
       String(row?.tag || row?.titleOverride || row?.id || "").trim()
     );
 
     const getObservationPhotoCount = (row) => {
-      const tag = getObservationTagLabel(row);
+      const tag = getObservationMatchTag(row);
       if (!tag) return 0;
       return getPhotosForTag(tag, "observations").length;
     };

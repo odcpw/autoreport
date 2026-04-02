@@ -341,13 +341,34 @@
     .replace(/[^a-z0-9]+/gi, "-")
     .replace(/^-+|-+$/g, "") || "tag";
 
-  const getObservationTagsFromSidecar = (doc) => {
+  const normalizeObservationTagOption = (option) => {
+    if (!option) return null;
+    if (typeof option === "string") {
+      const value = String(option || "").trim();
+      if (!value) return null;
+      return { value, label: value };
+    }
+    if (typeof option === "object") {
+      const value = String(option.value || option.label || "").trim();
+      if (!value) return null;
+      const label = String(option.label || value).trim() || value;
+      return { value, label };
+    }
+    return null;
+  };
+
+  const getObservationTagOptionsFromSidecar = (doc) => {
     const options = doc?.photos?.photoTagOptions?.observations || [];
     return options
-      .map((opt) => (typeof opt === "string" ? opt : opt.value || opt.label))
-      .map((val) => String(val || "").trim())
+      .map(normalizeObservationTagOption)
       .filter(Boolean)
-      .sort((a, b) => a.localeCompare(b, "de", { numeric: true }));
+      .sort((a, b) => String(a.label || a.value || "").localeCompare(String(b.label || b.value || ""), "de", { numeric: true }));
+  };
+
+  const getObservationTagsFromSidecar = (doc) => {
+    return getObservationTagOptionsFromSidecar(doc)
+      .map((option) => option.value)
+      .filter(Boolean);
   };
 
   const buildObservationRow = (tag, idOverride = "") => ({
@@ -394,36 +415,43 @@
     const chapter = project.chapters.find((item) => item.id === "4.8");
     if (!chapter) return;
     const locale = project?.meta?.locale || "de-CH";
-    const tags = getObservationTagsFromSidecar(doc);
-    if (!tags.length) return;
+    const tagOptions = getObservationTagOptionsFromSidecar(doc);
+    if (!tagOptions.length) return;
 
     const existingRows = (chapter.rows || []).filter((row) => row.kind !== "section");
     let nextIndex = getNextObservationIndex(existingRows);
     const byTag = new Map();
+    const registerRow = (key, row) => {
+      const normalized = String(key || "").trim();
+      if (!normalized || byTag.has(normalized)) return;
+      byTag.set(normalized, row);
+    };
     existingRows.forEach((row) => {
-      const tag = row.tag || row.titleOverride;
-      if (tag) {
-        row.tag = tag;
-        row.titleOverride = tag;
-        byTag.set(tag, row);
-      }
+      registerRow(row?.tag, row);
+      registerRow(row?.titleOverride, row);
     });
 
-    const nextRows = tags.map((tag) => {
-      const existing = byTag.get(tag);
+    const nextRows = tagOptions.map((option) => {
+      const value = String(option?.value || "").trim();
+      if (!value) return null;
+      const label = String(option?.label || value).trim() || value;
+      const existing = byTag.get(value) || byTag.get(label);
       if (existing) {
-        existing.titleOverride = tag;
+        existing.tag = value;
+        existing.titleOverride = label;
         return existing;
       }
       const rowId = `4.8.${nextIndex}`;
       nextIndex += 1;
-      const row = buildObservationRow(tag, rowId);
+      const row = buildObservationRow(value, rowId);
+      row.tag = value;
+      row.titleOverride = label;
       row.sectionId = "4.8";
       row.sectionLabel = getObservationSectionLabel(locale);
       row.master.finding = getObservationFindingText(locale);
       row.workstate.findingText = getObservationFindingText(locale);
       return row;
-    });
+    }).filter(Boolean);
 
     if (!chapter.meta) chapter.meta = {};
     if (!Array.isArray(chapter.meta.order)) {
@@ -476,6 +504,8 @@
     ensureManagementSummaryChapter,
     normalizeProject,
     slugifyTag,
+    normalizeObservationTagOption,
+    getObservationTagOptionsFromSidecar,
     getObservationTagsFromSidecar,
     buildObservationRow,
     syncObservationChapterRows,
