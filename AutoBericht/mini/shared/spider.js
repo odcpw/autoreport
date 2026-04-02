@@ -88,6 +88,38 @@
     return 0;
   };
 
+  const pctFromAnswerValue = (answer) => {
+    if (answer === 1 || answer === "1" || answer === true) return 100;
+    if (answer === 0 || answer === "0" || answer === false) return 0;
+    return null;
+  };
+
+  const getWeightedContributions = (row, itemWeights, consultantPct) => {
+    const directId = String(row?.id || "");
+    const directWeight = itemWeights.get(directId);
+    const itemContributions = [];
+    const items = Array.isArray(row?.customer?.items) ? row.customer.items : [];
+
+    items.forEach((item) => {
+      const itemId = String(item?.id || "");
+      const weight = itemWeights.get(itemId);
+      if (!weight || Number.isNaN(weight)) return;
+      itemContributions.push({
+        weight,
+        companyPct: pctFromAnswerValue(item?.answer) ?? 0,
+        consultantPct,
+      });
+    });
+
+    if (itemContributions.length) return itemContributions;
+    if (!directWeight || Number.isNaN(directWeight)) return [];
+    return [{
+      weight: directWeight,
+      companyPct: pctFromCustomer(row),
+      consultantPct,
+    }];
+  };
+
   const computeChapterScores = (project, weights) => {
     const totals = new Map(); // chapter -> {wSum, compSum, consSum}
     const itemWeights = new Map((weights.items || []).map((it) => [String(it.id), Number(it.weight || 0)]));
@@ -96,23 +128,24 @@
         if (row.kind === "section") return;
         if (row.type === "field_observation" || String(row.id || "").startsWith("4.8")) return;
         const id = String(row.id || "");
-        const weight = itemWeights.get(id);
-        if (!weight || Number.isNaN(weight)) return;
         const chapterId = id.split(".")[0];
         const chapterTitle = (() => {
           if (row.sectionLabel) return row.sectionLabel;
           if (chapter.title?.de) return `${chapterId}. ${chapter.title.de}`;
           return chapterId;
         })();
-        const consPct = (() => {
+        const consultantPct = (() => {
           const ws = row.workstate || {};
           return LEVEL_TO_PCT(ws.selectedLevel || 1);
         })();
-        const compPct = pctFromCustomer(row);
+        const contributions = getWeightedContributions(row, itemWeights, consultantPct);
+        if (!contributions.length) return;
         const acc = totals.get(chapterId) || { w: 0, comp: 0, cons: 0, title: chapterTitle };
-        acc.w += weight;
-        acc.comp += weight * compPct;
-        acc.cons += weight * consPct;
+        contributions.forEach((contribution) => {
+          acc.w += contribution.weight;
+          acc.comp += contribution.weight * contribution.companyPct;
+          acc.cons += contribution.weight * contribution.consultantPct;
+        });
         if (!acc.title && chapterTitle) acc.title = chapterTitle;
         totals.set(chapterId, acc);
       });
