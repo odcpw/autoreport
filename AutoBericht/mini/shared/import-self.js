@@ -48,9 +48,16 @@
       }) || workbook.SheetNames[0];
       const sheet = workbook.Sheets[sheetName];
       const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
-      const headerRowIndex = rows.findIndex((row) => String(row[0] || "").toLowerCase().includes("nr"));
+      const normalizeHeaderCell = (value) => String(value || "")
+        .trim()
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+      const headerRowIndex = rows.findIndex((row) => {
+        const token = normalizeHeaderCell(row[0]);
+        return token === "nr" || token === "n" || token === "no";
+      });
       const headerRow = headerRowIndex >= 0 ? rows[headerRowIndex] : [];
-      const findCol = (label) => headerRow.findIndex((cell) => String(cell || "").toLowerCase().includes(label));
+      const findCol = (label) => headerRow.findIndex((cell) => normalizeHeaderCell(cell).includes(label));
       const pickCol = (...labels) => {
         for (const label of labels) {
           const idx = findCol(label);
@@ -58,14 +65,23 @@
         }
         return -1;
       };
-      const colId = headerRowIndex >= 0 ? findCol("nr") : 0;
+      const colId = 0;
       const colQuestion = headerRowIndex >= 0 ? (() => {
         const idx = pickCol("frage", "question", "domanda");
-        return idx >= 0 ? idx : -1;
-      })() : -1;
-      const colYes = headerRowIndex >= 0 ? findCol("ja") : 3;
-      const colNo = headerRowIndex >= 0 ? findCol("nein") : 4;
-      const colComment = headerRowIndex >= 0 ? findCol("bemerk") : 5;
+        return idx >= 0 ? idx : 2;
+      })() : 2;
+      const colYes = headerRowIndex >= 0 ? (() => {
+        const idx = pickCol("ja", "oui", "si");
+        return idx >= 0 ? idx : 3;
+      })() : 3;
+      const colNo = headerRowIndex >= 0 ? (() => {
+        const idx = pickCol("nein", "non", "no");
+        return idx >= 0 ? idx : 4;
+      })() : 4;
+      const colComment = headerRowIndex >= 0 ? (() => {
+        const idx = pickCol("bemerk", "remarque", "osserv");
+        return idx >= 0 ? idx : 5;
+      })() : 5;
       const colEvidence = headerRowIndex >= 0
         ? pickCol("nachweis", "beleg", "evidence", "document")
         : -1;
@@ -83,8 +99,14 @@
         const comment = String(row[colComment] || "").trim();
         const evidence = colEvidence >= 0 ? String(row[colEvidence] || "").trim() : "";
         let answer = null;
-        if (yesVal === "x" || yesVal === "ja") answer = 1;
-        if (noVal === "x" || noVal === "nein") answer = 0;
+        // Match the workbook's own Analyse formulas: a marked "Oui/Ja" cell wins.
+        // Some customer workbooks contain both markers, and treating "Non" as the
+        // last writer corrupts imported answers compared to Excel's calculations.
+        if (yesVal === "x" || yesVal === "ja") {
+          answer = 1;
+        } else if (noVal === "x" || noVal === "nein") {
+          answer = 0;
+        }
         answerMap.set(normalized, {
           originalId: rawId,
           question,

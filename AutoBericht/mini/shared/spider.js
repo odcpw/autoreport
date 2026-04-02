@@ -69,6 +69,84 @@
     return out;
   };
 
+  const normalizeWeightId = (raw) => String(raw || "")
+    .trim()
+    .toLowerCase()
+    .replace(/\s+/g, "")
+    .replace(/\.+$/g, "");
+
+  // Legacy self-assessment imports keep workbook leaf ids on `originalId`.
+  // Newer sidecars may only have the collapsed project row ids. Keep lookup permissive.
+  const buildWeightLookup = (weights) => {
+    const map = new Map();
+    (weights?.items || []).forEach((item) => {
+      const id = String(item?.id || "");
+      const weight = Number(item?.weight || 0);
+      const normalized = normalizeWeightId(id);
+      if (normalized) map.set(normalized, weight);
+      const collapsed = normalized.replace(/\./g, "");
+      if (collapsed) map.set(collapsed, weight);
+    });
+    return map;
+  };
+
+  // These row-level overrides mirror the workbook Analyse formulas where some
+  // project rows collapse multiple workbook leaves into one report row.
+  const ROW_RULES = {
+    "2.1.1": { mode: "max" },
+    "2.1.4": { mode: "max" },
+    "5.1.1": { mode: "max" },
+    "2.2.4": {
+      mode: "sum",
+      maxGroups: [
+        ["2.2.1.4.c", "2.2.1.4.d"],
+      ],
+    },
+  };
+
+  const REVERSE_SCORE_IDS = (() => {
+    const ids = [
+      "5.4.6",
+      "9.1.4",
+      "9.1.5",
+      "9.1.6",
+      "9.2.1",
+      "9.2.2",
+      "9.2.3",
+      "9.2.4",
+      "9.2.5.a",
+      "9.2.5.b",
+      "9.2.5.c",
+      "9.2.5.d",
+      "9.5.4",
+      "9.5.5",
+      "9.5.6",
+      "9.5.7",
+      "9.7.1.c",
+      "9.7.1.e",
+      "9.8.1",
+      "9.8.2",
+      "9.9.1",
+      "9.9.3",
+      "9.9.5",
+    ];
+    for (let code = "a".charCodeAt(0); code <= "z".charCodeAt(0); code += 1) {
+      ids.push(`9.3.1.${String.fromCharCode(code)}`);
+    }
+    for (let code = "a".charCodeAt(0); code <= "o".charCodeAt(0); code += 1) {
+      ids.push(`9.4.1.${String.fromCharCode(code)}`);
+    }
+    return new Set(ids.map((id) => normalizeWeightId(id)));
+  })();
+
+  // The Selbstbeurteilung workbook's Analyse sheet contains a small set of
+  // reverse-scored questions, encoded as `(1-answer) * weight`. Keep that
+  // mapping explicit here until the project data model carries row polarity.
+  const applyScoreDirection = (pct, rawId) => {
+    if (pct == null) return pct;
+    return REVERSE_SCORE_IDS.has(normalizeWeightId(rawId)) ? 100 - pct : pct;
+  };
+
   const pctFromCustomer = (row) => {
     // Prefer row.customer.answer, else average of customer.items[*].answer
     const ans = row?.customer?.answer;
@@ -94,61 +172,170 @@
     return null;
   };
 
-  const getWeightedContributions = (row, itemWeights, consultantPct) => {
-    const directId = String(row?.id || "");
-    const directWeight = itemWeights.get(directId);
-    const itemContributions = [];
-    const items = Array.isArray(row?.customer?.items) ? row.customer.items : [];
+  const getRowRule = (rowId) => ROW_RULES[String(rowId || "")] || { mode: "sum" };
 
-    items.forEach((item) => {
-      const itemId = String(item?.id || "");
-      const weight = itemWeights.get(itemId);
-      if (!weight || Number.isNaN(weight)) return;
-      itemContributions.push({
-        weight,
-        companyPct: pctFromAnswerValue(item?.answer) ?? 0,
-        consultantPct,
-      });
-    });
-
-    if (itemContributions.length) return itemContributions;
-    if (!directWeight || Number.isNaN(directWeight)) return [];
-    return [{
-      weight: directWeight,
-      companyPct: pctFromCustomer(row),
-      consultantPct,
-    }];
+  const getWeightForId = (weightLookup, rawId) => {
+    const normalized = normalizeWeightId(rawId);
+    if (!normalized) return null;
+    if (weightLookup.has(normalized)) return weightLookup.get(normalized);
+    const collapsed = normalized.replace(/\./g, "");
+    if (weightLookup.has(collapsed)) return weightLookup.get(collapsed);
+    return null;
   };
 
-  const computeChapterScores = (project, weights) => {
-    const totals = new Map(); // chapter -> {wSum, compSum, consSum}
-    const itemWeights = new Map((weights.items || []).map((it) => [String(it.id), Number(it.weight || 0)]));
-    (project?.chapters || []).forEach((chapter) => {
-      (chapter.rows || []).forEach((row) => {
-        if (row.kind === "section") return;
-        if (row.type === "field_observation" || String(row.id || "").startsWith("4.8")) return;
-        const id = String(row.id || "");
-        const chapterId = id.split(".")[0];
-        const chapterTitle = (() => {
-          if (row.sectionLabel) return row.sectionLabel;
-          if (chapter.title?.de) return `${chapterId}. ${chapter.title.de}`;
-          return chapterId;
-        })();
-        const consultantPct = (() => {
-          const ws = row.workstate || {};
-          return LEVEL_TO_PCT(ws.selectedLevel || 1);
-        })();
-        const contributions = getWeightedContributions(row, itemWeights, consultantPct);
-        if (!contributions.length) return;
-        const acc = totals.get(chapterId) || { w: 0, comp: 0, cons: 0, title: chapterTitle };
-        contributions.forEach((contribution) => {
-          acc.w += contribution.weight;
-          acc.comp += contribution.weight * contribution.companyPct;
-          acc.cons += contribution.weight * contribution.consultantPct;
-        });
-        if (!acc.title && chapterTitle) acc.title = chapterTitle;
-        totals.set(chapterId, acc);
+  const collapseMaxGroups = (contributions, rule) => {
+    const groups = Array.isArray(rule?.maxGroups) ? rule.maxGroups : [];
+    if (!groups.length) return contributions;
+    const used = new Set();
+    const out = [];
+    groups.forEach((ids) => {
+      const normalizedIds = new Set((ids || []).map((id) => normalizeWeightId(id)));
+      const matches = contributions.filter((entry) => normalizedIds.has(entry.key));
+      matches.forEach((entry) => used.add(entry));
+      if (!matches.length) return;
+      out.push({
+        key: [...normalizedIds].join("|"),
+        weight: Math.max(...matches.map((entry) => entry.weight)),
+        companyScore: Math.max(...matches.map((entry) => entry.companyScore)),
+        consultantScore: Math.max(...matches.map((entry) => entry.consultantScore)),
       });
+    });
+    contributions.forEach((entry) => {
+      if (!used.has(entry)) out.push(entry);
+    });
+    return out;
+  };
+
+  const getRowContribution = (row, weightLookup) => {
+    const consultantPct = (() => {
+      const ws = row?.workstate || {};
+      return LEVEL_TO_PCT(ws.selectedLevel || 1);
+    })();
+    const items = Array.isArray(row?.customer?.items) ? row.customer.items : [];
+    const contributions = items.flatMap((item) => {
+      const rawId = item?.originalId || item?.id;
+      const weight = getWeightForId(weightLookup, rawId);
+      const companyPct = applyScoreDirection(pctFromAnswerValue(item?.answer), rawId);
+      if (!Number.isFinite(weight) || companyPct == null) return [];
+      const adjustedConsultantPct = applyScoreDirection(consultantPct, rawId);
+      return [{
+        key: normalizeWeightId(rawId),
+        weight,
+        companyScore: weight * companyPct,
+        consultantScore: weight * adjustedConsultantPct,
+      }];
+    });
+    const rule = getRowRule(row?.id);
+    const collapsed = collapseMaxGroups(contributions, rule);
+    if (collapsed.length) {
+      if (rule.mode === "max") {
+        const weight = Math.max(...collapsed.map((entry) => entry.weight));
+        return {
+          weight,
+          companyScore: Math.max(...collapsed.map((entry) => entry.companyScore)),
+          consultantScore: Math.max(...collapsed.map((entry) => entry.consultantScore)),
+        };
+      }
+      return collapsed.reduce((acc, entry) => ({
+        weight: acc.weight + entry.weight,
+        companyScore: acc.companyScore + entry.companyScore,
+        consultantScore: acc.consultantScore + entry.consultantScore,
+      }), { weight: 0, companyScore: 0, consultantScore: 0 });
+    }
+
+    const directWeight = getWeightForId(weightLookup, row?.id);
+    if (!Number.isFinite(directWeight) || directWeight <= 0) return null;
+    const adjustedCompanyPct = applyScoreDirection(pctFromCustomer(row), row?.id);
+    const adjustedConsultantPct = applyScoreDirection(consultantPct, row?.id);
+    return {
+      weight: directWeight,
+      companyScore: directWeight * adjustedCompanyPct,
+      consultantScore: directWeight * adjustedConsultantPct,
+    };
+  };
+
+  const chapterDisplayLabel = (chapter) => {
+    const titleObj = chapter?.title;
+    if (titleObj && typeof titleObj === "object") {
+      const values = Object.values(titleObj).filter((value) => typeof value === "string" && value.trim());
+      if (values.length) return values[0].trim();
+    }
+    return String(chapter?.id || "");
+  };
+
+  const buildSections = (chapter) => {
+    const sections = [];
+    let current = null;
+    (chapter?.rows || []).forEach((row) => {
+      if (row?.kind === "section") {
+        current = { id: String(row.id || ""), rows: [] };
+        sections.push(current);
+        return;
+      }
+      if (!current) {
+        current = { id: null, rows: [] };
+        sections.push(current);
+      }
+      current.rows.push(row);
+    });
+    return sections;
+  };
+
+  const sumRowContributions = (rows, weightLookup) => rows.reduce((acc, row) => {
+    if (row?.type === "field_observation" || String(row?.id || "").startsWith("4.8")) return acc;
+    const contribution = getRowContribution(row, weightLookup);
+    if (!contribution) return acc;
+    acc.weight += contribution.weight;
+    acc.companyScore += contribution.companyScore;
+    acc.consultantScore += contribution.consultantScore;
+    return acc;
+  }, { weight: 0, companyScore: 0, consultantScore: 0 });
+
+  const computeChapterScores = (project, weights) => {
+    const totals = new Map(); // chapter -> {wSum, compSum, consSum, title}
+    const weightLookup = buildWeightLookup(weights);
+    const sectionWeights = new Map();
+    (weights.items || []).forEach((item) => {
+      const id = String(item.id || "");
+      if (id.split(".").length === 2) {
+        sectionWeights.set(id, Number(item.weight || 0));
+      }
+    });
+
+    (project?.chapters || []).forEach((chapter) => {
+      const chapterId = String(chapter?.id || "");
+      if (!/^\d+$/.test(chapterId)) return;
+      const sections = buildSections(chapter);
+      const hasWeightedSections = sections.some((section) => section.id && sectionWeights.has(section.id));
+      const acc = { w: 0, comp: 0, cons: 0, title: chapterDisplayLabel(chapter) };
+
+      if (hasWeightedSections) {
+        sections.forEach((section) => {
+          if (!section.id || !sectionWeights.has(section.id)) return;
+          const sectionWeight = sectionWeights.get(section.id);
+          const rowTotals = sumRowContributions(section.rows, weightLookup);
+          const companyPct = rowTotals.weight ? rowTotals.companyScore / rowTotals.weight : 0;
+          const consultantPct = rowTotals.weight ? rowTotals.consultantScore / rowTotals.weight : 0;
+          acc.w += sectionWeight;
+          acc.comp += sectionWeight * companyPct;
+          acc.cons += sectionWeight * consultantPct;
+        });
+        // The workbook Analyse sheet scores chapter 4 with a fixed 4.8 sample
+        // contribution (`4.8.1 = 100%`, weighted by section 4.8). Mirror that
+        // here until the self-assessment model exposes an explicit 4.8 score.
+        if (chapterId === "4" && sectionWeights.has("4.8")) {
+          const sectionWeight = sectionWeights.get("4.8");
+          acc.w += sectionWeight;
+          acc.comp += sectionWeight * 100;
+          acc.cons += 0;
+        }
+      } else {
+        const rowTotals = sumRowContributions(chapter.rows || [], weightLookup);
+        acc.w = rowTotals.weight;
+        acc.comp = rowTotals.companyScore;
+        acc.cons = rowTotals.consultantScore;
+      }
+      totals.set(chapterId, acc);
     });
 
     const chapters = deriveChapters(weights);
