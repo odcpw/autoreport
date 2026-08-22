@@ -200,7 +200,9 @@
     clone.meta = isPlainObject(clone.meta) ? clone.meta : {};
     clone.structure = isPlainObject(clone.structure) ? clone.structure : { items: [] };
     clone.structure.items = Array.isArray(clone.structure.items) ? clone.structure.items : [];
-    clone.library = isPlainObject(clone.library) ? clone.library : { entries: [], observations: [], chapterPositives: {} };
+    clone.library = isPlainObject(clone.library)
+      ? clone.library
+      : { entries: [], observations: [], chapterPositives: {}, chapterFrontMatter: {} };
     clone.library.entries = (clone.library.entries || [])
       .filter((entry) => isPlainObject(entry) && String(entry.id || "").trim())
       .map((entry) => ({
@@ -217,6 +219,9 @@
         .localeCompare(String(b.label || b.value || ""), getLocaleBase(clone.meta.locale), { numeric: true }));
     clone.library.chapterPositives = isPlainObject(clone.library.chapterPositives)
       ? structuredClone(clone.library.chapterPositives)
+      : {};
+    clone.library.chapterFrontMatter = isPlainObject(clone.library.chapterFrontMatter)
+      ? structuredClone(clone.library.chapterFrontMatter)
       : {};
     clone.tags = typeof seeds.normalizeTagGroups === "function"
       ? seeds.normalizeTagGroups(clone.tags)

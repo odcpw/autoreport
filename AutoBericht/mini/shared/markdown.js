@@ -10,7 +10,11 @@
     let out = value;
     out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
     out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
-    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, rawUrl) => {
+      const url = String(rawUrl || "").trim();
+      if (!/^https?:\/\//i.test(url)) return label;
+      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+    });
     return out;
   };
 

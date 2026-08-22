@@ -22,8 +22,13 @@
   const saveHandle = async (handle) => {
     const db = await openHandleDb();
     if (!db) return;
-    const tx = db.transaction(HANDLE_STORE, "readwrite");
-    tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+    await new Promise((resolve, reject) => {
+      const tx = db.transaction(HANDLE_STORE, "readwrite");
+      tx.oncomplete = () => resolve();
+      tx.onerror = () => reject(tx.error || new Error("Could not save the project-folder handle."));
+      tx.onabort = () => reject(tx.error || new Error("Saving the project-folder handle was aborted."));
+      tx.objectStore(HANDLE_STORE).put(handle, HANDLE_KEY);
+    });
   };
 
   const loadHandle = async () => {
@@ -38,10 +43,14 @@
   };
 
   const requestHandlePermission = async (handle) => {
+    const opts = { mode: "readwrite" };
     try {
-      const opts = { mode: "readwrite" };
-      if ((await handle.queryPermission(opts)) === "granted") return true;
-      if ((await handle.requestPermission(opts)) === "granted") return true;
+      if (typeof handle?.queryPermission === "function" && (await handle.queryPermission(opts)) === "granted") return true;
+    } catch (err) {
+      // Older implementations may not support queryPermission options; try an explicit request.
+    }
+    try {
+      if (typeof handle?.requestPermission === "function" && (await handle.requestPermission(opts)) === "granted") return true;
     } catch (err) {
       return false;
     }

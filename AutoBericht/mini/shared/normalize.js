@@ -136,6 +136,12 @@
     if (!chapter || typeof chapter !== "object") return;
     if (!chapter.meta || typeof chapter.meta !== "object") chapter.meta = {};
     const meta = chapter.meta;
+    if (meta.frontMatterText == null) meta.frontMatterText = "";
+    const frontMatterAction = String(meta.frontMatterLibraryAction || "off").toLowerCase();
+    meta.frontMatterLibraryAction = ["off", "append", "replace"].includes(frontMatterAction)
+      ? frontMatterAction
+      : "off";
+    if (meta.frontMatterLibraryHash == null) meta.frontMatterLibraryHash = "";
     if (meta.positivesText == null) meta.positivesText = "";
     if (meta.positivesInclude == null) {
       meta.positivesInclude = false;

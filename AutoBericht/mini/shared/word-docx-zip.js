@@ -158,10 +158,16 @@
     let localOffset = 0;
 
     const sorted = [...entries].sort((a, b) => a.name.localeCompare(b.name, "en", { numeric: true }));
+    if (sorted.length > 0xffff) {
+      throw new Error("ZIP64 output is not supported (too many files). Reduce the export size.");
+    }
 
     sorted.forEach((entry) => {
       const nameBytes = textEncoder.encode(entry.name);
       const data = entry.data instanceof Uint8Array ? entry.data : new Uint8Array(entry.data);
+      if (nameBytes.length > 0xffff) throw new Error(`ZIP entry name is too long: ${entry.name}`);
+      if (data.length > 0xffffffff) throw new Error(`ZIP64 output is not supported for ${entry.name}.`);
+      if (localOffset > 0xffffffff) throw new Error("ZIP64 output is not supported (archive offset overflow).");
       const crc = crc32(data);
 
       const localHeader = new Uint8Array(30 + nameBytes.length);
@@ -202,10 +208,14 @@
       centralParts.push(centralHeader);
 
       localOffset += localHeader.length + data.length;
+      if (localOffset > 0xffffffff) throw new Error("ZIP64 output is not supported (archive exceeds 4 GiB).");
     });
 
     const localBlob = concatUint8(localParts);
     const centralBlob = concatUint8(centralParts);
+    if (centralBlob.length > 0xffffffff || localBlob.length > 0xffffffff) {
+      throw new Error("ZIP64 output is not supported (archive exceeds 4 GiB).");
+    }
 
     const eocd = new Uint8Array(22);
     writeU32(eocd, 0, ZIP_EOCD_SIG);

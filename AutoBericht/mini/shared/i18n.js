@@ -37,6 +37,8 @@
       project_tool_log_hint: "Save the current debug log to share diagnostics when troubleshooting.",
       project_bootstrap_hint: "This folder is empty. Select report language to load seed content.",
       project_meta_locale_select: "Select language",
+      chapter0_front_matter: "Customer context (introductory text)",
+      chapter0_front_matter_hint: "This text appears before the A/B/C summary points. Separate paragraphs with a blank line.",
       checklist_button_title: "Suva checklists",
       checklist_button_label: "Checklists",
       checklist_overlay_title: "Suva checklists",
@@ -95,6 +97,8 @@
       project_spider_hint: "Kapitel-Overrides anpassen und die Spider-Grafik live prüfen.",
       project_bootstrap_hint: "Dieser Ordner ist leer. Berichtsprache waehlen, um Seed-Inhalte zu laden.",
       project_meta_locale_select: "Sprache waehlen",
+      chapter0_front_matter: "Kundenkontext (Einleitungstext)",
+      chapter0_front_matter_hint: "Dieser Text erscheint vor den A/B/C-Zusammenfassungspunkten. Absätze mit einer Leerzeile trennen.",
       checklist_button_title: "Suva-Checklisten",
       checklist_button_label: "Checklisten",
       checklist_overlay_title: "Suva-Checklisten",
@@ -146,6 +150,8 @@
       project_spider_hint: "Ajustez les surcharges par chapitre et previsualisez le spider en direct.",
       project_bootstrap_hint: "Ce dossier est vide. Selectionnez la langue du rapport pour charger le seed.",
       project_meta_locale_select: "Choisir la langue",
+      chapter0_front_matter: "Contexte du client (texte introductif)",
+      chapter0_front_matter_hint: "Ce texte apparaît avant les points de synthèse A/B/C. Séparez les paragraphes par une ligne vide.",
       checklist_button_title: "Listes de contrôle Suva",
       checklist_button_label: "Checklists",
       checklist_overlay_title: "Listes de contrôle Suva",
@@ -197,6 +203,8 @@
       project_spider_hint: "Regola gli override per capitolo e visualizza il grafico spider in tempo reale.",
       project_bootstrap_hint: "Questa cartella e vuota. Seleziona la lingua del rapporto per caricare il seed.",
       project_meta_locale_select: "Seleziona lingua",
+      chapter0_front_matter: "Contesto del cliente (testo introduttivo)",
+      chapter0_front_matter_hint: "Questo testo appare prima dei punti riepilogativi A/B/C. Separare i paragrafi con una riga vuota.",
       checklist_button_title: "Liste di controllo Suva",
       checklist_button_label: "Checklist",
       checklist_overlay_title: "Liste di controllo Suva",
@@ -266,10 +274,11 @@
   const setLocale = (locale) => {
     current = resolveLocale(locale);
     applyLocaleToDocument(current);
+    apply(typeof document !== "undefined" ? document : null);
   };
 
   const t = (key, fallback) => {
-    const value = locales.en?.[key];
+    const value = locales[current]?.[key] ?? locales.en?.[key];
     return value ?? fallback ?? key;
   };
 

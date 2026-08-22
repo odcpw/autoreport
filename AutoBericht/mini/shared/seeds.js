@@ -166,9 +166,18 @@
     const libraryMap = buildLibraryMap(knowledgeBase);
     const observationLibraryMap = buildObservationLibraryMap(knowledgeBase);
     const chapterPositivesMap = knowledgeBase?.library?.chapterPositives;
+    const chapterFrontMatterMap = knowledgeBase?.library?.chapterFrontMatter;
     const getChapterPositivesText = (chapterId) => {
       if (!chapterPositivesMap || typeof chapterPositivesMap !== "object" || Array.isArray(chapterPositivesMap)) return "";
       const entry = chapterPositivesMap[String(chapterId || "")];
+      if (entry == null) return "";
+      if (typeof entry === "string") return entry;
+      if (typeof entry === "object") return toText(entry.text || entry.value || "");
+      return "";
+    };
+    const getChapterFrontMatterText = (chapterId) => {
+      if (!chapterFrontMatterMap || typeof chapterFrontMatterMap !== "object" || Array.isArray(chapterFrontMatterMap)) return "";
+      const entry = chapterFrontMatterMap[String(chapterId || "")];
       if (entry == null) return "";
       if (typeof entry === "string") return entry;
       if (typeof entry === "object") return toText(entry.text || entry.value || "");
@@ -215,11 +224,15 @@
         rows: [],
         meta: {
           positivesText: getChapterPositivesText(chapterId),
+          frontMatterText: getChapterFrontMatterText(chapterId),
         },
       };
       if (!chapter.meta) chapter.meta = {};
       if (chapter.meta.positivesText == null) {
         chapter.meta.positivesText = getChapterPositivesText(chapterId);
+      }
+      if (chapter.meta.frontMatterText == null) {
+        chapter.meta.frontMatterText = getChapterFrontMatterText(chapterId);
       }
       const master = libraryMap.get(group.id) || null;
       const sectionLabel = isObservationChapter

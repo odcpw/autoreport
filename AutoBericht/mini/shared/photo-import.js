@@ -156,18 +156,28 @@
 
   const resizePhoto = async (file, maxSize, quality) => {
     const image = await createImageBitmap(file);
-    const longSide = Math.max(image.width, image.height);
-    const scale = longSide > maxSize ? maxSize / longSide : 1;
-    const targetWidth = Math.max(1, Math.round(image.width * scale));
-    const targetHeight = Math.max(1, Math.round(image.height * scale));
-    const canvas = document.createElement("canvas");
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
-    const ctx = canvas.getContext("2d");
-    ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
-    return new Promise((resolve) => {
-      canvas.toBlob((blob) => resolve(blob), "image/jpeg", quality);
-    });
+    try {
+      const longSide = Math.max(image.width, image.height);
+      const scale = longSide > maxSize ? maxSize / longSide : 1;
+      const targetWidth = Math.max(1, Math.round(image.width * scale));
+      const targetHeight = Math.max(1, Math.round(image.height * scale));
+      const canvas = document.createElement("canvas");
+      canvas.width = targetWidth;
+      canvas.height = targetHeight;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) throw new Error(`Could not create image canvas for ${file?.name || "photo"}.`);
+      ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+      const blob = await new Promise((resolve, reject) => {
+        canvas.toBlob(
+          (result) => result ? resolve(result) : reject(new Error(`Could not encode ${file?.name || "photo"} as JPEG.`)),
+          "image/jpeg",
+          quality,
+        );
+      });
+      return blob;
+    } finally {
+      image.close?.();
+    }
   };
 
   const findRawFolder = async (projectHandle, getNestedDirectory) => {
@@ -333,9 +343,13 @@
         const writable = await target.createWritable();
         await writable.write(sourceFile);
         await writable.close();
+        const savedFile = await target.getFile();
+        if (savedFile.size !== sourceFile.size) {
+          throw new Error(`Video copy verification failed for ${task.fileName}. Raw source was kept.`);
+        }
       });
       const raw = await findRawFolder(projectHandle, getNestedDirectory);
-      if (!raw) throw new Error("Missing photos/raw while moving videos.");
+      if (!raw) throw new Error("Missing photos/raw while finalizing moved videos.");
       const ownerHandle = await getNestedDirectory(raw.handle, [task.owner]);
       await ownerHandle.removeEntry(task.fileName);
       movedCount += 1;

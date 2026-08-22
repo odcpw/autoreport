@@ -10,6 +10,7 @@
     const { state, runtime, debug, setStatus, elements } = ctx;
     const textDecoder = new TextDecoder();
     const textEncoder = new TextEncoder();
+    const sidecarStorage = window.AutoBerichtSidecarStorage;
     const zipTools = window.AutoBerichtWordDocxZip || {};
     const reportRows = window.AutoBerichtReportRows || {};
     const unzipAllEntries = zipTools?.unzipAllEntries;
@@ -178,14 +179,54 @@
       } catch (err) {
         setStatus(`Invalid library: ${err.message || err}`);
         debug.logLine("error", `Invalid library: ${err.message || err}`);
-        return null;
+        throw new Error(`Could not load ${picked.name}: ${err.message || err}`);
       }
+    };
+
+    const localeMatches = (library, locale) => (
+      seeds.resolveLocaleKey(library?.meta?.locale || "") === seeds.resolveLocaleKey(locale)
+    );
+
+    const loadLibraryForLocale = async (locale) => {
+      if (!runtime.dirHandle) return null;
+      const requestedLocale = String(locale || "").trim();
+      if (!requestedLocale) return null;
+      const expectedName = stateHelpers.getLibraryFileName({
+        ...(state.project?.meta || {}),
+        locale: requestedLocale,
+      });
+      const options = await listLibraryFiles(runtime.dirHandle);
+      const exact = options.find((option) => option.name === expectedName);
+      if (exact) {
+        const library = await readLibraryFromHandle(exact.handle);
+        if (!localeMatches(library, requestedLocale)) {
+          throw new Error(`Library ${exact.name} does not contain locale ${requestedLocale}.`);
+        }
+        return library;
+      }
+
+      const matching = [];
+      for (const option of options) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          const library = await readLibraryFromHandle(option.handle);
+          if (localeMatches(library, requestedLocale)) matching.push({ ...option, library });
+        } catch (err) {
+          debug.logLine("warn", `Skipping invalid library ${option.name}: ${err.message || err}`);
+        }
+      }
+      if (!matching.length) return null;
+      const picked = await pickLibraryFile(matching);
+      return picked?.library || null;
     };
 
     const loadSeedKnowledgeBase = async (locale) => {
       const seedLocale = locale || "de-CH";
       const seedFilename = seeds.getKnowledgeBaseFilename(seedLocale);
-      let knowledgeBase = await seeds.readSeedFromProject(runtime.dirHandle, seedFilename);
+      let knowledgeBase = await loadLibraryForLocale(seedLocale);
+      if (!knowledgeBase) {
+        knowledgeBase = await seeds.readSeedFromProject(runtime.dirHandle, seedFilename);
+      }
       if (!knowledgeBase) {
         knowledgeBase = await seeds.readSeedFromHttp(seedFilename);
       }
@@ -340,21 +381,17 @@
 
     const loadProjectFromFolder = async () => {
       if (!runtime.dirHandle) return { ok: false, source: "none" };
-      try {
-        await ensureProjectScaffold(runtime.dirHandle);
-      } catch (err) {
-        setStatus(`Project scaffold failed: ${err.message || err}`);
-        debug.logLine("error", `Project scaffold failed: ${err.message || err}`);
-        return { ok: false, source: "none" };
+      if (!sidecarStorage?.readSidecar) {
+        throw new Error("Safe sidecar storage module is unavailable.");
       }
+      setStatus(`Loading project folder: ${runtime.dirHandle.name}`);
       let sidecarDoc = null;
       try {
-        const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
-        const file = await handle.getFile();
-        const text = await file.text();
-        sidecarDoc = JSON.parse(text);
+        sidecarDoc = await sidecarStorage.readSidecar(runtime.dirHandle, { allowMissing: true });
       } catch (err) {
-        sidecarDoc = null;
+        setStatus(`Project load failed: ${err.message || err}`);
+        debug.logLine("error", `Project load failed: ${err.message || err}`);
+        return { ok: false, source: "error", error: err };
       }
 
       runtime.sidecarDoc = sidecarDoc;
@@ -366,85 +403,62 @@
         runtime.awaitingLocaleBootstrap = false;
         runtime.pendingBootstrapWrite = false;
         renderApi.buildPhotoIndex();
-        state.selectedChapterId = state.project.chapters[0]?.id || "";
-        renderApi.render();
-        setStatus("Loaded project_sidecar.json");
-        debug.logLine("info", "Loaded project_sidecar.json");
-        return { ok: true, source: "sidecar" };
-      }
-
-      const knowledgeBase = await loadLibraryFromProject();
-      let source = "empty";
-      let project = null;
-      if (knowledgeBase) {
-        source = "library";
-        project = seeds.buildProjectFromKnowledgeBase(knowledgeBase);
-      }
-
-      if (!project) {
-        project = {
-          meta: {
-            locale: "",
-            moderator: "",
-            moderatorInitials: "",
-            coModerator: "",
-            coModeratorInitials: "",
-            company: "",
-            companyId: "",
-            address: "",
-            plz: "",
-            city: "",
-            createdAt: new Date().toISOString(),
-          },
-          chapters: [],
-        };
-        source = "empty";
-      }
-
-      if (source === "empty") {
-        state.project = project;
-      } else {
-        state.project = normalizeHelpers.normalizeProject(project, ctx.i18n.setLocale);
-        normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
-      }
-      state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
-      state.selectedChapterId = state.project.chapters[0]?.id || "";
-      if (source === "library" || source === "empty") {
         state.selectedChapterId = "__project__";
+        renderApi.render();
+        let warning = "";
+        try {
+          await ensureProjectScaffold(runtime.dirHandle);
+        } catch (err) {
+          warning = ` Project loaded, but folder setup needs attention: ${err.message || err}`;
+          debug.logLine("warn", `Project scaffold failed after sidecar load: ${err.message || err}`);
+        }
+        setStatus(`Loaded project_sidecar.json.${warning}`.trim());
+        debug.logLine("info", "Loaded project_sidecar.json and opened Project.");
+        return { ok: true, source: "sidecar", warning };
       }
-      runtime.awaitingLocaleBootstrap = source === "empty";
+
+      const project = {
+        meta: {
+          locale: "",
+          moderator: "",
+          moderatorInitials: "",
+          coModerator: "",
+          coModeratorInitials: "",
+          company: "",
+          companyId: "",
+          address: "",
+          plz: "",
+          city: "",
+          createdAt: new Date().toISOString(),
+        },
+        chapters: [],
+      };
+      state.project = project;
+      state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
+      state.selectedChapterId = "__project__";
+      runtime.awaitingLocaleBootstrap = true;
       runtime.pendingBootstrapWrite = false;
       renderApi.buildPhotoIndex();
       renderApi.render();
-
-      if (source === "library") {
-        setStatus("Library loaded; initialized project.");
-        debug.logLine("info", "Library loaded; initialized project.");
-      } else {
-        setStatus("Initialized empty project. Choose report language to bootstrap seed content.");
-        debug.logLine("warn", "Initialized empty project; waiting for explicit language bootstrap.");
+      let warning = "";
+      try {
+        await ensureProjectScaffold(runtime.dirHandle);
+      } catch (err) {
+        warning = ` Folder setup needs attention: ${err.message || err}`;
+        debug.logLine("warn", `Project scaffold failed for new project: ${err.message || err}`);
       }
-
-      return { ok: true, source };
+      setStatus(`New project ready. Choose the report language to load its matching library.${warning}`);
+      debug.logLine("info", "New project opened on Project; waiting for explicit locale bootstrap.");
+      return { ok: true, source: "empty", warning };
     };
 
     const saveSidecar = async () => {
       if (!runtime.dirHandle) return;
-      runtime.saveQueue = runtime.saveQueue.then(async () => {
-        let existing = runtime.sidecarDoc;
-        try {
-          const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
-          const file = await handle.getFile();
-          const text = await file.text();
-          existing = JSON.parse(text);
-        } catch (err) {
-          if (err && err.name === "SyntaxError") {
-            setStatus("project_sidecar.json is corrupted. Fix it before saving.");
-            debug.logLine("error", `Sidecar parse failed: ${err.message || err}`);
-            return;
-          }
-          existing = runtime.sidecarDoc;
-        }
+      if (!sidecarStorage?.saveBranch || !sidecarStorage?.enqueue) {
+        throw new Error("Safe sidecar storage module is unavailable.");
+      }
+      return sidecarStorage.enqueue(runtime, async () => {
+        const saveVersion = Number(runtime.changeVersion) || 0;
         let spiderData = null;
         if (spiderModule?.computeSpider) {
           try {
@@ -457,19 +471,19 @@
             debug.logLine("error", `Spider compute failed: ${err.message || err}`);
           }
         }
-        const payload = mergeSidecar(existing, state.project, spiderData);
-        const handle = await runtime.dirHandle.getFileHandle("project_sidecar.json", { create: true });
-        const writable = await handle.createWritable();
-        await writable.write(JSON.stringify(payload, null, 2));
-        await writable.close();
+        const payload = await sidecarStorage.saveBranch({
+          dirHandle: runtime.dirHandle,
+          baseDoc: runtime.sidecarDoc,
+          branch: "report",
+          writerId: runtime.writerId || "report",
+          merge: (latest) => mergeSidecar(latest, state.project, spiderData),
+        });
         runtime.sidecarDoc = payload;
         runtime.pendingBootstrapWrite = false;
         runtime.awaitingLocaleBootstrap = false;
-      }).catch((err) => {
-        setStatus(`Autosave failed: ${err.message}`);
-        debug.logLine("error", `Autosave failed: ${err.message || err}`);
+        runtime.hasUnsavedChanges = (Number(runtime.changeVersion) || 0) !== saveVersion;
+        return payload;
       });
-      return runtime.saveQueue;
     };
 
     const backupSidecar = async () => {
@@ -490,25 +504,35 @@
     const loadLibraryFile = async () => {
       if (!runtime.dirHandle) return null;
       const filename = stateHelpers.getLibraryFileName(state.project.meta || {});
-      return seeds.readJsonIfExists(runtime.dirHandle, [filename]);
+      try {
+        const handle = await runtime.dirHandle.getFileHandle(filename);
+        return await readLibraryFromHandle(handle);
+      } catch (err) {
+        if (err?.name === "NotFoundError") return null;
+        throw new Error(`Could not load ${filename}: ${err.message || err}`);
+      }
+    };
+
+    const writeJsonFileVerified = async (dirHandle, filename, value) => {
+      const serialized = JSON.stringify(value, null, 2);
+      const handle = await dirHandle.getFileHandle(filename, { create: true });
+      const writable = await handle.createWritable();
+      await writable.write(serialized);
+      await writable.close();
+      const saved = JSON.parse(await (await handle.getFile()).text());
+      if (JSON.stringify(saved) !== JSON.stringify(value)) {
+        throw new Error(`Saved library verification failed for ${filename}.`);
+      }
+      return handle;
     };
 
     const saveLibraryFile = async (library, timestampSuffix) => {
       if (!runtime.dirHandle) return;
       const filename = stateHelpers.getLibraryFileName(state.project.meta || {});
-      const handle = await runtime.dirHandle.getFileHandle(filename, { create: true });
-      const writable = await handle.createWritable();
-      await writable.write(JSON.stringify(library, null, 2));
-      await writable.close();
+      await writeJsonFileVerified(runtime.dirHandle, filename, library);
       if (!timestampSuffix) return;
       const archiveName = filename.replace(/\.json$/i, "");
-      const archiveHandle = await runtime.dirHandle.getFileHandle(
-        `${archiveName}_${timestampSuffix}.json`,
-        { create: true },
-      );
-      const archiveWritable = await archiveHandle.createWritable();
-      await archiveWritable.write(JSON.stringify(library, null, 2));
-      await archiveWritable.close();
+      await writeJsonFileVerified(runtime.dirHandle, `${archiveName}_${timestampSuffix}.json`, library);
     };
 
     const normalizeTagOption = (tag) => {
@@ -1469,6 +1493,12 @@
           };
         })
         .sort((a, b) => compareIds(a.chapterId, b.chapterId));
+      const chapterFrontMatterRows = Object.entries(library.library?.chapterFrontMatter || {})
+        .map(([chapterId, value]) => ({
+          chapterId,
+          text: toFlatText(typeof value === "string" ? value : value?.text || ""),
+        }))
+        .sort((a, b) => compareIds(a.chapterId, b.chapterId));
 
       const toTagRows = (tags, group) => {
         const sorted = group === "observations"
@@ -1502,6 +1532,7 @@
       appendSheet("LibraryEntries", libraryRows);
       appendSheet("Observations", observationLibraryRows);
       appendSheet("ChapterPositives", chapterPositiveRows);
+      appendSheet("ChapterFrontMatter", chapterFrontMatterRows);
       appendSheet("TagsReport", reportTagRows);
       appendSheet("TagsObservations", observationTagRows);
       appendSheet("TagsTraining", trainingTagRows);
@@ -1581,14 +1612,7 @@
         return;
       }
 
-      let latestSidecar = runtime.sidecarDoc;
-      try {
-        const existingHandle = await runtime.dirHandle.getFileHandle("project_sidecar.json");
-        const existingFile = await existingHandle.getFile();
-        latestSidecar = JSON.parse(await existingFile.text());
-      } catch (err) {
-        // Keep last loaded sidecar snapshot.
-      }
+      const latestSidecar = await sidecarStorage.readSidecar(runtime.dirHandle, { allowMissing: true });
 
       const photoTags = latestSidecar?.photos?.photoTagOptions || runtime.sidecarDoc?.photos?.photoTagOptions;
       const normalizedPhotoTags = photoTags ? seeds.normalizeTagGroups(photoTags) : null;
@@ -1607,6 +1631,11 @@
         && typeof knowledgeBase.library.chapterPositives === "object"
         && !Array.isArray(knowledgeBase.library.chapterPositives)
       ) ? structuredClone(knowledgeBase.library.chapterPositives) : {};
+      const existingChapterFrontMatter = (
+        knowledgeBase.library
+        && typeof knowledgeBase.library.chapterFrontMatter === "object"
+        && !Array.isArray(knowledgeBase.library.chapterFrontMatter)
+      ) ? structuredClone(knowledgeBase.library.chapterFrontMatter) : {};
       const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
       let applied = 0;
 
@@ -1670,9 +1699,29 @@
           normalizeHelpers.ensureChapterMetaDefaults(chapter);
         }
         const chapterMeta = chapter?.meta || {};
+        const frontMatterAction = String(chapterMeta.frontMatterLibraryAction || "off").toLowerCase();
+        const chapterId = String(chapter?.id || "").trim();
+        if (chapterId === "0" && ["append", "replace"].includes(frontMatterAction)) {
+          const frontMatterText = stateHelpers.toText(chapterMeta.frontMatterText).trim();
+          const frontMatterHash = stateHelpers.hashText(frontMatterText);
+          if (frontMatterText && chapterMeta.frontMatterLibraryHash !== frontMatterHash) {
+            const currentEntry = existingChapterFrontMatter[chapterId];
+            const previousText = typeof currentEntry === "string"
+              ? currentEntry
+              : stateHelpers.toText(currentEntry?.text);
+            const normalizedPrevious = previousText.trim();
+            const alreadyAppended = normalizedPrevious === frontMatterText
+              || normalizedPrevious.endsWith(`\n\n${frontMatterText}`);
+            const nextText = frontMatterAction === "append" && normalizedPrevious && !alreadyAppended
+              ? `${normalizedPrevious}\n\n${frontMatterText}`
+              : (frontMatterAction === "append" && alreadyAppended ? normalizedPrevious : frontMatterText);
+            existingChapterFrontMatter[chapterId] = nextText;
+            chapterMeta.frontMatterLibraryHash = frontMatterHash;
+            if (nextText !== normalizedPrevious) applied += 1;
+          }
+        }
         const chapterAction = String(chapterMeta.positivesLibraryAction || "off").toLowerCase();
         if (!["append", "replace"].includes(chapterAction)) return;
-        const chapterId = String(chapter?.id || "").trim();
         if (!chapterId) return;
         const text = stateHelpers.toText(chapterMeta.positivesText).trim();
         if (!text) return;
@@ -1775,6 +1824,12 @@
           typeof value === "string" ? value : stateHelpers.toText(value?.text),
         ]),
       );
+      output.library.chapterFrontMatter = Object.fromEntries(
+        Object.entries(existingChapterFrontMatter).map(([chapterId, value]) => [
+          chapterId,
+          typeof value === "string" ? value : stateHelpers.toText(value?.text),
+        ]),
+      );
       output.tags = output.tags || { report: [], observations: [], training: [] };
 
       const applySummaryOrder = () => {
@@ -1820,7 +1875,7 @@
       await saveLibraryFile(output, timestamp);
       await saveSidecar();
       if (applied === 0) {
-        setStatus("Library updated (0 changes). Set Library to Append/Replace on rows or chapter positives.");
+        setStatus("Library updated (0 changes). Set Library to Append/Replace on rows, Chapter 0 context, or chapter positives.");
       } else {
         setStatus(`Library updated (${applied} changes).`);
       }
@@ -1851,9 +1906,7 @@
       state.project = project;
       normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
       state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
-      if (!state.selectedChapterId) {
-        state.selectedChapterId = state.project.chapters[0]?.id || "";
-      }
+      state.selectedChapterId = "__project__";
       runtime.awaitingLocaleBootstrap = false;
       runtime.pendingBootstrapWrite = options.deferSave === true;
       renderApi.buildPhotoIndex();

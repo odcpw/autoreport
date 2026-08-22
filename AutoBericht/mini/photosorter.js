@@ -27,8 +27,12 @@
       activeTagFilters: { report: [], observations: [], training: [] },
     };
   const runtime = stateHelpers.createRuntime ? stateHelpers.createRuntime() : { autosaveTimer: null, saveQueue: Promise.resolve(), renderTimer: null };
-  if (window.localStorage) {
-    state.showTagCounts = window.localStorage.getItem("photosorterShowCounts") === "1";
+  try {
+    if (window.localStorage) {
+      state.showTagCounts = window.localStorage.getItem("photosorterShowCounts") === "1";
+    }
+  } catch (err) {
+    state.showTagCounts = false;
   }
 
   const setStatus = (message) => {
@@ -204,25 +208,39 @@
         observations: [],
         training: [],
       });
-    const statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
+    let statusHidden = false;
+    try {
+      statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
+    } catch (err) {
+      statusHidden = false;
+    }
     renderApi.updateStatusVisibility?.(statusHidden);
     bindApi.ensureFsAccess?.();
     actions.enableActions();
     if (!state.projectHandle && !config.demoPhotosMode) {
       const restored = await (async () => {
         if (!ctx.fs?.loadHandle || !ctx.fs?.requestHandlePermission) return false;
-        const saved = await ctx.fs.loadHandle();
-        if (!saved) return false;
-        const granted = await ctx.fs.requestHandlePermission(saved);
-        if (!granted) return false;
-        state.projectHandle = saved;
-        actions.enableActions();
-        await ioApi.loadProjectSidecar();
-        return true;
+        try {
+          const saved = await ctx.fs.loadHandle();
+          if (!saved) return false;
+          const granted = await ctx.fs.requestHandlePermission(saved);
+          if (!granted) return false;
+          state.projectHandle = saved;
+          actions.enableActions();
+          await ioApi.loadProjectSidecar();
+          return true;
+        } catch (err) {
+          state.projectHandle = null;
+          runtime.restoreErrorMessage = `Saved project folder could not be restored: ${err.message || err}`;
+          actions.enableActions();
+          setStatus(runtime.restoreErrorMessage);
+          debug.logLine("error", runtime.restoreErrorMessage);
+          return false;
+        }
       })();
       if (!restored) {
         bindApi.setFirstRunVisible?.(true);
-        setStatus("Select a project folder to start.");
+        if (!runtime.restoreErrorMessage) setStatus("Select a project folder to start.");
       }
     }
 
@@ -234,5 +252,9 @@
     }
   };
 
-  init();
+  init().catch((err) => {
+    bindApi.setFirstRunVisible?.(true);
+    setStatus(`PhotoSorter startup failed: ${err.message || err}`);
+    debug.logLine("error", `PhotoSorter startup failed: ${err.message || err}`);
+  });
 })();

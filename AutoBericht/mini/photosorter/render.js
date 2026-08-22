@@ -9,8 +9,10 @@
     };
 
     const setStatusHidden = (hidden) => {
-      if (window.localStorage) {
-        window.localStorage.setItem("photosorterStatusHidden", hidden ? "1" : "0");
+      try {
+        window.localStorage?.setItem("photosorterStatusHidden", hidden ? "1" : "0");
+      } catch (err) {
+        // Privacy settings may disable localStorage; visual state still updates.
       }
       updateStatusVisibility(hidden);
     };

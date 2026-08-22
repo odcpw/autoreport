@@ -911,7 +911,8 @@
       if (!handle) return null;
       return await handle.getFile();
     } catch (err) {
-      return null;
+      if (err?.name === "NotFoundError") return null;
+      throw err;
     }
   };
 
@@ -1137,8 +1138,8 @@
     if (!projectHandle) throw new Error("Project folder not selected.");
     const templatePath = resolveWordTemplatePath(project?.meta?.locale || "de-CH");
     const templateFile = await resolveWordTemplateFile(projectHandle, templatePath, notify);
-    const entries = await unzipAllEntries(await templateFile.arrayBuffer());
-    const map = new Map(entries.map((entry) => [entry.name, entry]));
+    let entries = await unzipAllEntries(await templateFile.arrayBuffer());
+    let map = new Map(entries.map((entry) => [entry.name, entry]));
 
     const getText = (name) => {
       const entry = map.get(name);
@@ -1155,6 +1156,20 @@
 
     let documentXml = getText("word/document.xml");
     if (!documentXml) throw new Error("Template missing word/document.xml");
+    if (!hasMarker(documentXml, "CHAPTER0_FRONT_MATTER$$")) {
+      notify(`Word export: project template is outdated; using the bundled ${templatePath} for this export`);
+      const bundledBytes = await fetchBundledTemplateBytes(templatePath);
+      const bundledBuffer = bundledBytes.buffer.slice(
+        bundledBytes.byteOffset,
+        bundledBytes.byteOffset + bundledBytes.byteLength,
+      );
+      entries = await unzipAllEntries(bundledBuffer);
+      map = new Map(entries.map((entry) => [entry.name, entry]));
+      documentXml = getText("word/document.xml");
+      if (!documentXml || !hasMarker(documentXml, "CHAPTER0_FRONT_MATTER$$")) {
+        throw new Error("Bundled Word template is missing required marker CHAPTER0_FRONT_MATTER$$.");
+      }
+    }
 
     const markerMap = {
       "NAME$$": project?.meta?.projectName || project?.meta?.company || "",
@@ -1181,6 +1196,17 @@
       return String(a?.id || "").localeCompare(String(b?.id || ""), "de", { numeric: true });
     });
     const chapter0ListNumId = findUpperLetterNumId(getText("word/numbering.xml"));
+    const chapter0 = chapters.find((chapter) => String(chapter?.id || "") === "0");
+    const frontMatterText = String(chapter0?.meta?.frontMatterText || "").trim();
+    const frontMatterPatch = replaceParagraphMarker(
+      documentXml,
+      "CHAPTER0_FRONT_MATTER$$",
+      frontMatterText ? multiParagraphXml(frontMatterText) : "",
+    );
+    if (!frontMatterPatch.replaced) {
+      throw new Error("Word template is missing required marker CHAPTER0_FRONT_MATTER$$.");
+    }
+    documentXml = frontMatterPatch.xml;
 
     chapters.forEach((chapter) => {
       const marker = `CHAPTER${chapter.id}$$`;
@@ -1193,8 +1219,15 @@
         replacement = `${paragraphXml(" ")}${buildChapterTableXml(chapter, toText, project?.meta?.locale || "de-CH")}`;
       }
       const patched = replaceParagraphMarker(documentXml, marker, replacement);
+      if (!patched.replaced) {
+        throw new Error(`Word template is missing required marker ${marker}.`);
+      }
       documentXml = patched.xml;
     });
+    const unresolvedChapterMarker = documentXml.match(/CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/)?.[0];
+    if (unresolvedChapterMarker) {
+      throw new Error(`Project data is missing a chapter required by the Word template (${unresolvedChapterMarker}).`);
+    }
 
     let contentTypes = getText("[Content_Types].xml");
 
@@ -1331,36 +1364,32 @@
       });
     }
 
-    if (typeof computeSpider === "function") {
-      try {
-        const spiderData = await computeSpider({
-          project,
-          overrides: spiderOverrides || {},
-          dirHandle: projectHandle,
-        });
-        try {
-          const spiderBlob = await drawSpiderPng(
-            spiderData,
-            String(project?.meta?.company || "").trim() || "Company",
-            project,
-          );
-          await insertImageAtMarker({
-            xmlPart: "word/document.xml",
-            marker: "SPIDER$$",
-            imageFile: spiderBlob,
-            mediaName: "autobericht_spider.png",
-            fitToTextWidth: true,
-            cmHeight: 10.0,
-            align: "center",
-          });
-        } catch (err) {
-          // Keep export running even if spider image generation fails.
-        }
-        insertChapterThermos(spiderData);
-      } catch (err) {
-        // Keep export running even if spider computation fails.
-      }
+    if (typeof computeSpider !== "function") {
+      throw new Error("Spider computation is unavailable; report export was not created.");
     }
+    const spiderData = await computeSpider({
+      project,
+      overrides: spiderOverrides || {},
+      dirHandle: projectHandle,
+    });
+    const spiderBlob = await drawSpiderPng(
+      spiderData,
+      String(project?.meta?.company || "").trim() || "Company",
+      project,
+    );
+    const spiderInserted = await insertImageAtMarker({
+      xmlPart: "word/document.xml",
+      marker: "SPIDER$$",
+      imageFile: spiderBlob,
+      mediaName: "autobericht_spider.png",
+      fitToTextWidth: true,
+      cmHeight: 10.0,
+      align: "center",
+    });
+    if (!spiderInserted) {
+      throw new Error("Word template is missing required marker SPIDER$$ or its image relationship part.");
+    }
+    insertChapterThermos(spiderData);
 
     setText("word/document.xml", documentXml);
     const settingsXml = getText("word/settings.xml");

@@ -81,7 +81,7 @@
           <button type="button" class="modal__close" id="import-close-btn">×</button>
         </div>
         <div class="modal__body">
-          <p class="import-note">Import: Imports all images from the 3-letter subfolders in <strong>photos/raw</strong>, renames by capture time, resizes, and saves into <strong>photos/resized</strong>. Interrupted runs can be resumed. Video files are moved to <strong>photos/videos</strong>.</p>
+          <p class="import-note">Import: Imports all images from the 3-letter subfolders in <strong>photos/raw</strong>, renames by capture time, resizes, and saves into <strong>photos/resized</strong>. Interrupted runs can be resumed. Video files are moved to <strong>photos/videos</strong> after the copied file is verified.</p>
           <p class="import-note">Rescan: Reloads photos from the current folder without re-importing.</p>
           <p class="import-note">Export: Copies photos into <strong>photos/export</strong> grouped by tag (with <strong>unsorted</strong> for untagged images).</p>
           <div class="modal__actions">
@@ -153,6 +153,7 @@
   <script src="shared/normalize.js"></script>
   <script src="shared/seeds.js"></script>
   <script src="shared/fs-handle.js"></script>
+  <script src="shared/sidecar-storage.js"></script>
   <script src="shared/photo-import.js"></script>
   <script src="photosorter/state.js"></script>
   <script src="photosorter/elements.js"></script>

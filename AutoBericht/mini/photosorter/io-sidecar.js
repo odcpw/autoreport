@@ -4,6 +4,7 @@
     const { tagsApi, photosApi, i18n } = deps;
     const seeds = window.AutoBerichtSeeds || {};
     const normalizeHelpers = window.AutoBerichtNormalize || {};
+    const sidecarStorage = window.AutoBerichtSidecarStorage;
     const createEmptyTagOptions = () => (
       typeof tagsApi.createEmptyTagOptions === "function"
         ? tagsApi.createEmptyTagOptions()
@@ -155,17 +156,30 @@
       return true;
     };
 
-    const readKnowledgeBase = async () => {
+    const readKnowledgeBase = async (localeHint = "") => {
       if (state.projectHandle) {
         try {
           const options = await listLibraryFiles();
           if (options.length) {
-            const picked = await pickLibraryFile(options);
-            if (picked) {
-              const file = await picked.handle.getFile();
-              const parsed = JSON.parse(await file.text());
-              if (isValidKnowledgeBase(parsed, `User library (${picked.name})`)) return parsed;
+            const requestedLocale = String(localeHint || "").trim();
+            const candidates = [];
+            for (const option of options) {
+              try {
+                // eslint-disable-next-line no-await-in-loop
+                const file = await option.handle.getFile();
+                // eslint-disable-next-line no-await-in-loop
+                const parsed = JSON.parse(await file.text());
+                if (!isValidKnowledgeBase(parsed, `User library (${option.name})`)) continue;
+                if (requestedLocale && typeof seeds.resolveLocaleKey === "function") {
+                  if (seeds.resolveLocaleKey(parsed?.meta?.locale) !== seeds.resolveLocaleKey(requestedLocale)) continue;
+                }
+                candidates.push({ ...option, library: parsed });
+              } catch (err) {
+                debug.logLine("warn", `User library ${option.name} is invalid: ${err?.message || err}`);
+              }
             }
+            const picked = await pickLibraryFile(candidates);
+            if (picked?.library) return picked.library;
           }
         } catch (err) {
           debug.logLine("warn", `User library load failed: ${err?.message || err}`);
@@ -246,9 +260,9 @@
 
     const fillMissingTagsFromLibrary = async () => {
       if (state.tagOptions?.report?.length && state.tagOptions?.observations?.length && state.tagOptions?.training?.length) return;
-      let knowledgeBase = await readKnowledgeBase();
+      const localeFromReport = state.sidecarDoc?.report?.project?.meta?.locale || "";
+      let knowledgeBase = await readKnowledgeBase(localeFromReport);
       if (!knowledgeBase) {
-        const localeFromReport = state.sidecarDoc?.report?.project?.meta?.locale || "";
         knowledgeBase = await readSeedKnowledgeBase(localeFromReport);
       }
       if (!knowledgeBase?.tags) return;
@@ -265,13 +279,13 @@
 
     const loadProjectSidecar = async () => {
       if (!state.projectHandle) return;
+      if (!sidecarStorage?.readSidecar) {
+        throw new Error("Safe sidecar storage module is unavailable.");
+      }
       state.activeTagFilters = { report: [], observations: [], training: [] };
       state.filterMode = "all";
-      try {
-        const handle = await state.projectHandle.getFileHandle("project_sidecar.json");
-        const file = await handle.getFile();
-        const text = await file.text();
-        const sidecar = JSON.parse(text);
+      const sidecar = await sidecarStorage.readSidecar(state.projectHandle, { allowMissing: true });
+      if (sidecar) {
         state.sidecarDoc = sidecar;
         let photoDoc = null;
         if (isPlainObject(sidecar?.photos)) {
@@ -293,7 +307,7 @@
         state.photoRootName = state.projectDoc.photoRoot || "";
         setStatus("Loaded project_sidecar.json");
         debug.logLine("info", "Loaded project_sidecar.json");
-      } catch (err) {
+      } else {
         state.sidecarDoc = null;
         state.projectDoc = createEmptyProjectDoc();
         state.tagOptions = createEmptyTagOptions();
@@ -329,7 +343,7 @@
         }
         state.photoRootName = "";
         setStatus(statusMessage);
-        debug.logLine("warn", `Sidecar not found: ${err.message || err}`);
+        debug.logLine("info", "project_sidecar.json does not exist yet.");
       }
       await setDefaultPhotoHandle();
       const didScan = await photosApi.maybeAutoScan();
@@ -340,6 +354,9 @@
 
     const saveProjectSidecar = async () => {
       if (!state.projectHandle) return;
+      if (!sidecarStorage?.saveBranch || !sidecarStorage?.enqueue) {
+        throw new Error("Safe sidecar storage module is unavailable.");
+      }
       const payload = normalizePhotoDoc(state.projectDoc);
       payload.photos = photosApi.serializePhotos();
       payload.photoTagOptions = structuredClone(state.tagOptions);
@@ -347,56 +364,53 @@
       if (!payload.meta) payload.meta = {};
       payload.meta.updatedAt = new Date().toISOString();
 
-      runtime.saveQueue = runtime.saveQueue.then(async () => {
-        let existing = state.sidecarDoc;
-        try {
-          const existingHandle = await state.projectHandle.getFileHandle("project_sidecar.json");
-          const existingFile = await existingHandle.getFile();
-          const existingText = await existingFile.text();
-          existing = JSON.parse(existingText);
-        } catch (err) {
-          if (err && err.name === "SyntaxError") {
-            setStatus("project_sidecar.json is corrupted. Fix it before saving.");
-            debug.logLine("error", `Sidecar parse failed: ${err.message || err}`);
-            return;
-          }
-          existing = state.sidecarDoc;
-        }
-        const sidecar = existing && typeof existing === "object" ? structuredClone(existing) : {};
-        if (!sidecar.meta) sidecar.meta = {};
-        sidecar.meta.updatedAt = new Date().toISOString();
-        sidecar.photos = payload;
-        delete sidecar.photoRoot;
-        delete sidecar.photoTagOptions;
-        const handle = await state.projectHandle.getFileHandle("project_sidecar.json", { create: true });
-        const writable = await handle.createWritable();
-        await writable.write(JSON.stringify(sidecar, null, 2));
-        await writable.close();
+      return sidecarStorage.enqueue(runtime, async () => {
+        const saveVersion = Number(runtime.changeVersion) || 0;
+        const sidecar = await sidecarStorage.saveBranch({
+          dirHandle: state.projectHandle,
+          baseDoc: state.sidecarDoc,
+          branch: "photos",
+          writerId: runtime.writerId || "photos",
+          merge: (latest) => {
+            const next = isPlainObject(latest) ? structuredClone(latest) : {};
+            next.photos = payload;
+            delete next.photoRoot;
+            delete next.photoTagOptions;
+            return next;
+          },
+        });
         state.projectDoc = payload;
         state.sidecarDoc = sidecar;
+        runtime.hasUnsavedChanges = (Number(runtime.changeVersion) || 0) !== saveVersion;
         setStatus("Saved photo tags to project_sidecar.json");
         debug.logLine("info", "Saved photo tags to project_sidecar.json");
-      }).catch((err) => {
-        setStatus(`Save failed: ${err.message}`);
-        debug.logLine("error", `Save failed: ${err.message}`);
+        return sidecar;
       });
-      return runtime.saveQueue;
     };
 
     const scheduleAutosave = () => {
       if (!state.projectHandle) return;
+      runtime.hasUnsavedChanges = true;
+      runtime.changeVersion = (Number(runtime.changeVersion) || 0) + 1;
       if (runtime.autosaveTimer) clearTimeout(runtime.autosaveTimer);
       runtime.autosaveTimer = setTimeout(async () => {
         runtime.autosaveTimer = null;
-        await saveProjectSidecar();
+        try {
+          await saveProjectSidecar();
+        } catch (err) {
+          setStatus(`Autosave failed: ${err.message || err}`);
+          debug.logLine("error", `Autosave failed: ${err.message || err}`);
+        }
       }, 2000);
     };
 
     const flushAutosave = async () => {
+      const shouldSave = runtime.hasUnsavedChanges || !!runtime.autosaveTimer;
       if (runtime.autosaveTimer) {
         clearTimeout(runtime.autosaveTimer);
         runtime.autosaveTimer = null;
       }
+      if (!shouldSave) return;
       await saveProjectSidecar();
     };
 

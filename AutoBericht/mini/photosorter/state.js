@@ -108,6 +108,9 @@
     autosaveTimer: null,
     saveQueue: Promise.resolve(),
     renderTimer: null,
+    hasUnsavedChanges: false,
+    changeVersion: 0,
+    writerId: `photos-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`}`,
   });
 
   window.AutoBerichtPhotoSorterState = {

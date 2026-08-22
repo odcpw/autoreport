@@ -398,12 +398,13 @@ Training tag names in the knowledge base must match the layout mapping above (ca
 
 Seed and library resolution (fresh projects):
 - Prefer existing `project_sidecar.json` if present.
-- If no sidecar, load a user **knowledge base** in project root
-  (e.g., `library_user_XX_de-CH.json`) and use it **as-is**.
-- If multiple user knowledge bases are present, prompt the user to choose one.
-- If no user knowledge base, load bundled seed knowledge base from
-  `AutoBericht/data/seed/knowledge_base_*.json` (single source of defaults: tags, structure, content).
-- If neither exists, the app initializes an empty project and prompts the user.
+- If no sidecar, open the Project page and require an explicit report language.
+- Load only a user **knowledge base** whose `meta.locale` matches that language
+  (e.g., `library_user_XX_fr-CH.json`). If several match, prompt the user to choose one.
+- If no matching user knowledge base exists, load the bundled seed for that exact
+  language from `AutoBericht/data/seed/knowledge_base_*.json`.
+- Save the initialized sidecar before reporting bootstrap success. A library for a
+  different locale is never used as a fallback.
 
 ### 12a. Current Sidecar Schema (as implemented; stored in project folder)
 
@@ -416,6 +417,10 @@ project_sidecar.json
 │     └─ chapters[]
 │        ├─ id: "1", "4.8", "11", ...
 │        ├─ title: { de: "Leitbild, Sicherheitsziele ..." }
+│        ├─ meta
+│        │  ├─ frontMatterText (Chapter 0 customer context before A/B/C points)
+│        │  ├─ frontMatterLibraryAction / frontMatterLibraryHash
+│        │  └─ positivesText / positivesInclude / positivesDone / library controls
 │        └─ rows[]
 │           ├─ kind: "section" (for 1.1 / 1.2 headers)
 │           │  └─ id / title
@@ -445,11 +450,14 @@ knowledge_base_*.json   (seed + user library share the same schema)
 │     ├─ sectionLabel
 │     └─ question
 ├─ library
-│  └─ entries[]
+│  ├─ entries[]
 │     ├─ id
 │     ├─ finding
 │     ├─ recommendation
 │     └─ lastUsed?
+│  ├─ observations[]
+│  ├─ chapterPositives { chapterId → text }
+│  └─ chapterFrontMatter { "0" → customer-context text }
 └─ tags
    ├─ observations[]
    ├─ training[]

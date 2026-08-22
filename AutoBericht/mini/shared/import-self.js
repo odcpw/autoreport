@@ -3,14 +3,9 @@
     const { runtime, debug, setStatus, state } = ctx;
     const { renderRows, saveSidecar } = deps;
     const stateHelpers = window.AutoBerichtState || {};
+    const assessment = window.AutoBerichtSelfAssessment || {};
     const compareIdSegments = stateHelpers.compareIdSegments || ((a, b) => String(a || "").localeCompare(String(b || ""), "de", { numeric: true }));
-    const normalizeId = (raw) => String(raw || "")
-      .trim()
-      .toLowerCase()
-      // Some Selbstbeurteilung sources contain IDs like `3.2.4. a`.
-      // Collapse whitespace so the import can still map answers correctly.
-      .replace(/\s+/g, "")
-      .replace(/\.+$/g, "");
+    const normalizeId = assessment.normalizeId || ((raw) => String(raw || "").trim().toLowerCase());
 
     const toGroupId = (normalizedId) => {
       const match = String(normalizedId || "").match(/^(\d+(?:\.\d+)*)(?:\.[a-z])$/i);
@@ -19,6 +14,10 @@
     if (!runtime.dirHandle) return;
     if (!window.showOpenFilePicker || !window.XLSX) {
       setStatus("File picker or SheetJS not available in this browser.");
+      return;
+    }
+    if (!assessment.findAssessmentSheetName || !assessment.parseRows || !assessment.validateProjectCoverage) {
+      setStatus("Self-assessment validator is unavailable.");
       return;
     }
     try {
@@ -39,82 +38,10 @@
       const file = await fileHandle.getFile();
       const buffer = await file.arrayBuffer();
       const workbook = window.XLSX.read(buffer, { type: "array" });
-      const sheetName = workbook.SheetNames.find((name) => {
-        const lower = name.toLowerCase();
-        return lower.includes("selbstbeurteilung")
-          || lower.includes("autoévaluation")
-          || lower.includes("autoevaluation")
-          || lower.includes("autovalutazione");
-      }) || workbook.SheetNames[0];
+      const sheetName = assessment.findAssessmentSheetName(workbook.SheetNames);
       const sheet = workbook.Sheets[sheetName];
       const rows = window.XLSX.utils.sheet_to_json(sheet, { header: 1, blankrows: false });
-      const normalizeHeaderCell = (value) => String(value || "")
-        .trim()
-        .toLowerCase()
-        .replace(/[^a-z0-9]/g, "");
-      const headerRowIndex = rows.findIndex((row) => {
-        const token = normalizeHeaderCell(row[0]);
-        return token === "nr" || token === "n" || token === "no";
-      });
-      const headerRow = headerRowIndex >= 0 ? rows[headerRowIndex] : [];
-      const findCol = (label) => headerRow.findIndex((cell) => normalizeHeaderCell(cell).includes(label));
-      const pickCol = (...labels) => {
-        for (const label of labels) {
-          const idx = findCol(label);
-          if (idx >= 0) return idx;
-        }
-        return -1;
-      };
-      const colId = 0;
-      const colQuestion = headerRowIndex >= 0 ? (() => {
-        const idx = pickCol("frage", "question", "domanda");
-        return idx >= 0 ? idx : 2;
-      })() : 2;
-      const colYes = headerRowIndex >= 0 ? (() => {
-        const idx = pickCol("ja", "oui", "si");
-        return idx >= 0 ? idx : 3;
-      })() : 3;
-      const colNo = headerRowIndex >= 0 ? (() => {
-        const idx = pickCol("nein", "non", "no");
-        return idx >= 0 ? idx : 4;
-      })() : 4;
-      const colComment = headerRowIndex >= 0 ? (() => {
-        const idx = pickCol("bemerk", "remarque", "osserv");
-        return idx >= 0 ? idx : 5;
-      })() : 5;
-      const colEvidence = headerRowIndex >= 0
-        ? pickCol("nachweis", "beleg", "evidence", "document")
-        : -1;
-      const dataRows = headerRowIndex >= 0 ? rows.slice(headerRowIndex + 1) : rows;
-      const answerMap = new Map();
-
-      dataRows.forEach((row) => {
-        const rawId = String(row[colId] || "").trim();
-        if (!rawId) return;
-        const normalized = normalizeId(rawId);
-        if (!/^[0-9]/.test(normalized)) return;
-        const question = colQuestion >= 0 ? String(row[colQuestion] || "").trim() : "";
-        const yesVal = String(row[colYes] || "").trim().toLowerCase();
-        const noVal = String(row[colNo] || "").trim().toLowerCase();
-        const comment = String(row[colComment] || "").trim();
-        const evidence = colEvidence >= 0 ? String(row[colEvidence] || "").trim() : "";
-        let answer = null;
-        // Match the workbook's own Analyse formulas: a marked "Oui/Ja" cell wins.
-        // Some customer workbooks contain both markers, and treating "Non" as the
-        // last writer corrupts imported answers compared to Excel's calculations.
-        if (yesVal === "x" || yesVal === "ja") {
-          answer = 1;
-        } else if (noVal === "x" || noVal === "nein") {
-          answer = 0;
-        }
-        answerMap.set(normalized, {
-          originalId: rawId,
-          question,
-          answer,
-          comment,
-          evidence,
-        });
-      });
+      const parsed = assessment.parseRows(rows);
 
       const idMap = new Map();
       const rowMap = new Map();
@@ -132,6 +59,8 @@
           });
         });
       });
+      assessment.validateProjectCoverage(parsed, new Set([...idMap.keys(), ...rowMap.keys()]));
+      const answerMap = new Map(parsed.entries.map((entry) => [entry.id, entry]));
 
       const ensureSelfItem = (id, payload) => {
         const groupId = toGroupId(id);
@@ -194,8 +123,14 @@
         if (payload.evidence) {
           item.evidence = payload.evidence;
         }
-        applied += 1;
+        if (payload.answer === 0 || payload.answer === 1 || payload.comment || payload.evidence) {
+          applied += 1;
+        }
       });
+
+      if (applied === 0) {
+        throw new Error("No meaningful self-assessment rows matched the current project.");
+      }
 
       setStatus(`Imported self-assessment answers (${applied}).`);
       debug.logLine("info", `Imported self-assessment answers (${applied}).`);

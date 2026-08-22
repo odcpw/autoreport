@@ -98,16 +98,26 @@
     const pickProjectFolder = async () => {
       if (!ensureFsAccess()) return;
       try {
-        state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        try {
+          state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        } catch (err) {
+          if (!(err instanceof TypeError)) throw err;
+          state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+        }
         if (ctx.fs?.saveHandle) {
-          await ctx.fs.saveHandle(state.projectHandle);
+          try {
+            await ctx.fs.saveHandle(state.projectHandle);
+          } catch (err) {
+            debug.logLine("warn", `Project folder opened, but its handle could not be remembered: ${err.message || err}`);
+          }
         }
         setStatus(`Project folder: ${state.projectHandle.name}`);
         setFirstRunVisible(false);
         await ioApi.loadProjectSidecar();
-        setStatus(`Project folder: ${state.projectHandle.name}`);
       } catch (err) {
-        setStatus(`Project pick canceled: ${err.message}`);
+        const canceled = err?.name === "AbortError";
+        setStatus(canceled ? "Project pick canceled." : `Project load failed: ${err.message || err}`);
+        debug.logLine(canceled ? "info" : "error", `Project picker/load: ${err.message || err}`);
       }
       enableActions();
     };
@@ -121,7 +131,12 @@
 
     if (elements.loadSidecarBtn) {
       elements.loadSidecarBtn.addEventListener("click", async () => {
-        await ioApi.loadProjectSidecar();
+        try {
+          await ioApi.loadProjectSidecar();
+        } catch (err) {
+          setStatus(`Project load failed: ${err.message || err}`);
+          debug.logLine("error", `Project load failed: ${err.message || err}`);
+        }
       });
     }
 
@@ -235,7 +250,12 @@
 
     if (elements.saveSidecarBtn) {
       elements.saveSidecarBtn.addEventListener("click", async () => {
-        await ioApi.saveProjectSidecar();
+        try {
+          await ioApi.saveProjectSidecar();
+        } catch (err) {
+          setStatus(`Save failed: ${err.message || err}`);
+          debug.logLine("error", `Save failed: ${err.message || err}`);
+        }
       });
     }
 
@@ -289,8 +309,10 @@
     if (elements.countToggleBtn) {
       elements.countToggleBtn.addEventListener("click", () => {
         state.showTagCounts = !state.showTagCounts;
-        if (window.localStorage) {
-          window.localStorage.setItem("photosorterShowCounts", state.showTagCounts ? "1" : "0");
+        try {
+          window.localStorage?.setItem("photosorterShowCounts", state.showTagCounts ? "1" : "0");
+        } catch (err) {
+          debug.logLine("warn", `Could not remember photo count preference: ${err.message || err}`);
         }
         renderApi.renderPanels();
         renderApi.renderAll();
@@ -395,6 +417,11 @@
     });
     window.addEventListener("pagehide", () => {
       flushAutosaveSafely();
+    });
+    window.addEventListener("beforeunload", (event) => {
+      if (!runtime.hasUnsavedChanges) return;
+      event.preventDefault();
+      event.returnValue = "";
     });
 
     return {

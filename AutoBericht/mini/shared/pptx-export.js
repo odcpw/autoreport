@@ -421,7 +421,8 @@
       if (!handle) return null;
       return await handle.getFile();
     } catch (err) {
-      return null;
+      if (err?.name === "NotFoundError") return null;
+      throw err;
     }
   };
 

@@ -1532,7 +1532,17 @@
           if (options.step != null) input.step = String(options.step);
         }
         if (options.select) {
-          input.addEventListener("change", () => onInput(input.value));
+          input.addEventListener("change", async () => {
+            input.disabled = true;
+            try {
+              await onInput(input.value);
+            } catch (err) {
+              setStatus(`Update failed: ${err.message || err}`);
+              debug.logLine("error", `Project metadata update failed: ${err.message || err}`);
+            } finally {
+              input.disabled = false;
+            }
+          });
         } else {
           input.addEventListener("input", () => onInput(input.value));
         }
@@ -1582,7 +1592,7 @@
         meta.city = String(value || "").trim();
         scheduleProjectAutosave();
       }, { colSpan: 2 }));
-      formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "", (value) => {
+      formGrid.appendChild(createMetaField(t("project_meta_locale", "Locale"), meta.locale || "", async (value) => {
         const nextLocale = String(value || "").trim();
         meta.locale = nextLocale;
         if (nextLocale) {
@@ -1594,10 +1604,7 @@
           && typeof seedBootstrapHandler === "function"
           && !!nextLocale;
         if (shouldBootstrap) {
-          seedBootstrapHandler(nextLocale, { deferSave: true }).catch((err) => {
-            setStatus(`Seed bootstrap failed: ${err.message || err}`);
-            debug.logLine("error", `Seed bootstrap failed: ${err.message || err}`);
-          });
+          await seedBootstrapHandler(nextLocale, { deferSave: false });
           return;
         }
         scheduleProjectAutosave();
@@ -2714,6 +2721,55 @@
       return card;
     };
 
+    const createChapterFrontMatterCard = (chapter) => {
+      if (!chapter || String(chapter.id || "") !== "0") return null;
+      if (typeof normalizeHelpers.ensureChapterMetaDefaults === "function") {
+        normalizeHelpers.ensureChapterMetaDefaults(chapter);
+      }
+      const meta = chapter.meta || (chapter.meta = {});
+      const card = document.createElement("div");
+      card.className = "row-card chapter-front-matter-card";
+
+      const header = document.createElement("div");
+      header.className = "field-header";
+      const label = document.createElement("label");
+      label.textContent = t("chapter0_front_matter", "Customer context (introductory text)");
+      label.appendChild(createMarkdownHint());
+      const controls = document.createElement("div");
+      controls.className = "field-controls";
+      controls.appendChild(createLibraryGroup(
+        meta.frontMatterLibraryAction || "off",
+        (nextAction) => {
+          meta.frontMatterLibraryAction = nextAction;
+          scheduleAutosave();
+        },
+        "Library",
+      ));
+      header.appendChild(label);
+      header.appendChild(controls);
+
+      const hint = document.createElement("p");
+      hint.className = "project-card__hint";
+      hint.textContent = tHint(
+        "chapter0_front_matter_hint",
+        "This text appears before the A/B/C summary points. Separate paragraphs with a blank line.",
+      );
+      const input = document.createElement("textarea");
+      applyEditorLocale(input);
+      input.value = String(meta.frontMatterText || "");
+      input.addEventListener("input", () => {
+        meta.frontMatterText = input.value;
+        scheduleAutosave();
+        autosizeTextarea(input);
+      });
+      requestAnimationFrame(() => autosizeTextarea(input));
+
+      card.appendChild(header);
+      card.appendChild(hint);
+      card.appendChild(input);
+      return card;
+    };
+
     const renderRows = () => {
       rowsEl.innerHTML = "";
       if (state.selectedChapterId === PROJECT_VIEW_ID) {
@@ -2727,6 +2783,8 @@
       const chapter = state.project.chapters.find((c) => c.id === state.selectedChapterId);
       if (!chapter) return;
       renderChapterTitle(chapter);
+      const chapterFrontMatterCard = createChapterFrontMatterCard(chapter);
+      if (chapterFrontMatterCard) rowsEl.appendChild(chapterFrontMatterCard);
       const chapterPositivesCard = createChapterPositivesCard(chapter);
       if (chapterPositivesCard) rowsEl.appendChild(chapterPositivesCard);
       let rows = chapter.rows || [];

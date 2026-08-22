@@ -32,6 +32,10 @@
     backupTimer: null,
     pendingBootstrapWrite: false,
     awaitingLocaleBootstrap: false,
+    hasUnsavedChanges: false,
+    changeVersion: 0,
+    restoreErrorMessage: "",
+    writerId: `report-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`}`,
   };
 
   const setStatus = (message) => {
@@ -137,6 +141,8 @@
 
   const scheduleAutosave = () => {
     if (!runtime.dirHandle) return;
+    runtime.hasUnsavedChanges = true;
+    runtime.changeVersion += 1;
     if (runtime.autosaveTimer) clearTimeout(runtime.autosaveTimer);
     runtime.autosaveTimer = setTimeout(async () => {
       runtime.autosaveTimer = null;
@@ -151,10 +157,12 @@
 
   const flushAutosave = async () => {
     if (!runtime.dirHandle) return;
+    const shouldSave = runtime.hasUnsavedChanges || !!runtime.autosaveTimer;
     if (runtime.autosaveTimer) {
       clearTimeout(runtime.autosaveTimer);
       runtime.autosaveTimer = null;
     }
+    if (!shouldSave) return;
     await ioApi.saveSidecar();
   };
 
@@ -189,15 +197,27 @@
 
   const restoreHandle = async () => {
     if (!ctx.fs?.loadHandle || !ctx.fs?.requestHandlePermission) return false;
-    const saved = await ctx.fs.loadHandle();
-    if (!saved) return false;
-    const granted = await ctx.fs.requestHandlePermission(saved);
-    if (!granted) return false;
-    runtime.dirHandle = saved;
-    enableActions();
-    await ioApi.loadProjectFromFolder();
-    applyAutoBackup();
-    return true;
+    try {
+      const saved = await ctx.fs.loadHandle();
+      if (!saved) return false;
+      const granted = await ctx.fs.requestHandlePermission(saved);
+      if (!granted) return false;
+      runtime.dirHandle = saved;
+      enableActions();
+      const result = await ioApi.loadProjectFromFolder();
+      if (!result?.ok) {
+        throw result?.error || new Error("The saved project folder could not be loaded.");
+      }
+      applyAutoBackup();
+      return true;
+    } catch (err) {
+      runtime.dirHandle = null;
+      runtime.restoreErrorMessage = `Saved project folder could not be restored: ${err.message || err}`;
+      enableActions();
+      setStatus(runtime.restoreErrorMessage);
+      debug.logLine("error", `Saved project folder restore failed: ${err.message || err}`);
+      return false;
+    }
   };
 
   const init = async () => {
@@ -207,7 +227,7 @@
       const restored = await restoreHandle();
       if (!restored) {
         setFirstRunVisible(true);
-        setStatus("Select a project folder to start.");
+        if (!runtime.restoreErrorMessage) setStatus("Select a project folder to start.");
       }
     }
     if (spiderUiModule.init) {
@@ -215,5 +235,9 @@
     }
   };
 
-  init();
+  init().catch((err) => {
+    setFirstRunVisible(true);
+    setStatus(`AutoBericht startup failed: ${err.message || err}`);
+    debug.logLine("error", `AutoBericht startup failed: ${err.message || err}`);
+  });
 })();

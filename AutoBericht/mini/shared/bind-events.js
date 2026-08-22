@@ -25,9 +25,18 @@
     const pickProjectFolder = async () => {
       if (!ensureFsAccess()) return;
       try {
-        runtime.dirHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        try {
+          runtime.dirHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+        } catch (err) {
+          if (!(err instanceof TypeError)) throw err;
+          runtime.dirHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+        }
         if (ctx.fs?.saveHandle) {
-          await ctx.fs.saveHandle(runtime.dirHandle);
+          try {
+            await ctx.fs.saveHandle(runtime.dirHandle);
+          } catch (err) {
+            debug.logLine("warn", `Project folder opened, but its handle could not be remembered: ${err.message || err}`);
+          }
         }
         enableActions();
         setStatus(`Selected folder: ${runtime.dirHandle.name}`);
@@ -56,10 +65,15 @@
     if (elements.loadSidecarBtn) {
       elements.loadSidecarBtn.addEventListener("click", async () => {
         if (!runtime.dirHandle) return;
-        const result = await ioApi.loadProjectFromFolder();
-        if (result?.ok) {
-          maybeOpenSettings(result);
-          if (applyAutoBackup) applyAutoBackup();
+        try {
+          const result = await ioApi.loadProjectFromFolder();
+          if (result?.ok) {
+            maybeOpenSettings(result);
+            if (applyAutoBackup) applyAutoBackup();
+          }
+        } catch (err) {
+          setStatus(`Project load failed: ${err.message || err}`);
+          debug.logLine("error", `Project load failed: ${err.message || err}`);
         }
       });
     }
@@ -184,8 +198,8 @@
         && !!state.project.meta.locale;
       if (canBootstrapFromSettings) {
         try {
-          await ioApi.bootstrapProjectFromSeed(state.project.meta.locale, { deferSave: true });
-          setStatus("Settings saved. Seed content loaded (sidecar save deferred until you leave Project page).");
+          await ioApi.bootstrapProjectFromSeed(state.project.meta.locale, { deferSave: false });
+          setStatus("Settings saved. Matching language library loaded and sidecar saved.");
           if (renderApi?.renderRows) renderApi.renderRows();
         } catch (err) {
           setStatus(`Settings saved, but seed bootstrap failed: ${err.message}`);
@@ -336,6 +350,11 @@
     });
     window.addEventListener("pagehide", () => {
       flushAutosaveSafe("pagehide");
+    });
+    window.addEventListener("beforeunload", (event) => {
+      if (!runtime.hasUnsavedChanges) return;
+      event.preventDefault();
+      event.returnValue = "";
     });
 
     if (elements.importSelfBtn) {
