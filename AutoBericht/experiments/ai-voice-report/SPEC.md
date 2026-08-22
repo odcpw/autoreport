@@ -1,7 +1,7 @@
 # AI Voice Report (Standalone Experiment) - Spec v0.1
 
-Date: 2026-02-20  
-Status: Draft for implementation and parallel execution  
+Date: 2026-08-21
+Status: Browser-only model architecture selected; implementation remains experimental
 Scope: Standalone experiment in `AutoBericht/experiments/`, no dependency on main app runtime.
 
 ## 1) Purpose
@@ -32,6 +32,12 @@ Core user value:
 ## 4) Deployment Mode
 
 - Separate page under `AutoBericht/experiments/ai-voice-report/`.
+- Runs entirely in managed Microsoft Edge. No native executable, browser
+  extension, localhost service, Python runtime, CLI, or machine installation is
+  permitted.
+- Runtime libraries and model artifacts are versioned, integrity-checked, and
+  served from the same approved internal HTTPS origin. Production inference
+  must not contact a CDN, model hub, or cloud API.
 - User selects project folder via File System Access.
 - Reads from:
   - `project_sidecar.json`
@@ -95,34 +101,89 @@ Core user value:
 
 ## 7) Model Strategy
 
-Use specialized local models instead of one general model.
+Use separate browser-native models for transcription and report structuring.
+Row routing remains deterministic and is never delegated to a language model.
+
+This section records the target architecture selected on 2026-08-21. The
+current experiment still defaults to the older `Xenova/whisper-tiny` or
+`Xenova/whisper-base` plus `LiquidAI/LFM2.5-VL-1.6B-ONNX`; migration and
+representative-device validation are still required.
 
 ### 7.1 ASR (Speech -> Text)
 
 Primary:
-- `Xenova/whisper-tiny`
-- `Xenova/whisper-base`
+- `onnx-community/whisper-large-v3-turbo`
+- WebGPU dtype: `q4f16`
+- Approximate selected weight footprint: 560 MB, excluding runtime buffers.
+
+Low-memory / no-WebGPU fallback:
+- `onnx-community/whisper-small`
+- WASM-compatible INT8/quantized weights.
 
 Policy:
-- Prefer WebGPU + fp16 where available.
-- Fallback to fp32/WASM when `shader-f16` is unavailable.
+- Prefer WebGPU + `q4f16` where available.
+- Resolve the transcription language from the sidecar locale (`de`, `fr`, or
+  `it`) for short recordings instead of relying on language auto-detection.
 - Use chunked transcription (`chunk_length_s`, `stride_length_s`) for long recordings.
+- Keep `whisper-small` as the functional fallback rather than silently running
+  the primary model with an impractical CPU configuration.
+- A Swiss-German fine-tune may be evaluated as an optional locale pack, but it
+  is not a production default without representative visit-report evidence.
 
 ### 7.2 Extraction (Notes -> Structured Fields)
 
 Primary:
-- `LiquidAI/LFM2.5-VL-1.6B-ONNX` local ONNX path
+- `LiquidAI/LFM2.5-1.2B-Instruct-ONNX`
+- WebGPU dtype: `q4f16`
+- Approximate selected weight footprint: 760 MB, excluding runtime buffers.
+- Text-only model supporting German, French, and Italian.
+
+Optional quality tier, enabled only after testing on the weakest supported
+device:
+- `LiquidAI/LFM2.5-2.6B-ONNX`
+- WebGPU dtype: `q4f16`
+- Approximate selected weight footprint: 1.5 GB.
+
+Evaluation candidate for a smaller German/French-only deployment:
+- `onnx-community/LFM2-350M-Extract-ONNX` (`q4f16`, approximately 312 MB).
+- Do not use it as the single multilingual default because Italian is not an
+  officially supported language.
+
+Rejected default:
+- `LiquidAI/LFM2.5-VL-1.6B-ONNX`; AutoBericht does not need its vision stack,
+  so its additional browser memory cost has no product benefit.
 
 Prompt contract:
-- strict block output per row:
-  - `ID: <row_id>`
-  - `FINDING: ...`
-  - `RECOMMENDATION: ...`
+- greedy decoding (`temperature: 0`, no sampling)
+- strict JSON output validated against the row-draft schema
+- fields per row:
+  - `id`
+  - `finding`
+  - `recommendation`
+- no invented facts or recommendations; use an empty string when the spoken
+  note does not support a field.
 
 Parser contract:
 - ignore unknown IDs
 - allow missing fields
+- reject malformed output rather than partially guessing its meaning
 - keep raw model output for audit in card take history.
+
+### 7.3 Model Lifecycle and Memory
+
+The ASR and extraction models must not remain resident together:
+
+1. Load Whisper in a dedicated worker.
+2. Transcribe the recording.
+3. Dispose the Whisper pipeline, sessions, tensors, and worker; release GPU
+   references.
+4. Load the extraction model in a dedicated worker.
+5. Generate and validate row drafts.
+6. Dispose the extraction model after the review workflow no longer needs it.
+
+Model files may remain in the browser Cache API or Origin Private File System;
+live inference sessions and GPU buffers may not. This keeps the recommended
+model pair practical on normal team laptops.
 
 ## 8) Mention Parsing and Segmentation Design
 
@@ -217,11 +278,19 @@ Card-level actions:
 
 ## 12) Runtime and Performance Policy
 
-- Default device preference: WebGPU if available, else WASM.
-- Keep heavy compute off the UI thread where feasible in future refactor.
+- Target runtime baseline: Transformers.js `4.2.0` and ONNX Runtime Web
+  `1.27.0`, pinned with integrity metadata and upgraded only after regression
+  testing.
+- Default device preference: WebGPU. Use the explicit ASR fallback when WebGPU
+  is unavailable; never require users to enable unsafe browser flags.
+- Run ASR and extraction in workers so model loading and generation do not
+  block the UI thread.
+- Load only the precision files selected for the active execution path.
+- Cache immutable model assets locally after first approved-origin retrieval.
 - Use micro-batch extraction (target batch size 4-8 rows).
 - Show explicit status transitions for long operations.
-- Cache model sessions/tokenizers during one page lifecycle.
+- Cache tokenizers and immutable assets, but dispose model sessions between ASR
+  and extraction as defined in section 7.3.
 
 ## 13) Safety, Privacy, and Auditability
 
@@ -239,7 +308,14 @@ Card-level actions:
 - Model output misses IDs:
   - Mitigation: strict output parser, missing-ID warnings, manual card edits.
 - Browser/runtime mismatch for WebGPU:
-  - Mitigation: ORT provider fallback to WASM.
+  - Mitigation: capability check at startup, supported ASR fallback, and a
+    clear transcription-only/manual-edit path if local text generation is not
+    viable on the device.
+- Browser memory pressure from two large models:
+  - Mitigation: sequential workers and mandatory model/session disposal.
+- Model update changes report wording or schema adherence:
+  - Mitigation: pinned model revisions and representative DE/FR/IT regression
+    recordings before an artifact update.
 - Large-project latency:
   - Mitigation: batch extraction, staged status, save/reload draft artifacts.
 
