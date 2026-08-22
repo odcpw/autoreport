@@ -1,6 +1,7 @@
 (() => {
   const init = (ctx, deps) => {
     const { state, runtime, setStatus } = ctx;
+    const { t, tf } = ctx.i18n;
     const { tagsApi, notifyChange } = deps;
     const constants = window.AutoBerichtPhotoSorterState || {};
 
@@ -71,7 +72,7 @@
     const scanPhotos = async () => {
       if (!state.photoHandle) return;
       clearPhotoUrl();
-      setStatus("Scanning photos...");
+      setStatus(t("status_scanning_photos"));
       const collection = [];
       const prefix = state.photoRootName ? `${state.photoRootName}/` : "";
       await collectImages(state.photoHandle, prefix, collection);
@@ -79,7 +80,7 @@
       state.photos = collection;
       state.filterMode = "all";
       state.currentIndex = 0;
-      setStatus(`Loaded ${state.photos.length} photos from ${state.photoRootName}`);
+      setStatus(tf("status_loaded_photos", "Loaded {count} photos from {folder}.", { count: state.photos.length, folder: state.photoRootName }));
       if (notifyChange) notifyChange();
     };
 
@@ -139,7 +140,7 @@
           ? deps.ioApi.createEmptyProjectDoc()
           : { photos: {}, photoTagOptions: tagsApi.SEED_TAG_OPTIONS, photoRoot: "" };
       }
-      setStatus("Loading demo photos...");
+      setStatus(t("status_loading_demo_photos"));
       const collection = [];
       for (let i = 0; i < constants.DEMO_PHOTO_URLS.length; i += 1) {
         const url = constants.DEMO_PHOTO_URLS[i];
@@ -155,7 +156,7 @@
       state.photos = collection;
       state.filterMode = "all";
       state.currentIndex = 0;
-      setStatus(`Loaded ${collection.length} demo photos`);
+      setStatus(tf("status_loaded_demo_photos", "Loaded {count} demo photos.", { count: collection.length }));
       if (notifyChange) notifyChange();
     };
 

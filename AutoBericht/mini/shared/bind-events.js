@@ -14,6 +14,7 @@
       applyAutoBackup,
     } = deps;
     const { elements, state, runtime, debug, setStatus, i18n } = ctx;
+    const { t, tf } = i18n;
 
     const maybeOpenSettings = (result) => {
       if (result && result.source && result.source !== "sidecar") {
@@ -39,7 +40,7 @@
           }
         }
         enableActions();
-        setStatus(`Selected folder: ${runtime.dirHandle.name}`);
+        setStatus(tf("status_selected_folder", "Selected folder: {name}", { name: runtime.dirHandle.name }));
         debug.logLine("info", `Selected folder: ${runtime.dirHandle.name}`);
         if (setFirstRunVisible) setFirstRunVisible(false);
         const result = await ioApi.loadProjectFromFolder();
@@ -50,7 +51,7 @@
           setFirstRunVisible(true);
         }
       } catch (err) {
-        setStatus(`Folder pick canceled or failed: ${err.message}`);
+        setStatus(tf("status_folder_pick_failed", "Folder selection was canceled or failed: {error}", { error: err.message || err }));
         debug.logLine("warn", `Folder pick canceled or failed: ${err.message}`);
       }
     };
@@ -72,7 +73,7 @@
             if (applyAutoBackup) applyAutoBackup();
           }
         } catch (err) {
-          setStatus(`Project load failed: ${err.message || err}`);
+          setStatus(tf("status_project_load_failed", "Project load failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Project load failed: ${err.message || err}`);
         }
       });
@@ -83,10 +84,10 @@
         if (!runtime.dirHandle) return;
         try {
           await ioApi.saveSidecar();
-          setStatus("Saved project_sidecar.json");
+          setStatus(t("status_sidecar_saved"));
           debug.logLine("info", "Saved project_sidecar.json");
         } catch (err) {
-          setStatus(`Save failed: ${err.message}`);
+          setStatus(tf("status_save_failed", "Save failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Save failed: ${err.message}`);
         }
       });
@@ -103,10 +104,10 @@
           normalizeHelpers.ensureProjectMeta(state.project, i18n.setLocale);
           state.selectedChapterId = state.project.chapters[0]?.id || "";
           renderApi.render();
-          setStatus("Loaded seed data.");
+          setStatus(t("status_seed_loaded"));
           debug.logLine("info", "Loaded seed data.");
         } catch (err) {
-          setStatus(`Seed load failed: ${err.message}`);
+          setStatus(tf("status_seed_load_failed", "Seed load failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Seed load failed: ${err.message}`);
         }
       });
@@ -119,9 +120,9 @@
             suggestedName: `mini-editor-log-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`,
             dirHandle: runtime.dirHandle,
           });
-          setStatus(`Saved log (${result.location}): ${result.filename}`);
+          setStatus(tf("status_log_saved", "Saved log ({location}): {filename}", result));
         } catch (err) {
-          setStatus(`Log save failed: ${err.message}`);
+          setStatus(tf("status_log_save_failed", "Log save failed: {error}", { error: err.message || err }));
         }
       });
     }
@@ -199,10 +200,10 @@
       if (canBootstrapFromSettings) {
         try {
           await ioApi.bootstrapProjectFromSeed(state.project.meta.locale, { deferSave: false });
-          setStatus("Settings saved. Matching language library loaded and sidecar saved.");
+          setStatus(t("status_settings_library_saved"));
           if (renderApi?.renderRows) renderApi.renderRows();
         } catch (err) {
-          setStatus(`Settings saved, but seed bootstrap failed: ${err.message}`);
+          setStatus(tf("status_settings_seed_failed", "Settings saved, but language library setup failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Seed bootstrap failed from settings: ${err.message || err}`);
         }
         return;
@@ -210,14 +211,14 @@
       if (runtime.dirHandle) {
         try {
           await ioApi.saveSidecar();
-          setStatus("Settings saved.");
+          setStatus(t("status_settings_saved"));
           if (renderApi?.renderRows) renderApi.renderRows();
         } catch (err) {
-          setStatus(`Settings saved, but sidecar save failed: ${err.message}`);
+          setStatus(tf("status_settings_sidecar_failed", "Settings saved, but sidecar save failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Sidecar save failed: ${err.message || err}`);
         }
       } else {
-        setStatus("Settings saved (remember to save sidecar).");
+        setStatus(t("status_settings_unsaved_sidecar"));
         if (renderApi?.renderRows) renderApi.renderRows();
       }
     };
@@ -239,7 +240,7 @@
         try {
           await ioApi.generateLibrary();
         } catch (err) {
-          setStatus(`Library update failed: ${err.message}`);
+          setStatus(tf("status_library_update_failed", "Library update failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Library update failed: ${err.message || err}`);
         }
       });

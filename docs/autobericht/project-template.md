@@ -20,6 +20,7 @@ Current flow: user selects an **empty** project folder, then AutoBericht creates
       pm2/
       pm3/
     resized/
+    videos/
     export/
 ```
 
@@ -31,6 +32,8 @@ Current flow: user selects an **empty** project folder, then AutoBericht creates
 ## Notes
 
 - Keep all paths lowercase for consistency.
-- Photo import reads from `photos/raw/pm1..pm3` and writes to `photos/resized`.
+- Photo import reads from `photos/raw/pm1..pm3`, writes resized image copies to
+  `photos/resized`, and copies videos to `photos/videos` with the owner-folder
+  prefix. Files in `photos/raw` are never moved or deleted.
 - Tagged photo export writes into `photos/export`.
 - Template pickers should default to `<Project>/templates`.

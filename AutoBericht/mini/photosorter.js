@@ -1,32 +1,40 @@
 (() => {
-  const elements = window.AutoBerichtPhotoSorterElements?.getElements?.() || {};
-  const debug = window.AutoReportDebug || {
-    logLine: () => {},
-    saveLog: async () => ({ location: "none", filename: "" }),
-  };
-  const i18n = window.AutoBerichtI18n || {};
-  const fs = window.AutoBerichtFsHandle || {};
-  const photoImport = window.AutoBerichtPhotoImport || {};
-  const stateHelpers = window.AutoBerichtPhotoSorterState || {};
-  const tagsApi = window.AutoBerichtPhotoSorterTags || {};
-  const photosModule = window.AutoBerichtPhotoSorterPhotos || {};
-  const ioModule = window.AutoBerichtPhotoSorterSidecar || {};
-  const renderModule = window.AutoBerichtPhotoSorterRender || {};
-  const bindModule = window.AutoBerichtPhotoSorterBindEvents || {};
+  const dependencyTools = window.AutoBerichtDependencies;
+  if (typeof dependencyTools?.requireModules !== "function") {
+    const message = "PhotoSorter cannot start: required module AutoBerichtDependencies did not load.";
+    const statusEl = document.getElementById("status-text");
+    if (statusEl) statusEl.textContent = message;
+    throw new Error(message);
+  }
+  const modules = dependencyTools.requireModules({
+    AutoBerichtPhotoSorterElements: ["getElements"],
+    AutoReportDebug: ["logLine", "saveLog"],
+    AutoBerichtI18n: ["t", "tf", "tHint", "setLocale", "resolveSpellcheckLang"],
+    AutoBerichtFsHandle: ["saveHandle", "loadHandle", "requestHandlePermission"],
+    AutoBerichtPhotoImport: ["importRawPhotos", "exportTaggedPhotos"],
+    AutoBerichtPhotoSorterState: ["getLayoutConfig", "createState", "createRuntime"],
+    AutoBerichtPhotoSorterTags: ["createEmptyTagOptions"],
+    AutoBerichtPhotoSorterPhotos: ["init"],
+    AutoBerichtPhotoSorterSidecar: ["init"],
+    AutoBerichtPhotoSorterRender: ["init"],
+    AutoBerichtPhotoSorterBindEvents: ["bind"],
+  }, { appName: "PhotoSorter", statusElementId: "status-text" });
 
-  const config = stateHelpers.getLayoutConfig ? stateHelpers.getLayoutConfig() : {
-    demoMode: false,
-    demoPhotosMode: false,
-  };
+  const elements = modules.AutoBerichtPhotoSorterElements.getElements();
+  const debug = modules.AutoReportDebug;
+  const i18n = modules.AutoBerichtI18n;
+  const fs = modules.AutoBerichtFsHandle;
+  const photoImport = modules.AutoBerichtPhotoImport;
+  const stateHelpers = modules.AutoBerichtPhotoSorterState;
+  const tagsApi = modules.AutoBerichtPhotoSorterTags;
+  const photosModule = modules.AutoBerichtPhotoSorterPhotos;
+  const ioModule = modules.AutoBerichtPhotoSorterSidecar;
+  const renderModule = modules.AutoBerichtPhotoSorterRender;
+  const bindModule = modules.AutoBerichtPhotoSorterBindEvents;
 
-  const state = stateHelpers.createState
-    ? stateHelpers.createState()
-    : {
-      photos: [],
-      tagFilters: { report: "", observations: "", training: "" },
-      activeTagFilters: { report: [], observations: [], training: [] },
-    };
-  const runtime = stateHelpers.createRuntime ? stateHelpers.createRuntime() : { autosaveTimer: null, saveQueue: Promise.resolve(), renderTimer: null };
+  const config = stateHelpers.getLayoutConfig();
+  const state = stateHelpers.createState();
+  const runtime = stateHelpers.createRuntime();
   try {
     if (window.localStorage) {
       state.showTagCounts = window.localStorage.getItem("photosorterShowCounts") === "1";
@@ -49,21 +57,24 @@
     debug,
     setStatus,
     i18n: {
-      setLocale: i18n.setLocale || (() => {}),
-      resolveSpellcheckLang: i18n.resolveSpellcheckLang || ((locale) => String(locale || "en").toLowerCase().split("-")[0] || "en"),
+      t: i18n.t,
+      tf: i18n.tf,
+      tHint: i18n.tHint,
+      setLocale: i18n.setLocale,
+      resolveSpellcheckLang: i18n.resolveSpellcheckLang,
     },
     fs: {
-      saveHandle: fs.saveHandle || (async () => {}),
-      loadHandle: fs.loadHandle || (async () => null),
-      requestHandlePermission: fs.requestHandlePermission || (async () => false),
+      saveHandle: fs.saveHandle,
+      loadHandle: fs.loadHandle,
+      requestHandlePermission: fs.requestHandlePermission,
     },
     photoImport: {
       importRawPhotos: photoImport.importRawPhotos,
       exportTaggedPhotos: photoImport.exportTaggedPhotos,
     },
     constants: {
-      RESIZE_MAX: stateHelpers.RESIZE_MAX || 1920,
-      RESIZE_QUALITY: stateHelpers.RESIZE_QUALITY || 0.85,
+      RESIZE_MAX: stateHelpers.RESIZE_MAX,
+      RESIZE_QUALITY: stateHelpers.RESIZE_QUALITY,
     },
   };
 
@@ -72,9 +83,7 @@
     if (renderApi) renderApi.renderAll();
   };
 
-  const photosApi = photosModule.init
-    ? photosModule.init(ctx, { tagsApi, notifyChange })
-    : {};
+  const photosApi = photosModule.init(ctx, { tagsApi, notifyChange });
 
   const actions = {
     toggleTag: () => {},
@@ -86,18 +95,14 @@
     enableActions: () => {},
   };
 
-  renderApi = renderModule.init
-    ? renderModule.init(ctx, { elements, tagsApi, photosApi, actions })
-    : { renderAll: () => {} };
+  renderApi = renderModule.init(ctx, { elements, tagsApi, photosApi, actions });
 
-  const ioApi = ioModule.init
-    ? ioModule.init(ctx, {
-      tagsApi,
-      photosApi,
-      renderApi,
-      i18n: ctx.i18n,
-    })
-    : {};
+  const ioApi = ioModule.init(ctx, {
+    tagsApi,
+    photosApi,
+    renderApi,
+    i18n: ctx.i18n,
+  });
   actions.persistTagOptions = () => {
     ioApi.scheduleAutosave?.();
   };
@@ -187,27 +192,19 @@
     renderApi.renderAll();
   };
 
-  const bindApi = bindModule.bind
-    ? bindModule.bind(ctx, {
-      elements,
-      tagsApi,
-      photosApi,
-      ioApi,
-      renderApi,
-      actions,
-    })
-    : { ensureFsAccess: () => {}, enableActions: () => {} };
+  const bindApi = bindModule.bind(ctx, {
+    elements,
+    tagsApi,
+    photosApi,
+    ioApi,
+    renderApi,
+    actions,
+  });
 
-  actions.enableActions = bindApi.enableActions || (() => {});
+  actions.enableActions = bindApi.enableActions;
 
   const init = async () => {
-    state.tagOptions = tagsApi.createEmptyTagOptions
-      ? tagsApi.createEmptyTagOptions()
-      : structuredClone(tagsApi.EMPTY_TAG_OPTIONS || {
-        report: [],
-        observations: [],
-        training: [],
-      });
+    state.tagOptions = tagsApi.createEmptyTagOptions();
     let statusHidden = false;
     try {
       statusHidden = window.localStorage?.getItem("photosorterStatusHidden") === "1";
@@ -231,7 +228,7 @@
           return true;
         } catch (err) {
           state.projectHandle = null;
-          runtime.restoreErrorMessage = `Saved project folder could not be restored: ${err.message || err}`;
+          runtime.restoreErrorMessage = i18n.tf("status_restore_failed", "Saved project folder could not be restored: {error}", { error: err.message || err });
           actions.enableActions();
           setStatus(runtime.restoreErrorMessage);
           debug.logLine("error", runtime.restoreErrorMessage);
@@ -240,13 +237,13 @@
       })();
       if (!restored) {
         bindApi.setFirstRunVisible?.(true);
-        if (!runtime.restoreErrorMessage) setStatus("Select a project folder to start.");
+        if (!runtime.restoreErrorMessage) setStatus(i18n.t("status_select_project_folder"));
       }
     }
 
     if (config.demoPhotosMode) {
       photosApi.loadDemoPhotos?.().catch((err) => {
-        setStatus(`Demo photos failed: ${err.message}`);
+        setStatus(i18n.tf("status_demo_photos_failed", "Demo photos failed: {error}", { error: err.message || err }));
         debug.logLine("error", `Demo photos failed: ${err.message}`);
       });
     }
@@ -254,7 +251,7 @@
 
   init().catch((err) => {
     bindApi.setFirstRunVisible?.(true);
-    setStatus(`PhotoSorter startup failed: ${err.message || err}`);
+    setStatus(i18n.tf("status_photosorter_startup_failed", "PhotoSorter startup failed: {error}", { error: err.message || err }));
     debug.logLine("error", `PhotoSorter startup failed: ${err.message || err}`);
   });
 })();

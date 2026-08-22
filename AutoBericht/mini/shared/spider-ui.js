@@ -1,6 +1,7 @@
 (() => {
   const init = (ctx, deps) => {
     const { elements, state, runtime, setStatus, debug } = ctx;
+    const { t, tf } = ctx.i18n;
     const { spider, ioApi } = deps;
 
     const closeModal = () => {
@@ -12,18 +13,18 @@
     const openModal = async () => {
       if (!elements.spiderModal) return;
       try {
-        setStatus("Recalculating spider values...");
+        setStatus(t("status_spider_recalculating"));
         const spiderData = await spider.computeSpider({
           project: state.project,
           overrides: state.spiderOverrides || {},
           dirHandle: runtime.dirHandle,
         });
         renderTable(spiderData);
-        setStatus("Spider values ready.");
+        setStatus(t("status_spider_ready"));
         elements.spiderModal.classList.add("is-open");
         elements.spiderModal.setAttribute("aria-hidden", "false");
       } catch (err) {
-        setStatus(`Spider calc failed: ${err.message || err}`);
+        setStatus(tf("status_spider_calc_failed", "Spider calculation failed: {error}", { error: err.message || err }));
         debug.logLine("error", `Spider calc failed: ${err.message || err}`);
       }
     };
@@ -74,7 +75,7 @@
         };
       });
       state.spiderOverrides = next;
-      setStatus("Spider overrides saved (autosave will persist).");
+      setStatus(t("status_spider_overrides_autosave"));
     };
 
     if (elements.openSpiderBtn) {
@@ -96,7 +97,7 @@
           try {
             await ioApi.saveSidecar();
           } catch (err) {
-            setStatus(`Spider save failed: ${err.message || err}`);
+            setStatus(tf("status_spider_save_failed", "Spider save failed: {error}", { error: err.message || err }));
             debug.logLine("error", `Spider save failed: ${err.message || err}`);
           }
         }

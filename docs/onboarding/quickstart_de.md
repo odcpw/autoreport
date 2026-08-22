@@ -15,15 +15,15 @@ Diese Anleitung ist für neue Anwender:innen mit technischem Grundverständnis. 
 
 ## 3) Projekt initialisieren (Sprache/Metadaten)
 1. Auf der linken Seite **Project** öffnen.
-2. Im Feld **Locale** Sprache wählen (`DE`, `FR`, `IT`).
+2. Im Feld **Language** die Berichtssprache wählen (`DE`, `FR`, `IT`).
 3. Moderator/Firma eintragen.
 
-Rote Markierungen: Locale, Import Self-Assessment, Word/PPT Export.
+Rote Markierungen: Language, Import Self-Assessment, Word/PPT Export.
 
 ![Project Seite](screenshots/annotated/02-project-page-overview.png)
 
 ## 4) Foto-Workflow vorbereiten
-1. Originalfotos in `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3` ablegen.
+1. Originalfotos und -videos in `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3` ablegen.
 2. In der App auf **PhotoSorter** wechseln.
 3. Oben: **Import / Export Photos**.
 
@@ -32,7 +32,7 @@ Rote Markierungen: Import/Export, Edit tags, Save sidecar, Show Unsorted, Clear 
 ![PhotoSorter Übersicht](screenshots/annotated/06-photosorter-main.png)
 
 ## 5) Fotos importieren/exportieren
-- **Import photos**: Import + Resize nach `photos/resized` (lange Seite max. 1920 px).
+- **Import photos**: Bildkopien werden nach `photos/resized` verkleinert (lange Seite max. 1920 px); Videos werden nach `photos/videos` kopiert. Die Originale in `photos/raw` bleiben unverändert erhalten.
 - **Rescan photos**: nur neu einlesen.
 - **Export tagged folders**: exportiert in `photos/export` je Tag/Kategorie.
 

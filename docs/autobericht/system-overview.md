@@ -39,6 +39,7 @@ Browser-first offline workflow with project-local state and direct Word/PPT expo
   photos/
     raw/pm1|pm2|pm3
     resized/
+    videos/
     export/
 ```
 
@@ -50,7 +51,7 @@ Browser-first offline workflow with project-local state and direct Word/PPT expo
   - filters, scoring, include/done workflow
   - 4.8 organization and checklist support
 - PhotoSorter
-  - raw import/rename/resize
+  - immutable raw intake, image resize copies, and video copies
   - report/observation/training tagging
   - tagged folder export
 - Project page

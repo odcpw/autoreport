@@ -6,18 +6,6 @@
     .replace(/\"/g, "&quot;")
     .replace(/'/g, "&#39;");
 
-  const formatInlineMarkdown = (value) => {
-    let out = value;
-    out = out.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
-    out = out.replace(/\*(.+?)\*/g, "<em>$1</em>");
-    out = out.replace(/\[([^\]]+)\]\(([^)]+)\)/g, (match, label, rawUrl) => {
-      const url = String(rawUrl || "").trim();
-      if (!/^https?:\/\//i.test(url)) return label;
-      return `<a href="${url}" target="_blank" rel="noopener noreferrer">${label}</a>`;
-    });
-    return out;
-  };
-
   const appendSegment = (segments, segment) => {
     if (!segment?.text) return;
     const previous = segments[segments.length - 1];
@@ -102,7 +90,7 @@
   const parseInlineMarkdownSegments = (value) => {
     const source = String(value || "");
     const parts = [];
-    const linkPattern = /\[([^\]\n]+)\]\((https?:\/\/[^)\n]+)\)/gi;
+    const linkPattern = /\[([^\]\n]+)\]\(([^()\n]*(?:\([^()\n]*\)[^()\n]*)*)\)/g;
     let cursor = 0;
     let match = linkPattern.exec(source);
     const appendPlain = (text) => {
@@ -114,7 +102,7 @@
       if (match.index > cursor) appendPlain(source.slice(cursor, match.index));
       const url = normalizeHttpUrl(match[2]);
       if (!url) {
-        appendPlain(match[0]);
+        appendPlain(match[1]);
       } else {
         parseEmphasisSegments(match[1]).forEach((segment) => {
           appendSegment(parts, { ...segment, type: "link", url });
@@ -127,6 +115,19 @@
     return parts;
   };
 
+  const formatInlineMarkdown = (value) => parseInlineMarkdownSegments(value)
+    .map((segment) => {
+      let content = escapeHtml(String(segment.text || ""));
+      if (segment.italic) content = `<em>${content}</em>`;
+      if (segment.bold) content = `<strong>${content}</strong>`;
+      if (segment.type === "link" && segment.url) {
+        const href = escapeHtml(segment.url);
+        content = `<a href="${href}" target="_blank" rel="noopener noreferrer">${content}</a>`;
+      }
+      return content;
+    })
+    .join("");
+
   const markdownToHtml = (text) => {
     const lines = String(text || "").split(/\r?\n/);
     const parts = [];
@@ -135,7 +136,7 @@
 
     const flushParagraph = () => {
       if (!paragraphLines.length) return;
-      const safe = paragraphLines.map((line) => escapeHtml(line)).map((line) => formatInlineMarkdown(line));
+      const safe = paragraphLines.map((line) => formatInlineMarkdown(line));
       parts.push(`<p>${safe.join("<br>")}</p>`);
       paragraphLines = [];
     };
@@ -149,7 +150,7 @@
           inList = true;
         }
         const item = trimmed.slice(2);
-        parts.push(`<li>${formatInlineMarkdown(escapeHtml(item))}</li>`);
+        parts.push(`<li>${formatInlineMarkdown(item)}</li>`);
         return;
       }
       if (trimmed === "") {

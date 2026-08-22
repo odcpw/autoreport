@@ -2,6 +2,7 @@
   const init = (ctx, deps) => {
     const { state, runtime, setStatus, debug, elements } = ctx;
     const { tagsApi, photosApi, i18n } = deps;
+    const { t, tf } = i18n;
     const seeds = window.AutoBerichtSeeds || {};
     const normalizeHelpers = window.AutoBerichtNormalize || {};
     const sidecarStorage = window.AutoBerichtSidecarStorage;
@@ -305,7 +306,7 @@
         }
         await fillMissingTagsFromLibrary();
         state.photoRootName = state.projectDoc.photoRoot || "";
-        setStatus("Loaded project_sidecar.json");
+        setStatus(t("status_photosorter_loaded_sidecar"));
         debug.logLine("info", "Loaded project_sidecar.json");
       } else {
         state.sidecarDoc = null;
@@ -313,7 +314,7 @@
         state.tagOptions = createEmptyTagOptions();
         const knowledgeBase = await readKnowledgeBase();
         let reportProject = null;
-        let statusMessage = "Sidecar not found; starting fresh.";
+        let statusMessage = t("status_photosorter_fresh");
         if (knowledgeBase) {
           const nextOptions = tagsApi.ensureTagOptions(knowledgeBase.tags || {});
           const reportOptions = tagsApi.buildReportTagOptionsFromStructure
@@ -333,9 +334,9 @@
               debug.logLine("error", `Failed to build report project: ${projectErr.message || projectErr}`);
             }
           }
-          statusMessage = "Sidecar not found; loaded tags from library.";
+          statusMessage = t("status_photosorter_library_tags");
         } else {
-          statusMessage = "Sidecar not found and no library found. Starting fresh.";
+          statusMessage = t("status_photosorter_no_library");
           debug.logLine("warn", "Library not found. Tag options are empty.");
         }
         if (reportProject) {
@@ -382,7 +383,7 @@
         state.projectDoc = payload;
         state.sidecarDoc = sidecar;
         runtime.hasUnsavedChanges = (Number(runtime.changeVersion) || 0) !== saveVersion;
-        setStatus("Saved photo tags to project_sidecar.json");
+        setStatus(t("status_photosorter_saved_sidecar"));
         debug.logLine("info", "Saved photo tags to project_sidecar.json");
         return sidecar;
       });
@@ -398,7 +399,7 @@
         try {
           await saveProjectSidecar();
         } catch (err) {
-          setStatus(`Autosave failed: ${err.message || err}`);
+          setStatus(tf("status_autosave_failed", "Autosave failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Autosave failed: ${err.message || err}`);
         }
       }, 2000);

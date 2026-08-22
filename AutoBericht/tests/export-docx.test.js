@@ -88,6 +88,7 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
 
   const context = loadBrowserScripts([
     "mini/shared/markdown.js",
+    "mini/shared/report-rows.js",
     "mini/shared/word-docx-zip.js",
     "mini/shared/word-docx-xml.js",
     "mini/shared/word-export.js",

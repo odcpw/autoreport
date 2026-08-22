@@ -1,28 +1,45 @@
 (() => {
-  const elements = window.AutoBerichtElements?.getElements?.() || {};
-  const debug = window.AutoReportDebug || {
-    logLine: () => {},
-    saveLog: async () => ({ location: "none", filename: "" }),
-  };
-  const i18n = window.AutoBerichtI18n || {};
-  const markdown = window.AutoBerichtMarkdown || {};
-  const fsHandles = window.AutoBerichtFsHandle || {};
-  const stateHelpers = window.AutoBerichtState || {};
-  const normalizeHelpers = window.AutoBerichtNormalize || {};
-  const seeds = window.AutoBerichtSeeds || {};
-  const ioModule = window.AutoBerichtSidecar || {};
-  const renderModule = window.AutoBerichtRender || {};
-  const importModule = window.AutoBerichtImportSelf || {};
-  const spiderModule = window.AutoBerichtSpider || {};
-  const spiderUiModule = window.AutoBerichtSpiderUi || {};
-  const bindModule = window.AutoBerichtBindEvents || {};
+  const dependencyTools = window.AutoBerichtDependencies;
+  if (typeof dependencyTools?.requireModules !== "function") {
+    const message = "AutoBericht cannot start: required module AutoBerichtDependencies did not load.";
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.textContent = message;
+    throw new Error(message);
+  }
+  const modules = dependencyTools.requireModules({
+    AutoBerichtElements: ["getElements"],
+    AutoReportDebug: ["logLine", "saveLog"],
+    AutoBerichtI18n: ["t", "tf", "tHint", "tReport", "setLocale", "resolveSpellcheckLang"],
+    AutoBerichtMarkdown: ["escapeHtml", "formatInlineMarkdown", "parseInlineMarkdownSegments"],
+    AutoBerichtFsHandle: ["saveHandle", "loadHandle", "requestHandlePermission"],
+    AutoBerichtState: ["createState"],
+    AutoBerichtNormalize: ["normalizeProject"],
+    AutoBerichtSeeds: ["validateKnowledgeBase", "buildProjectFromKnowledgeBase"],
+    AutoBerichtSidecar: ["init"],
+    AutoBerichtImportSelf: ["createHandler"],
+    AutoBerichtRender: ["init"],
+    AutoBerichtSpider: ["computeSpider"],
+    AutoBerichtSpiderUi: ["init"],
+    AutoBerichtBindEvents: ["bind"],
+  }, { appName: "AutoBericht", statusElementId: "status" });
 
-  const t = i18n.t || ((key, fallback) => fallback || key);
-  const setLocale = i18n.setLocale || (() => {});
+  const elements = modules.AutoBerichtElements.getElements();
+  const debug = modules.AutoReportDebug;
+  const i18n = modules.AutoBerichtI18n;
+  const markdown = modules.AutoBerichtMarkdown;
+  const fsHandles = modules.AutoBerichtFsHandle;
+  const stateHelpers = modules.AutoBerichtState;
+  const normalizeHelpers = modules.AutoBerichtNormalize;
+  const seeds = modules.AutoBerichtSeeds;
+  const ioModule = modules.AutoBerichtSidecar;
+  const renderModule = modules.AutoBerichtRender;
+  const importModule = modules.AutoBerichtImportSelf;
+  const spiderModule = modules.AutoBerichtSpider;
+  const spiderUiModule = modules.AutoBerichtSpiderUi;
+  const bindModule = modules.AutoBerichtBindEvents;
 
-  const state = stateHelpers.createState
-    ? stateHelpers.createState(stateHelpers.defaultProject)
-    : { project: { chapters: [] }, filters: { mode: "all" } };
+  const { t, tf, setLocale } = i18n;
+  const state = stateHelpers.createState(stateHelpers.defaultProject);
 
   const runtime = {
     dirHandle: null,
@@ -64,42 +81,36 @@
     setStatus,
     i18n: {
       t,
+      tf,
+      tHint: i18n.tHint,
+      tReport: i18n.tReport,
       setLocale,
-      resolveSpellcheckLang: i18n.resolveSpellcheckLang || ((locale) => String(locale || "en").toLowerCase().split("-")[0] || "en"),
+      resolveSpellcheckLang: i18n.resolveSpellcheckLang,
     },
     markdown,
     fs: {
-      saveHandle: fsHandles.saveHandle || (async () => {}),
-      loadHandle: fsHandles.loadHandle || (async () => null),
-      requestHandlePermission: fsHandles.requestHandlePermission || (async () => false),
+      saveHandle: fsHandles.saveHandle,
+      loadHandle: fsHandles.loadHandle,
+      requestHandlePermission: fsHandles.requestHandlePermission,
     },
   };
 
-  const renderApi = renderModule.init
-    ? renderModule.init(ctx, { stateHelpers, normalizeHelpers })
-    : { render: () => {}, renderRows: () => {}, buildPhotoIndex: () => {} };
-
-  const ioApi = ioModule.init
-    ? ioModule.init(ctx, {
-      stateHelpers,
-      normalizeHelpers,
-      seeds,
-      renderApi,
-      spiderModule,
-    })
-    : {
-      loadProjectFromFolder: async () => ({ ok: false, source: "none" }),
-      saveSidecar: async () => {},
-      generateLibrary: async () => {},
-    };
-
-  const importSelfHandler = importModule.createHandler
-    ? importModule.createHandler(ctx, { renderRows: renderApi.renderRows, saveSidecar: ioApi.saveSidecar })
-    : async () => {};
+  const renderApi = renderModule.init(ctx, { stateHelpers, normalizeHelpers });
+  const ioApi = ioModule.init(ctx, {
+    stateHelpers,
+    normalizeHelpers,
+    seeds,
+    renderApi,
+    spiderModule,
+  });
+  const importSelfHandler = importModule.createHandler(ctx, {
+    renderRows: renderApi.renderRows,
+    saveSidecar: ioApi.saveSidecar,
+  });
 
   const ensureFsAccess = () => {
     if (!window.showDirectoryPicker) {
-      setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
+      setStatus(t("status_fs_api_unavailable"));
       if (elements.pickFolderBtn) elements.pickFolderBtn.disabled = true;
       if (elements.firstRunPickBtn) elements.firstRunPickBtn.disabled = true;
       return false;
@@ -148,9 +159,9 @@
       runtime.autosaveTimer = null;
       try {
         await ioApi.saveSidecar();
-        setStatus("Autosaved.");
+        setStatus(t("status_autosaved"));
       } catch (err) {
-        setStatus(`Autosave failed: ${err.message}`);
+        setStatus(tf("status_autosave_failed", "Autosave failed: {error}", { error: err.message || err }));
       }
     }, 2000);
   };
@@ -179,21 +190,19 @@
     renderApi.setActionPlanExportHandler(ioApi.exportActionPlanExcel);
   }
 
-  if (bindModule.bind) {
-    bindModule.bind(ctx, {
-      renderApi,
-      ioApi,
-      seeds,
-      stateHelpers,
-      normalizeHelpers,
-      importSelfHandler,
-      ensureFsAccess,
-      enableActions,
-      flushAutosave,
-      setFirstRunVisible,
-      applyAutoBackup,
-    });
-  }
+  bindModule.bind(ctx, {
+    renderApi,
+    ioApi,
+    seeds,
+    stateHelpers,
+    normalizeHelpers,
+    importSelfHandler,
+    ensureFsAccess,
+    enableActions,
+    flushAutosave,
+    setFirstRunVisible,
+    applyAutoBackup,
+  });
 
   const restoreHandle = async () => {
     if (!ctx.fs?.loadHandle || !ctx.fs?.requestHandlePermission) return false;
@@ -212,7 +221,7 @@
       return true;
     } catch (err) {
       runtime.dirHandle = null;
-      runtime.restoreErrorMessage = `Saved project folder could not be restored: ${err.message || err}`;
+      runtime.restoreErrorMessage = tf("status_restore_failed", "Saved project folder could not be restored: {error}", { error: err.message || err });
       enableActions();
       setStatus(runtime.restoreErrorMessage);
       debug.logLine("error", `Saved project folder restore failed: ${err.message || err}`);
@@ -227,7 +236,7 @@
       const restored = await restoreHandle();
       if (!restored) {
         setFirstRunVisible(true);
-        if (!runtime.restoreErrorMessage) setStatus("Select a project folder to start.");
+        if (!runtime.restoreErrorMessage) setStatus(t("status_select_project_folder"));
       }
     }
     if (spiderUiModule.init) {
@@ -237,7 +246,7 @@
 
   init().catch((err) => {
     setFirstRunVisible(true);
-    setStatus(`AutoBericht startup failed: ${err.message || err}`);
+    setStatus(tf("status_app_startup_failed", "AutoBericht startup failed: {error}", { error: err.message || err }));
     debug.logLine("error", `AutoBericht startup failed: ${err.message || err}`);
   });
 })();

@@ -10,7 +10,7 @@
   const textDecoder = new TextDecoder();
   const textEncoder = new TextEncoder();
   const zipTools = window.AutoBerichtWordDocxZip;
-  const reportRows = window.AutoBerichtReportRows || {};
+  const reportRows = window.AutoBerichtReportRows;
   const markdownTools = window.AutoBerichtMarkdown || {};
 
   const unzipAllEntries = zipTools?.unzipAllEntries;
@@ -34,12 +34,26 @@
   const REL_SLIDE_MASTER = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster";
   const REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
   const REL_HYPERLINK = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
-  const parseInlineMarkdownSegments = (value) => {
-    if (typeof markdownTools.parseInlineMarkdownSegments !== "function") {
-      throw new Error("AutoBerichtMarkdown.parseInlineMarkdownSegments helper is unavailable.");
-    }
-    return markdownTools.parseInlineMarkdownSegments(value);
+  const requireHelper = (scope, toolbox, name) => {
+    const fn = toolbox?.[name];
+    if (typeof fn !== "function") throw new Error(`${scope}.${name} helper is unavailable.`);
+    return fn;
   };
+  const parseInlineMarkdownSegments = requireHelper(
+    "AutoBerichtMarkdown",
+    markdownTools,
+    "parseInlineMarkdownSegments",
+  );
+  const sharedStripLeadingNumber = requireHelper("AutoBerichtReportRows", reportRows, "stripLeadingNumber");
+  const isSectionRow = requireHelper("AutoBerichtReportRows", reportRows, "isSectionRow");
+  const isIncludedRow = requireHelper("AutoBerichtReportRows", reportRows, "isReportReadyRow");
+  const resolveSectionId = requireHelper("AutoBerichtReportRows", reportRows, "resolveSectionId");
+  const sharedResolveSectionTitle = requireHelper("AutoBerichtReportRows", reportRows, "resolveSectionTitle");
+  const resolveFindingText = requireHelper("AutoBerichtReportRows", reportRows, "resolveFindingText");
+  const resolveRecommendationText = requireHelper("AutoBerichtReportRows", reportRows, "resolveRecommendationText");
+  const resolveSectionDisplayId = requireHelper("AutoBerichtReportRows", reportRows, "resolveSectionDisplayId");
+  const sharedBuildRenumberMap = requireHelper("AutoBerichtReportRows", reportRows, "buildRenumberMap");
+  const orderRowsForChapter = requireHelper("AutoBerichtReportRows", reportRows, "orderRowsForChapter");
 
   const REPORT_LAYOUTS = {
     cover: "ab_title",
@@ -211,14 +225,6 @@
     return cleaned || fallback;
   };
 
-  const rowToText = (value, toText) => {
-    if (typeof reportRows.rowToText === "function") return reportRows.rowToText(value, toText);
-    if (typeof toText === "function") return toText(value);
-    if (Array.isArray(value)) return value.join("\n");
-    if (value == null) return "";
-    return String(value);
-  };
-
   const localeBase = (locale) => String(locale || "").trim().toLowerCase().split("-")[0] || "de";
 
   const resolveLocalizedText = (value, locale = "de-CH") => {
@@ -254,116 +260,17 @@
     return String(value);
   };
 
-  const stripLeadingNumber = (value) => {
-    if (typeof reportRows.stripLeadingNumber === "function") return reportRows.stripLeadingNumber(value);
-    return String(value || "").replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "").trim();
-  };
-
-  const isSectionRow = (row) => {
-    if (typeof reportRows.isSectionRow === "function") return reportRows.isSectionRow(row);
-    return String(row?.kind || "").toLowerCase() === "section";
-  };
-
-  const isIncludedRow = (row) => {
-    if (typeof reportRows.isReportReadyRow === "function") return reportRows.isReportReadyRow(row);
-    const ws = row?.workstate;
-    if (!ws || ws.includeFinding == null) return false;
-    return ws.includeFinding === true && ws.done === true;
-  };
-
-  const resolveSectionId = (row, chapterId) => {
-    if (typeof reportRows.resolveSectionId === "function") return reportRows.resolveSectionId(row, chapterId);
-    const sectionId = String(row?.sectionId || "").trim();
-    if (sectionId) return sectionId;
-    const parts = String(row?.id || "").split(".");
-    if (parts.length >= 2) return `${parts[0]}.${parts[1]}`;
-    return `${chapterId}.1`;
-  };
+  const stripLeadingNumber = sharedStripLeadingNumber;
 
   const resolveSectionTitle = (row, locale = "de-CH") => {
-    if (typeof reportRows.resolveSectionTitle === "function") {
-      const fromHelper = reportRows.resolveSectionTitle(row);
-      const helperText = resolveLocalizedText(fromHelper, locale);
-      if (helperText) return stripLeadingNumber(helperText) || helperText;
-    }
+    const fromHelper = sharedResolveSectionTitle(row);
+    const helperText = resolveLocalizedText(fromHelper, locale);
+    if (helperText) return stripLeadingNumber(helperText) || helperText;
     const rawTitle = resolveLocalizedText(row?.title, locale) || String(row?.id || "");
     const cleaned = stripLeadingNumber(rawTitle);
     return cleaned || rawTitle;
   };
-
-  const resolveFindingText = (row, toText) => {
-    if (typeof reportRows.resolveFindingText === "function") return reportRows.resolveFindingText(row, toText);
-    const ws = row?.workstate;
-    if (ws && Object.prototype.hasOwnProperty.call(ws, "findingText")) {
-      return rowToText(ws.findingText, toText);
-    }
-    return rowToText(row?.master?.finding, toText);
-  };
-
-  const resolveRecommendationText = (row, toText) => {
-    if (typeof reportRows.resolveRecommendationText === "function") return reportRows.resolveRecommendationText(row, toText);
-    const ws = row?.workstate || {};
-    if (ws.includeRecommendation === false) return "";
-    if (Object.prototype.hasOwnProperty.call(ws, "recommendationText")) {
-      return rowToText(ws.recommendationText, toText);
-    }
-    return rowToText(row?.master?.recommendation, toText);
-  };
-
-  const resolvePriorityText = (row) => {
-    if (typeof reportRows.resolvePriorityText === "function") return reportRows.resolvePriorityText(row);
-    const raw = Number(row?.workstate?.priority);
-    if (!Number.isFinite(raw)) return "";
-    const value = Math.round(raw);
-    if (value < 1 || value > 4) return "";
-    return String(value);
-  };
-
-  const isFieldObservationChapter = (chapterId) => {
-    if (typeof reportRows.isFieldObservationChapter === "function") return reportRows.isFieldObservationChapter(chapterId);
-    return String(chapterId || "").includes(".");
-  };
-
-  const resolveSectionDisplayId = (sectionId, chapterId, sectionMap) => {
-    if (typeof reportRows.resolveSectionDisplayId === "function") {
-      return reportRows.resolveSectionDisplayId(sectionId, chapterId, sectionMap);
-    }
-    const key = String(sectionId || "").trim();
-    if (!key) return "";
-    if (sectionMap && sectionMap.has(key)) return `${chapterId}.${sectionMap.get(key)}`;
-    return key;
-  };
-
-  const buildRenumberMap = (rows, chapterId) => {
-    if (typeof reportRows.buildRenumberMap === "function") {
-      return reportRows.buildRenumberMap(rows, chapterId, isIncludedRow);
-    }
-    const rowMap = new Map();
-    const sectionMap = new Map();
-    const sectionCounts = new Map();
-    let itemCount = 0;
-    rows.forEach((row) => {
-      if (isSectionRow(row) || !isIncludedRow(row)) return;
-      const rowId = String(row?.id || "").trim();
-      if (!rowId) return;
-      if (isFieldObservationChapter(chapterId)) {
-        itemCount += 1;
-        rowMap.set(rowId, `${chapterId}.${itemCount}`);
-        return;
-      }
-      const sectionId = resolveSectionId(row, chapterId);
-      if (!sectionMap.has(sectionId)) sectionMap.set(sectionId, sectionMap.size + 1);
-      const count = (sectionCounts.get(sectionId) || 0) + 1;
-      sectionCounts.set(sectionId, count);
-      rowMap.set(rowId, `${chapterId}.${sectionMap.get(sectionId)}.${count}`);
-    });
-    return { rowMap, sectionMap };
-  };
-
-  const orderRowsForChapter = (chapter) => {
-    if (typeof reportRows.orderRowsForChapter === "function") return reportRows.orderRowsForChapter(chapter);
-    return Array.isArray(chapter?.rows) ? [...chapter.rows] : [];
-  };
+  const buildRenumberMap = (rows, chapterId) => sharedBuildRenumberMap(rows, chapterId, isIncludedRow);
 
   const getNestedDirectory = async (root, parts, options = { create: false }) => {
     let current = root;

@@ -330,16 +330,15 @@
     return current.getFileHandle(parts[parts.length - 1]);
   };
 
-  const moveRawVideos = async (projectHandle, getNestedDirectory, videoTasks = []) => {
+  const copyRawVideos = async (projectHandle, getNestedDirectory, videoTasks = []) => {
     if (!videoTasks.length) return 0;
     const resolveVideosHandle = () => ensureVideosFolder(projectHandle, getNestedDirectory);
-    let movedCount = 0;
+    let copiedCount = 0;
     for (const task of videoTasks) {
       const sourceFile = await task.fileHandle.getFile();
       const prefixedName = `${String(task.owner || "").trim()}_${String(task.fileName || "").trim()}`;
       await withFreshDirectoryHandle(resolveVideosHandle, async (videosHandle) => {
-        const safeName = await ensureUniqueFileName(videosHandle, prefixedName);
-        const target = await videosHandle.getFileHandle(safeName, { create: true });
+        const target = await videosHandle.getFileHandle(prefixedName, { create: true });
         const writable = await target.createWritable();
         await writable.write(sourceFile);
         await writable.close();
@@ -348,13 +347,9 @@
           throw new Error(`Video copy verification failed for ${task.fileName}. Raw source was kept.`);
         }
       });
-      const raw = await findRawFolder(projectHandle, getNestedDirectory);
-      if (!raw) throw new Error("Missing photos/raw while finalizing moved videos.");
-      const ownerHandle = await getNestedDirectory(raw.handle, [task.owner]);
-      await ownerHandle.removeEntry(task.fileName);
-      movedCount += 1;
+      copiedCount += 1;
     }
-    return movedCount;
+    return copiedCount;
   };
 
   const getPhotoFile = async (photo, projectHandle) => {
@@ -427,34 +422,38 @@
       getNestedDirectory,
       isImageFile,
       setStatus,
+      translate,
       resizeMax = 1920,
       resizeQuality = 0.85,
     } = context || {};
+    const statusText = (key, fallback, values = {}) => (
+      typeof translate === "function" ? translate(key, fallback, values) : fallback.replace(/\{(\w+)\}/g, (match, name) => String(values[name] ?? match))
+    );
 
     if (!projectHandle) {
-      setStatus?.("Open project folder first.");
+      setStatus?.(statusText("project_open_folder_first", "Open project folder first."));
       return null;
     }
 
     const raw = await findRawFolder(projectHandle, getNestedDirectory);
     if (!raw) {
-      setStatus?.("Missing photos/raw. Expected 3-letter subfolders such as pm1, pm2, pm3 or abc.");
+      setStatus?.(statusText("status_missing_raw_photos", "Missing photos/raw. Expected three-letter subfolders such as pm1, pm2, pm3, or abc."));
       return null;
     }
     const { imageTasks, videoTasks } = await collectRawTasks(raw.handle, isImageFile);
-    const movedVideoCount = await moveRawVideos(projectHandle, getNestedDirectory, videoTasks);
+    const copiedVideoCount = await copyRawVideos(projectHandle, getNestedDirectory, videoTasks);
     if (!imageTasks.length) {
-      if (movedVideoCount > 0) {
+      if (copiedVideoCount > 0) {
         return {
           resizedHandle: await ensureResizedFolder(projectHandle, getNestedDirectory),
           photoRootName: "photos/resized",
           count: 0,
           importedCount: 0,
           skippedCount: 0,
-          movedVideoCount,
+          copiedVideoCount,
         };
       }
-      setStatus?.("No raw images found.");
+      setStatus?.(statusText("status_no_raw_images", "No raw images found."));
       return null;
     }
     const resizedHandle = await ensureResizedFolder(projectHandle, getNestedDirectory);
@@ -484,7 +483,7 @@
         skippedCount += 1;
         processedCount += 1;
         const pct = Math.round((processedCount / importPlan.length) * 100);
-        setStatus?.(`Importing photos ${processedCount}/${importPlan.length} (${pct}%) • skipped ${skippedCount}`);
+        setStatus?.(statusText("status_importing_photos", "Importing photos {processed}/{total} ({percent}%) • skipped {skipped}", { processed: processedCount, total: importPlan.length, percent: pct, skipped: skippedCount }));
         continue;
       }
       const blob = await resizePhoto(task.file, resizeMax, resizeQuality);
@@ -502,7 +501,7 @@
       importedCount += 1;
       processedCount += 1;
       const pct = Math.round((processedCount / importPlan.length) * 100);
-      setStatus?.(`Importing photos ${processedCount}/${importPlan.length} (${pct}%) • skipped ${skippedCount}`);
+      setStatus?.(statusText("status_importing_photos", "Importing photos {processed}/{total} ({percent}%) • skipped {skipped}", { processed: processedCount, total: importPlan.length, percent: pct, skipped: skippedCount }));
     }
 
     return {
@@ -511,7 +510,7 @@
       count: importPlan.length,
       importedCount,
       skippedCount,
-      movedVideoCount,
+      copiedVideoCount,
     };
   };
 
@@ -522,13 +521,17 @@
       photos,
       tagOptions,
       locale,
+      translate,
     } = context || {};
+    const statusText = (key, fallback, values = {}) => (
+      typeof translate === "function" ? translate(key, fallback, values) : fallback.replace(/\{(\w+)\}/g, (match, name) => String(values[name] ?? match))
+    );
     if (!projectHandle) throw new Error("Project folder is missing.");
     if (!Array.isArray(photos) || !photos.length) {
       return { count: 0, exportRootName: "photos/export" };
     }
 
-    setStatus?.("Preparing export...");
+    setStatus?.(statusText("status_preparing_export", "Preparing export ..."));
     const resolveLocaleBase = (value) => {
       const base = String(value || "").toLowerCase().split("-")[0];
       if (base === "fr") return "fr";
@@ -656,7 +659,7 @@
         await writable.write(file);
         await writable.close();
         completed += 1;
-        setStatus?.(`Exporting photos ${completed}/${total}`);
+        setStatus?.(statusText("status_exporting_photos", "Exporting photos {completed}/{total}", { completed, total }));
       }
     }
 

@@ -53,9 +53,23 @@ test("markdown drops unsafe and relative link targets", () => {
   const api = loadBrowserScripts(["mini/shared/markdown.js"]).AutoBerichtMarkdown;
   const unsafe = api.markdownToHtml("[click](javascript:alert(1))");
   assert.equal(unsafe.includes("href="), false);
+  assert.equal(unsafe, "<p>click</p>");
   const safe = api.markdownToHtml("[Suva](https://www.suva.ch/)");
   assert.match(safe, /href="https:\/\/www\.suva\.ch\/"/);
   assert.match(safe, /noopener noreferrer/);
+});
+
+test("browser Markdown preview uses the same styles and links as Office exports", () => {
+  const api = loadBrowserScripts(["mini/shared/markdown.js"]).AutoBerichtMarkdown;
+  const html = api.markdownToHtml(
+    "***Important*** **bold** *italic* https://example.com/test. <unsafe>",
+  );
+  assert.match(html, /<strong><em>Important<\/em><\/strong>/);
+  assert.match(html, /<strong>bold<\/strong>/);
+  assert.match(html, /<em>italic<\/em>/);
+  assert.match(html, /href="https:\/\/example\.com\/test"/);
+  assert.match(html, /&lt;unsafe&gt;/);
+  assert.doesNotMatch(html, /\*\*\*|\*\*bold\*\*|\*italic\*/);
 });
 
 test("export markdown parser preserves visible text and inline styles", () => {
@@ -84,6 +98,7 @@ test("export markdown parser preserves visible text and inline styles", () => {
 test("PowerPoint text renderer converts Markdown into DrawingML runs", () => {
   const context = loadBrowserScripts([
     "mini/shared/markdown.js",
+    "mini/shared/report-rows.js",
     "mini/shared/pptx-export.js",
   ], {
     AutoBerichtWordDocxZip: {},
@@ -99,14 +114,25 @@ test("PowerPoint text renderer converts Markdown into DrawingML runs", () => {
   assert.deepEqual(Array.from(rendered.hyperlinkTargets), ["https://www.suva.ch/"]);
 });
 
-test("locale translation lookup uses the selected locale", () => {
+test("report locale changes report wording and spellcheck, while steering UI stays English", () => {
+  let documentLang = "";
   const document = {
-    documentElement: { setAttribute() {} },
+    documentElement: { setAttribute(name, value) { if (name === "lang") documentLang = value; } },
     querySelectorAll() { return []; },
   };
   const api = loadBrowserScripts(["mini/shared/i18n.js"], { document }).AutoBerichtI18n;
-  api.setLocale("fr-CH");
-  assert.equal(api.t("project_meta_locale_select"), "Choisir la langue");
+  for (const [locale, seeAlso] of [["de-CH", "Siehe auch"], ["fr-CH", "Voir aussi"], ["it-CH", "Vedere anche"]]) {
+    api.setLocale(locale);
+    assert.equal(documentLang, locale);
+    assert.equal(api.t("project_meta_locale_select"), "Select language");
+    assert.equal(api.t("project_tool_import_title"), "Import Self-Assessment");
+    assert.equal(api.t("project_export_card_title"), "Word Export");
+    assert.equal(api.tReport("checklist_see_also"), seeAlso);
+    assert.equal(
+      api.tf("status_loaded_photos", "Loaded {count} photos from {folder}.", { count: 3, folder: "photos/resized" }),
+      "Loaded 3 photos from photos/resized.",
+    );
+  }
 });
 
 test("Chapter 0 front matter is loaded from the user library", () => {

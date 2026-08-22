@@ -2,8 +2,11 @@
   const init = (ctx, deps) => {
     const { stateHelpers, normalizeHelpers } = deps;
     const { elements, state, runtime, debug, setStatus } = ctx;
-    const { t, tHint = t } = ctx.i18n;
-    const { escapeHtml = (value) => value, formatInlineMarkdown = (value) => value } = ctx.markdown || {};
+    const { t, tf, tHint = t, tReport = t } = ctx.i18n;
+    const { escapeHtml, formatInlineMarkdown } = ctx.markdown;
+    if (typeof escapeHtml !== "function" || typeof formatInlineMarkdown !== "function") {
+      throw new Error("AutoBerichtMarkdown preview helpers are unavailable.");
+    }
     const reportRows = window.AutoBerichtReportRows || {};
 
     const {
@@ -159,7 +162,7 @@
       } catch (err) {
         photoOverlayImage.removeAttribute("src");
         photoOverlayImage.alt = "Photo not available";
-        setStatus(`Photo not found: ${path}`);
+        setStatus(tf("status_photo_not_found", "Photo not found: {path}", { path }));
       }
     };
 
@@ -371,7 +374,7 @@
     };
 
     const formatChecklistMarkdown = (item) => {
-      const prefix = t("checklist_see_also", "See also");
+      const prefix = tReport("checklist_see_also", "See also");
       const title = formatChecklistTitle(item);
       const rawUrl = String(item.url || "").trim();
       const linkTarget = normalizeChecklistUrl(rawUrl);
@@ -416,7 +419,7 @@
       const text = formatChecklistMarkdown(item);
       const ok = await copyToClipboard(text);
       if (ok) {
-        setStatus(`Copied: ${formatChecklistTitle(item)}`);
+        setStatus(tf("status_checklist_copied", "Copied: {title}", { title: formatChecklistTitle(item) }));
         if (button) {
           button.classList.add("is-copied");
           window.setTimeout(() => {
@@ -424,7 +427,7 @@
           }, 1200);
         }
       } else {
-        setStatus("Copy failed.");
+        setStatus(t("status_copy_failed"));
       }
     };
 
@@ -434,7 +437,7 @@
       try {
         source = await loadChecklistData();
       } catch (err) {
-        setStatus(err.message || "Checklist load failed.");
+        setStatus(tf("status_checklist_load_failed", "Checklist load failed: {error}", { error: err.message || err }));
         debug.logLine("error", `Checklist load failed: ${err.message || err}`);
         return;
       }
@@ -1164,7 +1167,7 @@
             inList = true;
           }
           const item = trimmed.slice(2);
-          parts.push(`<li>${formatInlineMarkdown(escapeHtml(item))}</li>`);
+          parts.push(`<li>${formatInlineMarkdown(item)}</li>`);
           return;
         }
         closeList();
@@ -1172,7 +1175,7 @@
           parts.push("<p></p>");
           return;
         }
-        parts.push(`<p>${formatInlineMarkdown(escapeHtml(line))}</p>`);
+        parts.push(`<p>${formatInlineMarkdown(line)}</p>`);
       });
       closeList();
       return parts.join("");
@@ -1468,7 +1471,7 @@
         if (elements.importSelfBtn) {
           elements.importSelfBtn.click();
         } else {
-          setStatus("Import tool is not available.");
+          setStatus(t("status_import_tool_missing"));
         }
       };
 
@@ -1476,7 +1479,7 @@
         if (elements.generateLibraryBtn) {
           elements.generateLibraryBtn.click();
         } else {
-          setStatus("Library tool is not available.");
+          setStatus(t("status_library_tool_missing"));
         }
       };
 
@@ -1484,7 +1487,7 @@
         if (elements.saveLogBtn) {
           elements.saveLogBtn.click();
         } else {
-          setStatus("Log tool is not available.");
+          setStatus(t("status_log_tool_missing"));
         }
       };
 
@@ -1537,7 +1540,7 @@
             try {
               await onInput(input.value);
             } catch (err) {
-              setStatus(`Update failed: ${err.message || err}`);
+              setStatus(tf("status_update_failed", "Update failed: {error}", { error: err.message || err }));
               debug.logLine("error", `Project metadata update failed: ${err.message || err}`);
             } finally {
               input.disabled = false;
@@ -1678,16 +1681,17 @@
               notify: showExportToast,
             });
             if (result?.savedAs) {
-              setStatus(`Exported ${result.savedAs}`);
-              showExportToast(`Exported ${result.savedAs}`);
+              const message = tf("status_exported_file", "Exported {filename}", { filename: result.savedAs });
+              setStatus(message);
+              showExportToast(message);
             } else {
               setStatus(t("project_export_done", "Export complete."));
               showExportToast(t("project_export_done", "Export complete."));
             }
           } catch (err) {
-            setStatus(`Export failed: ${err.message || err}`);
+            setStatus(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }));
             debug.logLine("error", `No-VBA export failed: ${err.message || err}`);
-            showExportToast(`Export failed: ${err.message || err}`, "error");
+            showExportToast(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }), "error");
           } finally {
             button.disabled = false;
             button.textContent = previous;
@@ -1732,16 +1736,17 @@
             notify: showExportToast,
           });
           if (result?.savedAs) {
-            setStatus(`Exported ${result.savedAs}`);
-            showExportToast(`Exported ${result.savedAs}`);
+            const message = tf("status_exported_file", "Exported {filename}", { filename: result.savedAs });
+            setStatus(message);
+            showExportToast(message);
           } else {
             setStatus(t("project_export_ppt_done", "PowerPoint export complete."));
             showExportToast(t("project_export_ppt_done", "PowerPoint export complete."));
           }
         } catch (err) {
-          setStatus(`Export failed: ${err.message || err}`);
+          setStatus(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }));
           debug.logLine("error", `PowerPoint export failed (${mode}): ${err.message || err}`);
-          showExportToast(`Export failed: ${err.message || err}`, "error");
+          showExportToast(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }), "error");
         } finally {
           button.disabled = false;
           button.textContent = previous;
@@ -1791,16 +1796,17 @@
           try {
             const result = await actionPlanExportHandler();
             if (result?.savedAs) {
-              setStatus(`Exported ${result.savedAs}`);
-              showExportToast(`Exported ${result.savedAs}`);
+              const message = tf("status_exported_file", "Exported {filename}", { filename: result.savedAs });
+              setStatus(message);
+              showExportToast(message);
             } else {
               setStatus(t("project_tool_action_plan_done", "Action plan export complete."));
               showExportToast(t("project_tool_action_plan_done", "Action plan export complete."));
             }
           } catch (err) {
-            setStatus(`Export failed: ${err.message || err}`);
+            setStatus(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }));
             debug.logLine("error", `Action plan export failed: ${err.message || err}`);
-            showExportToast(`Export failed: ${err.message || err}`, "error");
+            showExportToast(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }), "error");
           } finally {
             button.disabled = false;
             button.textContent = previous;
@@ -1880,7 +1886,7 @@
           scheduleAutosave();
           setStatus(t("project_logo_done", "Logo assets prepared."));
         } catch (err) {
-          setStatus(`Logo processing failed: ${err.message || err}`);
+          setStatus(tf("status_logo_processing_failed", "Logo processing failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Logo processing failed: ${err.message || err}`);
         } finally {
           logoBtn.disabled = false;

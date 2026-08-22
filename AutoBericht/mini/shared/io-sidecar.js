@@ -7,7 +7,8 @@
       renderApi,
       spiderModule,
     } = deps;
-    const { state, runtime, debug, setStatus, elements } = ctx;
+    const { state, runtime, debug, setStatus, elements, i18n } = ctx;
+    const { t, tf } = i18n;
     const textDecoder = new TextDecoder();
     const textEncoder = new TextEncoder();
     const sidecarStorage = window.AutoBerichtSidecarStorage;
@@ -177,7 +178,7 @@
       try {
         return await readLibraryFromHandle(picked.handle);
       } catch (err) {
-        setStatus(`Invalid library: ${err.message || err}`);
+        setStatus(tf("status_invalid_library", "Invalid library: {error}", { error: err.message || err }));
         debug.logLine("error", `Invalid library: ${err.message || err}`);
         throw new Error(`Could not load ${picked.name}: ${err.message || err}`);
       }
@@ -234,7 +235,7 @@
       try {
         seeds.validateKnowledgeBase(knowledgeBase);
       } catch (err) {
-        setStatus(`Invalid seed: ${err.message || err}`);
+        setStatus(tf("status_invalid_seed", "Invalid seed: {error}", { error: err.message || err }));
         debug.logLine("error", `Invalid seed: ${err.message || err}`);
         return null;
       }
@@ -384,12 +385,12 @@
       if (!sidecarStorage?.readSidecar) {
         throw new Error("Safe sidecar storage module is unavailable.");
       }
-      setStatus(`Loading project folder: ${runtime.dirHandle.name}`);
+      setStatus(tf("status_loading_project_folder", "Loading project folder: {name}", { name: runtime.dirHandle.name }));
       let sidecarDoc = null;
       try {
         sidecarDoc = await sidecarStorage.readSidecar(runtime.dirHandle, { allowMissing: true });
       } catch (err) {
-        setStatus(`Project load failed: ${err.message || err}`);
+        setStatus(tf("status_project_load_failed", "Project load failed: {error}", { error: err.message || err }));
         debug.logLine("error", `Project load failed: ${err.message || err}`);
         return { ok: false, source: "error", error: err };
       }
@@ -412,7 +413,7 @@
           warning = ` Project loaded, but folder setup needs attention: ${err.message || err}`;
           debug.logLine("warn", `Project scaffold failed after sidecar load: ${err.message || err}`);
         }
-        setStatus(`Loaded project_sidecar.json.${warning}`.trim());
+        setStatus(tf("status_loaded_sidecar", "Loaded project_sidecar.json.{warning}", { warning }).trim());
         debug.logLine("info", "Loaded project_sidecar.json and opened Project.");
         return { ok: true, source: "sidecar", warning };
       }
@@ -447,7 +448,7 @@
         warning = ` Folder setup needs attention: ${err.message || err}`;
         debug.logLine("warn", `Project scaffold failed for new project: ${err.message || err}`);
       }
-      setStatus(`New project ready. Choose the report language to load its matching library.${warning}`);
+      setStatus(tf("status_new_project_ready", "New project ready. Choose the report language to load its matching library.{warning}", { warning }));
       debug.logLine("info", "New project opened on Project; waiting for explicit locale bootstrap.");
       return { ok: true, source: "empty", warning };
     };
@@ -1427,7 +1428,7 @@
 
     const exportLibraryExcel = async () => {
       if (!runtime.dirHandle) {
-        setStatus("Open project folder first.");
+        setStatus(t("project_open_folder_first"));
         return;
       }
       if (!window.XLSX?.utils?.book_new) {
@@ -1543,13 +1544,13 @@
       const xlsxName = `${baseName}_${stamp}.xlsx`;
       const arrayBuffer = window.XLSX.write(workbook, { type: "array", bookType: "xlsx" });
       await writeBinaryFile(runtime.dirHandle, xlsxName, arrayBuffer, xlsxName);
-      setStatus(`Library Excel exported: ${xlsxName}`);
+      setStatus(tf("status_library_excel_exported", "Library Excel exported: {filename}", { filename: xlsxName }));
       debug.logLine("info", `Library Excel exported: ${xlsxName}`);
     };
 
     const exportActionPlanExcel = async () => {
       if (!runtime.dirHandle) {
-        setStatus("Open project folder first.");
+        setStatus(t("project_open_folder_first"));
         return null;
       }
       if (typeof unzipAllEntries !== "function" || typeof buildZipStore !== "function") {
@@ -1600,14 +1601,14 @@
         knowledgeBase = await seeds.readSeedFromHttp(seedFilename);
       }
       if (!knowledgeBase) {
-        setStatus("Knowledge base seed not found.");
+        setStatus(t("status_knowledge_base_not_found"));
         debug.logLine("error", "Knowledge base seed not found.");
         return;
       }
       try {
         seeds.validateKnowledgeBase(knowledgeBase);
       } catch (err) {
-        setStatus(`Invalid knowledge base: ${err.message}`);
+        setStatus(tf("status_invalid_knowledge_base", "Invalid knowledge base: {error}", { error: err.message || err }));
         debug.logLine("error", `Invalid knowledge base: ${err.message || err}`);
         return;
       }
@@ -1875,9 +1876,9 @@
       await saveLibraryFile(output, timestamp);
       await saveSidecar();
       if (applied === 0) {
-        setStatus("Library updated (0 changes). Set Library to Append/Replace on rows, Chapter 0 context, or chapter positives.");
+        setStatus(t("status_library_zero_changes"));
       } else {
-        setStatus(`Library updated (${applied} changes).`);
+        setStatus(tf("status_library_updated", "Library updated ({count} changes).", { count: applied }));
       }
       debug.logLine("info", `Library updated (${applied} changes).`);
     };
@@ -1915,8 +1916,8 @@
         await saveSidecar();
       }
       const deferredMsg = options.deferSave === true
-        ? "Seed loaded from language. Sidecar will be saved when leaving Project page."
-        : "Seed loaded and saved to project_sidecar.json.";
+        ? t("status_seed_loaded_deferred")
+        : t("status_seed_loaded_saved");
       setStatus(deferredMsg);
       debug.logLine("info", deferredMsg);
       return { ok: true, deferred: options.deferSave === true };

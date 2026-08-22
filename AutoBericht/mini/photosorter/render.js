@@ -2,7 +2,8 @@
   const init = (ctx, deps) => {
     const { state, runtime, setStatus } = ctx;
     const { elements, tagsApi, photosApi, actions } = deps;
-    const tHint = ctx.i18n?.tHint || ((key, fallback) => fallback || key);
+    const { t, tf } = ctx.i18n;
+    const tHint = ctx.i18n.tHint;
 
     const updateStatusVisibility = (isHidden) => {
       elements.statusEl?.classList.toggle("is-hidden", isHidden);
@@ -23,7 +24,7 @@
       const unsorted = state.photos.filter(photosApi.isPhotoUnsorted).length;
       const current = filtered.length ? state.currentIndex + 1 : 0;
       if (elements.photoMetaEl) {
-        elements.photoMetaEl.textContent = `Image ${current} of ${filtered.length} • Total ${total} • Unsorted ${unsorted}`;
+        elements.photoMetaEl.textContent = tf("photosorter_image_meta", "Image {current} of {filtered} • Total {total} • Unsorted {unsorted}", { current, filtered: filtered.length, total, unsorted });
       }
     };
 
@@ -117,7 +118,7 @@
       if (!current) {
         if (elements.photoImageEl) {
           elements.photoImageEl.removeAttribute("src");
-          elements.photoImageEl.alt = "No photo loaded";
+          elements.photoImageEl.alt = t("photosorter_no_photo");
         }
         if (elements.photoFilenameEl) elements.photoFilenameEl.textContent = "";
         if (elements.notesEl) {
@@ -168,7 +169,7 @@
           elements.photoImageEl.alt = current.path;
         }
       }).catch((err) => {
-        setStatus(`Photo load failed: ${err.message}`);
+        setStatus(tf("status_photo_load_failed", "Photo load failed: {error}", { error: err.message || err }));
       });
     };
 
@@ -186,7 +187,7 @@
       controls.className = "panel__controls";
       const filterInput = document.createElement("input");
       filterInput.type = "text";
-      filterInput.placeholder = "Filter tags";
+      filterInput.placeholder = t("photosorter_filter_tags");
       filterInput.value = config.filter || "";
       filterInput.addEventListener("input", () => {
         state.tagFilters[group] = filterInput.value;

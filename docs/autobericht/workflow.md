@@ -14,13 +14,15 @@ This is the current folder-first workflow.
 2. Create an empty project folder.
 3. Start `start-autobericht.cmd` from repo root.
 4. In app, click **Open Project Folder** and select the empty project folder.
-5. On **Project**, choose `Locale` to bootstrap seed content.
+5. On **Project**, choose **Language** to bootstrap report content.
 
 ## Working Flow
 
 1. Import self-assessment on **Project** (optional when available).
 2. Use **PhotoSorter**:
    - `Import / Export Photos` -> `Import photos`
+   - original files stay in `photos/raw`; resized images go to `photos/resized`
+     and videos are copied to `photos/videos`
    - tag photos (report / observations / training)
    - `Export tagged folders` when needed
 3. Use **AutoBericht** chapter editor:

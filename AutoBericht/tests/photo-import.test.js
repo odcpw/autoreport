@@ -110,7 +110,7 @@ const createVideoProject = (options = {}) => {
   return { root, photos, owner };
 };
 
-test("raw videos are moved into photos/videos after a verified copy", async () => {
+test("raw videos are copied into photos/videos and the intake originals remain untouched", async () => {
   const browser = loadBrowserScripts(["mini/shared/photo-import.js"]);
   const { root, photos, owner } = createVideoProject();
 
@@ -120,11 +120,11 @@ test("raw videos are moved into photos/videos after a verified copy", async () =
     isImageFile: () => false,
   });
 
-  assert.equal(result.movedVideoCount, 1);
-  assert.equal(owner.entries.has("walkthrough.MOV"), false);
+  assert.equal(result.copiedVideoCount, 1);
+  assert.equal(owner.entries.has("walkthrough.MOV"), true);
   const videos = photos.entries.get("videos");
-  const moved = await videos.entries.get("abc_walkthrough.MOV").getFile();
-  assert.equal(Buffer.from(moved.bytes).toString(), "video-payload");
+  const copied = await videos.entries.get("abc_walkthrough.MOV").getFile();
+  assert.equal(Buffer.from(copied.bytes).toString(), "video-payload");
 });
 
 test("an incomplete video copy leaves the raw source untouched", async () => {

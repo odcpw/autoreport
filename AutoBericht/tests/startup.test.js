@@ -2,6 +2,94 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const { loadBrowserScripts, createMemoryDirectory } = require("./helpers");
 
+const functionModule = (...names) => Object.fromEntries(names.map((name) => [name, () => {}]));
+const testI18n = {
+  setLocale() {},
+  t: (key, fallback) => fallback || key,
+  tf: (key, fallback, values = {}) => String(fallback || key).replace(/\{(\w+)\}/g, (match, name) => String(values[name] ?? match)),
+};
+
+test("dependency guard reports the exact missing module in the page status", () => {
+  const status = { textContent: "" };
+  const context = loadBrowserScripts(["mini/shared/dependencies.js"], {
+    document: { getElementById: () => status },
+  });
+  assert.throws(
+    () => context.AutoBerichtDependencies.requireModules(
+      { AutoBerichtMissing: ["init"] },
+      { appName: "AutoBericht", statusElementId: "status" },
+    ),
+    /AutoBericht cannot start: required module AutoBerichtMissing did not load/,
+  );
+  assert.match(status.textContent, /AutoBerichtMissing/);
+});
+
+test("production entry points stop instead of substituting no-op core modules", () => {
+  const cases = [
+    {
+      script: "mini/app.js",
+      missing: "AutoBerichtSidecar",
+      statusId: "status",
+      globals: {
+        AutoBerichtElements: functionModule("getElements"),
+        AutoReportDebug: functionModule("logLine", "saveLog"),
+        AutoBerichtI18n: functionModule("t", "tf", "tHint", "tReport", "setLocale", "resolveSpellcheckLang"),
+        AutoBerichtMarkdown: functionModule("escapeHtml", "formatInlineMarkdown", "parseInlineMarkdownSegments"),
+        AutoBerichtFsHandle: functionModule("saveHandle", "loadHandle", "requestHandlePermission"),
+        AutoBerichtState: functionModule("createState"),
+        AutoBerichtNormalize: functionModule("normalizeProject"),
+        AutoBerichtSeeds: functionModule("validateKnowledgeBase", "buildProjectFromKnowledgeBase"),
+        AutoBerichtImportSelf: functionModule("createHandler"),
+        AutoBerichtRender: functionModule("init"),
+        AutoBerichtSpider: functionModule("computeSpider"),
+        AutoBerichtSpiderUi: functionModule("init"),
+        AutoBerichtBindEvents: functionModule("bind"),
+      },
+    },
+    {
+      script: "mini/photosorter.js",
+      missing: "AutoBerichtPhotoImport",
+      statusId: "status-text",
+      globals: {
+        AutoBerichtPhotoSorterElements: functionModule("getElements"),
+        AutoReportDebug: functionModule("logLine", "saveLog"),
+        AutoBerichtI18n: functionModule("t", "tf", "tHint", "setLocale", "resolveSpellcheckLang"),
+        AutoBerichtFsHandle: functionModule("saveHandle", "loadHandle", "requestHandlePermission"),
+        AutoBerichtPhotoSorterState: functionModule("getLayoutConfig", "createState", "createRuntime"),
+        AutoBerichtPhotoSorterTags: functionModule("createEmptyTagOptions"),
+        AutoBerichtPhotoSorterPhotos: functionModule("init"),
+        AutoBerichtPhotoSorterSidecar: functionModule("init"),
+        AutoBerichtPhotoSorterRender: functionModule("init"),
+        AutoBerichtPhotoSorterBindEvents: functionModule("bind"),
+      },
+    },
+    {
+      script: "mini/librarymaker.js",
+      missing: "AutoBerichtSeeds",
+      statusId: "status",
+      globals: {
+        AutoReportDebug: functionModule("logLine"),
+        AutoBerichtI18n: functionModule("t", "tf", "setLocale", "resolveSpellcheckLang"),
+        AutoBerichtFsHandle: functionModule("saveHandle", "loadHandle", "requestHandlePermission"),
+        AutoBerichtState: functionModule("compareIdSegments", "formatChapterLabel", "getLibraryFileName", "toText"),
+        AutoBerichtNormalize: functionModule("normalizeProject"),
+      },
+    },
+  ];
+
+  cases.forEach(({ script, missing, statusId, globals }) => {
+    const status = { textContent: "" };
+    assert.throws(
+      () => loadBrowserScripts(["mini/shared/dependencies.js", script], {
+        ...globals,
+        document: { getElementById: (id) => id === statusId ? status : null },
+      }),
+      new RegExp(`required module ${missing} did not load`),
+    );
+    assert.match(status.textContent, new RegExp(missing));
+  });
+});
+
 const createIo = ({ files, project }) => {
   const statuses = [];
   let renders = 0;
@@ -26,7 +114,7 @@ const createIo = ({ files, project }) => {
     elements: {},
     setStatus: (message) => statuses.push(message),
     debug: { logLine() {} },
-    i18n: { setLocale() {} },
+    i18n: testI18n,
   }, {
     stateHelpers: {
       getLibraryFileName: (meta) => `library_user_${meta.locale}.json`,
@@ -131,7 +219,7 @@ test("Chapter 0 customer context is stored in the user library without duplicate
     elements: {},
     setStatus() {},
     debug: { logLine() {} },
-    i18n: { setLocale() {} },
+    i18n: testI18n,
   }, {
     stateHelpers: {
       getLibraryFileName: () => libraryName,

@@ -15,15 +15,15 @@ Ce guide est destiné à des utilisateurs techniques. Les libellés de l'interfa
 
 ## 3) Initialiser le projet (langue/métadonnées)
 1. Ouvrir **Project** à gauche.
-2. Dans **Locale**, choisir la langue (`DE`, `FR`, `IT`).
+2. Dans **Language**, choisir la langue du rapport (`DE`, `FR`, `IT`).
 3. Renseigner modérateur et entreprise.
 
-Cercles rouges: Locale, Import Self-Assessment, Word/PPT Export.
+Cercles rouges: Language, Import Self-Assessment, Word/PPT Export.
 
 ![Page Project](screenshots/annotated/02-project-page-overview.png)
 
 ## 4) Préparer le flux photo
-1. Mettre les photos originales dans `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`.
+1. Mettre les photos et vidéos originales dans `photos/raw/pm1`, `photos/raw/pm2`, `photos/raw/pm3`.
 2. Passer à **PhotoSorter**.
 3. En haut: **Import / Export Photos**.
 
@@ -32,7 +32,7 @@ Cercles rouges: Import/Export, Edit tags, Save sidecar, Show Unsorted, Clear Fil
 ![Vue PhotoSorter](screenshots/annotated/06-photosorter-main.png)
 
 ## 5) Importer/exporter les photos
-- **Import photos**: import + redimensionnement vers `photos/resized` (côté long max. 1920 px).
+- **Import photos**: les copies des images sont redimensionnées dans `photos/resized` (côté long max. 1920 px); les vidéos sont copiées dans `photos/videos`. Les originaux dans `photos/raw` restent intacts.
 - **Rescan photos**: relecture simple.
 - **Export tagged folders**: export dans `photos/export` par tags/catégories.
 

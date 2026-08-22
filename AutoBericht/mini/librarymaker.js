@@ -1,10 +1,25 @@
 (() => {
-  const debug = window.AutoReportDebug || { logLine: () => {} };
-  const i18n = window.AutoBerichtI18n || {};
-  const fsHandles = window.AutoBerichtFsHandle || {};
-  const stateHelpers = window.AutoBerichtState || {};
-  const normalizeHelpers = window.AutoBerichtNormalize || {};
-  const seeds = window.AutoBerichtSeeds || {};
+  const dependencyTools = window.AutoBerichtDependencies;
+  if (typeof dependencyTools?.requireModules !== "function") {
+    const message = "LibraryMaker cannot start: required module AutoBerichtDependencies did not load.";
+    const statusEl = document.getElementById("status");
+    if (statusEl) statusEl.textContent = message;
+    throw new Error(message);
+  }
+  const modules = dependencyTools.requireModules({
+    AutoReportDebug: ["logLine"],
+    AutoBerichtI18n: ["t", "tf", "setLocale", "resolveSpellcheckLang"],
+    AutoBerichtFsHandle: ["saveHandle", "loadHandle", "requestHandlePermission"],
+    AutoBerichtState: ["compareIdSegments", "formatChapterLabel", "getLibraryFileName", "toText"],
+    AutoBerichtNormalize: ["normalizeProject"],
+    AutoBerichtSeeds: ["normalizeTagGroups", "validateKnowledgeBase"],
+  }, { appName: "LibraryMaker", statusElementId: "status" });
+  const debug = modules.AutoReportDebug;
+  const i18n = modules.AutoBerichtI18n;
+  const fsHandles = modules.AutoBerichtFsHandle;
+  const stateHelpers = modules.AutoBerichtState;
+  const normalizeHelpers = modules.AutoBerichtNormalize;
+  const seeds = modules.AutoBerichtSeeds;
 
   const elements = {
     statusEl: document.getElementById("status"),
@@ -50,18 +65,10 @@
     saveQueue: Promise.resolve(),
   };
 
-  const t = i18n.t || ((key, fallback) => fallback || key);
-  const setLocale = i18n.setLocale || (() => {});
-  const resolveSpellcheckLang = i18n.resolveSpellcheckLang || ((locale) => String(locale || "en").toLowerCase().split("-")[0] || "en");
-  const compareIds = stateHelpers.compareIdSegments
-    || ((a, b) => String(a || "").localeCompare(String(b || ""), "de", { numeric: true }));
-  const getLibraryFileName = stateHelpers.getLibraryFileName
-    || ((meta = {}) => `library_user_${String(meta.locale || "de-CH")}.json`);
-  const toText = stateHelpers.toText || ((value) => {
-    if (Array.isArray(value)) return value.join("\n");
-    if (value == null) return "";
-    return String(value);
-  });
+  const { t, tf, setLocale, resolveSpellcheckLang } = i18n;
+  const compareIds = stateHelpers.compareIdSegments;
+  const getLibraryFileName = stateHelpers.getLibraryFileName;
+  const toText = stateHelpers.toText;
 
   const isPlainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
 
@@ -103,7 +110,7 @@
 
   const ensureFsAccess = () => {
     if (!window.showDirectoryPicker) {
-      setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
+      setStatus(t("status_fs_api_unavailable"));
       if (elements.openProjectBtn) elements.openProjectBtn.disabled = true;
       if (elements.firstRunPickBtn) elements.firstRunPickBtn.disabled = true;
       return false;
@@ -354,7 +361,7 @@
       try {
         await saveTargetLibrary();
       } catch (err) {
-        setStatus(`Autosave failed: ${err.message || err}`);
+        setStatus(tf("status_autosave_failed", "Autosave failed: {error}", { error: err.message || err }));
       }
     }, 1200);
   };
@@ -471,7 +478,7 @@
     const chapters = getChapterObjects();
     state.selectedChapterId = chapters[0]?.id || "";
     setSaveState("Loaded");
-    setStatus(`Loaded My Library: ${resolved.fileName}`);
+    setStatus(tf("status_librarymaker_loaded_my", "Loaded My Library: {filename}", { filename: resolved.fileName }));
     updateActionState();
     render();
   };
@@ -970,11 +977,11 @@
 
   const loadSourceLibrary = async () => {
     if (!state.targetLibrary) {
-      setStatus("Load your project library first.");
+      setStatus(t("status_librarymaker_load_project_first"));
       return;
     }
     if (!window.showOpenFilePicker) {
-      setStatus("File picker is not available in this browser.");
+      setStatus(t("status_file_picker_unavailable"));
       return;
     }
     try {
@@ -995,11 +1002,11 @@
       }
       state.sourceLibrary = library;
       state.sourceFileName = handle.name;
-      setStatus(`Loaded Other Library: ${handle.name}`);
+      setStatus(tf("status_librarymaker_loaded_other", "Loaded Other Library: {filename}", { filename: handle.name }));
       render();
     } catch (err) {
       if (err?.name === "AbortError") return;
-      setStatus(`Loading Other Library failed: ${err.message || err}`);
+      setStatus(tf("status_librarymaker_load_other_failed", "Loading Other Library failed: {error}", { error: err.message || err }));
     }
   };
 
@@ -1013,7 +1020,7 @@
       await loadTargetLibraryFromProject();
     } catch (err) {
       if (err?.name === "AbortError") return;
-      setStatus(`Project pick failed: ${err.message || err}`);
+      setStatus(tf("status_librarymaker_project_pick_failed", "Project selection failed: {error}", { error: err.message || err }));
     }
   };
 
@@ -1027,7 +1034,7 @@
     try {
       await loadTargetLibraryFromProject();
     } catch (err) {
-      setStatus(`Loading My Library failed: ${err.message || err}`);
+      setStatus(tf("status_librarymaker_load_my_failed", "Loading My Library failed: {error}", { error: err.message || err }));
       return false;
     }
     return true;
@@ -1057,9 +1064,9 @@
   if (elements.saveBtn) elements.saveBtn.addEventListener("click", async () => {
     try {
       await flushAutosave();
-      setStatus(`Saved My Library: ${state.targetFileName}`);
+      setStatus(tf("status_librarymaker_saved_my", "Saved My Library: {filename}", { filename: state.targetFileName }));
     } catch (err) {
-      setStatus(`Save failed: ${err.message || err}`);
+      setStatus(tf("status_save_failed", "Save failed: {error}", { error: err.message || err }));
     }
   });
   if (elements.undoBtn) elements.undoBtn.addEventListener("click", undo);
@@ -1083,7 +1090,7 @@
     const restored = await restoreProjectHandle();
     if (!restored) {
       setFirstRunVisible(true);
-      setStatus("Select a project folder to load your library.");
+      setStatus(t("status_librarymaker_select_project"));
     }
   };
 

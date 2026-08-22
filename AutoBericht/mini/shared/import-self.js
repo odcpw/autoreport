@@ -1,6 +1,7 @@
 (() => {
   const createHandler = (ctx, deps) => async () => {
     const { runtime, debug, setStatus, state } = ctx;
+    const { t, tf } = ctx.i18n;
     const { renderRows, saveSidecar } = deps;
     const stateHelpers = window.AutoBerichtState || {};
     const assessment = window.AutoBerichtSelfAssessment || {};
@@ -13,11 +14,11 @@
     };
     if (!runtime.dirHandle) return;
     if (!window.showOpenFilePicker || !window.XLSX) {
-      setStatus("File picker or SheetJS not available in this browser.");
+      setStatus(t("status_import_capability_missing"));
       return;
     }
     if (!assessment.findAssessmentSheetName || !assessment.parseRows || !assessment.validateProjectCoverage) {
-      setStatus("Self-assessment validator is unavailable.");
+      setStatus(t("status_validator_missing"));
       return;
     }
     try {
@@ -132,12 +133,12 @@
         throw new Error("No meaningful self-assessment rows matched the current project.");
       }
 
-      setStatus(`Imported self-assessment answers (${applied}).`);
+      setStatus(tf("status_self_assessment_imported", "Imported self-assessment answers ({count}).", { count: applied }));
       debug.logLine("info", `Imported self-assessment answers (${applied}).`);
       renderRows();
       await saveSidecar();
     } catch (err) {
-      setStatus(`Import failed: ${err.message}`);
+      setStatus(tf("status_import_failed", "Import failed: {error}", { error: err.message || err }));
       debug.logLine("error", `Import failed: ${err.message || err}`);
     }
   };

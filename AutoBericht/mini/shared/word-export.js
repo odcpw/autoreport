@@ -16,7 +16,7 @@
 (() => {
   const textDecoder = new TextDecoder();
   const textEncoder = new TextEncoder();
-  const reportRows = window.AutoBerichtReportRows || {};
+  const reportRows = window.AutoBerichtReportRows;
   const zipTools = window.AutoBerichtWordDocxZip;
   const xmlTools = window.AutoBerichtWordDocxXml;
   const markdownTools = window.AutoBerichtMarkdown;
@@ -54,80 +54,9 @@
     it: "templates/Vorlage IST-Aufnahme-Bericht i.V01.docx",
   };
 
-  const stripLeadingNumber = typeof reportRows.stripLeadingNumber === "function"
-    ? reportRows.stripLeadingNumber
-    : (value) => String(value || "").replace(/^\s*\d+(?:\.\d+)*(?:\s|[.:-]\s*)?/, "").trim();
-
-  const rowToText = typeof reportRows.rowToText === "function"
-    ? reportRows.rowToText
-    : (value, toText) => {
-      if (typeof toText === "function") return toText(value);
-      if (Array.isArray(value)) return value.join("\n");
-      if (value == null) return "";
-      return String(value);
-    };
-
-  const isSectionRow = typeof reportRows.isSectionRow === "function"
-    ? reportRows.isSectionRow
-    : (row) => String(row?.kind || "").toLowerCase() === "section";
-
-  const isIncludedRow = typeof reportRows.isReportReadyRow === "function"
-    ? reportRows.isReportReadyRow
-    : (row) => {
-      const ws = row?.workstate;
-      if (!ws || ws.includeFinding == null) return false;
-      return ws.includeFinding === true && ws.done === true;
-    };
-
-  const resolveSectionId = typeof reportRows.resolveSectionId === "function"
-    ? reportRows.resolveSectionId
-    : (row, chapterId) => {
-      const sectionId = String(row?.sectionId || "").trim();
-      if (sectionId) return sectionId;
-      const parts = String(row?.id || "").split(".");
-      if (parts.length >= 2) return `${parts[0]}.${parts[1]}`;
-      return `${chapterId}.1`;
-    };
-
-  const resolveSectionTitle = typeof reportRows.resolveSectionTitle === "function"
-    ? reportRows.resolveSectionTitle
-    : (row) => {
-      const rawTitle = String(row?.title || row?.id || "");
-      const cleaned = stripLeadingNumber(rawTitle);
-      return cleaned || rawTitle;
-    };
-
-  const resolveFindingText = typeof reportRows.resolveFindingText === "function"
-    ? (row, toText) => reportRows.resolveFindingText(row, toText)
-    : (row, toText) => {
-      const ws = row?.workstate;
-      if (ws && Object.prototype.hasOwnProperty.call(ws, "findingText")) {
-        return rowToText(ws.findingText, toText);
-      }
-      return rowToText(row?.master?.finding, toText);
-    };
-
-  const resolveRecommendationText = typeof reportRows.resolveRecommendationText === "function"
-    ? (row, toText) => reportRows.resolveRecommendationText(row, toText)
-    : (row, toText) => {
-      const ws = row?.workstate || {};
-      if (ws.includeRecommendation === false) return "";
-      if (Object.prototype.hasOwnProperty.call(ws, "recommendationText")) {
-        return rowToText(ws.recommendationText, toText);
-      }
-      return rowToText(row?.master?.recommendation, toText);
-    };
-
-  const resolvePriorityText = typeof reportRows.resolvePriorityText === "function"
-    ? reportRows.resolvePriorityText
-    : (row) => {
-      const ws = row?.workstate || {};
-      const raw = Number(ws.priority);
-      if (!Number.isFinite(raw)) return "";
-      const value = Math.round(raw);
-      if (value < 1 || value > 4) return "";
-      return String(value);
-    };
+  const stripLeadingNumber = requireHelper("AutoBerichtReportRows", reportRows, "stripLeadingNumber");
+  const isIncludedRow = requireHelper("AutoBerichtReportRows", reportRows, "isReportReadyRow");
+  const buildSharedChapterRows = requireHelper("AutoBerichtReportRows", reportRows, "buildChapterRows");
 
   const buildAddressLine = (meta = {}) => {
     const address = String(meta?.address || "").trim();
@@ -339,99 +268,13 @@
     return Array.from(variants).filter(Boolean).map((token) => `THERMO${token}$$`);
   };
 
-  const isFieldObservationChapter = typeof reportRows.isFieldObservationChapter === "function"
-    ? reportRows.isFieldObservationChapter
-    : (chapterId) => String(chapterId || "").includes(".");
-
-  const resolveSectionDisplayId = typeof reportRows.resolveSectionDisplayId === "function"
-    ? reportRows.resolveSectionDisplayId
-    : (sectionId, chapterId, sectionMap) => {
-      const key = String(sectionId || "").trim();
-      if (!key) return "";
-      if (sectionMap && sectionMap.has(key)) return `${chapterId}.${sectionMap.get(key)}`;
-      return key;
-    };
-
-  const buildIncludedSections = typeof reportRows.buildIncludedSections === "function"
-    ? (rows) => reportRows.buildIncludedSections(rows, isIncludedRow)
-    : (rows) => {
-      const included = new Set();
-      rows.forEach((row) => {
-        if (isSectionRow(row) || !isIncludedRow(row)) return;
-        const sectionId = String(row?.sectionId || "").trim();
-        if (sectionId) included.add(sectionId);
-      });
-      return included;
-    };
-
-  const buildRenumberMap = typeof reportRows.buildRenumberMap === "function"
-    ? (rows, chapterId) => reportRows.buildRenumberMap(rows, chapterId, isIncludedRow)
-    : (rows, chapterId) => {
-      const rowMap = new Map();
-      const sectionMap = new Map();
-      const sectionCounts = new Map();
-      let itemCount = 0;
-      rows.forEach((row) => {
-        if (isSectionRow(row) || !isIncludedRow(row)) return;
-        const rowId = String(row?.id || "").trim();
-        if (!rowId) return;
-        if (isFieldObservationChapter(chapterId)) {
-          itemCount += 1;
-          rowMap.set(rowId, `${chapterId}.${itemCount}`);
-          return;
-        }
-        const sectionId = resolveSectionId(row, chapterId);
-        if (!sectionMap.has(sectionId)) sectionMap.set(sectionId, sectionMap.size + 1);
-        const count = (sectionCounts.get(sectionId) || 0) + 1;
-        sectionCounts.set(sectionId, count);
-        rowMap.set(rowId, `${chapterId}.${sectionMap.get(sectionId)}.${count}`);
-      });
-      return { rowMap, sectionMap };
-    };
-
-  const orderRowsForChapter = typeof reportRows.orderRowsForChapter === "function"
-    ? reportRows.orderRowsForChapter
-    : (chapter) => Array.isArray(chapter?.rows) ? [...chapter.rows] : [];
-
-  const buildChapterRows = (chapter, toText) => {
-    if (typeof reportRows.buildChapterRows === "function") {
-      return reportRows.buildChapterRows(chapter, {
-        toText,
-        includeRow: isIncludedRow,
-        titleForFinding: (row, chapterId) => (
-          chapterId === "4.8" ? String(row?.titleOverride || "").trim() : ""
-        ),
-      });
-    }
-    const rows = orderRowsForChapter(chapter);
-    const includedSections = buildIncludedSections(rows);
-    const chapterId = String(chapter?.id || "");
-    const { rowMap, sectionMap } = buildRenumberMap(rows, chapterId);
-    const output = [];
-    rows.forEach((row) => {
-      if (isSectionRow(row)) {
-        const sectionId = String(row?.id || "").trim();
-        if (!sectionId || !includedSections.has(sectionId)) return;
-        output.push({
-          kind: "section",
-          id: resolveSectionDisplayId(sectionId, chapterId, sectionMap),
-          title: resolveSectionTitle(row),
-        });
-        return;
-      }
-      if (!isIncludedRow(row)) return;
-      const rowId = String(row?.id || "").trim();
-      output.push({
-        kind: "finding",
-        id: rowMap.get(rowId) || rowId,
-        title: chapter?.id === "4.8" ? String(row?.titleOverride || "").trim() : "",
-        finding: resolveFindingText(row, toText),
-        recommendation: resolveRecommendationText(row, toText),
-        priority: resolvePriorityText(row),
-      });
-    });
-    return output;
-  };
+  const buildChapterRows = (chapter, toText) => buildSharedChapterRows(chapter, {
+    toText,
+    includeRow: isIncludedRow,
+    titleForFinding: (row, chapterId) => (
+      chapterId === "4.8" ? String(row?.titleOverride || "").trim() : ""
+    ),
+  });
 
   const paragraphXml = (text, options = {}) => {
     const safe = xmlEscape(text || "");

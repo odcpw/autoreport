@@ -1,11 +1,12 @@
 (() => {
   const bind = (ctx, deps) => {
     const { state, runtime, setStatus, debug } = ctx;
+    const { t, tf } = ctx.i18n;
     const { elements, tagsApi, photosApi, ioApi, renderApi, actions } = deps;
 
     const ensureFsAccess = () => {
       if (!window.showDirectoryPicker) {
-        setStatus("File System Access API is not available. Open via http://localhost in Edge/Chrome to enable file access.");
+        setStatus(t("status_fs_api_unavailable"));
         if (elements.pickProjectBtn) {
           elements.pickProjectBtn.disabled = true;
         }
@@ -111,12 +112,14 @@
             debug.logLine("warn", `Project folder opened, but its handle could not be remembered: ${err.message || err}`);
           }
         }
-        setStatus(`Project folder: ${state.projectHandle.name}`);
+        setStatus(tf("status_project_folder", "Project folder: {name}", { name: state.projectHandle.name }));
         setFirstRunVisible(false);
         await ioApi.loadProjectSidecar();
       } catch (err) {
         const canceled = err?.name === "AbortError";
-        setStatus(canceled ? "Project pick canceled." : `Project load failed: ${err.message || err}`);
+        setStatus(canceled
+          ? t("status_project_pick_canceled")
+          : tf("status_project_load_failed", "Project load failed: {error}", { error: err.message || err }));
         debug.logLine(canceled ? "info" : "error", `Project picker/load: ${err.message || err}`);
       }
       enableActions();
@@ -134,7 +137,7 @@
         try {
           await ioApi.loadProjectSidecar();
         } catch (err) {
-          setStatus(`Project load failed: ${err.message || err}`);
+          setStatus(tf("status_project_load_failed", "Project load failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Project load failed: ${err.message || err}`);
         }
       });
@@ -150,11 +153,11 @@
       elements.importActionBtn.addEventListener("click", async () => {
         try {
           if (!state.projectHandle) {
-            setStatus("Open project folder first.");
+            setStatus(t("project_open_folder_first"));
             return;
           }
           if (!ctx.photoImport?.importRawPhotos) {
-            setStatus("Photo import module not available.");
+            setStatus(t("status_photo_import_module_missing"));
             return;
           }
           const result = await ctx.photoImport.importRawPhotos({
@@ -164,6 +167,7 @@
             setStatus,
             resizeMax: ctx.constants.RESIZE_MAX,
             resizeQuality: ctx.constants.RESIZE_QUALITY,
+            translate: tf,
           });
           if (!result?.resizedHandle) return;
           state.photoRootName = result.photoRootName || "";
@@ -177,14 +181,14 @@
           await photosApi.scanPhotos();
           const imported = Number(result.importedCount) || 0;
           const skipped = Number(result.skippedCount) || 0;
-          const movedVideos = Number(result.movedVideoCount) || 0;
+          const copiedVideos = Number(result.copiedVideoCount) || 0;
           const parts = [];
-          parts.push(`Imported ${imported} photos`);
-          if (skipped > 0) parts.push(`skipped ${skipped} already present`);
-          if (movedVideos > 0) parts.push(`moved ${movedVideos} videos to photos/videos`);
+          parts.push(tf("status_imported_photos", "Imported {count} photos", { count: imported }));
+          if (skipped > 0) parts.push(tf("status_skipped_photos", "skipped {count} already present", { count: skipped }));
+          if (copiedVideos > 0) parts.push(tf("status_copied_videos", "copied {count} videos to photos/videos", { count: copiedVideos }));
           setStatus(`${parts.join(", ")}.`);
         } catch (err) {
-          setStatus(`Import failed: ${err.message}`);
+          setStatus(tf("status_import_failed", "Import failed: {error}", { error: err.message || err }));
         }
       });
     }
@@ -193,18 +197,18 @@
       elements.exportActionBtn.addEventListener("click", async () => {
         try {
           if (!state.projectHandle) {
-            setStatus("Open project folder first.");
+            setStatus(t("project_open_folder_first"));
             return;
           }
           if (!ctx.photoImport?.exportTaggedPhotos) {
-            setStatus("Photo export module not available.");
+            setStatus(t("status_photo_export_module_missing"));
             return;
           }
           if (!state.photoHandle) {
             await ioApi.setDefaultPhotoHandle();
           }
           if (!state.photoHandle) {
-            setStatus("No photo folder found. Import or scan photos first.");
+            setStatus(t("status_photo_folder_missing_scan"));
             return;
           }
           if (!state.photos.length) {
@@ -217,16 +221,17 @@
             photos: state.photos,
             tagOptions: state.tagOptions,
             locale: state.sidecarDoc?.report?.project?.meta?.locale || document.documentElement?.getAttribute("lang") || "de-CH",
+            translate: tf,
           });
           if (result?.count !== undefined) {
             const copyCount = result.copyCount;
             const label = copyCount && copyCount !== result.count
-              ? `${copyCount} copies (${result.count} photos)`
-              : `${result.count} photos`;
-            setStatus(`Exported ${label} to ${result.exportRootName}`);
+              ? tf("status_photo_copy_count", "{copies} copies ({photos} photos)", { copies: copyCount, photos: result.count })
+              : tf("status_photo_count", "{count} photos", { count: result.count });
+            setStatus(tf("status_exported_photos", "Exported {label} to {folder}", { label, folder: result.exportRootName }));
           }
         } catch (err) {
-          setStatus(`Export failed: ${err.message}`);
+          setStatus(tf("status_export_failed", "Export failed: {error}", { error: err.message || err }));
         }
       });
     }
@@ -234,14 +239,14 @@
     if (elements.rescanPhotosBtn) {
       elements.rescanPhotosBtn.addEventListener("click", async () => {
         if (!state.projectHandle) {
-          setStatus("Open project folder first.");
+          setStatus(t("project_open_folder_first"));
           return;
         }
         if (!state.photoHandle) {
           await ioApi.setDefaultPhotoHandle();
         }
         if (!state.photoHandle) {
-          setStatus("No photo folder found. Import photos first.");
+          setStatus(t("status_photo_folder_missing_import"));
           return;
         }
         await photosApi.scanPhotos();
@@ -253,7 +258,7 @@
         try {
           await ioApi.saveProjectSidecar();
         } catch (err) {
-          setStatus(`Save failed: ${err.message || err}`);
+          setStatus(tf("status_save_failed", "Save failed: {error}", { error: err.message || err }));
           debug.logLine("error", `Save failed: ${err.message || err}`);
         }
       });
@@ -300,7 +305,9 @@
     if (elements.filterToggleBtn) {
       elements.filterToggleBtn.addEventListener("click", () => {
         state.filterMode = state.filterMode === "all" ? "unsorted" : "all";
-        elements.filterToggleBtn.textContent = state.filterMode === "all" ? "Show Unsorted" : "Show All";
+        elements.filterToggleBtn.textContent = state.filterMode === "all"
+          ? t("status_show_unsorted")
+          : t("status_show_all");
         state.currentIndex = 0;
         renderApi.renderAll();
       });
@@ -397,9 +404,9 @@
             suggestedName: `photosorter-log-${new Date().toISOString().replace(/[:.]/g, "-")}.txt`,
             dirHandle: state.projectHandle || null,
           });
-          setStatus(`Saved log (${result.location}): ${result.filename}`);
+          setStatus(tf("status_log_saved", "Saved log ({location}): {filename}", result));
         } catch (err) {
-          setStatus(`Log save failed: ${err.message}`);
+          setStatus(tf("status_log_save_failed", "Log save failed: {error}", { error: err.message || err }));
         }
       });
     }
