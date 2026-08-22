@@ -58,6 +58,47 @@ test("markdown drops unsafe and relative link targets", () => {
   assert.match(safe, /noopener noreferrer/);
 });
 
+test("export markdown parser preserves visible text and inline styles", () => {
+  const api = loadBrowserScripts(["mini/shared/markdown.js"]).AutoBerichtMarkdown;
+  const segments = api.parseInlineMarkdownSegments(
+    "Plain **bold** *italic* ***both*** [Suva](https://www.suva.ch/) https://example.com/test.",
+  );
+  assert.deepEqual(
+    JSON.parse(JSON.stringify(segments.map(({ type, text, url, bold, italic }) => ({ type, text, url, bold, italic })))),
+    [
+      { type: "text", text: "Plain ", bold: false, italic: false },
+      { type: "text", text: "bold", bold: true, italic: false },
+      { type: "text", text: " ", bold: false, italic: false },
+      { type: "text", text: "italic", bold: false, italic: true },
+      { type: "text", text: " ", bold: false, italic: false },
+      { type: "text", text: "both", bold: true, italic: true },
+      { type: "text", text: " ", bold: false, italic: false },
+      { type: "link", text: "Suva", url: "https://www.suva.ch/", bold: false, italic: false },
+      { type: "text", text: " ", bold: false, italic: false },
+      { type: "link", text: "https://example.com/test", url: "https://example.com/test", bold: false, italic: false },
+      { type: "text", text: ".", bold: false, italic: false },
+    ],
+  );
+});
+
+test("PowerPoint text renderer converts Markdown into DrawingML runs", () => {
+  const context = loadBrowserScripts([
+    "mini/shared/markdown.js",
+    "mini/shared/pptx-export.js",
+  ], {
+    AutoBerichtWordDocxZip: {},
+  });
+  const rendered = context.AutoBerichtPptxExport.renderMarkdownTextBodyXml(
+    "- **Bold** and *italic* with [Suva](https://www.suva.ch/)",
+  );
+  assert.match(rendered.xml, /<a:buChar char="•"\/>/);
+  assert.match(rendered.xml, /<a:rPr[^>]*b="1"\/><a:t[^>]*>Bold<\/a:t>/);
+  assert.match(rendered.xml, /<a:rPr[^>]*i="1"\/><a:t[^>]*>italic<\/a:t>/);
+  assert.match(rendered.xml, /<a:hlinkClick r:id="rId2"\/>/);
+  assert.doesNotMatch(rendered.xml, /\*\*Bold\*\*|\*italic\*|\[Suva\]\(/);
+  assert.deepEqual(Array.from(rendered.hyperlinkTargets), ["https://www.suva.ch/"]);
+});
+
 test("locale translation lookup uses the selected locale", () => {
   const document = {
     documentElement: { setAttribute() {} },

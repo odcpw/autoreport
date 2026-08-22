@@ -11,6 +11,7 @@
   const textEncoder = new TextEncoder();
   const zipTools = window.AutoBerichtWordDocxZip;
   const reportRows = window.AutoBerichtReportRows || {};
+  const markdownTools = window.AutoBerichtMarkdown || {};
 
   const unzipAllEntries = zipTools?.unzipAllEntries;
   const buildZipStore = zipTools?.buildZipStore;
@@ -32,6 +33,13 @@
   const REL_SLIDE_LAYOUT = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideLayout";
   const REL_SLIDE_MASTER = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/slideMaster";
   const REL_IMAGE = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
+  const REL_HYPERLINK = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/hyperlink";
+  const parseInlineMarkdownSegments = (value) => {
+    if (typeof markdownTools.parseInlineMarkdownSegments !== "function") {
+      throw new Error("AutoBerichtMarkdown.parseInlineMarkdownSegments helper is unavailable.");
+    }
+    return markdownTools.parseInlineMarkdownSegments(value);
+  };
 
   const REPORT_LAYOUTS = {
     cover: "ab_title",
@@ -1220,7 +1228,7 @@
     types.appendChild(node);
   };
 
-  const createSlideRelDoc = (layoutPartName, imageTargets) => {
+  const createSlideRelDoc = (layoutPartName, imageTargets, hyperlinkTargets = []) => {
     const relsDoc = parseXml(`<Relationships xmlns="${NS_REL}"/>`, "slide rels");
     const root = relsDoc.documentElement;
 
@@ -1238,38 +1246,92 @@
       root.appendChild(rel);
     });
 
+    (hyperlinkTargets || []).forEach((target, index) => {
+      const rel = relsDoc.createElementNS(NS_REL, "Relationship");
+      rel.setAttribute("Id", `rId${(imageTargets || []).length + index + 2}`);
+      rel.setAttribute("Type", REL_HYPERLINK);
+      rel.setAttribute("Target", String(target || ""));
+      rel.setAttribute("TargetMode", "External");
+      root.appendChild(rel);
+    });
+
     return serializeXml(relsDoc);
   };
 
-  const paragraphRunsXml = (line, size = 1800, bold = false) => {
-    const value = xmlEscape(line || "");
-    const rPr = [`<a:rPr lang=\"en-US\" sz=\"${size}\"`];
-    if (bold) rPr.push(" b=\"1\"");
-    rPr.push("/>");
-    return `<a:r>${rPr.join("")}<a:t>${value}</a:t></a:r>`;
+  const paragraphRunsXml = (line, options = {}) => {
+    const size = Number(options.size || 0);
+    const baseBold = options.bold === true;
+    const inherit = options.inherit === true;
+    const linkRelIds = options.linkRelIds instanceof Map ? options.linkRelIds : new Map();
+    return parseInlineMarkdownSegments(line).map((segment) => {
+      const value = String(segment?.text || "");
+      if (!value) return "";
+      const attributes = [];
+      if (!inherit) attributes.push("lang=\"en-US\"");
+      if (size > 0) attributes.push(`sz=\"${size}\"`);
+      if (baseBold || segment.bold === true) attributes.push("b=\"1\"");
+      if (segment.italic === true) attributes.push("i=\"1\"");
+      const relId = segment.type === "link" ? linkRelIds.get(String(segment.url || "")) : "";
+      const properties = relId
+        ? `<a:rPr${attributes.length ? ` ${attributes.join(" ")}` : ""}><a:hlinkClick r:id=\"${xmlEscape(relId)}\"/></a:rPr>`
+        : (attributes.length ? `<a:rPr ${attributes.join(" ")}/>` : "");
+      return `<a:r>${properties}<a:t xml:space=\"preserve\">${xmlEscape(value)}</a:t></a:r>`;
+    }).join("");
+  };
+
+  const markdownParagraphXml = (line, options = {}) => {
+    const trimmed = String(line || "").trim();
+    if (!trimmed) {
+      const lang = options.inherit === true ? "" : " lang=\"en-US\"";
+      return `<a:p><a:endParaRPr${lang}/></a:p>`;
+    }
+    const bullet = trimmed.startsWith("- ") || trimmed.startsWith("* ");
+    const value = bullet ? trimmed.slice(2) : String(line || "");
+    const paragraphProperties = bullet
+      ? "<a:pPr marL=\"342900\" indent=\"-285750\"><a:buChar char=\"•\"/></a:pPr>"
+      : "";
+    const lang = options.inherit === true ? "" : " lang=\"en-US\"";
+    return `<a:p>${paragraphProperties}${paragraphRunsXml(value, options)}<a:endParaRPr${lang}/></a:p>`;
   };
 
   const textBodyXml = (text, options = {}) => {
     const size = Number(options.size || 1800);
     const bold = options.bold === true;
     const lines = String(text || "").split(/\r?\n/);
-    const paragraphs = (lines.length ? lines : [""]).map((line) => {
-      if (!line.trim()) return "<a:p><a:endParaRPr lang=\"en-US\"/></a:p>";
-      return `<a:p>${paragraphRunsXml(line, size, bold)}<a:endParaRPr lang=\"en-US\"/></a:p>`;
-    }).join("");
+    const paragraphs = (lines.length ? lines : [""])
+      .map((line) => markdownParagraphXml(line, { ...options, size, bold, inherit: false }))
+      .join("");
     return `<p:txBody><a:bodyPr/><a:lstStyle/>${paragraphs}</p:txBody>`;
   };
 
-  const textBodyXmlInherit = (text) => {
+  const textBodyXmlInherit = (text, options = {}) => {
     const lines = String(text || "").split(/\r?\n/);
-    const paragraphs = (lines.length ? lines : [""]).map((line) => {
-      if (!line.trim()) return "<a:p><a:endParaRPr/></a:p>";
-      return `<a:p><a:r><a:t>${xmlEscape(line)}</a:t></a:r><a:endParaRPr/></a:p>`;
-    }).join("");
+    const paragraphs = (lines.length ? lines : [""])
+      .map((line) => markdownParagraphXml(line, { ...options, inherit: true }))
+      .join("");
     return `<p:txBody><a:bodyPr/><a:lstStyle/>${paragraphs}</p:txBody>`;
   };
 
-  const textShapeXml = ({ id, name, bounds, text, size = 1800, bold = false }) => {
+  const collectMarkdownLinks = (...values) => {
+    const urls = [];
+    const seen = new Set();
+    values.forEach((value) => {
+      String(value || "").split(/\r?\n/).forEach((line) => {
+        const trimmed = line.trim();
+        const text = trimmed.startsWith("- ") || trimmed.startsWith("* ") ? trimmed.slice(2) : line;
+        parseInlineMarkdownSegments(text).forEach((segment) => {
+          if (segment?.type !== "link") return;
+          const url = String(segment.url || "").trim();
+          if (!url || seen.has(url)) return;
+          seen.add(url);
+          urls.push(url);
+        });
+      });
+    });
+    return urls;
+  };
+
+  const textShapeXml = ({ id, name, bounds, text, size = 1800, bold = false, linkRelIds = new Map() }) => {
     const x = toInt(bounds?.x, 0);
     const y = toInt(bounds?.y, 0);
     const cx = Math.max(1, toInt(bounds?.cx, 1000000));
@@ -1286,12 +1348,12 @@
       "<a:prstGeom prst=\"rect\"><a:avLst/></a:prstGeom>",
       "<a:noFill/>",
       "</p:spPr>",
-      textBodyXml(text, { size, bold }),
+      textBodyXml(text, { size, bold, linkRelIds }),
       "</p:sp>",
     ].join("");
   };
 
-  const textPlaceholderShapeXml = ({ id, name, text, phType = "body", idxKey = "" }) => {
+  const textPlaceholderShapeXml = ({ id, name, text, phType = "body", idxKey = "", linkRelIds = new Map() }) => {
     const idxAttr = idxKey ? ` idx=\"${xmlEscape(idxKey)}\"` : "";
     return [
       "<p:sp>",
@@ -1301,7 +1363,7 @@
       `<p:nvPr><p:ph type=\"${xmlEscape(phType)}\"${idxAttr}/></p:nvPr>`,
       "</p:nvSpPr>",
       "<p:spPr/>",
-      textBodyXmlInherit(text),
+      textBodyXmlInherit(text, { linkRelIds }),
       "</p:sp>",
     ].join("");
   };
@@ -1390,7 +1452,14 @@
     "</p:sp>",
   ].join("");
 
-  const buildSlideXml = ({ layoutInfo, title, body, images, preservePicPlaceholders = false }) => {
+  const buildSlideXml = ({
+    layoutInfo,
+    title,
+    body,
+    images,
+    preservePicPlaceholders = false,
+    linkRelIds = new Map(),
+  }) => {
     let nextShapeId = 2;
     const shapes = [];
 
@@ -1408,6 +1477,7 @@
           text: String(title || ""),
           phType: titleSlot.type,
           idxKey: titleSlot.idxKey || "",
+          linkRelIds,
         }));
       } else if (titleSlot.bounds) {
         shapes.push(textShapeXml({
@@ -1417,6 +1487,7 @@
           text: String(title || ""),
           size: 2400,
           bold: true,
+          linkRelIds,
         }));
       } else {
         throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} title placeholder is not renderable.`);
@@ -1435,6 +1506,7 @@
           text: String(body || ""),
           phType: bodySlot.type,
           idxKey: bodySlot.idxKey || "",
+          linkRelIds,
         }));
       } else if (bodySlot.bounds) {
         shapes.push(textShapeXml({
@@ -1444,6 +1516,7 @@
           text: String(body || ""),
           size: 1800,
           bold: false,
+          linkRelIds,
         }));
       } else {
         throw new Error(`Layout ${layoutInfo?.name || "(unknown)"} body placeholder is not renderable.`);
@@ -1838,14 +1911,21 @@
         mediaTargets.push(mediaName);
       });
 
+      const hyperlinkTargets = collectMarkdownLinks(slide.title, slide.body);
+      const linkRelIds = new Map(hyperlinkTargets.map((target, index) => [
+        target,
+        `rId${mediaTargets.length + index + 2}`,
+      ]));
+
       const slideXml = buildSlideXml({
         layoutInfo,
         title: slide.title,
         body: slide.body,
         images: slide.images,
         preservePicPlaceholders: slide.preservePicPlaceholders === true,
+        linkRelIds,
       });
-      const slideRelXml = createSlideRelDoc(layoutInfo.partName, mediaTargets);
+      const slideRelXml = createSlideRelDoc(layoutInfo.partName, mediaTargets, hyperlinkTargets);
 
       const slidePart = `ppt/slides/slide${nextSlide}.xml`;
       const slideRelPart = `ppt/slides/_rels/slide${nextSlide}.xml.rels`;
@@ -2063,9 +2143,19 @@
   });
   const exportTrainingPptx = async (args) => exportPptx({ ...args, mode: "training" });
 
+  const renderMarkdownTextBodyXml = (text, options = {}) => {
+    const hyperlinkTargets = collectMarkdownLinks(text);
+    const linkRelIds = new Map(hyperlinkTargets.map((target, index) => [target, `rId${index + 2}`]));
+    return {
+      xml: textBodyXml(text, { ...options, linkRelIds }),
+      hyperlinkTargets,
+    };
+  };
+
   window.AutoBerichtPptxExport = {
     exportReportPptx,
     exportReportPptxIdms,
     exportTrainingPptx,
+    renderMarkdownTextBodyXml,
   };
 })();

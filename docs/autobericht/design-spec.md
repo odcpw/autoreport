@@ -248,7 +248,7 @@ UI:
   - score percentage
   - recommendation text (single editable block; save to report or library)
   - photo attachment via section tags only (no per-finding photo linkage)
-- Minimal formatting controls (markdown-lite: bold, bullets, links).
+- Minimal formatting controls (markdown-lite: bold, italic, bullets, and HTTP(S) links).
 - Word templates handle final formatting.
 - Optional preview panel to approximate Word layout.
 
@@ -266,7 +266,9 @@ Goal: remove Excel as an orchestration hop while keeping Word in charge of layou
 Phase A (browser)
 - The editor writes canonical state to `project_sidecar.json`.
 - Export uses the sidecar directly (or an optional lightweight “export.json” view).
-- Content is plain text + simple list markers (markdown-lite).
+- Content is plain text + markdown-lite markers. Word and PowerPoint exporters
+  convert the markers into native bold/italic runs, bullet paragraphs, and links;
+  raw Markdown markers must not appear in the exported document.
 
 Phase B (web export engine)
 - Word template contains one content control per chapter (e.g., `Chapter1`).

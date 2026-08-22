@@ -19,6 +19,7 @@
   const reportRows = window.AutoBerichtReportRows || {};
   const zipTools = window.AutoBerichtWordDocxZip;
   const xmlTools = window.AutoBerichtWordDocxXml;
+  const markdownTools = window.AutoBerichtMarkdown;
 
   const requireHelper = (scope, toolbox, name) => {
     const fn = toolbox?.[name];
@@ -42,6 +43,11 @@
   const emuFromCm = requireHelper("AutoBerichtWordDocxXml", xmlTools, "emuFromCm");
   const drawingXml = requireHelper("AutoBerichtWordDocxXml", xmlTools, "drawingXml");
   const ensureUpdateFieldsOnOpen = requireHelper("AutoBerichtWordDocxXml", xmlTools, "ensureUpdateFieldsOnOpen");
+  const parseInlineMarkdownSegments = requireHelper(
+    "AutoBerichtMarkdown",
+    markdownTools,
+    "parseInlineMarkdownSegments",
+  );
   const WORD_TEMPLATE_BY_LOCALE = {
     de: "templates/Vorlage IST-Aufnahme-Bericht d.V01.docx",
     fr: "templates/Vorlage IST-Aufnahme-Bericht f.V01.docx",
@@ -441,89 +447,23 @@
     return `<w:p>${pPr}<w:r>${boldStart}<w:t xml:space=\"preserve\">${safe}</w:t></w:r></w:p>`;
   };
 
-  const normalizeMarkdownInline = (value) => String(value || "")
-    .replace(/\*\*([^*]+)\*\*/g, "$1")
-    .replace(/\*([^*]+)\*/g, "$1")
-    .replace(/__([^_]+)__/g, "$1")
-    .replace(/_([^_]+)_/g, "$1")
-    .replace(/`([^`]+)`/g, "$1")
-    .replace(/^\s*>\s?/g, "");
-
-  const splitTextByUrls = (text) => {
-    const source = String(text || "");
-    const out = [];
-    const urlRegex = /(https?:\/\/[^\s<>"']+)/g;
-    let last = 0;
-    let match = urlRegex.exec(source);
-    while (match) {
-      const start = match.index;
-      let rawUrl = match[1];
-      const rawEnd = start + rawUrl.length;
-      let end = rawEnd;
-      let trim = rawUrl;
-      while (/[.,;!?]$/.test(trim)) {
-        trim = trim.slice(0, -1);
-        end -= 1;
-      }
-      if (start > last) out.push({ type: "text", text: source.slice(last, start) });
-      if (trim) out.push({ type: "link", text: trim, url: trim });
-      if (rawEnd > end) {
-        out.push({ type: "text", text: source.slice(end, rawEnd) });
-      }
-      last = end;
-      urlRegex.lastIndex = end;
-      match = urlRegex.exec(source);
-    }
-    if (last < source.length) out.push({ type: "text", text: source.slice(last) });
-    return out;
-  };
-
-  const parseInlineMarkdownSegments = (text) => {
-    const source = String(text || "");
-    const parts = [];
-    const markdownLinkRegex = /\[([^\]]+)\]\((https?:\/\/[^)\s]+)\)/g;
-    let cursor = 0;
-    let match = markdownLinkRegex.exec(source);
-    while (match) {
-      if (match.index > cursor) {
-        parts.push({ type: "text", text: source.slice(cursor, match.index) });
-      }
-      parts.push({
-        type: "link",
-        text: normalizeMarkdownInline(match[1]),
-        url: match[2],
-      });
-      cursor = match.index + match[0].length;
-      match = markdownLinkRegex.exec(source);
-    }
-    if (cursor < source.length) {
-      parts.push({ type: "text", text: source.slice(cursor) });
-    }
-
-    const expanded = [];
-    parts.forEach((part) => {
-      if (part.type === "link") {
-        expanded.push(part);
-        return;
-      }
-      splitTextByUrls(normalizeMarkdownInline(part.text)).forEach((token) => expanded.push(token));
-    });
-    return expanded;
-  };
-
   const inlineSegmentsToXml = (segments, options = {}) => {
-    const bold = !!options.bold;
     const xml = (segments || []).map((segment) => {
       if (!segment) return "";
+      const bold = options.bold === true || segment.bold === true;
+      const italic = segment.italic === true;
       if (segment.type === "link") {
         const url = String(segment.url || "").trim();
         const label = String(segment.text || url).trim() || url;
         if (!url) return "";
         const instr = xmlEscape(`HYPERLINK "${url}"`);
+        const properties = ["<w:rStyle w:val=\"Hyperlink\"/>"];
+        if (bold) properties.push("<w:b/>");
+        if (italic) properties.push("<w:i/>");
         return [
           `<w:fldSimple w:instr="${instr}">`,
           "<w:r>",
-          "<w:rPr><w:rStyle w:val=\"Hyperlink\"/></w:rPr>",
+          `<w:rPr>${properties.join("")}</w:rPr>`,
           `<w:t xml:space=\"preserve\">${xmlEscape(label)}</w:t>`,
           "</w:r>",
           "</w:fldSimple>",
@@ -533,7 +473,9 @@
       if (!value) return "";
       return [
         "<w:r>",
-        bold ? "<w:rPr><w:b/></w:rPr>" : "",
+        bold || italic
+          ? `<w:rPr>${bold ? "<w:b/>" : ""}${italic ? "<w:i/>" : ""}</w:rPr>`
+          : "",
         `<w:t xml:space=\"preserve\">${xmlEscape(value)}</w:t>`,
         "</w:r>",
       ].join("");
@@ -559,7 +501,7 @@
 
   const letteredParagraphXml = (label, text, options = {}) => {
     const safeLabel = xmlEscape(label || "");
-    const safeText = xmlEscape(text || "");
+    const textRuns = inlineSegmentsToXml(parseInlineMarkdownSegments(String(text || "")));
     const numId = String(options?.numId || "").trim();
     if (numId) {
       return [
@@ -571,7 +513,7 @@
         `<w:numId w:val="${xmlEscape(numId)}"/>`,
         "</w:numPr>",
         "</w:pPr>",
-        `<w:r><w:t xml:space=\"preserve\">${safeText}</w:t></w:r>`,
+        textRuns,
         "</w:p>",
       ].join("");
     }
@@ -580,7 +522,7 @@
       "<w:pPr><w:ind w:left=\"720\" w:hanging=\"360\"/></w:pPr>",
       `<w:r><w:t xml:space=\"preserve\">${safeLabel}.</w:t></w:r>`,
       "<w:r><w:tab/></w:r>",
-      `<w:r><w:t xml:space=\"preserve\">${safeText}</w:t></w:r>`,
+      textRuns,
       "</w:p>",
     ].join("");
   };

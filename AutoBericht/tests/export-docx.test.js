@@ -87,6 +87,7 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
   );
 
   const context = loadBrowserScripts([
+    "mini/shared/markdown.js",
     "mini/shared/word-docx-zip.js",
     "mini/shared/word-docx-xml.js",
     "mini/shared/word-export.js",
@@ -120,8 +121,19 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
     chapters: chapterIds.map((id) => ({
       id,
       title: { fr: `Chapitre ${id}` },
-      meta: id === "0" ? { frontMatterText: "Premier paragraphe client.\n\nDeuxième paragraphe client." } : {},
-      rows: [],
+      meta: id === "0" ? {
+        frontMatterText: "Premier **paragraphe** client.\n\nDeuxième *paragraphe* client avec [Suva](https://www.suva.ch/).",
+      } : {},
+      rows: id === "0" ? [{
+        id: "0.1",
+        master: { finding: "", recommendation: "" },
+        workstate: {
+          includeFinding: true,
+          done: true,
+          findingText: "",
+          recommendationText: "Résumé avec **priorité** et *responsabilité*.",
+        },
+      }] : [],
     })),
   };
   const result = await context.AutoBerichtWordExport.exportReportDocx({
@@ -140,8 +152,14 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
   const entries = await context.AutoBerichtWordDocxZip.unzipAllEntries(outputBuffer);
   const documentEntry = entries.find((entry) => entry.name === "word/document.xml");
   const documentXml = new TextDecoder().decode(documentEntry.data);
-  assert.match(documentXml, /Premier paragraphe client\./);
-  assert.match(documentXml, /Deuxième paragraphe client\./);
+  assert.match(documentXml, /Premier /);
+  assert.match(documentXml, /<w:rPr><w:b\/><\/w:rPr><w:t[^>]*>paragraphe<\/w:t>/);
+  assert.match(documentXml, /<w:rPr><w:i\/><\/w:rPr><w:t[^>]*>paragraphe<\/w:t>/);
+  assert.match(documentXml, /w:instr="HYPERLINK &quot;https:\/\/www\.suva\.ch\/&quot;"/);
+  assert.match(documentXml, /<w:rPr><w:b\/><\/w:rPr><w:t[^>]*>priorité<\/w:t>/);
+  assert.match(documentXml, /<w:rPr><w:i\/><\/w:rPr><w:t[^>]*>responsabilité<\/w:t>/);
+  assert.doesNotMatch(documentXml, /\*\*(?:paragraphe|priorité)\*\*/);
+  assert.doesNotMatch(documentXml, /\*(?:paragraphe|responsabilité)\*/);
   assert.doesNotMatch(documentXml, /CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/);
   assert.doesNotMatch(documentXml, /SPIDER\$\$/);
 
