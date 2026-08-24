@@ -2,7 +2,7 @@
 setlocal
 
 set "SCRIPT_DIR=%~dp0"
-set "PS1=%SCRIPT_DIR%AutoBericht\start-autobericht.ps1"
+set "PS1=%SCRIPT_DIR%sync-autobericht.ps1"
 
 if not exist "%PS1%" (
   echo Missing "%PS1%".

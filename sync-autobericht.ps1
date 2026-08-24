@@ -10,6 +10,14 @@ function Ensure-Folder([string]$Path) {
     }
 }
 
+function Unblock-InstalledScript([string]$BasePath, [string]$RelativePath) {
+    $scriptPath = Join-Path $BasePath $RelativePath
+    if (-not (Test-Path -LiteralPath $scriptPath -PathType Leaf)) {
+        throw "Expected installed script missing after sync: $scriptPath"
+    }
+    Unblock-File -LiteralPath $scriptPath -ErrorAction Stop
+}
+
 $zipPath     = Join-Path $env:TEMP "autobericht_zip_download.zip"
 $extractRoot = Join-Path $env:TEMP "autobericht_zip_extract"
 
@@ -42,7 +50,15 @@ try {
     Write-Host "Copying repo into $ResolvedTarget ..." -ForegroundColor Cyan
     Copy-Item -Path (Join-Path $sourceInner '*') -Destination $ResolvedTarget -Recurse -Force
 
-    Write-Host "Sync complete. Open AutoBericht via http://localhost:5501/AutoBericht/index.html (serve locally)." -ForegroundColor Green
+    foreach ($relativeScript in @(
+        'sync-autobericht.ps1',
+        'AutoBericht\start-autobericht.ps1',
+        'AutoBericht\tools\serve-autobericht.ps1'
+    )) {
+        Unblock-InstalledScript -BasePath $ResolvedTarget -RelativePath $relativeScript
+    }
+
+    Write-Host "Sync complete. Start AutoBericht with start-autobericht.cmd." -ForegroundColor Green
 }
 catch {
     Write-Error $_
