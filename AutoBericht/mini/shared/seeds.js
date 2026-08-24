@@ -120,6 +120,29 @@
     return knowledgeBase;
   };
 
+  const normalizeChapterTextValue = (value) => {
+    if (typeof value === "string") return value.replace(/\r\n/g, "\n");
+    if (value && typeof value === "object" && !Array.isArray(value)) {
+      return toText(value.text ?? value.value).replace(/\r\n/g, "\n");
+    }
+    return "";
+  };
+
+  const normalizeChapterTextMap = (value) => {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+    return Object.fromEntries(
+      Object.entries(value).map(([chapterId, text]) => [String(chapterId || "").trim(), normalizeChapterTextValue(text)]),
+    );
+  };
+
+  const normalizeKnowledgeBaseCompatibility = (knowledgeBase) => {
+    validateKnowledgeBase(knowledgeBase);
+    const clone = structuredClone(knowledgeBase);
+    clone.library = clone.library || { entries: [] };
+    clone.library.chapterFrontMatter = normalizeChapterTextMap(clone.library.chapterFrontMatter);
+    return clone;
+  };
+
   const buildLibraryMap = (knowledgeBase) => {
     const entries = knowledgeBase?.library?.entries || [];
     return new Map(entries.map((entry) => [entry.id, entry]));
@@ -161,7 +184,7 @@
   };
 
   const buildProjectFromKnowledgeBase = (knowledgeBase) => {
-    validateKnowledgeBase(knowledgeBase);
+    knowledgeBase = normalizeKnowledgeBaseCompatibility(knowledgeBase);
     const locale = knowledgeBase?.meta?.locale || "de-CH";
     const libraryMap = buildLibraryMap(knowledgeBase);
     const observationLibraryMap = buildObservationLibraryMap(knowledgeBase);
@@ -393,6 +416,7 @@
     readSeedFromHttp,
     normalizeTagGroups,
     validateKnowledgeBase,
+    normalizeKnowledgeBaseCompatibility,
     buildLibraryMap,
     buildObservationLibraryMap,
     buildProjectFromKnowledgeBase,

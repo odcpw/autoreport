@@ -165,8 +165,11 @@
       const file = await fileHandle.getFile();
       const text = await file.text();
       const data = JSON.parse(text);
-      seeds.validateKnowledgeBase(data);
-      return data;
+      const normalized = typeof seeds.normalizeKnowledgeBaseCompatibility === "function"
+        ? seeds.normalizeKnowledgeBaseCompatibility(data)
+        : data;
+      seeds.validateKnowledgeBase(normalized);
+      return normalized;
     };
 
     const loadLibraryFromProject = async () => {
@@ -239,7 +242,9 @@
         debug.logLine("error", `Invalid seed: ${err.message || err}`);
         return null;
       }
-      return knowledgeBase;
+      return typeof seeds.normalizeKnowledgeBaseCompatibility === "function"
+        ? seeds.normalizeKnowledgeBaseCompatibility(knowledgeBase)
+        : knowledgeBase;
     };
 
     const findDirectoryCaseInsensitive = async (parentHandle, name) => {
@@ -398,7 +403,7 @@
       runtime.sidecarDoc = sidecarDoc;
       const reportProject = extractReportProject(sidecarDoc);
       if (reportProject) {
-        state.project = normalizeHelpers.normalizeProject(reportProject, ctx.i18n.setLocale);
+        state.project = normalizeHelpers.normalizeProject(structuredClone(reportProject), ctx.i18n.setLocale);
         normalizeHelpers.syncObservationChapterRows(state.project, runtime.sidecarDoc);
         state.spiderOverrides = runtime.sidecarDoc?.spider?.overrides || {};
         runtime.awaitingLocaleBootstrap = false;

@@ -90,7 +90,7 @@ test("production entry points stop instead of substituting no-op core modules", 
   });
 });
 
-const createIo = ({ files, project }) => {
+const createIo = ({ files, project, normalizeProject, seedOverrides }) => {
   const statuses = [];
   let renders = 0;
   const context = loadBrowserScripts([
@@ -121,7 +121,7 @@ const createIo = ({ files, project }) => {
       toText: (value) => value == null ? "" : String(value),
     },
     normalizeHelpers: {
-      normalizeProject: (value) => structuredClone(value),
+      normalizeProject: normalizeProject || ((value) => structuredClone(value)),
       syncObservationChapterRows() {},
     },
     seeds: {
@@ -135,6 +135,7 @@ const createIo = ({ files, project }) => {
         meta: { locale: library.meta.locale, libraryMarker: library.marker },
         chapters: [{ id: "0", rows: [] }],
       }),
+      ...seedOverrides,
     },
     renderApi: {
       buildPhotoIndex() {},
@@ -156,6 +157,30 @@ test("a valid sidecar opens Project even when scaffold setup fails", async () =>
   assert.match(fixture.statuses.at(-1), /Loaded project_sidecar\.json/);
 });
 
+test("a wrapped sidecar can load then save even if normalizeProject mutates its input", async () => {
+  const sidecar = {
+    report: {
+      project: {
+        meta: { locale: "de-CH" },
+        chapters: [{ id: "0", rows: [] }],
+      },
+    },
+  };
+  const fixture = createIo({
+    files: { "project_sidecar.json": JSON.stringify(sidecar) },
+    normalizeProject: (value) => {
+      value.meta ||= {};
+      value.meta.moderator = "Normalized";
+      return value;
+    },
+  });
+  const loaded = await fixture.io.loadProjectFromFolder();
+  assert.equal(loaded.ok, true);
+  await assert.doesNotReject(() => fixture.io.saveSidecar());
+  const saved = JSON.parse(fixture.runtime.dirHandle.read("project_sidecar.json"));
+  assert.equal(saved.report.project.meta.moderator, "Normalized");
+});
+
 test("language bootstrap selects the matching user library and saves immediately", async () => {
   const de = { meta: { locale: "de-CH" }, marker: "german" };
   const fr = { meta: { locale: "fr-CH" }, marker: "french" };
@@ -172,6 +197,101 @@ test("language bootstrap selects the matching user library and saves immediately
   assert.equal(fixture.runtime.pendingBootstrapWrite, false);
   const saved = JSON.parse(fixture.runtime.dirHandle.read("project_sidecar.json"));
   assert.equal(saved.report.project.meta.libraryMarker, "french");
+});
+
+test("new-project bootstrap ingests a legacy user library without chapterFrontMatter migration", async () => {
+  const fixture = createIo({
+    files: {
+      "library_user_OLD_de-CH.json": JSON.stringify({
+        schemaVersion: "1.1",
+        meta: { locale: "de-CH" },
+        structure: { items: [{ id: "0.1", collapsedId: "0.1", chapterLabel: "Summary", question: "Lead" }] },
+        library: { entries: [{ id: "0.1", finding: "", recommendation: "Base" }] },
+        tags: { report: [], observations: [], training: [] },
+      }),
+    },
+    normalizeProject: (value) => {
+      value.chapters.forEach((chapter) => {
+        chapter.meta ||= {};
+        if (chapter.meta.frontMatterText == null) chapter.meta.frontMatterText = "";
+        if (chapter.meta.frontMatterLibraryAction == null) chapter.meta.frontMatterLibraryAction = "off";
+        if (chapter.meta.frontMatterLibraryHash == null) chapter.meta.frontMatterLibraryHash = "";
+      });
+      return value;
+    },
+    seedOverrides: {
+      normalizeKnowledgeBaseCompatibility: (library) => {
+        const clone = structuredClone(library);
+        clone.library = clone.library || { entries: [] };
+        clone.library.chapterFrontMatter = {};
+        return clone;
+      },
+      buildProjectFromKnowledgeBase: (library) => ({
+        meta: { locale: library.meta.locale },
+        chapters: [{
+          id: "0",
+          rows: [],
+          meta: {
+            frontMatterText: library.library.chapterFrontMatter?.["0"] || "",
+          },
+        }],
+      }),
+    },
+  });
+  const opened = await fixture.io.loadProjectFromFolder();
+  assert.equal(opened.source, "empty");
+  await fixture.io.bootstrapProjectFromSeed("de-CH", { deferSave: false });
+  const chapter0 = fixture.state.project.chapters.find((chapter) => chapter.id === "0");
+  assert.equal(chapter0.meta.frontMatterText, "");
+  assert.equal(chapter0.meta.frontMatterLibraryAction, "off");
+  assert.equal(chapter0.meta.frontMatterLibraryHash, "");
+  const saved = JSON.parse(fixture.runtime.dirHandle.read("project_sidecar.json"));
+  assert.equal(saved.report.project.chapters[0].meta.frontMatterText, "");
+});
+
+test("new-project bootstrap copies current Chapter 0 customer context from the matching user library", async () => {
+  const fixture = createIo({
+    files: {
+      "library_user_OLD_de-CH.json": JSON.stringify({
+        schemaVersion: "1.1",
+        meta: { locale: "de-CH" },
+        structure: { items: [{ id: "0.1", collapsedId: "0.1", chapterLabel: "Summary", question: "Lead" }] },
+        library: {
+          entries: [{ id: "0.1", finding: "", recommendation: "Base" }],
+          chapterFrontMatter: { "0": "Customer context" },
+        },
+        tags: { report: [], observations: [], training: [] },
+      }),
+    },
+    normalizeProject: (value) => {
+      value.chapters.forEach((chapter) => {
+        chapter.meta ||= {};
+        if (chapter.meta.frontMatterText == null) chapter.meta.frontMatterText = "";
+        if (chapter.meta.frontMatterLibraryAction == null) chapter.meta.frontMatterLibraryAction = "off";
+        if (chapter.meta.frontMatterLibraryHash == null) chapter.meta.frontMatterLibraryHash = "";
+      });
+      return value;
+    },
+    seedOverrides: {
+      normalizeKnowledgeBaseCompatibility: (library) => structuredClone(library),
+      buildProjectFromKnowledgeBase: (library) => ({
+        meta: { locale: library.meta.locale },
+        chapters: [{
+          id: "0",
+          rows: [],
+          meta: {
+            frontMatterText: library.library.chapterFrontMatter?.["0"] || "",
+          },
+        }],
+      }),
+    },
+  });
+  await fixture.io.loadProjectFromFolder();
+  await fixture.io.bootstrapProjectFromSeed("de-CH", { deferSave: false });
+  const chapter0 = fixture.state.project.chapters.find((chapter) => chapter.id === "0");
+  assert.equal(chapter0.meta.frontMatterText, "Customer context");
+  const saved = JSON.parse(fixture.runtime.dirHandle.read("project_sidecar.json"));
+  assert.equal(saved.report.project.chapters[0].meta.frontMatterText, "Customer context");
 });
 
 test("Chapter 0 customer context is stored in the user library without duplicate appends", async () => {

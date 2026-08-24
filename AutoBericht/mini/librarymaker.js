@@ -71,6 +71,17 @@
   const toText = stateHelpers.toText;
 
   const isPlainObject = (value) => !!value && typeof value === "object" && !Array.isArray(value);
+  const normalizeChapterTextValue = (value) => {
+    if (typeof value === "string") return value.replace(/\r\n/g, "\n");
+    if (isPlainObject(value)) return toText(value.text ?? value.value).replace(/\r\n/g, "\n");
+    return "";
+  };
+  const normalizeChapterTextMap = (value) => {
+    if (!isPlainObject(value)) return {};
+    return Object.fromEntries(
+      Object.entries(value).map(([chapterId, text]) => [String(chapterId || "").trim(), normalizeChapterTextValue(text)]),
+    );
+  };
 
   const getLocaleBase = (locale) => {
     const base = String(locale || "de-CH").toLowerCase().split("-")[0];
@@ -202,8 +213,11 @@
   };
 
   const normalizeKnowledgeBaseForMaker = (knowledgeBase) => {
-    seeds.validateKnowledgeBase(knowledgeBase);
-    const clone = structuredClone(knowledgeBase);
+    const compat = typeof seeds.normalizeKnowledgeBaseCompatibility === "function"
+      ? seeds.normalizeKnowledgeBaseCompatibility(knowledgeBase)
+      : knowledgeBase;
+    seeds.validateKnowledgeBase(compat);
+    const clone = structuredClone(compat);
     clone.meta = isPlainObject(clone.meta) ? clone.meta : {};
     clone.structure = isPlainObject(clone.structure) ? clone.structure : { items: [] };
     clone.structure.items = Array.isArray(clone.structure.items) ? clone.structure.items : [];
@@ -227,9 +241,7 @@
     clone.library.chapterPositives = isPlainObject(clone.library.chapterPositives)
       ? structuredClone(clone.library.chapterPositives)
       : {};
-    clone.library.chapterFrontMatter = isPlainObject(clone.library.chapterFrontMatter)
-      ? structuredClone(clone.library.chapterFrontMatter)
-      : {};
+    clone.library.chapterFrontMatter = normalizeChapterTextMap(clone.library.chapterFrontMatter);
     clone.tags = typeof seeds.normalizeTagGroups === "function"
       ? seeds.normalizeTagGroups(clone.tags)
       : { report: [], observations: [], training: [] };
@@ -562,7 +574,26 @@
     if (hasObservations && !chapterMap.has("4.8")) {
       chapterMap.set("4.8", { id: "4.8" });
     }
+    const hasChapter0FrontMatter = (
+      Object.prototype.hasOwnProperty.call(state.targetLibrary?.library?.chapterFrontMatter || {}, "0")
+      || Object.prototype.hasOwnProperty.call(state.sourceLibrary?.library?.chapterFrontMatter || {}, "0")
+    );
+    if (hasChapter0FrontMatter && !chapterMap.has("0")) {
+      chapterMap.set("0", { id: "0" });
+    }
     return Array.from(chapterMap.values()).sort((a, b) => compareIds(a.id, b.id));
+  };
+
+  const buildChapterFrontMatterRow = (chapterId) => {
+    if (String(chapterId) !== "0") return null;
+    return {
+      kind: "chapterFrontMatter",
+      key: "chapter-front-matter:0",
+      chapterId: "0",
+      displayId: "0",
+      title: "Customer context",
+      context: "Shown before the Chapter 0 A/B/C points.",
+    };
   };
 
   const buildStructuredRows = (chapterId) => {
@@ -630,11 +661,24 @@
   const buildRowsForSelection = () => {
     if (!state.targetLibrary || !state.selectedChapterId) return [];
     if (state.selectedChapterId === "4.8") return buildObservationRows();
-    return buildStructuredRows(state.selectedChapterId);
+    const rows = [];
+    const chapterFrontMatterRow = buildChapterFrontMatterRow(state.selectedChapterId);
+    if (chapterFrontMatterRow) rows.push(chapterFrontMatterRow);
+    return rows.concat(buildStructuredRows(state.selectedChapterId));
   };
 
-  const getTargetFieldValue = (row, field) => toText(row?.targetEntry?.[field] || "");
-  const getSourceFieldValue = (row, field) => toText(row?.sourceEntry?.[field] || "");
+  const getTargetFieldValue = (row, field) => {
+    if (row?.kind === "chapterFrontMatter" && field === "text") {
+      return normalizeChapterTextValue(state.targetLibrary?.library?.chapterFrontMatter?.[row.chapterId]);
+    }
+    return toText(row?.targetEntry?.[field] || "");
+  };
+  const getSourceFieldValue = (row, field) => {
+    if (row?.kind === "chapterFrontMatter" && field === "text") {
+      return normalizeChapterTextValue(state.sourceLibrary?.library?.chapterFrontMatter?.[row.chapterId]);
+    }
+    return toText(row?.sourceEntry?.[field] || "");
+  };
 
   const ensureTargetStructuredEntry = (entryId) => {
     let entry = (state.targetLibrary.library.entries || []).find((item) => String(item?.id || "") === String(entryId || ""));
@@ -725,11 +769,15 @@
       state.targetLibrary.tags?.observations || [],
       getLocaleBase(state.targetLibrary.meta?.locale),
     );
+    state.targetLibrary.library.chapterFrontMatter = normalizeChapterTextMap(state.targetLibrary.library.chapterFrontMatter);
   };
 
   const setTargetFieldValue = (row, field, value) => {
     const normalizedValue = toText(value).replace(/\r\n/g, "\n");
-    if (row.kind === "observation") {
+    if (row.kind === "chapterFrontMatter" && field === "text") {
+      state.targetLibrary.library.chapterFrontMatter = normalizeChapterTextMap(state.targetLibrary.library.chapterFrontMatter);
+      state.targetLibrary.library.chapterFrontMatter[row.chapterId] = normalizedValue;
+    } else if (row.kind === "observation") {
       ensureTargetObservationTag(row.value, row.label);
       const entry = ensureTargetObservationEntry(row.value, row.label);
       entry[field] = normalizedValue;
@@ -961,8 +1009,12 @@
       header.appendChild(meta);
 
       card.appendChild(header);
-      card.appendChild(createFieldBlock(row, "finding", "Finding"));
-      card.appendChild(createFieldBlock(row, "recommendation", "Recommendation"));
+      if (row.kind === "chapterFrontMatter") {
+        card.appendChild(createFieldBlock(row, "text", "Customer context"));
+      } else {
+        card.appendChild(createFieldBlock(row, "finding", "Finding"));
+        card.appendChild(createFieldBlock(row, "recommendation", "Recommendation"));
+      }
       fragment.appendChild(card);
     });
     elements.rowsEl.appendChild(fragment);
@@ -1093,6 +1145,41 @@
       setStatus(t("status_librarymaker_select_project"));
     }
   };
+
+  if (window.__AUTO_BERICHT_TEST__) {
+    window.__AUTO_BERICHT_TEST__.librarymaker = {
+      normalizeKnowledgeBaseForMaker,
+      getChapterObjects,
+      buildRowsForSelection,
+      applyButtonAction,
+      setTargetFieldValue,
+      loadTargetLibraryFromProject,
+      saveTargetLibrary,
+      render,
+      setState(partial = {}) {
+        Object.entries(partial).forEach(([key, value]) => {
+          state[key] = value;
+        });
+      },
+      getState() {
+        return {
+          ...structuredClone({
+            projectMeta: state.projectMeta,
+            targetLibrary: state.targetLibrary,
+            targetFileName: state.targetFileName,
+            sourceLibrary: state.sourceLibrary,
+            sourceFileName: state.sourceFileName,
+            selectedChapterId: state.selectedChapterId,
+            historyPast: state.historyPast,
+            historyFuture: state.historyFuture,
+            dirty: state.dirty,
+          }),
+          touchedKeys: new Set(state.touchedKeys),
+          projectHandle: state.projectHandle,
+        };
+      },
+    };
+  }
 
   init();
 })();
