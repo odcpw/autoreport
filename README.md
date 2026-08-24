@@ -16,6 +16,7 @@ Offline safety-culture reporting tool with a browser UI (`AutoBericht/mini`) and
 Windows launchers:
 - `start-autobericht.cmd` starts the local app from the repo root.
 - `sync-autobericht.cmd` updates a local copy from the repo ZIP.
+- Sync clears the downloaded archive's Internet marker before extraction and verifies the five launcher files are marker-free after copy.
 - Both wrappers use `powershell.exe -ExecutionPolicy Bypass` for that process only. They do not change system or user execution policy.
 
 To update an installed copy on Windows, run `sync-autobericht.cmd` from that copy's repo root, then run `start-autobericht.cmd`.
