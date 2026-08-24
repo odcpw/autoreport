@@ -1,5 +1,7 @@
 const test = require("node:test");
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const path = require("node:path");
 const { loadBrowserScripts } = require("./helpers");
 
 test("self-assessment requires the named sheet and explicit header columns", () => {
@@ -33,6 +35,30 @@ test("English No. ID header is distinct from the No answer column", () => {
   assert.equal(parsed.columns.id, 0);
   assert.equal(parsed.columns.no, 3);
   assert.equal(parsed.entries[0].answer, 0);
+});
+
+test("bundled self-assessment workbooks parse sparse Excel header rows", () => {
+  const XLSX = require("../libs/sheetjs/xlsx.full.min.js");
+  const api = loadBrowserScripts(["mini/shared/self-assessment.js"]).AutoBerichtSelfAssessment;
+  const templatesDir = path.resolve(__dirname, "../project-template/templates");
+  const workbookNames = [
+    "Selbstbeurteilung Integrierte Sicherheit d.V14.xlsx",
+    "Selbstbeurteilung Integrierte Sicherheit f.V15.xlsx",
+    "Selbstbeurteilung Integrierte Sicherheit i.V14.xlsx",
+  ];
+
+  workbookNames.forEach((workbookName) => {
+    const workbook = XLSX.read(fs.readFileSync(path.join(templatesDir, workbookName)), { type: "buffer" });
+    const sheetName = api.findAssessmentSheetName(workbook.SheetNames);
+    const rows = XLSX.utils.sheet_to_json(workbook.Sheets[sheetName], { header: 1, blankrows: false });
+    // The bundled templates are blank. Mark the first numbered row so the
+    // parser can complete the same path as a filled customer workbook.
+    rows[2][3] = "x";
+    const parsed = api.parseRows(rows);
+
+    assert.ok(parsed.structuralIds.length > 100, workbookName);
+    assert.ok(parsed.entries.length > 0, workbookName);
+  });
 });
 
 test("self-assessment counts only meaningful rows and validates project identity", () => {

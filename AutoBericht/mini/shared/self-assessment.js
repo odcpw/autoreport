@@ -27,7 +27,7 @@
   };
 
   const HEADER_ALIASES = {
-    id: ["nr", "n", "no", "numero", "number", "id"],
+    id: ["nr", "n", "no", "numero", "number", "id", "nrsb"],
     question: ["frage", "question", "domanda"],
     yes: ["ja", "oui", "si", "yes"],
     no: ["nein", "non", "no"],
@@ -36,7 +36,10 @@
   };
 
   const findColumn = (header, aliases, exact = false, excluded = new Set()) => {
-    const tokens = (header || []).map(normalizeToken);
+    // SheetJS preserves blank and merged Excel cells as sparse array slots.
+    // Array#map preserves those holes while Array#findIndex visits them as
+    // undefined, so normalize every slot through Array.from first.
+    const tokens = Array.from(Array.isArray(header) ? header : [], normalizeToken);
     return tokens.findIndex((token, index) => !excluded.has(index) && aliases.some((alias) => (
       exact ? token === alias : token === alias || token.includes(alias)
     )));
