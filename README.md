@@ -13,14 +13,6 @@ Offline safety-culture reporting tool with a browser UI (`AutoBericht/mini`) and
    - **AutoBericht** for findings/recommendations + chapter workflow
    - **Project** for Word/PPT export + library update/export
 
-Windows launchers:
-- `start-autobericht.cmd` starts the local app from the repo root.
-- `sync-autobericht.cmd` updates a local copy from the repo ZIP.
-- Sync clears the downloaded archive's Internet marker before extraction and verifies the five launcher files are marker-free after copy.
-- Both wrappers use `powershell.exe -ExecutionPolicy Bypass` for that process only. They do not change system or user execution policy.
-
-To update an installed copy on Windows, run `sync-autobericht.cmd` from that copy's repo root, then run `start-autobericht.cmd`.
-
 For onboarding guides, see:
 - `instructions.txt`
 - `docs/onboarding/AutoBericht-Schnellstart-DE.docx`
@@ -46,7 +38,6 @@ autoreport/
 ├── README.md
 ├── instructions.txt
 ├── start-autobericht.cmd
-├── sync-autobericht.cmd
 ├── AutoBericht/
 │   ├── mini/                 # main web app (AutoBericht + PhotoSorter)
 │   ├── data/                 # seeds, weights, checklists

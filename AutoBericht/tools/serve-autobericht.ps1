@@ -97,9 +97,7 @@ try {
       }
 
       $candidate = [System.IO.Path]::GetFullPath((Join-Path $rootPath $relative))
-      $rootBoundary = $rootPath.TrimEnd([System.IO.Path]::DirectorySeparatorChar, [System.IO.Path]::AltDirectorySeparatorChar) + [System.IO.Path]::DirectorySeparatorChar
-      $isRoot = $candidate.Equals($rootPath, [System.StringComparison]::OrdinalIgnoreCase)
-      if (-not $isRoot -and -not $candidate.StartsWith($rootBoundary, [System.StringComparison]::OrdinalIgnoreCase)) {
+      if (-not $candidate.StartsWith($rootPath, [System.StringComparison]::OrdinalIgnoreCase)) {
         Write-TextResponse $response 400 'Bad request.'
         continue
       }
@@ -118,7 +116,6 @@ try {
 
       if ($request.HttpMethod -eq 'HEAD') {
         $response.StatusCode = 200
-        $response.ContentLength64 = ([System.IO.FileInfo]$candidate).Length
         $response.OutputStream.Close()
         continue
       }
