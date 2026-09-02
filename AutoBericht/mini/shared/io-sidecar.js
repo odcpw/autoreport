@@ -46,37 +46,6 @@
       && !Array.isArray(value)
     );
 
-    const sanitizePhotoTagOptions = (value) => {
-      const normalized = typeof seeds.normalizeTagGroups === "function"
-        ? seeds.normalizeTagGroups(value)
-        : {
-          report: value?.report || [],
-          observations: value?.observations || [],
-          training: value?.training || [],
-        };
-      return {
-        report: Array.isArray(normalized.report) ? structuredClone(normalized.report) : [],
-        observations: Array.isArray(normalized.observations) ? structuredClone(normalized.observations) : [],
-        training: Array.isArray(normalized.training) ? structuredClone(normalized.training) : [],
-      };
-    };
-
-    const sanitizePhotosBranch = (photosBranch) => {
-      const source = isPlainObject(photosBranch) ? photosBranch : {};
-      const meta = isPlainObject(source.meta) ? structuredClone(source.meta) : {};
-      if (!meta.createdAt) meta.createdAt = new Date().toISOString();
-      if (meta.updatedAt == null) meta.updatedAt = "";
-      if (!Object.prototype.hasOwnProperty.call(meta, "projectId")) meta.projectId = "";
-      const photoRoot = typeof source.photoRoot === "string" ? source.photoRoot : "";
-      const photos = isPlainObject(source.photos) ? structuredClone(source.photos) : {};
-      return {
-        meta,
-        photoRoot,
-        photoTagOptions: sanitizePhotoTagOptions(source.photoTagOptions),
-        photos,
-      };
-    };
-
     const reorderChapterRows = (project, chapterId) => {
       if (!project?.chapters) return;
       const chapter = project.chapters.find((item) => item.id === chapterId);
@@ -102,9 +71,7 @@
       reorderChapterRows(projectCopy, "0");
       reorderChapterRows(projectCopy, "4.8");
       merged.report = { project: projectCopy };
-      if (Object.prototype.hasOwnProperty.call(merged, "photos")) {
-        merged.photos = sanitizePhotosBranch(merged.photos);
-      }
+      // The photos branch belongs to PhotoSorter and is carried through untouched.
       delete merged.photoRoot;
       delete merged.photoTagOptions;
       if (spiderData) merged.spider = spiderData;
@@ -409,7 +376,7 @@
         runtime.awaitingLocaleBootstrap = false;
         runtime.pendingBootstrapWrite = false;
         renderApi.buildPhotoIndex();
-        state.selectedChapterId = "__project__";
+        state.selectedChapterId = state.project.chapters[0]?.id || "";
         renderApi.render();
         let warning = "";
         try {
@@ -419,7 +386,7 @@
           debug.logLine("warn", `Project scaffold failed after sidecar load: ${err.message || err}`);
         }
         setStatus(tf("status_loaded_sidecar", "Loaded project_sidecar.json.{warning}", { warning }).trim());
-        debug.logLine("info", "Loaded project_sidecar.json and opened Project.");
+        debug.logLine("info", "Loaded project_sidecar.json.");
         return { ok: true, source: "sidecar", warning };
       }
 
@@ -460,11 +427,10 @@
 
     const saveSidecar = async () => {
       if (!runtime.dirHandle) return;
-      if (!sidecarStorage?.saveBranch || !sidecarStorage?.enqueue) {
+      if (!sidecarStorage?.saveSidecar || !sidecarStorage?.enqueue) {
         throw new Error("Safe sidecar storage module is unavailable.");
       }
       return sidecarStorage.enqueue(runtime, async () => {
-        const saveVersion = Number(runtime.changeVersion) || 0;
         let spiderData = null;
         if (spiderModule?.computeSpider) {
           try {
@@ -477,17 +443,14 @@
             debug.logLine("error", `Spider compute failed: ${err.message || err}`);
           }
         }
-        const payload = await sidecarStorage.saveBranch({
+        const payload = await sidecarStorage.saveSidecar({
           dirHandle: runtime.dirHandle,
-          baseDoc: runtime.sidecarDoc,
-          branch: "report",
-          writerId: runtime.writerId || "report",
           merge: (latest) => mergeSidecar(latest, state.project, spiderData),
         });
         runtime.sidecarDoc = payload;
         runtime.pendingBootstrapWrite = false;
         runtime.awaitingLocaleBootstrap = false;
-        runtime.hasUnsavedChanges = (Number(runtime.changeVersion) || 0) !== saveVersion;
+        runtime.hasUnsavedChanges = false;
         return payload;
       });
     };

@@ -4,26 +4,27 @@ const fs = require("node:fs");
 const path = require("node:path");
 const { loadBrowserScripts } = require("./helpers");
 
-test("self-assessment requires the named sheet and explicit header columns", () => {
+test("self-assessment falls back to the first sheet and the Suva column layout", () => {
   const api = loadBrowserScripts(["mini/shared/self-assessment.js"]).AutoBerichtSelfAssessment;
-  assert.throws(() => api.findAssessmentSheetName(["Sheet1"]), /recognized self-assessment sheet/);
-  assert.throws(() => api.parseRows([["Nr", "Question"], ["1.1", "Test"]]), /ID, Yes and No/);
+  assert.equal(api.findAssessmentSheetName(["Sheet1"]), "Sheet1");
+  assert.equal(api.findAssessmentSheetName(["Anleitung", "Selbstbeurteilung Kunde"]), "Selbstbeurteilung Kunde");
+  const parsed = api.parseRows([["Nr", "Question"], ["1.1", "", "Test", "x", ""]]);
+  assert.equal(parsed.headerRowIndex, -1);
+  assert.deepEqual(Array.from(parsed.entries, (entry) => [entry.id, entry.answer]), [["1.1", 1]]);
 });
 
-test("self-assessment rejects conflicting marks and duplicate IDs", () => {
+test("a row marked both Ja and Nein imports as Nein, and a repeated ID keeps the later row", () => {
   const api = loadBrowserScripts(["mini/shared/self-assessment.js"]).AutoBerichtSelfAssessment;
-  assert.throws(
-    () => api.parseRows([["Nr", "Question", "Oui", "Non"], ["1.1", "Q", "x", "x"]]),
-    /Conflicting Yes and No/,
-  );
-  assert.throws(
-    () => api.parseRows([
-      ["Nr", "Question", "Ja", "Nein"],
-      ["1.1", "Q", "x", ""],
-      ["1.1", "Q again", "", "x"],
-    ]),
-    /Duplicate self-assessment ID/,
-  );
+  const both = api.parseRows([["Nr", "Question", "Oui", "Non"], ["1.1", "Q", "x", "x"]]);
+  assert.equal(both.entries[0].answer, 0);
+  const repeated = api.parseRows([
+    ["Nr", "Question", "Ja", "Nein"],
+    ["1.1", "Q", "x", ""],
+    ["1.1", "Q again", "", "x"],
+  ]);
+  assert.equal(repeated.entries.length, 1);
+  assert.equal(repeated.entries[0].answer, 0);
+  assert.deepEqual(Array.from(repeated.structuralIds), ["1.1"]);
 });
 
 test("English No. ID header is distinct from the No answer column", () => {
@@ -61,18 +62,16 @@ test("bundled self-assessment workbooks parse sparse Excel header rows", () => {
   });
 });
 
-test("self-assessment counts only meaningful rows and validates project identity", () => {
+test("self-assessment imports only rows with an answer, comment, or evidence", () => {
   const api = loadBrowserScripts(["mini/shared/self-assessment.js"]).AutoBerichtSelfAssessment;
   const rows = [["Nr", "Question", "Oui", "Non", "Remarque"]];
   for (let index = 1; index <= 10; index += 1) {
     rows.push([`1.${index}`, `Q${index}`, index === 1 ? "x" : "", "", index === 2 ? "note" : ""]);
   }
   const parsed = api.parseRows(rows);
+  assert.equal(parsed.structuralIds.length, 10);
   assert.equal(parsed.entries.length, 2);
   assert.deepEqual(Array.from(parsed.entries, (entry) => entry.id), ["1.1", "1.2"]);
-  const coverage = api.validateProjectCoverage(parsed, parsed.structuralIds);
-  assert.equal(coverage.matched, 10);
-  assert.throws(() => api.validateProjectCoverage(parsed, ["9.9"]), /does not match this project/);
 });
 
 test("markdown drops unsafe and relative link targets", () => {
@@ -140,19 +139,26 @@ test("PowerPoint text renderer converts Markdown into DrawingML runs", () => {
   assert.deepEqual(Array.from(rendered.hyperlinkTargets), ["https://www.suva.ch/"]);
 });
 
-test("report locale changes report wording and spellcheck, while steering UI stays English", () => {
+test("report locale changes report wording, hints and spellcheck, while controls stay English", () => {
   let documentLang = "";
   const document = {
     documentElement: { setAttribute(name, value) { if (name === "lang") documentLang = value; } },
     querySelectorAll() { return []; },
   };
   const api = loadBrowserScripts(["mini/shared/i18n.js"], { document }).AutoBerichtI18n;
-  for (const [locale, seeAlso] of [["de-CH", "Siehe auch"], ["fr-CH", "Voir aussi"], ["it-CH", "Vedere anche"]]) {
+  const cases = [
+    ["de-CH", "Siehe auch", "Selbstbeurteilung importieren"],
+    ["fr-CH", "Voir aussi", "Importer l'autoevaluation"],
+    ["it-CH", "Vedere anche", "Importa autovalutazione"],
+  ];
+  for (const [locale, seeAlso, importTitle] of cases) {
     api.setLocale(locale);
     assert.equal(documentLang, locale);
     assert.equal(api.t("project_meta_locale_select"), "Select language");
     assert.equal(api.t("project_tool_import_title"), "Import Self-Assessment");
     assert.equal(api.t("project_export_card_title"), "Word Export");
+    assert.equal(api.tHint("project_tool_import_title"), importTitle);
+    assert.equal(api.tHint("status_autosaved", "Autosaved."), "Autosaved.");
     assert.equal(api.tReport("checklist_see_also"), seeAlso);
     assert.equal(
       api.tf("status_loaded_photos", "Loaded {count} photos from {folder}.", { count: 3, folder: "photos/resized" }),

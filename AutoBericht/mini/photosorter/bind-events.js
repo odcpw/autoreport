@@ -181,11 +181,11 @@
           await photosApi.scanPhotos();
           const imported = Number(result.importedCount) || 0;
           const skipped = Number(result.skippedCount) || 0;
-          const copiedVideos = Number(result.copiedVideoCount) || 0;
+          const movedVideos = Number(result.movedVideoCount) || 0;
           const parts = [];
           parts.push(tf("status_imported_photos", "Imported {count} photos", { count: imported }));
           if (skipped > 0) parts.push(tf("status_skipped_photos", "skipped {count} already present", { count: skipped }));
-          if (copiedVideos > 0) parts.push(tf("status_copied_videos", "copied {count} videos to photos/videos", { count: copiedVideos }));
+          if (movedVideos > 0) parts.push(tf("status_moved_videos", "moved {count} videos to photos/videos", { count: movedVideos }));
           setStatus(`${parts.join(", ")}.`);
         } catch (err) {
           setStatus(tf("status_import_failed", "Import failed: {error}", { error: err.message || err }));
@@ -305,6 +305,7 @@
     if (elements.filterToggleBtn) {
       elements.filterToggleBtn.addEventListener("click", () => {
         state.filterMode = state.filterMode === "all" ? "unsorted" : "all";
+        state.keepPath = "";
         elements.filterToggleBtn.textContent = state.filterMode === "all"
           ? t("status_show_unsorted")
           : t("status_show_all");
@@ -357,22 +358,31 @@
       });
     }
 
-    if (elements.prevBtn) {
-      elements.prevBtn.addEventListener("click", () => {
-        const filtered = photosApi.getFilteredPhotos();
-        if (!filtered.length) return;
-        state.currentIndex = (state.currentIndex - 1 + filtered.length) % filtered.length;
+    const stepPhoto = (delta) => {
+      const currentPath = photosApi.getCurrentPhoto()?.path || "";
+      state.keepPath = "";
+      const filtered = photosApi.getFilteredPhotos();
+      if (!filtered.length) {
+        state.currentIndex = 0;
         renderApi.renderAll();
-      });
+        return;
+      }
+      const index = filtered.findIndex((photo) => photo.path === currentPath);
+      // A just-tagged photo has left the unsorted list: the following photo now
+      // sits at its old index, so "next" needs no step and "previous" one step.
+      const base = index >= 0
+        ? index + delta
+        : Math.min(state.currentIndex, filtered.length) + (delta > 0 ? 0 : -1);
+      state.currentIndex = ((base % filtered.length) + filtered.length) % filtered.length;
+      renderApi.renderAll();
+    };
+
+    if (elements.prevBtn) {
+      elements.prevBtn.addEventListener("click", () => stepPhoto(-1));
     }
 
     if (elements.nextBtn) {
-      elements.nextBtn.addEventListener("click", () => {
-        const filtered = photosApi.getFilteredPhotos();
-        if (!filtered.length) return;
-        state.currentIndex = (state.currentIndex + 1) % filtered.length;
-        renderApi.renderAll();
-      });
+      elements.nextBtn.addEventListener("click", () => stepPhoto(1));
     }
 
     if (elements.notesEl) {

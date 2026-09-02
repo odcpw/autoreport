@@ -6,6 +6,10 @@ const path = require("node:path");
 const { spawnSync } = require("node:child_process");
 const { ROOT, loadBrowserScripts } = require("./helpers");
 
+// Strict OOXML validation needs the optional `ooxml` CLI; the structural
+// assertions below run everywhere.
+const ooxmlAvailable = spawnSync("ooxml", ["--version"], { encoding: "utf8" }).status === 0;
+
 const asBytes = async (value) => {
   if (typeof value === "string") return new TextEncoder().encode(value);
   if (value instanceof Uint8Array) return value;
@@ -164,23 +168,29 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
   assert.doesNotMatch(documentXml, /CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/);
   assert.doesNotMatch(documentXml, /SPIDER\$\$/);
 
-  const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "autobericht-docx-test-"));
-  const outputPath = path.join(tempDir, outputName);
-  fs.writeFileSync(outputPath, outputHandle.bytes);
-  const validation = spawnSync("ooxml", ["validate", "--strict", outputPath], { encoding: "utf8" });
-  assert.equal(validation.status, 0, validation.stderr || validation.stdout);
-  fs.rmSync(tempDir, { recursive: true, force: true });
+  if (ooxmlAvailable) {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "autobericht-docx-test-"));
+    const outputPath = path.join(tempDir, outputName);
+    fs.writeFileSync(outputPath, outputHandle.bytes);
+    const validation = spawnSync("ooxml", ["validate", "--strict", outputPath], { encoding: "utf8" });
+    assert.equal(validation.status, 0, validation.stderr || validation.stdout);
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
 
-  await assert.rejects(
-    context.AutoBerichtWordExport.exportReportDocx({
-      project: { ...project, chapters: project.chapters.filter((chapter) => chapter.id !== "14") },
-      projectHandle: root,
-      computeSpider: async () => ({ effective: { chapters_1_11: [] } }),
-      compareIdSegments: (a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }),
-      toText: (value) => value == null ? "" : String(value),
-    }),
-    /Project data is missing a chapter required by the Word template \(CHAPTER14\$\$\)/,
-  );
+  // A project without chapter 14 still exports; the unused marker is removed
+  // and reported instead of aborting the export.
+  const partialNotices = [];
+  const partialResult = await context.AutoBerichtWordExport.exportReportDocx({
+    project: { ...project, chapters: project.chapters.filter((chapter) => chapter.id !== "14") },
+    projectHandle: root,
+    computeSpider: async () => { throw new Error("weights unavailable"); },
+    compareIdSegments: (a, b) => String(a).localeCompare(String(b), undefined, { numeric: true }),
+    toText: (value) => value == null ? "" : String(value),
+    notify: (message) => partialNotices.push(message),
+  });
+  assert.match(partialResult.savedAs, /^outputs\//);
+  assert.equal(partialNotices.some((message) => /CHAPTER14\$\$ has no matching chapter/.test(message)), true);
+  assert.equal(partialNotices.some((message) => /spider picture skipped \(weights unavailable\)/.test(message)), true);
 
   const templateBytes = new Uint8Array(fs.readFileSync(path.join(ROOT, "project-template", "templates", templateName)));
   const templateBuffer = templateBytes.buffer.slice(templateBytes.byteOffset, templateBytes.byteOffset + templateBytes.byteLength);
@@ -192,8 +202,10 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
   const legacyRoot = new MemoryDirectoryHandle("legacy-project");
   const legacyTemplates = await legacyRoot.getDirectoryHandle("templates", { create: true });
   legacyTemplates.children.set(templateName, new MemoryFileHandle(templateName, context.AutoBerichtWordDocxZip.buildZipStore(legacyEntries)));
+  // A project template from before the front-matter marker existed is still
+  // used as-is; only the customer context is skipped.
   const notices = [];
-  const fallbackResult = await context.AutoBerichtWordExport.exportReportDocx({
+  const legacyResult = await context.AutoBerichtWordExport.exportReportDocx({
     project,
     projectHandle: legacyRoot,
     computeSpider: async () => ({ effective: { chapters_1_11: [] } }),
@@ -201,6 +213,8 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
     toText: (value) => value == null ? "" : String(value),
     notify: (message) => notices.push(message),
   });
-  assert.match(fallbackResult.savedAs, /^outputs\//);
-  assert.equal(notices.some((message) => /template is outdated; using the bundled/.test(message)), true);
+  assert.match(legacyResult.savedAs, /^outputs\//);
+  assert.equal(notices.some((message) => /using project template/.test(message)), true);
+  assert.equal(notices.some((message) => /no CHAPTER0_FRONT_MATTER\$\$ marker; customer context was skipped/.test(message)), true);
+  assert.equal(notices.some((message) => /using the bundled/.test(message)), false);
 });

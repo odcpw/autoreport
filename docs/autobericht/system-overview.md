@@ -51,7 +51,7 @@ Browser-first offline workflow with project-local state and direct Word/PPT expo
   - filters, scoring, include/done workflow
   - 4.8 organization and checklist support
 - PhotoSorter
-  - immutable raw intake, image resize copies, and video copies
+  - raw image intake, resized image copies, and videos moved to `photos/videos`
   - report/observation/training tagging
   - tagged folder export
 - Project page

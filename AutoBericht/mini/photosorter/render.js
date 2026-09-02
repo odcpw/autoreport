@@ -345,6 +345,14 @@
         const count = document.createElement("span");
         count.className = "settings-tags__count";
         count.textContent = String(counts.get(option.value) || 0);
+        const renameBtn = document.createElement("button");
+        renameBtn.type = "button";
+        renameBtn.textContent = "Rename";
+        renameBtn.addEventListener("click", () => {
+          const next = window.prompt(`Rename "${option.label}" to:`, option.label);
+          if (next == null) return;
+          actions.renameObservationTag(option.value, next);
+        });
         const removeBtn = document.createElement("button");
         removeBtn.type = "button";
         removeBtn.textContent = "Remove";
@@ -355,7 +363,7 @@
           if (!confirmed) return;
           actions.removeObservationTag(option.value);
         });
-        row.append(label, count, removeBtn);
+        row.append(label, count, renameBtn, removeBtn);
         elements.obsTagList.appendChild(row);
       });
     };

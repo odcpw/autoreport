@@ -29,7 +29,7 @@ cd AutoBericht
 npm test
 ```
 
-The suite covers sidecar persistence/conflicts, startup and locale bootstrap, self-assessment validation, safe Markdown, ZIP limits, and the real DOCX export/template boundary. The DOCX checks require the `ooxml` CLI on `PATH`.
+The suite covers sidecar persistence across two open tabs, startup and locale bootstrap, self-assessment parsing, safe Markdown, ZIP limits, and the real DOCX export/template boundary. Strict OOXML validation runs only when the optional `ooxml` CLI is on `PATH`; the rendered PowerPoint check runs only when Firefox is installed. Both are skipped otherwise.
 
 ## Related Docs
 

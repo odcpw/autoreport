@@ -17,7 +17,7 @@
       setStatus(t("status_import_capability_missing"));
       return;
     }
-    if (!assessment.findAssessmentSheetName || !assessment.parseRows || !assessment.validateProjectCoverage) {
+    if (!assessment.findAssessmentSheetName || !assessment.parseRows) {
       setStatus(t("status_validator_missing"));
       return;
     }
@@ -60,7 +60,6 @@
           });
         });
       });
-      assessment.validateProjectCoverage(parsed, new Set([...idMap.keys(), ...rowMap.keys()]));
       const answerMap = new Map(parsed.entries.map((entry) => [entry.id, entry]));
 
       const ensureSelfItem = (id, payload) => {

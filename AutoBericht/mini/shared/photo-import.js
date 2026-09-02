@@ -330,10 +330,12 @@
     return current.getFileHandle(parts[parts.length - 1]);
   };
 
-  const copyRawVideos = async (projectHandle, getNestedDirectory, videoTasks = []) => {
+  // Videos are moved out of photos/raw into photos/videos so the raw folders
+  // hold only images. The raw file is removed only after the copy is verified.
+  const moveRawVideos = async (projectHandle, getNestedDirectory, videoTasks = []) => {
     if (!videoTasks.length) return 0;
     const resolveVideosHandle = () => ensureVideosFolder(projectHandle, getNestedDirectory);
-    let copiedCount = 0;
+    let movedCount = 0;
     for (const task of videoTasks) {
       const sourceFile = await task.fileHandle.getFile();
       const prefixedName = `${String(task.owner || "").trim()}_${String(task.fileName || "").trim()}`;
@@ -347,9 +349,13 @@
           throw new Error(`Video copy verification failed for ${task.fileName}. Raw source was kept.`);
         }
       });
-      copiedCount += 1;
+      const raw = await findRawFolder(projectHandle, getNestedDirectory);
+      if (!raw) throw new Error("Missing photos/raw while moving videos.");
+      const ownerHandle = await getNestedDirectory(raw.handle, [task.owner]);
+      await ownerHandle.removeEntry(task.fileName);
+      movedCount += 1;
     }
-    return copiedCount;
+    return movedCount;
   };
 
   const getPhotoFile = async (photo, projectHandle) => {
@@ -441,16 +447,16 @@
       return null;
     }
     const { imageTasks, videoTasks } = await collectRawTasks(raw.handle, isImageFile);
-    const copiedVideoCount = await copyRawVideos(projectHandle, getNestedDirectory, videoTasks);
+    const movedVideoCount = await moveRawVideos(projectHandle, getNestedDirectory, videoTasks);
     if (!imageTasks.length) {
-      if (copiedVideoCount > 0) {
+      if (movedVideoCount > 0) {
         return {
           resizedHandle: await ensureResizedFolder(projectHandle, getNestedDirectory),
           photoRootName: "photos/resized",
           count: 0,
           importedCount: 0,
           skippedCount: 0,
-          copiedVideoCount,
+          movedVideoCount,
         };
       }
       setStatus?.(statusText("status_no_raw_images", "No raw images found."));
@@ -510,7 +516,7 @@
       count: importPlan.length,
       importedCount,
       skippedCount,
-      copiedVideoCount,
+      movedVideoCount,
     };
   };
 

@@ -355,7 +355,7 @@
 
     const saveProjectSidecar = async () => {
       if (!state.projectHandle) return;
-      if (!sidecarStorage?.saveBranch || !sidecarStorage?.enqueue) {
+      if (!sidecarStorage?.saveSidecar || !sidecarStorage?.enqueue) {
         throw new Error("Safe sidecar storage module is unavailable.");
       }
       const payload = normalizePhotoDoc(state.projectDoc);
@@ -366,12 +366,8 @@
       payload.meta.updatedAt = new Date().toISOString();
 
       return sidecarStorage.enqueue(runtime, async () => {
-        const saveVersion = Number(runtime.changeVersion) || 0;
-        const sidecar = await sidecarStorage.saveBranch({
+        const sidecar = await sidecarStorage.saveSidecar({
           dirHandle: state.projectHandle,
-          baseDoc: state.sidecarDoc,
-          branch: "photos",
-          writerId: runtime.writerId || "photos",
           merge: (latest) => {
             const next = isPlainObject(latest) ? structuredClone(latest) : {};
             next.photos = payload;
@@ -382,7 +378,7 @@
         });
         state.projectDoc = payload;
         state.sidecarDoc = sidecar;
-        runtime.hasUnsavedChanges = (Number(runtime.changeVersion) || 0) !== saveVersion;
+        runtime.hasUnsavedChanges = false;
         setStatus(t("status_photosorter_saved_sidecar"));
         debug.logLine("info", "Saved photo tags to project_sidecar.json");
         return sidecar;
@@ -392,7 +388,6 @@
     const scheduleAutosave = () => {
       if (!state.projectHandle) return;
       runtime.hasUnsavedChanges = true;
-      runtime.changeVersion = (Number(runtime.changeVersion) || 0) + 1;
       if (runtime.autosaveTimer) clearTimeout(runtime.autosaveTimer);
       runtime.autosaveTimer = setTimeout(async () => {
         runtime.autosaveTimer = null;

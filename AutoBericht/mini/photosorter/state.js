@@ -98,6 +98,9 @@
     activeTagFilters: { report: [], observations: [], training: [] },
     photos: [],
     filterMode: "all",
+    // Path of the photo that was just tagged while "Show Unsorted" is active.
+    // It stays visible until the user moves on, so the tag click is confirmed.
+    keepPath: "",
     currentIndex: 0,
     currentPhotoUrl: "",
     currentPhotoToken: 0,
@@ -109,8 +112,6 @@
     saveQueue: Promise.resolve(),
     renderTimer: null,
     hasUnsavedChanges: false,
-    changeVersion: 0,
-    writerId: `photos-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`}`,
   });
 
   window.AutoBerichtPhotoSorterState = {

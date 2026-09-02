@@ -59,6 +59,7 @@ DE (Deutsch)
 - `project_sidecar.json` hält den Projektzustand (inkl. bearbeitete Texte und gewählte Library-Aktion je Zeile).
 - Die Library hält wiederverwendbare Textbausteine/Tags.
 - Wichtig: `Append`/`Replace` wirkt erst beim Klick auf `Generate / Update Library`.
+- Library im nächsten Projekt weiterverwenden: die Datei `library_user_<Kürzel>_<Sprache>.json` in den neuen, leeren Projektordner kopieren, bevor die Sprache gewählt wird. AutoBericht und PhotoSorter übernehmen daraus Texte und Tags.
 
 
 FR (Français)
@@ -119,6 +120,7 @@ FR (Français)
 - `project_sidecar.json` = état du projet (textes édités + action library choisie par ligne).
 - La library = contenus réutilisables (textes/tags).
 - Important: `Append`/`Replace` est appliqué uniquement lors de `Generate / Update Library`.
+- Réutiliser la library dans le projet suivant: copier le fichier `library_user_<initiales>_<langue>.json` dans le nouveau dossier projet vide avant de choisir la langue. AutoBericht et PhotoSorter y reprennent les textes et les tags.
 
 
 IT (Italiano)
@@ -179,3 +181,4 @@ IT (Italiano)
 - `project_sidecar.json` = stato progetto (testi modificati + azione library scelta per riga).
 - Library = contenuti riutilizzabili (testi/tag).
 - Importante: `Append`/`Replace` viene applicato solo con `Generate / Update Library`.
+- Riutilizzare la library nel progetto successivo: copiare il file `library_user_<iniziali>_<lingua>.json` nella nuova cartella progetto vuota prima di scegliere la lingua. AutoBericht e PhotoSorter ne riprendono testi e tag.

@@ -79,6 +79,7 @@
       collection.sort((a, b) => a.path.localeCompare(b.path));
       state.photos = collection;
       state.filterMode = "all";
+      state.keepPath = "";
       state.currentIndex = 0;
       setStatus(tf("status_loaded_photos", "Loaded {count} photos from {folder}.", { count: state.photos.length, folder: state.photoRootName }));
       if (notifyChange) notifyChange();
@@ -108,7 +109,7 @@
     const getFilteredPhotos = () => {
       let filtered = state.photos;
       if (state.filterMode === "unsorted") {
-        filtered = filtered.filter(isPhotoUnsorted);
+        filtered = filtered.filter((photo) => isPhotoUnsorted(photo) || photo.path === state.keepPath);
       }
       if (hasActiveTagFilters()) {
         filtered = filtered.filter(photoMatchesActiveTagFilters);

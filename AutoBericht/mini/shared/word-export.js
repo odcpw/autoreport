@@ -923,8 +923,8 @@
     if (!projectHandle) throw new Error("Project folder not selected.");
     const templatePath = resolveWordTemplatePath(project?.meta?.locale || "de-CH");
     const templateFile = await resolveWordTemplateFile(projectHandle, templatePath, notify);
-    let entries = await unzipAllEntries(await templateFile.arrayBuffer());
-    let map = new Map(entries.map((entry) => [entry.name, entry]));
+    const entries = await unzipAllEntries(await templateFile.arrayBuffer());
+    const map = new Map(entries.map((entry) => [entry.name, entry]));
 
     const getText = (name) => {
       const entry = map.get(name);
@@ -941,20 +941,6 @@
 
     let documentXml = getText("word/document.xml");
     if (!documentXml) throw new Error("Template missing word/document.xml");
-    if (!hasMarker(documentXml, "CHAPTER0_FRONT_MATTER$$")) {
-      notify(`Word export: project template is outdated; using the bundled ${templatePath} for this export`);
-      const bundledBytes = await fetchBundledTemplateBytes(templatePath);
-      const bundledBuffer = bundledBytes.buffer.slice(
-        bundledBytes.byteOffset,
-        bundledBytes.byteOffset + bundledBytes.byteLength,
-      );
-      entries = await unzipAllEntries(bundledBuffer);
-      map = new Map(entries.map((entry) => [entry.name, entry]));
-      documentXml = getText("word/document.xml");
-      if (!documentXml || !hasMarker(documentXml, "CHAPTER0_FRONT_MATTER$$")) {
-        throw new Error("Bundled Word template is missing required marker CHAPTER0_FRONT_MATTER$$.");
-      }
-    }
 
     const markerMap = {
       "NAME$$": project?.meta?.projectName || project?.meta?.company || "",
@@ -983,15 +969,18 @@
     const chapter0ListNumId = findUpperLetterNumId(getText("word/numbering.xml"));
     const chapter0 = chapters.find((chapter) => String(chapter?.id || "") === "0");
     const frontMatterText = String(chapter0?.meta?.frontMatterText || "").trim();
+    // Templates from before August 2026 have no front-matter marker; the
+    // customer context is then skipped and the rest of the export continues.
     const frontMatterPatch = replaceParagraphMarker(
       documentXml,
       "CHAPTER0_FRONT_MATTER$$",
       frontMatterText ? multiParagraphXml(frontMatterText) : "",
     );
-    if (!frontMatterPatch.replaced) {
-      throw new Error("Word template is missing required marker CHAPTER0_FRONT_MATTER$$.");
+    if (frontMatterPatch.replaced) {
+      documentXml = frontMatterPatch.xml;
+    } else if (frontMatterText) {
+      notify("Word export: template has no CHAPTER0_FRONT_MATTER$$ marker; customer context was skipped");
     }
-    documentXml = frontMatterPatch.xml;
 
     chapters.forEach((chapter) => {
       const marker = `CHAPTER${chapter.id}$$`;
@@ -1005,14 +994,19 @@
       }
       const patched = replaceParagraphMarker(documentXml, marker, replacement);
       if (!patched.replaced) {
-        throw new Error(`Word template is missing required marker ${marker}.`);
+        notify(`Word export: template has no ${marker} marker; chapter ${chapter.id} was skipped`);
+        return;
       }
       documentXml = patched.xml;
     });
-    const unresolvedChapterMarker = documentXml.match(/CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/)?.[0];
-    if (unresolvedChapterMarker) {
-      throw new Error(`Project data is missing a chapter required by the Word template (${unresolvedChapterMarker}).`);
-    }
+    // Markers for chapters this project does not have are removed so no
+    // placeholder text reaches the customer document.
+    const unresolvedMarkers = new Set(documentXml.match(/CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/g) || []);
+    unresolvedMarkers.forEach((marker) => {
+      const patched = replaceParagraphMarker(documentXml, marker, "");
+      if (patched.replaced) documentXml = patched.xml;
+      notify(`Word export: template marker ${marker} has no matching chapter in this project; it was removed`);
+    });
 
     let contentTypes = getText("[Content_Types].xml");
 
@@ -1149,32 +1143,34 @@
       });
     }
 
-    if (typeof computeSpider !== "function") {
-      throw new Error("Spider computation is unavailable; report export was not created.");
+    // The spider picture and thermo bars are best effort: a failure is reported
+    // in the export notice but must not block the report itself.
+    try {
+      if (typeof computeSpider !== "function") throw new Error("spider computation is unavailable");
+      const spiderData = await computeSpider({
+        project,
+        overrides: spiderOverrides || {},
+        dirHandle: projectHandle,
+      });
+      const spiderBlob = await drawSpiderPng(
+        spiderData,
+        String(project?.meta?.company || "").trim() || "Company",
+        project,
+      );
+      const spiderInserted = await insertImageAtMarker({
+        xmlPart: "word/document.xml",
+        marker: "SPIDER$$",
+        imageFile: spiderBlob,
+        mediaName: "autobericht_spider.png",
+        fitToTextWidth: true,
+        cmHeight: 10.0,
+        align: "center",
+      });
+      if (!spiderInserted) notify("Word export: template has no SPIDER$$ marker; spider picture was skipped");
+      insertChapterThermos(spiderData);
+    } catch (err) {
+      notify(`Word export: spider picture skipped (${err.message || err})`);
     }
-    const spiderData = await computeSpider({
-      project,
-      overrides: spiderOverrides || {},
-      dirHandle: projectHandle,
-    });
-    const spiderBlob = await drawSpiderPng(
-      spiderData,
-      String(project?.meta?.company || "").trim() || "Company",
-      project,
-    );
-    const spiderInserted = await insertImageAtMarker({
-      xmlPart: "word/document.xml",
-      marker: "SPIDER$$",
-      imageFile: spiderBlob,
-      mediaName: "autobericht_spider.png",
-      fitToTextWidth: true,
-      cmHeight: 10.0,
-      align: "center",
-    });
-    if (!spiderInserted) {
-      throw new Error("Word template is missing required marker SPIDER$$ or its image relationship part.");
-    }
-    insertChapterThermos(spiderData);
 
     setText("word/document.xml", documentXml);
     const settingsXml = getText("word/settings.xml");

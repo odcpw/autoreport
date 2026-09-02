@@ -8,6 +8,5 @@ On first load of an empty project directory, the app copies the scaffold defined
 
 The scaffold is intentionally explicit here so users can see what gets created in their project directories.
 
-PhotoSorter treats `photos/raw` as an immutable intake archive. Import creates
-resized image copies in `photos/resized` and video copies in `photos/videos`;
-it never moves or deletes the originals.
+PhotoSorter never moves or deletes raw images. Import creates resized copies in
+`photos/resized` and moves videos to `photos/videos` once the copy is verified.

@@ -106,7 +106,6 @@ const createIo = ({ files, project, normalizeProject, seedOverrides }) => {
     dirHandle: createMemoryDirectory(files),
     sidecarDoc: null,
     saveQueue: Promise.resolve(),
-    writerId: "startup-test",
   };
   const io = context.AutoBerichtSidecar.init({
     state,
@@ -146,13 +145,13 @@ const createIo = ({ files, project, normalizeProject, seedOverrides }) => {
   return { io, state, runtime, statuses, get renders() { return renders; } };
 };
 
-test("a valid sidecar opens Project even when scaffold setup fails", async () => {
+test("a valid sidecar opens its first chapter even when scaffold setup fails", async () => {
   const sidecar = { report: { project: { meta: { locale: "de-CH" }, chapters: [{ id: "0", rows: [] }] } } };
   const fixture = createIo({ files: { "project_sidecar.json": JSON.stringify(sidecar) } });
   const result = await fixture.io.loadProjectFromFolder();
   assert.equal(result.ok, true);
   assert.equal(result.source, "sidecar");
-  assert.equal(fixture.state.selectedChapterId, "__project__");
+  assert.equal(fixture.state.selectedChapterId, "0");
   assert.equal(fixture.renders > 0, true);
   assert.match(fixture.statuses.at(-1), /Loaded project_sidecar\.json/);
 });
@@ -330,8 +329,6 @@ test("Chapter 0 customer context is stored in the user library without duplicate
     dirHandle: createMemoryDirectory({ [libraryName]: JSON.stringify(initialLibrary) }),
     sidecarDoc: null,
     saveQueue: Promise.resolve(),
-    writerId: "front-matter-test",
-    changeVersion: 0,
   };
   const io = context.AutoBerichtSidecar.init({
     state: { project, selectedChapterId: "0" },

@@ -1,17 +1,14 @@
 /*
- * Shared, conflict-aware persistence for project_sidecar.json.
+ * Shared persistence for project_sidecar.json.
  *
  * AutoBericht and PhotoSorter edit different branches of the same document.
- * This module serializes cross-tab writes, rejects same-branch stale writes,
- * and reads the saved payload back before reporting success.
+ * Every save takes a cross-tab lock, reads the latest file, lets the caller
+ * replace only its own branch, and writes the result back. Two open tabs can
+ * therefore never overwrite each other's branch.
  */
 (() => {
   const SIDECAR_FILENAME = "project_sidecar.json";
   const LOCK_NAME = "autobericht-project-sidecar";
-  const FALLBACK_LOCK_KEY = "autobericht-project-sidecar-lock";
-  const FALLBACK_LOCK_TTL_MS = 15000;
-  const FALLBACK_LOCK_WAIT_MS = 40;
-  const FALLBACK_LOCK_TIMEOUT_MS = 20000;
 
   const isPlainObject = (value) => (
     !!value
@@ -61,91 +58,13 @@
     }
   };
 
-  const branchFingerprint = (doc, branch) => JSON.stringify(
-    isPlainObject(doc) && Object.prototype.hasOwnProperty.call(doc, branch)
-      ? doc[branch]
-      : null,
-  );
-
-  const readRevision = (doc) => {
-    const value = Number(doc?.meta?.revision);
-    return Number.isSafeInteger(value) && value >= 0 ? value : 0;
-  };
-
-  const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-  const createLockToken = () => {
-    if (globalThis.crypto?.randomUUID) return globalThis.crypto.randomUUID();
-    return `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-  };
-
-  const withLocalStorageLock = async (task) => {
-    let storage = null;
-    try {
-      storage = globalThis.localStorage;
-    } catch (err) {
-      return task();
-    }
-    if (!storage) return task();
-    const token = createLockToken();
-    const deadline = Date.now() + FALLBACK_LOCK_TIMEOUT_MS;
-
-    while (Date.now() < deadline) {
-      let current = null;
-      try {
-        current = JSON.parse(storage.getItem(FALLBACK_LOCK_KEY) || "null");
-      } catch (err) {
-        current = null;
-      }
-      const now = Date.now();
-      if (!current || Number(current.expiresAt) <= now) {
-        const candidate = JSON.stringify({ token, expiresAt: now + FALLBACK_LOCK_TTL_MS });
-        try {
-          storage.setItem(FALLBACK_LOCK_KEY, candidate);
-        } catch (err) {
-          return task();
-        }
-        let confirmed = null;
-        try {
-          confirmed = JSON.parse(storage.getItem(FALLBACK_LOCK_KEY) || "null");
-        } catch (err) {
-          confirmed = null;
-        }
-        if (confirmed?.token === token) {
-          try {
-            return await task();
-          } finally {
-            try {
-              const owner = JSON.parse(storage.getItem(FALLBACK_LOCK_KEY) || "null");
-              if (owner?.token === token) storage.removeItem(FALLBACK_LOCK_KEY);
-            } catch (err) {
-              // A malformed fallback lock expires automatically.
-            }
-          }
-        }
-      }
-      await sleep(FALLBACK_LOCK_WAIT_MS);
-    }
-    throw createStorageError(
-      "Timed out waiting for another AutoBericht window to finish saving.",
-      "SidecarLockTimeoutError",
-    );
-  };
-
   const withSidecarLock = async (task) => {
-    let lockManager = null;
-    try {
-      lockManager = globalThis.navigator?.locks;
-    } catch (err) {
-      lockManager = null;
-    }
-    if (lockManager?.request) {
-      return lockManager.request(LOCK_NAME, { mode: "exclusive" }, task);
-    }
-    return withLocalStorageLock(task);
+    const locks = globalThis.navigator?.locks;
+    if (locks?.request) return locks.request(LOCK_NAME, { mode: "exclusive" }, task);
+    return task();
   };
 
-  const writeAndVerify = async (dirHandle, payload) => {
+  const writeSidecar = async (dirHandle, payload) => {
     const handle = await dirHandle.getFileHandle(SIDECAR_FILENAME, { create: true });
     let writable = null;
     try {
@@ -167,47 +86,22 @@
         err,
       );
     }
-
-    const verified = await readSidecar(dirHandle, { allowMissing: false });
-    if (JSON.stringify(verified) !== JSON.stringify(payload)) {
-      throw createStorageError(
-        "The saved sidecar did not read back exactly as written.",
-        "SidecarVerificationError",
-      );
-    }
-    return verified;
+    return payload;
   };
 
-  const saveBranch = async ({
-    dirHandle,
-    baseDoc,
-    branch,
-    merge,
-    writerId = "",
-  }) => {
-    if (!branch) throw createStorageError("A sidecar branch name is required.");
+  // merge(latest) receives the document currently on disk (or null) and must
+  // return the full document to write, with only the caller's branch replaced.
+  const saveSidecar = async ({ dirHandle, merge }) => {
     if (typeof merge !== "function") throw createStorageError("A sidecar merge function is required.");
-
     return withSidecarLock(async () => {
       const latest = await readSidecar(dirHandle, { allowMissing: true });
-      const expected = branchFingerprint(baseDoc, branch);
-      const actual = branchFingerprint(latest, branch);
-      if (expected !== actual) {
-        throw createStorageError(
-          `project_sidecar.json changed in another window (${branch} branch). Reload before saving; your unsaved edits remain open.`,
-          "SidecarConflictError",
-        );
-      }
-
       const merged = merge(latest);
       if (!isPlainObject(merged)) {
         throw createStorageError("The sidecar merge did not return a JSON object.");
       }
       merged.meta = isPlainObject(merged.meta) ? merged.meta : {};
       merged.meta.updatedAt = new Date().toISOString();
-      merged.meta.revision = Math.max(readRevision(latest), readRevision(baseDoc)) + 1;
-      if (writerId) merged.meta.lastWriter = String(writerId);
-      return writeAndVerify(dirHandle, merged);
+      return writeSidecar(dirHandle, merged);
     });
   };
 
@@ -226,9 +120,7 @@
     SIDECAR_FILENAME,
     parseSidecarText,
     readSidecar,
-    branchFingerprint,
-    readRevision,
-    saveBranch,
+    saveSidecar,
     enqueue,
     withSidecarLock,
   };

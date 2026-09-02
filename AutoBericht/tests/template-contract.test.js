@@ -10,7 +10,9 @@ const templates = [
   "Vorlage IST-Aufnahme-Bericht i.V01.docx",
 ];
 
-test("Word templates are valid and expose the required Chapter 0 markers", () => {
+const ooxmlAvailable = spawnSync("ooxml", ["--version"], { encoding: "utf8" }).status === 0;
+
+test("Word templates are valid and expose the required Chapter 0 markers", { skip: !ooxmlAvailable && "ooxml CLI not installed" }, () => {
   templates.forEach((name) => {
     const file = path.join(ROOT, "project-template", "templates", name);
     const validation = spawnSync("ooxml", ["validate", "--strict", file], { encoding: "utf8" });

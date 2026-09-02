@@ -1,4 +1,4 @@
-/* Strict, dependency-free validation for imported self-assessment workbooks. */
+/* Shared parsing for imported self-assessment workbooks. */
 (() => {
   const normalizeId = (raw) => String(raw || "")
     .trim()
@@ -13,17 +13,16 @@
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
 
+  // Prefer the sheet named like the Suva workbook; otherwise the first sheet.
   const findAssessmentSheetName = (sheetNames) => {
-    const match = (sheetNames || []).find((name) => {
+    const names = Array.isArray(sheetNames) ? sheetNames : [];
+    const match = names.find((name) => {
       const token = normalizeToken(name);
       return token.includes("selbstbeurteilung")
         || token.includes("autoevaluation")
         || token.includes("autovalutazione");
     });
-    if (!match) {
-      throw new Error("Workbook does not contain a recognized self-assessment sheet.");
-    }
-    return match;
+    return match || names[0] || "";
   };
 
   const HEADER_ALIASES = {
@@ -34,6 +33,9 @@
     comment: ["bemerk", "remarque", "osserv", "comment"],
     evidence: ["nachweis", "beleg", "evidence", "document", "preuve"],
   };
+
+  // Column layout of the Suva workbook, used when no header row is recognized.
+  const DEFAULT_COLUMNS = { id: 0, question: 2, yes: 3, no: 4, comment: 5, evidence: -1 };
 
   const findColumn = (header, aliases, exact = false, excluded = new Set()) => {
     // SheetJS preserves blank and merged Excel cells as sparse array slots.
@@ -73,58 +75,40 @@
         break;
       }
     }
-    if (!columns) {
-      throw new Error("Self-assessment header must contain ID, Yes and No columns.");
-    }
+    if (!columns) columns = { ...DEFAULT_COLUMNS };
 
-    const structuralIds = [];
-    const entries = [];
-    const seen = new Set();
-    rows.slice(headerRowIndex + 1).forEach((row, offset) => {
+    const structuralIds = new Set();
+    const entries = new Map();
+    rows.slice(headerRowIndex + 1).forEach((row) => {
       if (!Array.isArray(row)) return;
       const originalId = String(row[columns.id] || "").trim();
       const id = normalizeId(originalId);
       if (!/^[0-9]/.test(id)) return;
-      if (seen.has(id)) {
-        throw new Error(`Duplicate self-assessment ID ${originalId || id} (row ${headerRowIndex + offset + 2}).`);
-      }
-      seen.add(id);
-      structuralIds.push(id);
+      structuralIds.add(id);
       const yes = isMarked(row[columns.yes], ["ja", "oui", "si", "yes"]);
       const no = isMarked(row[columns.no], ["nein", "non", "no"]);
-      if (yes && no) {
-        throw new Error(`Conflicting Yes and No marks for self-assessment ID ${originalId || id}.`);
-      }
+      // A row marked both Ja and Nein counts as Nein.
+      const answer = no ? 0 : (yes ? 1 : null);
       const question = columns.question >= 0 ? String(row[columns.question] || "").trim() : "";
       const comment = columns.comment >= 0 ? String(row[columns.comment] || "").trim() : "";
       const evidence = columns.evidence >= 0 ? String(row[columns.evidence] || "").trim() : "";
-      const answer = yes ? 1 : (no ? 0 : null);
       if (answer == null && !comment && !evidence) return;
-      entries.push({ id, originalId, question, answer, comment, evidence });
+      // A repeated ID keeps the later row, as the April importer did.
+      entries.set(id, { id, originalId, question, answer, comment, evidence });
     });
-    if (!structuralIds.length) throw new Error("Self-assessment sheet contains no numbered items.");
-    if (!entries.length) throw new Error("Self-assessment sheet contains no answers, comments, or evidence to import.");
-    return { headerRowIndex, columns, structuralIds, entries };
-  };
-
-  const validateProjectCoverage = (parsed, knownIds) => {
-    const known = new Set(Array.from(knownIds || [], normalizeId).filter(Boolean));
-    if (!known.size) throw new Error("Current project contains no self-assessment IDs.");
-    const matched = parsed.structuralIds.filter((id) => known.has(id)).length;
-    const requiredCount = Math.min(10, parsed.structuralIds.length);
-    const ratio = matched / parsed.structuralIds.length;
-    if (matched < requiredCount || ratio < 0.7) {
-      throw new Error(
-        `Workbook structure does not match this project (${matched}/${parsed.structuralIds.length} IDs recognized).`,
-      );
-    }
-    return { matched, total: parsed.structuralIds.length, ratio };
+    if (!structuralIds.size) throw new Error("Self-assessment sheet contains no numbered items.");
+    if (!entries.size) throw new Error("Self-assessment sheet contains no answers, comments, or evidence to import.");
+    return {
+      headerRowIndex,
+      columns,
+      structuralIds: Array.from(structuralIds),
+      entries: Array.from(entries.values()),
+    };
   };
 
   window.AutoBerichtSelfAssessment = {
     normalizeId,
     findAssessmentSheetName,
     parseRows,
-    validateProjectCoverage,
   };
 })();

@@ -107,9 +107,9 @@ RecommendationLibrary (per engineer)
 - Filters are cumulative (AND across active filters).
 - A clear-filters control is available in the photo viewer.
 - UI locale policy:
-  - UI controls, messages, and instructional hints remain in simple English.
-  - Project language (DE/FR/IT) applies only to report content, knowledge bases,
-    templates, spellcheck, and generated exports.
+  - UI controls, status messages, and errors remain in simple English.
+  - Instructional hint text and card titles are localized by the report language (DE/FR/IT).
+  - The report language also selects knowledge bases, templates, spellcheck, and generated exports.
 
 ## 9. Proposed Architecture (Policy-Safe)
 
@@ -209,8 +209,9 @@ Import rules (PhotoSorter "Import Photos" modal):
 - Source: `photos/raw/<owner>/` where `<owner>` is any 3-character folder name
   (default scaffold: `pm1`, `pm2`, `pm3`).
 - Accept: all image files.
-- Videos in the same owner folders are copied without transcoding to
-  `photos/videos/<owner>_<original-filename>`.
+- Videos in the same owner folders are moved without transcoding to
+  `photos/videos/<owner>_<original-filename>`; the raw file is removed only
+  after the copy has been verified.
 - Timestamp: prefer EXIF `DateTimeOriginal`; fallback to file creation time if
   available; otherwise use the file timestamp exposed by the browser
   (`lastModified`).
@@ -218,8 +219,7 @@ Import rules (PhotoSorter "Import Photos" modal):
   Sequence increments per owner to avoid collisions.
 - Resize: longest side = 1920px, JPEG quality ~0.85.
 - Destination: `photos/resized/` (lowercase) acts as the unsorted reservoir.
-- `photos/raw/` is the immutable intake archive. Raw images and videos are
-  never deleted or moved.
+- Raw images are never deleted or moved; only videos leave `photos/raw/`.
 
 Export rules (PhotoSorter "Export" action in the same modal):
 - Source: the current photo root (typically `photos/resized/`).

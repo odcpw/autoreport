@@ -50,9 +50,7 @@
     pendingBootstrapWrite: false,
     awaitingLocaleBootstrap: false,
     hasUnsavedChanges: false,
-    changeVersion: 0,
     restoreErrorMessage: "",
-    writerId: `report-${globalThis.crypto?.randomUUID?.() || `${Date.now()}-${Math.random().toString(16).slice(2)}`}`,
   };
 
   const setStatus = (message) => {
@@ -153,7 +151,6 @@
   const scheduleAutosave = () => {
     if (!runtime.dirHandle) return;
     runtime.hasUnsavedChanges = true;
-    runtime.changeVersion += 1;
     if (runtime.autosaveTimer) clearTimeout(runtime.autosaveTimer);
     runtime.autosaveTimer = setTimeout(async () => {
       runtime.autosaveTimer = null;
