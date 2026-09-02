@@ -172,15 +172,17 @@
     renderApi.renderAll();
   };
 
+  // Returns true when the tag was renamed; false when nothing changed or the
+  // name is already taken (reported in the status line).
   actions.renameObservationTag = (tag, nextLabel) => {
     const label = String(nextLabel || "").trim();
-    if (!tag || !label) return;
+    if (!tag || !label) return false;
     const options = state.tagOptions?.observations || [];
     const option = options.find((opt) => opt.value === tag);
-    if (!option || option.label === label) return;
+    if (!option || option.label === label) return false;
     if (options.some((opt) => opt !== option && opt.label === label)) {
       setStatus(`A tag named "${label}" already exists.`);
-      return;
+      return false;
     }
     // Only the display name changes. The stored value stays, so photos keep
     // their tags and the Chapter 4.8 row keeps its text; its title follows.
@@ -189,6 +191,8 @@
     ioApi.scheduleAutosave?.();
     renderApi.renderAll();
     renderApi.renderObservationTagList?.();
+    setStatus(`Renamed tag to "${label}".`);
+    return true;
   };
 
   actions.removeObservationTag = (tag) => {

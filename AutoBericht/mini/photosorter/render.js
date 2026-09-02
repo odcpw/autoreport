@@ -326,10 +326,27 @@
       scheduleRenderAll();
     };
 
-    const renderObservationTagList = () => {
+    // Value of the observation tag currently being renamed inline in the
+    // Edit tags dialog. Renaming follows the dialog's own add-tag row: a text
+    // input beside buttons, Enter to confirm, Escape to cancel.
+    let editingObservationTag = "";
+
+    const createTagButton = (text, onClick) => {
+      const button = document.createElement("button");
+      button.type = "button";
+      button.textContent = text;
+      button.addEventListener("click", onClick);
+      return button;
+    };
+
+    const renderObservationTagList = (options = {}) => {
       if (!elements.obsTagList) return;
+      if (options.reset) editingObservationTag = "";
       elements.obsTagList.innerHTML = "";
-      const options = state.tagOptions?.observations || [];
+      const tagOptions = state.tagOptions?.observations || [];
+      if (!tagOptions.some((option) => option.value === editingObservationTag)) {
+        editingObservationTag = "";
+      }
       const counts = new Map();
       state.photos.forEach((photo) => {
         (photo.tags?.observations || []).forEach((tag) => {
@@ -337,30 +354,68 @@
         });
       });
 
-      options.forEach((option) => {
+      tagOptions.forEach((option) => {
         const row = document.createElement("div");
         row.className = "settings-tags__row";
-        const label = document.createElement("span");
-        label.textContent = option.label;
         const count = document.createElement("span");
         count.className = "settings-tags__count";
         count.textContent = String(counts.get(option.value) || 0);
-        const renameBtn = document.createElement("button");
-        renameBtn.type = "button";
-        renameBtn.textContent = "Rename";
-        renameBtn.addEventListener("click", () => {
-          const next = window.prompt(`Rename "${option.label}" to:`, option.label);
-          if (next == null) return;
-          actions.renameObservationTag(option.value, next);
+
+        if (option.value === editingObservationTag) {
+          row.classList.add("settings-tags__row--editing");
+          const input = document.createElement("input");
+          input.type = "text";
+          input.className = "settings-tags__rename";
+          input.value = option.label;
+          input.setAttribute("aria-label", `New name for ${option.label}`);
+          const cancel = () => {
+            editingObservationTag = "";
+            renderObservationTagList();
+          };
+          const commit = () => {
+            const next = input.value.trim();
+            if (!next || next === option.label) {
+              cancel();
+              return;
+            }
+            editingObservationTag = "";
+            // On success the action re-renders this list; on a duplicate name
+            // it only reports, so the input stays open for a correction.
+            if (!actions.renameObservationTag(option.value, next)) {
+              editingObservationTag = option.value;
+              input.focus();
+            }
+          };
+          input.addEventListener("keydown", (event) => {
+            if (event.key === "Enter") {
+              event.preventDefault();
+              commit();
+            } else if (event.key === "Escape") {
+              event.preventDefault();
+              cancel();
+            }
+          });
+          row.append(input, createTagButton("Save", commit), createTagButton("Cancel", cancel));
+          elements.obsTagList.appendChild(row);
+          requestAnimationFrame(() => {
+            input.focus();
+            input.select();
+          });
+          return;
+        }
+
+        const label = document.createElement("span");
+        label.textContent = option.label;
+        const renameBtn = createTagButton("Rename", () => {
+          editingObservationTag = option.value;
+          renderObservationTagList();
         });
-        const removeBtn = document.createElement("button");
-        removeBtn.type = "button";
-        removeBtn.textContent = "Remove";
-        removeBtn.addEventListener("click", () => {
+        const removeBtn = createTagButton("Remove", () => {
           const confirmed = window.confirm(
             `Remove "${option.label}"? This clears it from all photos and Chapter 4.8 in the report.`
           );
           if (!confirmed) return;
+          editingObservationTag = "";
           actions.removeObservationTag(option.value);
         });
         row.append(label, count, renameBtn, removeBtn);

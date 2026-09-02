@@ -155,6 +155,8 @@
     "status_import_capability_missing": "File picker or SheetJS is not available in this browser.",
     "status_validator_missing": "Self-assessment validator is not available.",
     "status_self_assessment_imported": "Imported self-assessment answers ({count}).",
+    "status_self_assessment_copied": " Copied {filename} to inputs.",
+    "status_self_assessment_copy_failed": " Could not copy {filename} to inputs: {error}",
     "status_import_failed": "Import failed: {error}",
     "status_photo_not_found": "Photo not found: {path}",
     "status_checklist_copied": "Copied: {title}",

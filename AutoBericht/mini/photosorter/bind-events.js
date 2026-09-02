@@ -41,7 +41,7 @@
       if (!elements.settingsModal) return;
       elements.settingsModal.classList.add("is-open");
       elements.settingsModal.setAttribute("aria-hidden", "false");
-      renderApi.renderObservationTagList();
+      renderApi.renderObservationTagList({ reset: true });
     };
 
     const setFirstRunVisible = (visible) => {

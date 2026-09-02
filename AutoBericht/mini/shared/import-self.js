@@ -132,10 +132,31 @@
         throw new Error("No meaningful self-assessment rows matched the current project.");
       }
 
-      setStatus(tf("status_self_assessment_imported", "Imported self-assessment answers ({count}).", { count: applied }));
       debug.logLine("info", `Imported self-assessment answers (${applied}).`);
       renderRows();
       await saveSidecar();
+
+      // Best effort: keep a copy of the workbook in inputs/ for the record.
+      // A copy problem is reported but never undoes the imported answers.
+      let copyNote = "";
+      try {
+        const inputsDir = await runtime.dirHandle.getDirectoryHandle("inputs", { create: true });
+        const target = await inputsDir.getFileHandle(file.name, { create: true });
+        const writable = await target.createWritable();
+        await writable.write(buffer);
+        await writable.close();
+        const savedSize = (await target.getFile()).size;
+        if (savedSize !== buffer.byteLength) throw new Error("the saved file size does not match");
+        copyNote = tf("status_self_assessment_copied", " Copied {filename} to inputs.", { filename: file.name });
+        debug.logLine("info", `Copied ${file.name} to inputs/.`);
+      } catch (copyErr) {
+        copyNote = tf("status_self_assessment_copy_failed", " Could not copy {filename} to inputs: {error}", {
+          filename: file.name,
+          error: copyErr.message || copyErr,
+        });
+        debug.logLine("warn", `Self-assessment copy to inputs/ failed: ${copyErr.message || copyErr}`);
+      }
+      setStatus(tf("status_self_assessment_imported", "Imported self-assessment answers ({count}).", { count: applied }) + copyNote);
     } catch (err) {
       setStatus(tf("status_import_failed", "Import failed: {error}", { error: err.message || err }));
       debug.logLine("error", `Import failed: ${err.message || err}`);
