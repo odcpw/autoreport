@@ -191,6 +191,13 @@ test("French Word export inserts Chapter 0 customer context at the real DOCX bou
   assert.match(partialResult.savedAs, /^outputs\//);
   assert.equal(partialNotices.some((message) => /CHAPTER14\$\$ has no matching chapter/.test(message)), true);
   assert.equal(partialNotices.some((message) => /spider picture skipped \(weights unavailable\)/.test(message)), true);
+  const partialHandle = await (await root.getDirectoryHandle("outputs")).getFileHandle(partialResult.savedAs.split("/").pop());
+  const partialEntries = await context.AutoBerichtWordDocxZip.unzipAllEntries(partialHandle.bytes.buffer.slice(
+    partialHandle.bytes.byteOffset,
+    partialHandle.bytes.byteOffset + partialHandle.bytes.byteLength,
+  ));
+  const partialXml = new TextDecoder().decode(partialEntries.find((entry) => entry.name === "word/document.xml").data);
+  assert.doesNotMatch(partialXml, /SPIDER\$\$|THERMO[0-9A-Za-z_.]*\$\$|CHAPTER(?:0_FRONT_MATTER|[0-9.]+)\$\$/);
 
   const templateBytes = new Uint8Array(fs.readFileSync(path.join(ROOT, "project-template", "templates", templateName)));
   const templateBuffer = templateBytes.buffer.slice(templateBytes.byteOffset, templateBytes.byteOffset + templateBytes.byteLength);

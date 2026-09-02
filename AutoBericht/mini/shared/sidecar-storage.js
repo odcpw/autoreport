@@ -18,6 +18,46 @@
 
   const isNotFoundError = (err) => String(err?.name || "") === "NotFoundError";
 
+  // Sidecars written since February 2026 keep PhotoSorter's data under a
+  // `photos` branch: { meta, photos: { <path>: { notes, tags } }, photoTagOptions, photoRoot }.
+  // Older files kept the photo map and tag options at the root instead.
+  const isPhotosBranch = (value) => (
+    isPlainObject(value)
+    && (
+      Object.prototype.hasOwnProperty.call(value, "photoTagOptions")
+      || Object.prototype.hasOwnProperty.call(value, "photoRoot")
+      || isPlainObject(value.photos)
+      || isPlainObject(value.meta)
+    )
+  );
+
+  const isFlatLegacySidecar = (doc) => (
+    isPlainObject(doc)
+    && !isPhotosBranch(doc.photos)
+    && (
+      Object.prototype.hasOwnProperty.call(doc, "photoTagOptions")
+      || Object.prototype.hasOwnProperty.call(doc, "photoRoot")
+      || isPlainObject(doc.photos)
+    )
+  );
+
+  // Lifts a flat legacy document into the wrapped layout without losing data.
+  const wrapLegacyPhotos = (doc) => {
+    if (!isFlatLegacySidecar(doc)) return doc;
+    const next = { ...doc };
+    next.photos = {
+      meta: {},
+      photos: isPlainObject(doc.photos) ? doc.photos : {},
+      photoTagOptions: isPlainObject(doc.photoTagOptions)
+        ? doc.photoTagOptions
+        : { report: [], observations: [], training: [] },
+      photoRoot: typeof doc.photoRoot === "string" ? doc.photoRoot : "",
+    };
+    delete next.photoTagOptions;
+    delete next.photoRoot;
+    return next;
+  };
+
   const createStorageError = (message, name = "SidecarStorageError", cause = null) => {
     const error = new Error(message);
     error.name = name;
@@ -123,5 +163,8 @@
     saveSidecar,
     enqueue,
     withSidecarLock,
+    isPhotosBranch,
+    isFlatLegacySidecar,
+    wrapLegacyPhotos,
   };
 })();

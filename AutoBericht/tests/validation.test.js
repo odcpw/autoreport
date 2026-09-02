@@ -147,17 +147,18 @@ test("report locale changes report wording, hints and spellcheck, while controls
   };
   const api = loadBrowserScripts(["mini/shared/i18n.js"], { document }).AutoBerichtI18n;
   const cases = [
-    ["de-CH", "Siehe auch", "Selbstbeurteilung importieren"],
-    ["fr-CH", "Voir aussi", "Importer l'autoevaluation"],
-    ["it-CH", "Vedere anche", "Importa autovalutazione"],
+    ["de-CH", "Siehe auch", /^Datei der Selbstbeurteilung/],
+    ["fr-CH", "Voir aussi", /^Choisissez le fichier/],
+    ["it-CH", "Vedere anche", /^Scegli il file/],
   ];
-  for (const [locale, seeAlso, importTitle] of cases) {
+  for (const [locale, seeAlso, importHint] of cases) {
     api.setLocale(locale);
     assert.equal(documentLang, locale);
     assert.equal(api.t("project_meta_locale_select"), "Select language");
     assert.equal(api.t("project_tool_import_title"), "Import Self-Assessment");
     assert.equal(api.t("project_export_card_title"), "Word Export");
-    assert.equal(api.tHint("project_tool_import_title"), importTitle);
+    assert.match(api.tHint("project_tool_import_hint"), importHint);
+    assert.equal(api.tHint("project_tool_import_title"), "Import Self-Assessment");
     assert.equal(api.tHint("status_autosaved", "Autosaved."), "Autosaved.");
     assert.equal(api.tReport("checklist_see_also"), seeAlso);
     assert.equal(

@@ -64,16 +64,18 @@
     };
 
     const mergeSidecar = (baseDoc, project, spiderData) => {
-      const merged = baseDoc && typeof baseDoc === "object" ? structuredClone(baseDoc) : {};
+      // A flat pre-February sidecar carried the photo map and the project at
+      // the root; lift PhotoSorter's part into its branch before replacing ours.
+      const source = sidecarStorage.wrapLegacyPhotos(baseDoc);
+      const merged = source && typeof source === "object" ? structuredClone(source) : {};
       if (!merged.meta) merged.meta = {};
       merged.meta.updatedAt = new Date().toISOString();
       const projectCopy = structuredClone(project);
       reorderChapterRows(projectCopy, "0");
       reorderChapterRows(projectCopy, "4.8");
       merged.report = { project: projectCopy };
+      delete merged.chapters;
       // The photos branch belongs to PhotoSorter and is carried through untouched.
-      delete merged.photoRoot;
-      delete merged.photoTagOptions;
       if (spiderData) merged.spider = spiderData;
       return merged;
     };
@@ -367,7 +369,7 @@
         return { ok: false, source: "error", error: err };
       }
 
-      runtime.sidecarDoc = sidecarDoc;
+      runtime.sidecarDoc = sidecarDoc ? sidecarStorage.wrapLegacyPhotos(sidecarDoc) : sidecarDoc;
       const reportProject = extractReportProject(sidecarDoc);
       if (reportProject) {
         state.project = normalizeHelpers.normalizeProject(structuredClone(reportProject), ctx.i18n.setLocale);
@@ -450,7 +452,8 @@
         runtime.sidecarDoc = payload;
         runtime.pendingBootstrapWrite = false;
         runtime.awaitingLocaleBootstrap = false;
-        runtime.hasUnsavedChanges = false;
+        // An edit made while this write was in flight has re-armed the timer.
+        runtime.hasUnsavedChanges = !!runtime.autosaveTimer;
         return payload;
       });
     };

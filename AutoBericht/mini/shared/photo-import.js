@@ -231,6 +231,7 @@
         if (!VIDEO_EXTENSIONS.has(ext)) continue;
         videoTasks.push({
           owner: folder.name,
+          folderHandle: folder,
           fileHandle: entry,
           fileName: entry.name,
         });
@@ -349,10 +350,7 @@
           throw new Error(`Video copy verification failed for ${task.fileName}. Raw source was kept.`);
         }
       });
-      const raw = await findRawFolder(projectHandle, getNestedDirectory);
-      if (!raw) throw new Error("Missing photos/raw while moving videos.");
-      const ownerHandle = await getNestedDirectory(raw.handle, [task.owner]);
-      await ownerHandle.removeEntry(task.fileName);
+      await task.folderHandle.removeEntry(task.fileName);
       movedCount += 1;
     }
     return movedCount;

@@ -162,3 +162,94 @@ test("PhotoSorter keeps saving after AutoBericht saved in another tab", async ()
   assert.equal(onDisk.report.project.meta.company, "ACME edited twice");
   assert.equal(onDisk.photos.photoRoot, "photos/resized");
 });
+
+// Sidecars written before 24 February 2026 kept the project and the photo map
+// at the root. Both apps must read them and lift them into the wrapped layout.
+test("a flat pre-February sidecar keeps its photo tags in both apps", async () => {
+  const tags = {
+    report: [{ value: "1.1", label: "1.1 Leitbild" }],
+    observations: [{ value: "Ordnung", label: "Ordnung" }],
+    training: [],
+  };
+  const flat = {
+    meta: { locale: "de-CH", company: "Legacy AG" },
+    chapters: [{ id: "0", rows: [] }, { id: "1", rows: [] }],
+    photoRoot: "photos/resized",
+    photoTagOptions: tags,
+    photos: { "photos/resized/a.jpg": { notes: "", tags: { report: ["1.1"], observations: ["Ordnung"], training: [] } } },
+  };
+  const notFound = (name) => { const error = new Error(`${name} not found`); error.name = "NotFoundError"; return error; };
+  const dir = createMemoryDirectory({ "project_sidecar.json": JSON.stringify(flat) });
+  dir.getDirectoryHandle = async (name) => { throw notFound(name); };
+
+  const bootPhotoSorter = () => {
+    const context = loadBrowserScripts([
+      "mini/shared/sidecar-storage.js",
+      "mini/shared/state.js",
+      "mini/shared/normalize.js",
+      "mini/shared/seeds.js",
+      "mini/photosorter/tags.js",
+      "mini/photosorter/io-sidecar.js",
+    ], {
+      document: { documentElement: { getAttribute: () => "de-CH" } },
+      location: { href: "http://localhost/mini/photosorter.html" },
+      fetch: async () => { throw new Error("no http in test"); },
+    });
+    const state = { projectHandle: dir, photos: [], tagOptions: null, projectDoc: null, sidecarDoc: null, photoRootName: "", activeTagFilters: {}, filterMode: "all", photoHandle: null };
+    const io = context.AutoBerichtPhotoSorterSidecar.init(
+      { state, runtime: { saveQueue: Promise.resolve() }, setStatus() {}, debug: { logLine() {} }, elements: {} },
+      {
+        renderApi: { renderAll() {}, renderPanels() {} },
+        tagsApi: context.AutoBerichtPhotoSorterTags,
+        photosApi: { serializePhotos: () => Object.fromEntries(state.photos.map((photo) => [photo.path, { notes: "", tags: photo.tags }])), maybeAutoScan: async () => false },
+        i18n: testI18n,
+      },
+    );
+    return { io, state };
+  };
+
+  const first = bootPhotoSorter();
+  await first.io.loadProjectSidecar();
+  assert.deepEqual(Object.keys(first.state.projectDoc.photos), ["photos/resized/a.jpg"]);
+  assert.equal(first.state.tagOptions.observations.some((option) => option.value === "Ordnung"), true);
+  assert.equal(first.state.photoRootName, "photos/resized");
+
+  const abContext = loadBrowserScripts([
+    "mini/shared/sidecar-storage.js",
+    "mini/shared/state.js",
+    "mini/shared/normalize.js",
+    "mini/shared/seeds.js",
+    "mini/shared/io-sidecar.js",
+  ], {
+    location: { href: "http://localhost/mini/index.html", protocol: "http:" },
+    fetch: async () => { throw new Error("no http in test"); },
+    document: {},
+  });
+  const abState = { project: { meta: {}, chapters: [] }, selectedChapterId: "", spiderOverrides: {} };
+  const abIo = abContext.AutoBerichtSidecar.init(
+    { state: abState, runtime: { dirHandle: dir, sidecarDoc: null, saveQueue: Promise.resolve() }, elements: {}, setStatus() {}, debug: { logLine() {} }, i18n: testI18n },
+    {
+      stateHelpers: abContext.AutoBerichtState,
+      normalizeHelpers: abContext.AutoBerichtNormalize,
+      seeds: abContext.AutoBerichtSeeds,
+      renderApi: { buildPhotoIndex() {}, render() {} },
+      spiderModule: {},
+    },
+  );
+  const loaded = await abIo.loadProjectFromFolder();
+  assert.equal(loaded.source, "sidecar");
+  assert.equal(abState.project.meta.company, "Legacy AG");
+  await abIo.saveSidecar();
+
+  const saved = JSON.parse(dir.read("project_sidecar.json"));
+  assert.equal(saved.report.project.meta.company, "Legacy AG");
+  assert.equal("chapters" in saved, false);
+  assert.equal("photoTagOptions" in saved, false);
+  assert.deepEqual(Object.keys(saved.photos.photos), ["photos/resized/a.jpg"]);
+  assert.equal(saved.photos.photoRoot, "photos/resized");
+
+  const second = bootPhotoSorter();
+  await second.io.loadProjectSidecar();
+  assert.deepEqual(Object.keys(second.state.projectDoc.photos), ["photos/resized/a.jpg"]);
+  assert.equal(second.state.tagOptions.observations.some((option) => option.value === "Ordnung"), true);
+});

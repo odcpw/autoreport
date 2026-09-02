@@ -285,11 +285,14 @@
       }
       state.activeTagFilters = { report: [], observations: [], training: [] };
       state.filterMode = "all";
-      const sidecar = await sidecarStorage.readSidecar(state.projectHandle, { allowMissing: true });
+      const rawSidecar = await sidecarStorage.readSidecar(state.projectHandle, { allowMissing: true });
+      // A flat pre-February sidecar keeps the photo map at the root; lift it
+      // into the photos branch so tags and options are read, not dropped.
+      const sidecar = rawSidecar ? sidecarStorage.wrapLegacyPhotos(rawSidecar) : null;
       if (sidecar) {
         state.sidecarDoc = sidecar;
         let photoDoc = null;
-        if (isPlainObject(sidecar?.photos)) {
+        if (sidecarStorage.isPhotosBranch(sidecar?.photos)) {
           photoDoc = sidecar.photos;
         } else if (isLegacyPhotoDoc(sidecar)) {
           photoDoc = sidecar;
@@ -373,12 +376,15 @@
             next.photos = payload;
             delete next.photoRoot;
             delete next.photoTagOptions;
+            // A flat legacy file also carried the report at the root; AutoBericht
+            // reads that layout itself, so only PhotoSorter's own keys are lifted.
             return next;
           },
         });
         state.projectDoc = payload;
         state.sidecarDoc = sidecar;
-        runtime.hasUnsavedChanges = false;
+        // An edit made while this write was in flight has re-armed the timer.
+        runtime.hasUnsavedChanges = !!runtime.autosaveTimer;
         setStatus(t("status_photosorter_saved_sidecar"));
         debug.logLine("info", "Saved photo tags to project_sidecar.json");
         return sidecar;

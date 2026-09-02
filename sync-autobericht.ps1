@@ -42,7 +42,8 @@ try {
     Write-Host "Copying repo into $ResolvedTarget ..." -ForegroundColor Cyan
     Copy-Item -Path (Join-Path $sourceInner '*') -Destination $ResolvedTarget -Recurse -Force
 
-    Write-Host "Sync complete. Open AutoBericht via http://localhost:5501/AutoBericht/index.html (serve locally)." -ForegroundColor Green
+    Write-Host "Sync complete. Start AutoBericht with start-autobericht.cmd in $ResolvedTarget." -ForegroundColor Green
+    Write-Host "Tip: run with -CleanTarget to remove files from older versions first." -ForegroundColor Green
 }
 catch {
     Write-Error $_

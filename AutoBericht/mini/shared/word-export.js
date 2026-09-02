@@ -1171,6 +1171,14 @@
     } catch (err) {
       notify(`Word export: spider picture skipped (${err.message || err})`);
     }
+    // Whatever was skipped above must not reach the customer as placeholder text.
+    const spiderLeftover = replaceParagraphMarker(documentXml, "SPIDER$$", "");
+    if (spiderLeftover.replaced) documentXml = spiderLeftover.xml;
+    const thermoLeftovers = new Set(documentXml.match(/THERMO[0-9A-Za-z_.]*\$\$/g) || []);
+    thermoLeftovers.forEach((marker) => {
+      const patched = replaceAllParagraphMarkers(documentXml, marker, "");
+      if (patched.count > 0) documentXml = patched.xml;
+    });
 
     setText("word/document.xml", documentXml);
     const settingsXml = getText("word/settings.xml");
