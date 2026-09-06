@@ -7,3 +7,5 @@ Canonical redesign documentation.
 - `workflow.md`: intended user workflow
 - `project-template.md`: recommended project folder layout
 - `mini/word-export-v1.md`: notes for Word export behavior
+- [dictation-workflow.md](dictation-workflow.md): colleague workflow and portable skill packaging; personal inputs stay separate and photos remain on the work computer
+- [AutoBericht skill](../../skills/autobericht/SKILL.md): canonical shared instructions, examples and executable helpers

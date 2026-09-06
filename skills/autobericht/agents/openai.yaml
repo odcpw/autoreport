@@ -1,0 +1,4 @@
+interface:
+  display_name: "AutoBericht"
+  short_description: "From visit dictation to report and reusable library"
+  default_prompt: "Use $autobericht to guide me from my reports or visit dictation to a reviewed sidecar and an enriched personal library."

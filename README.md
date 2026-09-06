@@ -26,6 +26,7 @@ Primary redesign docs are in `docs/autobericht/`:
 - `docs/autobericht/system-overview.md`
 - `docs/autobericht/workflow.md`
 - `docs/autobericht/project-template.md`
+- [Dictation to a review-ready sidecar](docs/autobericht/dictation-workflow.md): shared AutoBericht skill, personal-library onboarding, transcription and report drafting while photos stay on the work computer.
 
 Additional research/docs:
 - `docs/research_recommendations/`
