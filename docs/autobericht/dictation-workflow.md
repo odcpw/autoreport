@@ -4,7 +4,7 @@ This package guides you through building your own recommendation library and wri
 
 ## Start in ChatGPT Work or another capable assistant
 
-Build the portable package as described below, then attach **AutoBericht_portable.md** and say:
+Attach the ready-made [AutoBericht_portable.md](AutoBericht_portable.md) from this repository and say:
 
 > Follow the attached AutoBericht workflow and guide me through it. Start with the files I have provided. Build my personal library and writing profile if needed. For a new visit, choose and assemble the appropriate recommendation passages yourself and return a complete sidecar for my review. Keep imported customer answers intact. Leave Done for my review. Ask only for what is missing to take the next step.
 
@@ -47,3 +47,5 @@ python3 skills/autobericht/scripts/build_distribution.py --output output/autober
 ```
 
 The output contains a skill ZIP, a complete portable Markdown document and hashes. Generated copies can be handed to colleagues; update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
+
+After changing the skill, regenerate the package and copy `output/autobericht-skill/AutoBericht_portable.md` to `docs/autobericht/AutoBericht_portable.md` before committing. This checked-in copy lets a colleague start without Python or a local packaging step.
