@@ -4,7 +4,7 @@ This package guides you through building your own recommendation library and wri
 
 ## Start in ChatGPT Work or another capable assistant
 
-After syncing the repository, open [dist/autobericht](../../dist/autobericht/README.md). Attach [autobericht-skill.zip](../../dist/autobericht/autobericht-skill.zip) to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
+After syncing the repository, attach [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
 
 > Follow the attached AutoBericht workflow and guide me through it. Start with the files I have provided. Build my personal library and writing profile if needed. For a new visit, choose and assemble the appropriate recommendation passages yourself and return a complete sidecar for my review. Keep imported customer answers intact. Leave Done for my review. Ask only for what is missing to take the next step.
 
@@ -46,6 +46,6 @@ From the repository root, generate a colleague package with:
 python3 skills/autobericht/scripts/build_distribution.py
 ```
 
-The checked-in `dist/autobericht/` output contains a skill ZIP, a complete portable Markdown document and hashes. Both `git pull` and the existing Windows sync script bring these files to colleagues without requiring Python on their computers. Update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
+The default build writes the ready-to-upload `autobericht-skill.zip` in the repository root, with the complete portable Markdown document and hashes in `dist/autobericht/`. Both `git pull` and the existing Windows sync script bring these files to colleagues without requiring Python on their computers. Update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
 
 After changing the skill, run the builder and commit the source and generated files together. The default build also refreshes `docs/autobericht/AutoBericht_portable.md` to preserve its existing download URL. CI rejects stale generated copies. Use `--output <directory>` for a separate handoff build; that option does not update the compatibility copy.

@@ -1,6 +1,6 @@
 # Ready-to-upload AutoBericht skill
 
-After `git pull` or `sync-autobericht.ps1`, open this folder and drag **autobericht-skill.zip** into a ChatGPT or Copilot conversation that can read ZIP attachments. The ZIP contains the complete `autobericht/` skill folder. If the chat cannot unpack ZIPs, attach **AutoBericht_portable.md**, which includes the same instructions and helper source as a single text document.
+After `git pull` or `sync-autobericht.ps1`, drag [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root into a ChatGPT or Copilot conversation that can read ZIP attachments. The ZIP contains the complete `autobericht/` skill folder. If the chat cannot unpack ZIPs, attach **AutoBericht_portable.md**, which includes the same instructions and helper source as a single text document.
 
 Then say:
 
@@ -16,4 +16,4 @@ Edit `skills/autobericht/`, then run from the repository root:
 python3 skills/autobericht/scripts/build_distribution.py
 ```
 
-Commit the source changes together with the regenerated ZIP, portable Markdown, manifest and the compatibility copy at `docs/autobericht/AutoBericht_portable.md`. The package contains only skill resources, not adjacent application or client files. The manifest records artifact sizes and SHA-256 hashes. CI regenerates the package and checks that the committed copies are current.
+The default build puts `autobericht-skill.zip` in the repository root and the portable Markdown and manifest in this folder. Commit the source changes together with the regenerated ZIP, portable Markdown, manifest and the compatibility copy at `docs/autobericht/AutoBericht_portable.md`. The package contains only skill resources, not adjacent application or client files. The manifest records artifact sizes and SHA-256 hashes. CI regenerates the package and checks that the committed copies are current.

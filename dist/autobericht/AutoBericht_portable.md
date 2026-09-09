@@ -743,7 +743,7 @@ def build(output):
             parts.append('````' + lang + '\n' + text.rstrip() + '\n````\n')
     portable = output / 'AutoBericht_portable.md'
     portable.write_text(''.join(parts), encoding='utf-8', newline='\n')
-    archive = output / 'autobericht-skill.zip'
+    archive = (REPO_ROOT if output == DISTRIBUTION else output) / 'autobericht-skill.zip'
     with zipfile.ZipFile(archive, 'w', zipfile.ZIP_DEFLATED) as z:
         for p in files:
             # Fixed metadata makes identical source produce identical ZIP bytes.

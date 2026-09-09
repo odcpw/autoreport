@@ -4,6 +4,7 @@ on:
     paths:
       - 'skills/autobericht/**'
       - 'dist/autobericht/**'
+      - 'autobericht-skill.zip'
       - 'docs/autobericht/AutoBericht_portable.md'
       - '.github/workflows/autobericht-skill-package.yml'
   push:
@@ -11,6 +12,7 @@ on:
     paths:
       - 'skills/autobericht/**'
       - 'dist/autobericht/**'
+      - 'autobericht-skill.zip'
       - 'docs/autobericht/AutoBericht_portable.md'
       - '.github/workflows/autobericht-skill-package.yml'
 permissions:
@@ -27,5 +29,5 @@ jobs:
         run: python3 skills/autobericht/scripts/build_distribution.py
       - name: Reject stale distribution files
         run: |
-          git diff --exit-code -- dist/autobericht docs/autobericht/AutoBericht_portable.md
-          test -z "$(git ls-files --others --exclude-standard -- dist/autobericht)"
+          git diff --exit-code -- autobericht-skill.zip dist/autobericht docs/autobericht/AutoBericht_portable.md
+          test -z "$(git ls-files --others --exclude-standard -- autobericht-skill.zip dist/autobericht)"
