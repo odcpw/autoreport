@@ -30,7 +30,10 @@
     <main class="layout">
       <section class="viewer">
         <div class="viewer__header">
-          <div class="viewer__meta" id="photo-meta">No photos loaded</div>
+          <div class="viewer__identity" aria-live="polite">
+            <div class="viewer__number" id="photo-number" hidden></div>
+            <div class="viewer__meta" id="photo-meta">No photos loaded</div>
+          </div>
           <div class="viewer__controls">
             <button id="filter-toggle" class="ghost" disabled>Show Unsorted</button>
             <button id="count-toggle" class="ghost" disabled>Show counts</button>

@@ -81,6 +81,8 @@
   let renderApi = null;
   const notifyChange = () => {
     if (renderApi) renderApi.renderAll();
+    // Scanning also assigns persistent numbers, even before the first tag edit.
+    ioApi.scheduleAutosave();
   };
 
   const photosApi = photosModule.init(ctx, { tagsApi, notifyChange });

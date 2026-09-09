@@ -13,10 +13,11 @@
     };
 
     const buildPhotoEntry = (path, fileHandle, file) => {
-      const previous = state.projectDoc?.photos?.[path];
+      const previous = state.photos.find((photo) => photo.path === path) || state.projectDoc?.photos?.[path];
       const tags = tagsApi.normalizePhotoTags(previous?.tags);
       return {
         path,
+        photoNumber: previous?.photoNumber,
         fileHandle: fileHandle || null,
         file: file || null,
         notes: previous?.notes || "",
@@ -69,6 +70,42 @@
       }
     };
 
+    // Numbers identify photos within this project, independently of the current
+    // list/filter. Keep a high-water mark even when the highest photo is removed.
+    const assignPhotoNumbers = (collection) => {
+      const saved = state.projectDoc?.photos || {};
+      const byNumber = new Map();
+      let last = state.projectDoc?.meta?.lastPhotoNumber ?? 0;
+      if (!Number.isSafeInteger(last) || last < 0) {
+        throw new Error("Invalid saved photo counter. Restore a valid sidecar before assigning photo numbers.");
+      }
+      const reserve = (path, number) => {
+        if (number == null) return;
+        if (!Number.isSafeInteger(number) || number < 1) {
+          throw new Error(`Invalid photo number for ${path}.`);
+        }
+        if (byNumber.has(number) && byNumber.get(number) !== path) {
+          throw new Error(`Photo ${number} is assigned to both ${byNumber.get(number)} and ${path}. Correct the sidecar before continuing.`);
+        }
+        byNumber.set(number, path);
+        last = Math.max(last, number);
+      };
+      Object.entries(saved).forEach(([path, photo]) => reserve(path, photo.photoNumber));
+      state.photos.forEach((photo) => reserve(photo.path, photo.photoNumber));
+      collection.forEach((photo) => reserve(photo.path, photo.photoNumber));
+      // scanPhotos supplies the same unfiltered path order as the existing UI.
+      const numbers = collection.map((photo) => {
+        if (photo.photoNumber != null) return photo.photoNumber;
+        if (last >= Number.MAX_SAFE_INTEGER) throw new Error("No photo numbers available.");
+        last += 1;
+        return last;
+      });
+      collection.forEach((photo, index) => { photo.photoNumber = numbers[index]; });
+      if (!state.projectDoc) state.projectDoc = {};
+      if (!state.projectDoc.meta) state.projectDoc.meta = {};
+      state.projectDoc.meta.lastPhotoNumber = last;
+    };
+
     const scanPhotos = async () => {
       if (!state.photoHandle) return;
       clearPhotoUrl();
@@ -77,6 +114,7 @@
       const prefix = state.photoRootName ? `${state.photoRootName}/` : "";
       await collectImages(state.photoHandle, prefix, collection);
       collection.sort((a, b) => a.path.localeCompare(b.path));
+      assignPhotoNumbers(collection);
       state.photos = collection;
       state.filterMode = "all";
       state.keepPath = "";
@@ -154,6 +192,7 @@
         collection.push(buildPhotoEntry(`demo-photos/${i + 1}.jpg`, null, file));
       }
       state.photoRootName = "demo-photos";
+      assignPhotoNumbers(collection);
       state.photos = collection;
       state.filterMode = "all";
       state.currentIndex = 0;
@@ -165,6 +204,8 @@
       const output = {};
       state.photos.forEach((photo) => {
         output[photo.path] = {
+          ...state.projectDoc?.photos?.[photo.path],
+          photoNumber: photo.photoNumber,
           notes: photo.notes || "",
           tags: photo.tags,
         };

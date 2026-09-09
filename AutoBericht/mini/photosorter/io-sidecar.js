@@ -349,6 +349,11 @@
         setStatus(statusMessage);
         debug.logLine("info", "project_sidecar.json does not exist yet.");
       }
+      // A sidecar reload/project switch must rebuild entries from that document,
+      // not reuse the previous project's in-memory numbers, notes or tags.
+      state.photos = [];
+      state.photoHandle = null;
+      state.keepPath = "";
       await setDefaultPhotoHandle();
       const didScan = await photosApi.maybeAutoScan();
       if (!didScan) {
@@ -361,6 +366,7 @@
       if (!sidecarStorage?.saveSidecar || !sidecarStorage?.enqueue) {
         throw new Error("Safe sidecar storage module is unavailable.");
       }
+      const projectHandle = state.projectHandle;
       const payload = normalizePhotoDoc(state.projectDoc);
       payload.photos = photosApi.serializePhotos();
       payload.photoTagOptions = structuredClone(state.tagOptions);
@@ -370,7 +376,7 @@
 
       return sidecarStorage.enqueue(runtime, async () => {
         const sidecar = await sidecarStorage.saveSidecar({
-          dirHandle: state.projectHandle,
+          dirHandle: projectHandle,
           merge: (latest) => {
             const next = isPlainObject(latest) ? structuredClone(latest) : {};
             next.photos = payload;
@@ -381,6 +387,12 @@
             return next;
           },
         });
+        if (state.projectHandle !== projectHandle) return sidecar;
+        // A rescan may have allocated (and even removed) more photos while this
+        // write was queued. Do not roll their reserved numbers back in memory.
+        if (state.projectDoc?.meta?.lastPhotoNumber > (payload.meta.lastPhotoNumber ?? 0)) {
+          payload.meta.lastPhotoNumber = state.projectDoc.meta.lastPhotoNumber;
+        }
         state.projectDoc = payload;
         state.sidecarDoc = sidecar;
         // An edit made while this write was in flight has re-armed the timer.

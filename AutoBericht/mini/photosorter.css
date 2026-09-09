@@ -131,8 +131,16 @@ button[disabled] {
 }
 
 .viewer__meta {
-  font-weight: 600;
+  font-size: 0.8rem;
+  color: #52606d;
+}
+
+.viewer__number {
+  font-size: 1.35rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
   color: #1f2933;
+  margin-bottom: 2px;
 }
 
 .viewer__controls {
@@ -198,6 +206,7 @@ button[disabled] {
   color: #6b7280;
   padding: 0 4px;
   min-height: 16px;
+  overflow-wrap: anywhere;
 }
 
 .photo-unsorted {

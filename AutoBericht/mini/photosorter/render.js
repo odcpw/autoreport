@@ -23,8 +23,18 @@
       const total = state.photos.length;
       const unsorted = state.photos.filter(photosApi.isPhotoUnsorted).length;
       const current = filtered.length ? state.currentIndex + 1 : 0;
+      const photo = filtered[state.currentIndex];
+      if (elements.photoNumberEl) {
+        const number = photo?.photoNumber;
+        elements.photoNumberEl.hidden = !Number.isSafeInteger(number) || number < 1;
+        elements.photoNumberEl.textContent = elements.photoNumberEl.hidden
+          ? ""
+          : `Photo ${String(number).padStart(3, "0")}`;
+      }
       if (elements.photoMetaEl) {
-        elements.photoMetaEl.textContent = tf("photosorter_image_meta", "Image {current} of {filtered} • Total {total} • Unsorted {unsorted}", { current, filtered: filtered.length, total, unsorted });
+        elements.photoMetaEl.textContent = hasAnyActiveFilters()
+          ? tf("photosorter_filtered_meta", "{current} of {filtered} filtered • Total {total} • Unsorted {unsorted}", { current, filtered: filtered.length, total, unsorted })
+          : tf("photosorter_image_meta", "{current} of {total} • Unsorted {unsorted}", { current, total, unsorted });
       }
     };
 

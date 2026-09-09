@@ -219,7 +219,8 @@
     "status_photosorter_fresh": "Sidecar not found; starting fresh.",
     "status_photosorter_library_tags": "Sidecar not found; loaded tags from the library.",
     "status_photosorter_no_library": "Sidecar and library not found; starting fresh.",
-    "photosorter_image_meta": "Image {current} of {filtered} • Total {total} • Unsorted {unsorted}",
+    "photosorter_image_meta": "{current} of {total} • Unsorted {unsorted}",
+    "photosorter_filtered_meta": "{current} of {filtered} filtered • Total {total} • Unsorted {unsorted}",
     "photosorter_no_photo": "No photo loaded",
     "photosorter_filter_tags": "Filter tags"
 };

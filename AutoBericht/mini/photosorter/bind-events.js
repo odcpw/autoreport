@@ -99,12 +99,16 @@
     const pickProjectFolder = async () => {
       if (!ensureFsAccess()) return;
       try {
+        let nextHandle;
         try {
-          state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
+          nextHandle = await window.showDirectoryPicker({ mode: "readwrite", id: "autobericht-project" });
         } catch (err) {
           if (!(err instanceof TypeError)) throw err;
-          state.projectHandle = await window.showDirectoryPicker({ mode: "readwrite" });
+          nextHandle = await window.showDirectoryPicker({ mode: "readwrite" });
         }
+        await ioApi.flushAutosave();
+        await runtime.saveQueue;
+        state.projectHandle = nextHandle;
         if (ctx.fs?.saveHandle) {
           try {
             await ctx.fs.saveHandle(state.projectHandle);

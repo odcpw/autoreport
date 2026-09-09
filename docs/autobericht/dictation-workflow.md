@@ -15,6 +15,27 @@ An “empty” Sidecar is not yet filled for this visit; the application has alr
 
 Keep your style guide privately and reuse it with each new project. “Author profile” elsewhere in the instructions means this same guide. If you need one created, the assistant can derive it from your existing anonymised reports and confirmed corrections. A few representative examples can live inside the guide; preparing a separate example collection is not part of the normal workflow.
 
+## Refer to photos while dictating
+
+PhotoSorter displays a persistent project number, such as **Photo 038**, above
+the image, and keeps the filename visible below it. Say “Photo 38” and
+describe the observation or requested tags. The smaller “12 of 58 filtered”
+counter is only your position in the current view; do not use it as an identifier.
+
+On the first scan, older projects receive numbers in the existing unfiltered
+filename order. Numbers are saved automatically in the sidecar and do not change
+when filtering, rescanning or adding photos. New photos get the next number;
+removed numbers are not reused. Save the sidecar before sending it with a
+recording. Numbers belong to that project, not to other projects or an earlier
+sidecar copy that has never been numbered.
+
+For tools reading the JSON, look up `photos.photos[path].photoNumber`; the path
+remains the link to the local file. `photos.meta.lastPhotoNumber` reserves all
+previously assigned numbers, including removed photos. Preserve both when editing
+the sidecar. If no numbers are stored yet, use a uniquely matching filename
+instead; never infer a spoken photo number from JSON key order. Renaming a file
+changes its path and is treated as a new photo on rescan.
+
 ## Start in ChatGPT Work or another capable assistant
 
 After syncing the repository, attach [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:

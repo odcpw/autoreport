@@ -26,6 +26,7 @@
     statusTextEl: document.getElementById("status-text"),
     statusCloseBtn: document.getElementById("status-close"),
     photoMetaEl: document.getElementById("photo-meta"),
+    photoNumberEl: document.getElementById("photo-number"),
     photoImageEl: document.getElementById("photo-image"),
     photoFilenameEl: document.getElementById("photo-filename"),
     photoUnsortedBtn: document.getElementById("photo-unsorted"),
