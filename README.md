@@ -19,6 +19,10 @@ For onboarding guides, see:
 - `docs/onboarding/AutoBericht-Guide-Rapide-FR.docx`
 - `docs/onboarding/AutoBericht-Guida-Rapida-IT.docx`
 
+## Use the AutoBericht skill in a chat
+
+After syncing, open [dist/autobericht](dist/autobericht/README.md). Drag [autobericht-skill.zip](dist/autobericht/autobericht-skill.zip) into a capable ChatGPT or Copilot window, or use [AutoBericht_portable.md](dist/autobericht/AutoBericht_portable.md) if ZIP attachments are unsupported. The editable source is [skills/autobericht](skills/autobericht/SKILL.md).
+
 ## Documentation
 
 Primary redesign docs are in `docs/autobericht/`:

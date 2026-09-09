@@ -22,6 +22,10 @@ Read [examples.md](references/examples.md) for cross-topic interviews, paragraph
 
 At the start, inspect supplied files and state the next useful step. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
 
+## Use current application context when useful
+
+The maintained application and editable skill are at https://github.com/odcpw/autoreport (`skills/autobericht/`). When current tag-to-row behaviour, sidecar compatibility, import/export or app testing matters, propose using that repository for context; see [repository-context.md](references/repository-context.md). Reuse an accessible checkout or GitHub connection, or offer to clone it when shell/network access permits. Continue with the supplied files when repository access is unavailable or unnecessary. Repository code explains application behaviour; the consultant’s own library and profile determine report wording.
+
 ## Working agreement
 
 1. **Preserve the author’s judgment.** Distinguish observations, self-assessment answers, statements in interviews, interpretation, proposed measures and decisions. Keep uncertainty and explicit corrections. Do not turn a rough impression into several proven failings.

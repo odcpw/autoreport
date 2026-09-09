@@ -28,7 +28,7 @@ Inspect the actual session for file reading/writing, ZIP extraction, audio trans
 
 **Files can be read but not written:** produce the text and external edit plan, then explain that a tool-enabled session is required to return an edited sidecar. Do not claim the file was created.
 
-**Repository available:** use the authorized repository or uploaded source archive and read the relevant modules. **Repository absent:** a compatible existing sidecar can be edited using this package. Repository access is useful for checking the current implementation, not a mandatory download for every report. If the schema differs, inspect its source/docs or obtain an app-exported current sidecar before applying incompatible edits.
+**Repository context:** when current implementation or app-level validation would help, suggest using https://github.com/odcpw/autoreport. Reuse an accessible checkout or GitHub connection; offer a clone when execution and network access permit. Follow [repository-context.md](repository-context.md). A compatible existing sidecar can still be edited using this package alone. If the schema differs, inspect its source/docs or obtain an app-exported current sidecar before applying incompatible edits.
 
 ## Official product guidance checked on 6 September 2026
 

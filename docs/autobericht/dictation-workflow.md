@@ -4,7 +4,7 @@ This package guides you through building your own recommendation library and wri
 
 ## Start in ChatGPT Work or another capable assistant
 
-Attach the ready-made [AutoBericht_portable.md](AutoBericht_portable.md) from this repository and say:
+After syncing the repository, open [dist/autobericht](../../dist/autobericht/README.md). Attach [autobericht-skill.zip](../../dist/autobericht/autobericht-skill.zip) to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
 
 > Follow the attached AutoBericht workflow and guide me through it. Start with the files I have provided. Build my personal library and writing profile if needed. For a new visit, choose and assemble the appropriate recommendation passages yourself and return a complete sidecar for my review. Keep imported customer answers intact. Leave Done for my review. Ask only for what is missing to take the next step.
 
@@ -32,7 +32,7 @@ You receive a complete draft sidecar, a readable preview, coverage/validation re
 
 Say: “Close out this report and enrich my current library from the reviewed sidecar.” The assistant generalises useful additions, removes company particulars, deduplicates them and returns the next library copy. Use that version for the next project. A new library file does not automatically refresh a sidecar already created from an older library.
 
-Repository access is optional for editing a compatible existing sidecar. For current app checks, supply an accessible checkout/source archive or connect a repository you can access. The skill does not grant repository access or fetch it automatically.
+Repository access is optional for editing a compatible existing sidecar. When current app behaviour or integration checks would help, the skill proposes reading or cloning https://github.com/odcpw/autoreport. It can reuse a checkout, source archive or authorized GitHub connection; when the user requests repository context and shell/network access allow it, it can clone the repo. This does not grant new credentials or authorize source changes.
 
 Read [validation.md](dictation-validation.md) for checks completed and the remaining real-recording test.
 
@@ -43,9 +43,9 @@ The shared workflow and skill source live in this repository at [skills/autoberi
 From the repository root, generate a colleague package with:
 
 ```sh
-python3 skills/autobericht/scripts/build_distribution.py --output output/autobericht-skill
+python3 skills/autobericht/scripts/build_distribution.py
 ```
 
-The output contains a skill ZIP, a complete portable Markdown document and hashes. Generated copies can be handed to colleagues; update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
+The checked-in `dist/autobericht/` output contains a skill ZIP, a complete portable Markdown document and hashes. Both `git pull` and the existing Windows sync script bring these files to colleagues without requiring Python on their computers. Update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
 
-After changing the skill, regenerate the package and copy `output/autobericht-skill/AutoBericht_portable.md` to `docs/autobericht/AutoBericht_portable.md` before committing. This checked-in copy lets a colleague start without Python or a local packaging step.
+After changing the skill, run the builder and commit the source and generated files together. The default build also refreshes `docs/autobericht/AutoBericht_portable.md` to preserve its existing download URL. CI rejects stale generated copies. Use `--output <directory>` for a separate handoff build; that option does not update the compatibility copy.
