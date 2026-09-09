@@ -6,6 +6,8 @@ Read this before drafting any report text, including a first trial. AutoBericht 
 
 Use the current user's instructions and corrections first. Then use their confirmed profile and approved examples, their own finished reports in the target language, and the supplied library. Treat unreviewed workstate, generated rewrites and translated bootstrap text as weaker evidence. An assistant's suggestion is not an approved example merely because the conversation continued. Do not assign a percentage of style fidelity or claim a perfect match without a defined evaluation.
 
+For a normal visit, read the supplied style guide as that profile and use the library already embedded in the Sidecar. The guide controls expression; the embedded library supplies candidate content, whose claims still need current evidence. Approved examples mean existing authored or confirmed passages when available, often within the guide; do not ask for a separate examples collection or library as a routine fifth input.
+
 Before composing, establish these choices in a short **internal** working note:
 
 - Report locale and the author's voice: impersonal, first-person plural, direct instructions or another evidenced form.

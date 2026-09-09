@@ -2,21 +2,22 @@
 
 ## What a colleague provides
 
-First-time setup can start with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). The assistant guides them to provide a base AutoBericht library or exported project when mapping requires its actual question IDs. They do not need to arrive with a writing profile already prepared.
-
-For a new visit, provide:
+For the normal report workflow, provide four inputs:
 
 - this skill package or the complete portable instruction document;
-- the latest `project_sidecar.json` with imported self-assessment when available;
-- their current `library_user_*.json` and author profile;
-- the visit recording or full transcript;
-- photo references already in the sidecar, or a permitted text-only filename manifest linking spoken identifiers to project-relative paths. The image files stay on the work computer.
+- the project's `project_sidecar.json`, not yet filled for this visit, with its loaded library and imported self-assessment when available;
+- the consultant's personal style guide (also called author profile);
+- the visit MP3 recording(s), or a full transcript when already available.
 
-A sidecar stores photo metadata, not the photo image bytes. Use the consultant’s descriptions as the evidence; do not request images or claim to inspect them. Do not substitute thumbnails, contact sheets, embedded report photos or screen sharing for uploads. Check that an export intended for Work contains no embedded image bytes. Reopen the returned sidecar on the work computer, where the app resolves its existing photo paths. A sidecar may contain some library text, but it is not always the complete latest reusable library.
+The Sidecar is the normal source of question structure, library findings/recommendations and photo references. “Empty” means the project-specific assessment is not yet drafted, not that the library or metadata are absent. Do not ask for a standalone library, a separate collection of examples or another package. Use a text-only filename map only if spoken photo identifiers cannot be resolved from the supplied Sidecar.
+
+If the consultant needs a style guide or library created, onboarding can start separately with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). Build the guide from their existing writing without asking them to curate a new example collection. Request an actual application structure only when library mapping requires it; do not repeat onboarding for every visit.
+
+A sidecar stores photo metadata, not the photo image bytes. Use the consultant’s descriptions as the evidence; do not request images or claim to inspect them. Do not substitute thumbnails, contact sheets, embedded report photos or screen sharing for uploads. Check that an export intended for Work contains no embedded image bytes. Reopen the returned sidecar on the work computer, where the app resolves its existing photo paths. Its embedded library is the starting snapshot for this report. A newer standalone library matters only for an explicitly requested refresh or library update; it is not a fifth report input.
 
 ## Minimal first message from the colleague
 
-“Use the AutoBericht instructions I attached. Guide me through the process. If I have not yet built my library/profile, start from my anonymised reports. Otherwise use my library, sidecar and recording to prepare a complete sidecar for review. The photos stay on my work computer; use my descriptions and the sidecar’s filenames. Choose and combine the appropriate recommendation passages yourself. Keep customer answers and unrelated project data intact. Leave Done for my review. Tell me only what is missing to take the next step.”
+“Use the attached AutoBericht skill, my style guide, the project Sidecar and these MP3s to prepare my report. The library is already in the Sidecar. Choose and assemble the relevant passages and write in my style. The photos stay on my work computer; use my descriptions and the Sidecar's filenames. Keep customer answers and unrelated project data intact. Return the complete draft Sidecar and a clean preview, with working questions and software feedback separately. Leave Done for my review.”
 
 ## Capability check, without ceremony
 
@@ -51,4 +52,4 @@ Keep a progress file with source filename/hash, duration, chunks processed, fail
 
 ## Reuse and sharing
 
-Use a dedicated ChatGPT project or reusable skill where available, but supply the current library version explicitly. Keep each company’s live case separate. Anonymised onboarding examples and generalised reusable language may be shared as authorized; the colleague package itself contains neither a personal corpus nor a client project. Installing in local Codex does not establish installation or synchronization in ChatGPT Work.
+Reuse the shared skill and the consultant's latest style guide with each new project's Sidecar and recordings. The application has already loaded the selected library into that Sidecar. Keep each company's live case separate. Anonymised onboarding examples and generalised reusable language may be shared as authorized; the colleague package itself contains neither a personal corpus nor a client project. Installing in local Codex does not establish installation or synchronization in ChatGPT Work.

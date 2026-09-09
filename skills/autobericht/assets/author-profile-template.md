@@ -3,7 +3,7 @@
 Populate from the consultant’s own reports and confirmed feedback. This template sets no personal style by default.
 
 - Author and report locale:
-- Profile version/date and associated library filename/version:
+- Style-guide version/date:
 - Original writing languages; translations and their original-language source:
 - Reports/sections actually examined:
 - Confirmed preferences versus provisional observations:

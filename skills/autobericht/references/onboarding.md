@@ -47,21 +47,16 @@ Describe whether differences are functional (summary versus detailed measure), l
 
 Provide a small before/after sample and ask for only the stylistic choices that materially change the profile. Continue building the library while optional preferences are pending. Retain confirmed examples separately from generated proposals. If no style examples are supplied for a new report, follow the library’s wording and use restrained language while stating the profile is provisional.
 
-## Package the author's reusable inputs
+## Reuse the style guide with a new project
 
-The shared repository distributes how AutoBericht works, not each consultant's personal style. Keep a private author pack for use alongside the shared skill:
+The shared repository distributes the workflow. Each consultant keeps their personal style guide privately. “Author profile” and “style guide” refer to the same file. It records the writing conventions and may include a few approved examples extracted from the supplied reports; the consultant should not have to assemble an additional example collection.
 
-- `author-profile.md`: identity, locale, version/date, the evidenced writing conventions and approved examples. Examples may be embedded here or kept in a referenced file.
-- The author's current library JSON, using its real application schema and locale.
+For an ordinary report, the inputs are the MP3 recording(s), project Sidecar, shared skill and style guide. The library has already been loaded into the Sidecar by the application. Do not create or require an author pack, duplicate library upload or repeated onboarding. Record the guide version and identifiable embedded library provenance in the working notes without making these extra user tasks.
 
-Use a folder or one ZIP when file tools permit; separate existing files are equally valid. Keep client Sidecars, recordings, complete reports and unapproved generated drafts outside this reusable pack. A pack is personal input data, not another skill that needs installation. Do not commit it to the shared repository. Record which profile/library version was used in the project's working notes.
-
-For first use, inspect the consultant's reports/library and build these resources as part of the work. For subsequent visits, reuse the latest available pack with the visit's Sidecar and recording/transcript. Do not make the consultant rebuild their profile or upload both the shared ZIP and its equivalent portable Markdown. If a profile or library is already available in the conversation or accessible private storage, use it. A Sidecar's embedded library can supply report passages when no separate library was provided; do not overwrite its project edits to synchronise with a newer pack.
-
-At a requested closeout, update the private pack from approved corrections using [library-cycle.md](library-cycle.md). Keep the prior version and carry the new version into the next project. Improve common behaviour in the shared skill separately, without copying personal examples or client facts into it.
+After review, retain explicit approved style corrections in a new version of the guide. A reusable library update is a separate requested operation; follow [library-cycle.md](library-cycle.md). Improve common behaviour in the shared skill separately, without copying personal examples or client facts into it.
 
 ## Onboarding delivery and coverage
 
-Deliver a private author pack containing the new `library_user_<author>_<locale>.json` and `author-profile.md` with confirmed examples. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Keep the source version and record the new file’s hash. Validate against the app’s library importer when available. Do not bundle the colleague's corpus into the reusable skill itself.
+Deliver the personal style guide and, when library creation was requested, the new `library_user_<author>_<locale>.json`. Embed useful confirmed examples in the guide rather than requiring another upload. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Preserve source versions. Validate a newly created library against the app's importer when available; the consultant loads it in the application for new projects. Do not bundle their corpus into the reusable skill itself.
 
 “Complete” means every supplied readable report has been accounted for and its usable recommendations matched or explicitly set aside. It does not mean every generic question has a recommendation or that no future report can add useful material.

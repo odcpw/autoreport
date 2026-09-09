@@ -1,24 +1,25 @@
 # AutoBericht: speak through the visit, review the draft
 
-This package guides you through building your own recommendation library and writing profile, preparing reports from spoken evaluations and local photo references, and enriching your library from reviewed reports. It contains the workflow and file helpers; bring your own reports, library and profile.
+Prepare a report from your MP3 recordings, project Sidecar, this shared skill and your personal style guide. The library is already loaded into the Sidecar. The skill selects and adapts that content to the visit and writes in your style.
 
-## What is shared, personal and specific to a visit?
+## The four inputs for a report
 
-| Resource | Contents | How it is reused |
-|---|---|---|
-| Shared skill in this repository | Workflow, blank profile template, synthetic examples and file helpers | Everyone uses the same maintained skill; ZIP and portable Markdown are alternative formats |
-| Private author pack | Your style profile with approved examples and your reusable library | Create it from your own work, then carry its latest version into each new visit |
-| Visit files | Current project Sidecar and recording or transcript | Supply them for the report being prepared; photos remain on your computer |
+| Input | What it supplies |
+|---|---|
+| MP3 recording(s) | Your observations, interviews, judgments and corrections |
+| Project Sidecar | The question structure, loaded library and existing customer/photo metadata |
+| Shared skill | The workflow and file helpers; use the ZIP or portable Markdown, or reuse the installed skill |
+| Personal style guide | Your wording and report-writing conventions |
 
-Your personal style does not belong in this shared repository. Keep the author pack in your own private folder, optionally as one ZIP. It is input for the skill, not a separate skill to install. The assistant can use the profile/library as separate files too.
+An “empty” Sidecar is not yet filled for this visit; the application has already loaded its library. You do not need to upload that library again, collect extra examples or make an author pack. Photos remain on your computer.
 
-For a first use, provide your own anonymised reports or existing library and ask the assistant to build your author pack. For later reports, use the shared skill with your author pack, Sidecar and recording/transcript. Reuse an installed/available skill; otherwise attach its ZIP or portable Markdown. No need to attach both. If the current Sidecar already contains the library text, the assistant can use it without requesting a duplicate library upload. Approved corrections improve your private pack for the next visit.
+Keep your style guide privately and reuse it with each new project. “Author profile” elsewhere in the instructions means this same guide. If you need one created, the assistant can derive it from your existing anonymised reports and confirmed corrections. A few representative examples can live inside the guide; preparing a separate example collection is not part of the normal workflow.
 
 ## Start in ChatGPT Work or another capable assistant
 
 After syncing the repository, attach [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
 
-> Follow the attached AutoBericht workflow and guide me through it. Start with the files I have provided. Build my personal library and writing profile if needed. For a new visit, choose and assemble the appropriate recommendation passages yourself and return a complete sidecar for my review. Keep imported customer answers intact. Leave Done for my review. Ask only for what is missing to take the next step.
+> Use this AutoBericht skill, my style guide, the project Sidecar and these MP3s to prepare my report. The library is already in the Sidecar. Choose and assemble the relevant passages and write in my style. Return the complete draft Sidecar and a clean preview, with working questions and software feedback separately. Keep imported customer answers intact. Leave Done for my review.
 
 The portable document includes all instructions, examples, the profile template and helper source code. The assistant can follow it directly and materialise helpers if its session supports file execution. Attaching instructions does not install a skill or grant missing tools.
 
@@ -32,7 +33,7 @@ Upload copies of your previous reports with company information and site photos 
 
 ## For a new report
 
-Provide the latest sidecar, preferably after importing the self-assessment, your current library/profile, your visit recording and the photo references already in the sidecar. **The photos stay on the work computer.** Look at them locally and dictate their filenames/categories and what matters. No image upload, contact sheet or screen sharing is needed. The returned sidecar reconnects to the image files in the local app. The assistant preserves yes/no answers and comments, adapts findings lightly, interprets natural assessment language, selects and combines recommendations, and links photos and applicable checklists.
+Provide the project Sidecar, preferably after importing the self-assessment, your style guide, the shared skill and your visit recording(s). Library text and photo references are already in the Sidecar. **The photos stay on the work computer.** Look at them locally and dictate their filenames/categories and what matters. No image upload, contact sheet or screen sharing is needed. The returned sidecar reconnects to the image files in the local app. The assistant preserves yes/no answers and comments, adapts findings lightly, interprets natural assessment language, selects and combines recommendations, and links photos and applicable checklists.
 
 You can make one long MP3. Say photo filenames when useful and distinguish interviews, your judgment, corrections and anything to leave out. Try the full recording first. If the session cannot process it reliably, split it with overlap and original time offsets; the supplied helper handles that. If no transcription tool is already available, the skill checks whether Work can install and run a multilingual engine in its task environment. This needs suitable execution, model downloads and resources. German and French are supported by Whisper; Swiss German needs a real speech test and may be captured as Standard German before drafting in the report language. If the runtime cannot transcribe, supply a complete transcript from an available tool. Chunking solves size/runtime problems, not an absence of transcription capability.
 

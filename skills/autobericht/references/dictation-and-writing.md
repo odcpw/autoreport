@@ -2,6 +2,8 @@
 
 Apply [report-authoring.md](report-authoring.md) before composing. It governs author-style evidence, minimal adaptation, clean output boundaries and the final semantic/style pass.
 
+Begin with the MP3 recording(s), project Sidecar, this skill and the supplied style guide. Use the library already loaded in the Sidecar; a separate library or examples upload is not part of this report workflow.
+
 ## Capture the judgment before editing the prose
 
 Use the imported self-assessment as the starting point: yes/no, comments, evidence and question groupings. Keep those customer statements intact. The consultant’s visit assessment belongs in the workstate and may contradict the customer’s answer.

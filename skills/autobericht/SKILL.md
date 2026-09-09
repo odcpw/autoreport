@@ -1,13 +1,15 @@
 ---
 name: autobericht
-description: Guide an SST consultant from anonymised past reports to a personal AutoBericht library and writing profile, then turn visit dictation, interviews, self-assessment and photos into a review-ready project sidecar and carry reviewed recommendations into the next library.
+description: Turn an SST consultant's MP3 recordings, project Sidecar with its embedded library, and personal style guide into a review-ready report in their voice. Also support style-guide/library onboarding from past reports and library updates after review.
 ---
 
 # AutoBericht — from professional judgment to a report
 
 The product goal is a structured report the consultant can use in their own voice after substantive review, without rewriting unwanted prose. Treat author-style fidelity, evidence fidelity and Sidecar compatibility as separate requirements. Help the consultant spend their time observing, evaluating and reviewing. Take responsibility for selecting, assembling and writing the appropriate report content in their voice. Guide a new colleague through the process; do not expect them to know the file structure or select paragraphs themselves.
 
-This is an author-neutral workflow. The consultant supplies their own library and style profile, or anonymised past reports from which to build them. Keep these reusable personal resources in a private **author pack**, separate from the shared skill and each visit's Sidecar/transcript. The pack is a folder or ZIP containing a profile with approved examples and the author's library; use the files already available rather than requiring that packaging. No previous consultant’s library, client data or personal writing profile is bundled in this skill. Respond in the user’s language and write the report in the project locale.
+The normal report workflow has four inputs: **MP3 recording(s), the project Sidecar, this skill and the consultant's style guide**. The application loads the library into the Sidecar when the project is created. An “empty” Sidecar is not yet filled for this visit; it still contains the question structure, library passages and any imported customer/photo metadata. Use that embedded library as the starting content and the supplied style guide as the writing authority. Do not request a duplicate library, a separate examples collection or an author-pack ZIP for an ordinary report.
+
+This is an author-neutral workflow. Each consultant keeps their own style guide privately; “author profile” in these instructions means that same guide, not another required file. It may include representative approved passages, but examples are not an additional upload requirement. No previous consultant's library, client data or personal writing profile is bundled in this skill. Respond in the user's language and write the report in the project locale.
 
 The shared skill, helpers and workflow are maintained in the AutoBericht repository. Each consultant's personal library, profile and reports remain in their chosen private storage. **Site photos stay on the work computer.** The consultant views them locally and dictates filenames/categories and descriptions. Work receives permitted audio/text and sidecar metadata, never photo uploads, thumbnails, contact sheets or screen captures. Generate text and photo associations from that testimony; the local app reconnects the returned sidecar to the image files and produces the illustrated report. Do not request cloud image access as a prerequisite or treat a local desktop agent as offline image analysis.
 
@@ -17,14 +19,14 @@ Before writing report content, read [report-authoring.md](references/report-auth
 
 ## Choose the starting point from the files already available
 
-- **First-time author, with old reports:** read [onboarding.md](references/onboarding.md). Build their personal library and profile before or alongside a first new report.
-- **New visit, existing library:** read [dictation-and-writing.md](references/dictation-and-writing.md), the author’s profile, then [sidecar-contract.md](references/sidecar-contract.md) before editing a sidecar.
+- **New visit, Sidecar and style guide:** read [dictation-and-writing.md](references/dictation-and-writing.md), the supplied guide, then [sidecar-contract.md](references/sidecar-contract.md). Use the library already embedded in the Sidecar; begin without a separate onboarding exercise.
+- **Style-guide or library creation from old reports:** read [onboarding.md](references/onboarding.md). This is preparation for an author who needs it, not a repeated prerequisite for each report.
 - **Reviewed report or sidecar returning from a project:** read [library-cycle.md](references/library-cycle.md). Extract useful reusable changes and prepare the next library version.
 - **Questions about recording, uploads or repository access:** read [start-and-capabilities.md](references/start-and-capabilities.md). Check the actual tools available; instructions do not themselves grant audio, file, repository or network access.
 
 Read [examples.md](references/examples.md) for cross-topic interviews, paragraph selection, uncertainty and library updates. It contains synthetic examples, not source material for a real company.
 
-At the start, inspect supplied files, including any author pack, and state the next useful step. Reuse an available installed skill or attached workflow; the ZIP and portable skill document are alternatives, not two required inputs. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files or ask for a separate library when suitable embedded text is already available. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
+At the start, inspect the recordings, Sidecar and style guide and state the next useful step. Reuse an available installed skill or attached workflow; the ZIP and portable skill document are alternatives, not two required inputs. Ask only for missing information that affects the work: typically an absent Sidecar, unresolved report language or a decision that changes a technical recommendation. If the Sidecar genuinely lacks the expected library/structure, identify the specific missing data before requesting another export. Do not mistake untouched generic workstate text for a case finding or an approved writing example. If only anonymised reports are provided for onboarding, start reading them instead of demanding a complete project first.
 
 ## Use current application context when useful
 
@@ -48,7 +50,7 @@ Inventory and authoring contract → full transcript and photo identities → co
 
 Work through a long recording in resumable batches. Keep an external coverage register of processed time ranges and unresolved items. Reconcile topics and corrections across all batches before claiming completeness. Try the supplied recording first when transcription is supported; chunk only when limits or reliability require it. Never silently substitute a summary for the full transcript.
 
-For a new author, build their profile from their actual reports and confirmed edits. Use `assets/author-profile-template.md` as a starting structure, not a fixed style. Reconstruct the library against an actual exported library/assessment structure. Remove identifiable untouched AI bootstrap recommendations while retaining authored additions and useful variants; keep ambiguous origin in an internal review list rather than guessing.
+When asked to create a style guide, build it from the author's actual reports and confirmed edits. Use `assets/author-profile-template.md` as a starting structure, not a fixed style. When library reconstruction is requested, use an actual exported library/assessment structure. Remove identifiable untouched AI bootstrap recommendations while retaining authored additions and useful variants; keep ambiguous origin in an internal review list rather than guessing. These onboarding operations are separate from drafting a visit with an already loaded Sidecar and supplied guide.
 
 ## Supporting tools
 
@@ -65,4 +67,4 @@ When repository access is available, inspect the relevant current modules and ru
 
 ## Expected delivery
 
-For onboarding: a private author pack containing the personal library and author profile with confirmed examples; keep the short style assessment, coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For closeout: next library/profile version in the author pack plus a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
+For onboarding: a personal style guide and, when requested, a library built against the actual application structure; keep coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For requested closeout: next library copy and any approved style-guide updates, with a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
