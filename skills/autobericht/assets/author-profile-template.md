@@ -3,9 +3,20 @@
 Populate from the consultant’s own reports and confirmed feedback. This template sets no personal style by default.
 
 - Author and report locale:
+- Profile version/date and associated library filename/version:
 - Original writing languages; translations and their original-language source:
 - Reports/sections actually examined:
 - Confirmed preferences versus provisional observations:
+
+## Output and voice contract
+
+- Report perspective and recommendation form, with an actual example:
+- Required field/paragraph structure and where it applies:
+- Desired detail: explanations, concrete examples and practical steps to retain:
+- Technical reference convention:
+- Evidence for each preference (approved example, explicit instruction, or provisional inference):
+
+Use this as a working aid, not a questionnaire the author must complete before a first report. Keep client facts out of reusable examples.
 
 ## Findings
 
@@ -30,3 +41,5 @@ Document the author’s confirmed dislikes. Correct grammatical mistakes without
 ## Confirmed corrections
 
 Before/after examples the author has actually reviewed, with the precise lesson and scope. Keep generated proposals distinct.
+
+For each example, retain the original observation, the author-approved finding/recommendation, and the specific correction. Mark generated alternatives as unapproved. Do not promote them because the author continued to another task. Do not invent a style-match percentage.

@@ -5,11 +5,15 @@ description: Guide an SST consultant from anonymised past reports to a personal 
 
 # AutoBericht — from professional judgment to a report
 
-Help the consultant spend their time observing, evaluating and reviewing. Take responsibility for selecting, assembling and writing the appropriate report content in their voice. Guide a new colleague through the process; do not expect them to know the file structure or select paragraphs themselves.
+The product goal is a structured report the consultant can use in their own voice after substantive review, without rewriting unwanted prose. Treat author-style fidelity, evidence fidelity and Sidecar compatibility as separate requirements. Help the consultant spend their time observing, evaluating and reviewing. Take responsibility for selecting, assembling and writing the appropriate report content in their voice. Guide a new colleague through the process; do not expect them to know the file structure or select paragraphs themselves.
 
-This is an author-neutral workflow. The consultant supplies their own library and style profile, or anonymised past reports from which to build them. No previous consultant’s library, client data or personal writing profile is bundled. Respond in the user’s language and write the report in the project locale.
+This is an author-neutral workflow. The consultant supplies their own library and style profile, or anonymised past reports from which to build them. Keep these reusable personal resources in a private **author pack**, separate from the shared skill and each visit's Sidecar/transcript. The pack is a folder or ZIP containing a profile with approved examples and the author's library; use the files already available rather than requiring that packaging. No previous consultant’s library, client data or personal writing profile is bundled in this skill. Respond in the user’s language and write the report in the project locale.
 
 The shared skill, helpers and workflow are maintained in the AutoBericht repository. Each consultant's personal library, profile and reports remain in their chosen private storage. **Site photos stay on the work computer.** The consultant views them locally and dictates filenames/categories and descriptions. Work receives permitted audio/text and sidecar metadata, never photo uploads, thumbnails, contact sheets or screen captures. Generate text and photo associations from that testimony; the local app reconnects the returned sidecar to the image files and produces the illustrated report. Do not request cloud image access as a prerequisite or treat a local desktop agent as offline image analysis.
+
+## Authoring contract
+
+Before writing report content, read [report-authoring.md](references/report-authoring.md). Establish the author’s voice and structure from their current instructions, confirmed examples and supplied library; assemble useful existing wording with minimal adaptation. Keep report text and its clean preview free of assistant narration and working annotations. Put source mappings, review questions and system feedback in separate files. Check every changed client-facing passage before delivery; a valid JSON file alone is not success.
 
 ## Choose the starting point from the files already available
 
@@ -20,7 +24,7 @@ The shared skill, helpers and workflow are maintained in the AutoBericht reposit
 
 Read [examples.md](references/examples.md) for cross-topic interviews, paragraph selection, uncertainty and library updates. It contains synthetic examples, not source material for a real company.
 
-At the start, inspect supplied files and state the next useful step. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
+At the start, inspect supplied files, including any author pack, and state the next useful step. Reuse an available installed skill or attached workflow; the ZIP and portable skill document are alternatives, not two required inputs. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files or ask for a separate library when suitable embedded text is already available. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
 
 ## Use current application context when useful
 
@@ -40,7 +44,7 @@ The maintained application and editable skill are at https://github.com/odcpw/au
 
 ## End-to-end execution
 
-Inventory → full transcript and photo identities → topic/evidence mapping → light finding adaptation → paragraph selection and assembly → existing-level assessment → sidecar copy → validation → consultant review/Done → reusable library update → next project.
+Inventory and authoring contract → full transcript and photo identities → corrections and topic/evidence mapping → light finding adaptation and paragraph assembly → existing-level assessment → sidecar copy → clean preview → evidence, style and application checks with internal repair → one delivery for consultant review/Done → approved library/profile update at closeout.
 
 Work through a long recording in resumable batches. Keep an external coverage register of processed time ranges and unresolved items. Reconcile topics and corrections across all batches before claiming completeness. Try the supplied recording first when transcription is supported; chunk only when limits or reliability require it. Never silently substitute a summary for the full transcript.
 
@@ -51,6 +55,7 @@ For a new author, build their profile from their actual reports and confirmed ed
 The Python helpers use the standard library; audio splitting additionally needs `ffmpeg` and `ffprobe`. The optional app checker uses Node.js. They make no network requests and do not transcribe audio or generate prose.
 
 - `scripts/sidecar_tool.py`: inspect, apply a narrow external edit plan to a copy, or validate preservation against the original. Supports the current nested sidecar; legacy inputs need adaptation first. Read the contract before use.
+- `scripts/report_preview.py`: generate a clean row-based preview directly from the Sidecar, with possible process-language leakage reported separately; does not certify style or evidence.
 - `scripts/library_tool.py`: apply reviewed, generalised recommendation additions to a library copy while preserving findings and other data. Detects exact normalised duplicate blocks; semantic deduplication remains the assistant’s responsibility.
 - `scripts/verify_app.cjs`: optional Node.js check against a supplied AutoBericht checkout for actual library import and sidecar normalisation.
 - `scripts/audio_chunks.py`: split an oversized recording, preserving source offsets and overlap in a manifest. Use only if necessary.
@@ -60,4 +65,4 @@ When repository access is available, inspect the relevant current modules and ru
 
 ## Expected delivery
 
-For onboarding: personal library copy, author profile, short style assessment, coverage/gaps list and reviewed-example candidates. For a visit: full updated sidecar copy, readable draft, short unresolved list, coverage record and validation result. For closeout: next library copy plus a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
+For onboarding: a private author pack containing the personal library and author profile with confirmed examples; keep the short style assessment, coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For closeout: next library/profile version in the author pack plus a concise change list. The user-facing interaction should remain light even when the internal work is thorough.

@@ -41,14 +41,27 @@ Do not assume every paragraph in a given table cell addresses the same category.
 
 ## Learn the writing profile
 
-Use `assets/author-profile-template.md`. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
+Use `assets/author-profile-template.md` and the evidence order in [report-authoring.md](report-authoring.md). Record actionable choices with supporting examples, not only adjectives such as “professional” or “concise”. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
 
 Describe whether differences are functional (summary versus detailed measure), linguistic (translation), chronological or inconsistent editing. Keep typos out of the profile. Distinguish confirmed preferences from working hypotheses. A harmonised experimental copy does not automatically become ground truth for the author’s voice.
 
 Provide a small before/after sample and ask for only the stylistic choices that materially change the profile. Continue building the library while optional preferences are pending. Retain confirmed examples separately from generated proposals. If no style examples are supplied for a new report, follow the library’s wording and use restrained language while stating the profile is provisional.
 
+## Package the author's reusable inputs
+
+The shared repository distributes how AutoBericht works, not each consultant's personal style. Keep a private author pack for use alongside the shared skill:
+
+- `author-profile.md`: identity, locale, version/date, the evidenced writing conventions and approved examples. Examples may be embedded here or kept in a referenced file.
+- The author's current library JSON, using its real application schema and locale.
+
+Use a folder or one ZIP when file tools permit; separate existing files are equally valid. Keep client Sidecars, recordings, complete reports and unapproved generated drafts outside this reusable pack. A pack is personal input data, not another skill that needs installation. Do not commit it to the shared repository. Record which profile/library version was used in the project's working notes.
+
+For first use, inspect the consultant's reports/library and build these resources as part of the work. For subsequent visits, reuse the latest available pack with the visit's Sidecar and recording/transcript. Do not make the consultant rebuild their profile or upload both the shared ZIP and its equivalent portable Markdown. If a profile or library is already available in the conversation or accessible private storage, use it. A Sidecar's embedded library can supply report passages when no separate library was provided; do not overwrite its project edits to synchronise with a newer pack.
+
+At a requested closeout, update the private pack from approved corrections using [library-cycle.md](library-cycle.md). Keep the prior version and carry the new version into the next project. Improve common behaviour in the shared skill separately, without copying personal examples or client facts into it.
+
 ## Onboarding delivery and coverage
 
-Deliver a new `library_user_<author>_<locale>.json`, an `author_profile.md`, a short homogeneity assessment and a coverage summary: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Keep the source version and record the new file’s hash. Validate against the app’s library importer when available. Do not bundle the colleague’s corpus into the reusable skill itself.
+Deliver a private author pack containing the new `library_user_<author>_<locale>.json` and `author-profile.md` with confirmed examples. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Keep the source version and record the new file’s hash. Validate against the app’s library importer when available. Do not bundle the colleague's corpus into the reusable skill itself.
 
 “Complete” means every supplied readable report has been accounted for and its usable recommendations matched or explicitly set aside. It does not mean every generic question has a recommendation or that no future report can add useful material.

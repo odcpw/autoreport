@@ -25,6 +25,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - name: Check portable helper behaviour
+        run: python3 -m unittest discover -s skills/autobericht/scripts -p 'test_*.py'
       - name: Rebuild upload files from editable skill
         run: python3 skills/autobericht/scripts/build_distribution.py
       - name: Reject stale distribution files

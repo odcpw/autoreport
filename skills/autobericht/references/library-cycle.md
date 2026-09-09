@@ -43,4 +43,6 @@ Return the next library and a concise change list. The user can adopt it for the
 
 Use the latest adopted library when creating the new AutoBericht project. Bring its author profile and confirmed examples. A file beside an already-created sidecar does not automatically refresh the master text embedded in that sidecar. Do not overwrite existing project edits to refresh its library.
 
+Keep the updated library, profile and approved examples together in the consultant's private author pack (folder or ZIP), preserving the prior version. The shared skill stays in the repository; personal style updates travel with the pack. Reuse available files on the next visit instead of asking the consultant to reconstruct their style or reinstall the common workflow.
+
 Teach only confirmed style preferences. An accepted case-specific measure is not automatically a preference to include that measure in all reports. A reviewed phrase becomes an example in the appropriate function—finding, recommendation or summary. Do not train the profile on the assistant’s own unreviewed drafts.

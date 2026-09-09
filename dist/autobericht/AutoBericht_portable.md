@@ -14,11 +14,15 @@ description: Guide an SST consultant from anonymised past reports to a personal 
 
 # AutoBericht — from professional judgment to a report
 
-Help the consultant spend their time observing, evaluating and reviewing. Take responsibility for selecting, assembling and writing the appropriate report content in their voice. Guide a new colleague through the process; do not expect them to know the file structure or select paragraphs themselves.
+The product goal is a structured report the consultant can use in their own voice after substantive review, without rewriting unwanted prose. Treat author-style fidelity, evidence fidelity and Sidecar compatibility as separate requirements. Help the consultant spend their time observing, evaluating and reviewing. Take responsibility for selecting, assembling and writing the appropriate report content in their voice. Guide a new colleague through the process; do not expect them to know the file structure or select paragraphs themselves.
 
-This is an author-neutral workflow. The consultant supplies their own library and style profile, or anonymised past reports from which to build them. No previous consultant’s library, client data or personal writing profile is bundled. Respond in the user’s language and write the report in the project locale.
+This is an author-neutral workflow. The consultant supplies their own library and style profile, or anonymised past reports from which to build them. Keep these reusable personal resources in a private **author pack**, separate from the shared skill and each visit's Sidecar/transcript. The pack is a folder or ZIP containing a profile with approved examples and the author's library; use the files already available rather than requiring that packaging. No previous consultant’s library, client data or personal writing profile is bundled in this skill. Respond in the user’s language and write the report in the project locale.
 
 The shared skill, helpers and workflow are maintained in the AutoBericht repository. Each consultant's personal library, profile and reports remain in their chosen private storage. **Site photos stay on the work computer.** The consultant views them locally and dictates filenames/categories and descriptions. Work receives permitted audio/text and sidecar metadata, never photo uploads, thumbnails, contact sheets or screen captures. Generate text and photo associations from that testimony; the local app reconnects the returned sidecar to the image files and produces the illustrated report. Do not request cloud image access as a prerequisite or treat a local desktop agent as offline image analysis.
+
+## Authoring contract
+
+Before writing report content, read [report-authoring.md](references/report-authoring.md). Establish the author’s voice and structure from their current instructions, confirmed examples and supplied library; assemble useful existing wording with minimal adaptation. Keep report text and its clean preview free of assistant narration and working annotations. Put source mappings, review questions and system feedback in separate files. Check every changed client-facing passage before delivery; a valid JSON file alone is not success.
 
 ## Choose the starting point from the files already available
 
@@ -29,7 +33,7 @@ The shared skill, helpers and workflow are maintained in the AutoBericht reposit
 
 Read [examples.md](references/examples.md) for cross-topic interviews, paragraph selection, uncertainty and library updates. It contains synthetic examples, not source material for a real company.
 
-At the start, inspect supplied files and state the next useful step. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
+At the start, inspect supplied files, including any author pack, and state the next useful step. Reuse an available installed skill or attached workflow; the ZIP and portable skill document are alternatives, not two required inputs. Ask only for missing information that affects the work: typically report language, the absent project/library, or a decision that changes a technical recommendation. Do not repeat questions answered by the files or ask for a separate library when suitable embedded text is already available. If only anonymised reports are provided, start reading them instead of demanding a complete project first.
 
 ## Use current application context when useful
 
@@ -49,7 +53,7 @@ The maintained application and editable skill are at https://github.com/odcpw/au
 
 ## End-to-end execution
 
-Inventory → full transcript and photo identities → topic/evidence mapping → light finding adaptation → paragraph selection and assembly → existing-level assessment → sidecar copy → validation → consultant review/Done → reusable library update → next project.
+Inventory and authoring contract → full transcript and photo identities → corrections and topic/evidence mapping → light finding adaptation and paragraph assembly → existing-level assessment → sidecar copy → clean preview → evidence, style and application checks with internal repair → one delivery for consultant review/Done → approved library/profile update at closeout.
 
 Work through a long recording in resumable batches. Keep an external coverage register of processed time ranges and unresolved items. Reconcile topics and corrections across all batches before claiming completeness. Try the supplied recording first when transcription is supported; chunk only when limits or reliability require it. Never silently substitute a summary for the full transcript.
 
@@ -60,6 +64,7 @@ For a new author, build their profile from their actual reports and confirmed ed
 The Python helpers use the standard library; audio splitting additionally needs `ffmpeg` and `ffprobe`. The optional app checker uses Node.js. They make no network requests and do not transcribe audio or generate prose.
 
 - `scripts/sidecar_tool.py`: inspect, apply a narrow external edit plan to a copy, or validate preservation against the original. Supports the current nested sidecar; legacy inputs need adaptation first. Read the contract before use.
+- `scripts/report_preview.py`: generate a clean row-based preview directly from the Sidecar, with possible process-language leakage reported separately; does not certify style or evidence.
 - `scripts/library_tool.py`: apply reviewed, generalised recommendation additions to a library copy while preserving findings and other data. Detects exact normalised duplicate blocks; semantic deduplication remains the assistant’s responsibility.
 - `scripts/verify_app.cjs`: optional Node.js check against a supplied AutoBericht checkout for actual library import and sidecar normalisation.
 - `scripts/audio_chunks.py`: split an oversized recording, preserving source offsets and overlap in a manifest. Use only if necessary.
@@ -69,7 +74,7 @@ When repository access is available, inspect the relevant current modules and ru
 
 ## Expected delivery
 
-For onboarding: personal library copy, author profile, short style assessment, coverage/gaps list and reviewed-example candidates. For a visit: full updated sidecar copy, readable draft, short unresolved list, coverage record and validation result. For closeout: next library copy plus a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
+For onboarding: a private author pack containing the personal library and author profile with confirmed examples; keep the short style assessment, coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For closeout: next library/profile version in the author pack plus a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
 
 
 ---
@@ -93,9 +98,20 @@ interface:
 Populate from the consultant’s own reports and confirmed feedback. This template sets no personal style by default.
 
 - Author and report locale:
+- Profile version/date and associated library filename/version:
 - Original writing languages; translations and their original-language source:
 - Reports/sections actually examined:
 - Confirmed preferences versus provisional observations:
+
+## Output and voice contract
+
+- Report perspective and recommendation form, with an actual example:
+- Required field/paragraph structure and where it applies:
+- Desired detail: explanations, concrete examples and practical steps to retain:
+- Technical reference convention:
+- Evidence for each preference (approved example, explicit instruction, or provisional inference):
+
+Use this as a working aid, not a questionnaire the author must complete before a first report. Keep client facts out of reusable examples.
 
 ## Findings
 
@@ -121,6 +137,8 @@ Document the author’s confirmed dislikes. Correct grammatical mistakes without
 
 Before/after examples the author has actually reviewed, with the precise lesson and scope. Keep generated proposals distinct.
 
+For each example, retain the original observation, the author-approved finding/recommendation, and the specific correction. Mark generated alternatives as unapproved. Do not promote them because the author continued to another task. Do not invent a style-match percentage.
+
 
 ---
 
@@ -128,13 +146,15 @@ Before/after examples the author has actually reviewed, with the precise lesson 
 
 # From rambling to a review-ready report
 
+Apply [report-authoring.md](report-authoring.md) before composing. It governs author-style evidence, minimal adaptation, clean output boundaries and the final semantic/style pass.
+
 ## Capture the judgment before editing the prose
 
 Use the imported self-assessment as the starting point: yes/no, comments, evidence and question groupings. Keep those customer statements intact. The consultant’s visit assessment belongs in the workstate and may contradict the customer’s answer.
 
 Transcribe before drafting in the report language. For Swiss German, a faithful Standard German transcript is acceptable; preserve dialect meaning and uncertainty rather than demanding dialect spelling. Maintain timestamps and stable photo identifiers where available. The author may revisit topics, correct themselves, read a checklist aloud, describe an interview, offer an idea or dictate a decision. Preserve those distinctions. Do not convert a quoted question, a hypothetical “if they do not…” or a future plan into an observed failure.
 
-Correct transcription uncertainties that can be resolved from context, but do not guess critical negations, equipment names, numbers, responsible persons or dates. Mark what remains uncertain. Handle the clear parts without waiting for all uncertainties to be resolved.
+Correct transcription uncertainties that can be resolved from context, but do not guess critical negations, equipment names, numbers, responsible persons or dates. Mark recognition uncertainties in the transcript/working review file; retain substantive interview uncertainty in natural report wording. Handle the clear parts without waiting for all uncertainties to be resolved.
 
 ## Build a topic map that can span chapters
 
@@ -150,7 +170,7 @@ Separate a confirmed theme from potential links. If the consultant reports a bro
 
 Use the closest applicable generic negative finding and change only what the case requires: attribution, scope, partial implementation, frequency and qualification. Examples of attribution include “Selon l’autoévaluation…”, “Selon nos discussions…”, “Selon les entretiens avec les collaborateurs…” and “Lors de la visite…”. Use the author’s language conventions.
 
-Remove unsupported clauses from compound findings. Occasional audits are not no audits. Lack of visible evidence in one photo is not proof an item does not exist elsewhere. Positive observations are legitimate; do not force a negative finding into a fully satisfied question. If no generic wording fits, propose a short case-specific finding and flag it as a wording/mapping exception, without altering the generic library finding.
+Check every factual claim in the selected library wording against the current testimony. Remove unsupported clauses, including the generic sentence's main diagnosis when necessary: overdue measures establish delay, but do not alone establish missing follow-up. Occasional audits are not no audits. Lack of visible evidence in one photo is not proof an item does not exist elsewhere. Positive observations are legitimate; do not force a negative finding into a fully satisfied question. If no generic wording fits, write a short case-specific finding and record any wording/mapping exception in the separate working review file, without altering the generic library finding.
 
 ## Recommendation selection is the assistant’s job
 
@@ -160,9 +180,9 @@ Select useful immediate correction, longer-term organisation, employee involveme
 
 Combine complementary passages into one coherent recommendation. Prefer existing good wording, retain practical explanations and questions, harmonise terminology and grammar, and remove overlap. A `---` separator is a variant boundary in the library, not a requirement to copy the whole block into the report. Preserve conditions and alternatives when extracting a sentence.
 
-The assistant may propose a suitable library measure even when the consultant only described the problem. Present it as a recommendation for their review; do not claim it was agreed with the company. Questions are for facts that change technical applicability or decisions, not for sentence order or equivalent phrasings.
+The assistant may propose a suitable library measure even when the consultant only described the problem. Write it as a recommendation in the author’s voice, leaving Done false for review; do not claim it was agreed with the company. Questions are for facts that change technical applicability or decisions, not for sentence order or equivalent phrasings.
 
-Do not import company names, site details, old dates, headcounts, frequencies or promises. Do not invent obligations or technical specifications. When a missing detail prevents a sound measure, leave that decision visible and continue drafting the rest. New technical claims or links need primary-source verification; stylistic rephrasing of supplied text does not require fresh web research.
+Do not import company names, site details, old dates, headcounts, frequencies or promises. Do not invent obligations or technical specifications. When a missing detail prevents a sound measure, record that decision in the working questions file and continue drafting the supported remainder. New technical claims or links need primary-source verification; stylistic rephrasing of supplied text does not require fresh web research.
 
 ## Natural-language evaluation
 
@@ -190,13 +210,13 @@ Retain only links relevant to the selected sentences. Deduplicate at the end of 
 
 Keep coverage by recording range and by topic, including excluded and unresolved items. A later “correction” applies to earlier material even when it arrives in another audio chunk. Deduplicate overlap by timestamps and meaning; repeated emphasis is not necessarily a new issue. Reading existing report/library text aloud must be distinguished from adopting it for the current company.
 
-Before delivery, sweep the entire transcript for topics never mapped, corrections not applied, conditions dropped and contradictions between yes/no, commentary, level and finding. Prepare a management summary after the topic sweep, based on the current case. Do not treat a large transcript as permission to output only its most salient themes.
+Before delivery, sweep the entire transcript for topics never mapped, corrections not applied, conditions dropped and contradictions between yes/no, commentary, level and finding. When the requested scope includes a management summary, prepare it after the topic sweep from the current case. Do not replace an existing summary or write a full-company diagnosis merely because this is a first photo batch. Do not treat a large transcript as permission to output only its most salient themes.
 
 ## Review and outputs
 
-Provide a complete sidecar copy, readable draft grouped by chapter, a short list of decisions still needed and validation/coverage results. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
+Provide a complete Sidecar copy and a clean draft grouped by chapter, using the same field text. Keep decisions still needed and validation/coverage results in separate working material, and software feedback in a separate system-improvement file. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
 
-The target is that the consultant reviews the substance and mainly checks Done. A complete draft can contain explicit unresolved items; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.
+The target is that the consultant reviews the substance and mainly checks Done. The delivery can include unresolved items in its separate working file; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.
 
 
 ---
@@ -326,6 +346,8 @@ Return the next library and a concise change list. The user can adopt it for the
 
 Use the latest adopted library when creating the new AutoBericht project. Bring its author profile and confirmed examples. A file beside an already-created sidecar does not automatically refresh the master text embedded in that sidecar. Do not overwrite existing project edits to refresh its library.
 
+Keep the updated library, profile and approved examples together in the consultant's private author pack (folder or ZIP), preserving the prior version. The shared skill stays in the repository; personal style updates travel with the pack. Reuse available files on the next visit instead of asking the consultant to reconstruct their style or reinstall the common workflow.
+
 Teach only confirmed style preferences. An accepted case-specific measure is not automatically a preference to include that measure in all reports. A reviewed phrase becomes an example in the appropriate function—finding, recommendation or summary. Do not train the profile on the assistant’s own unreviewed drafts.
 
 
@@ -376,17 +398,112 @@ Do not assume every paragraph in a given table cell addresses the same category.
 
 ## Learn the writing profile
 
-Use `assets/author-profile-template.md`. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
+Use `assets/author-profile-template.md` and the evidence order in [report-authoring.md](report-authoring.md). Record actionable choices with supporting examples, not only adjectives such as “professional” or “concise”. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
 
 Describe whether differences are functional (summary versus detailed measure), linguistic (translation), chronological or inconsistent editing. Keep typos out of the profile. Distinguish confirmed preferences from working hypotheses. A harmonised experimental copy does not automatically become ground truth for the author’s voice.
 
 Provide a small before/after sample and ask for only the stylistic choices that materially change the profile. Continue building the library while optional preferences are pending. Retain confirmed examples separately from generated proposals. If no style examples are supplied for a new report, follow the library’s wording and use restrained language while stating the profile is provisional.
 
+## Package the author's reusable inputs
+
+The shared repository distributes how AutoBericht works, not each consultant's personal style. Keep a private author pack for use alongside the shared skill:
+
+- `author-profile.md`: identity, locale, version/date, the evidenced writing conventions and approved examples. Examples may be embedded here or kept in a referenced file.
+- The author's current library JSON, using its real application schema and locale.
+
+Use a folder or one ZIP when file tools permit; separate existing files are equally valid. Keep client Sidecars, recordings, complete reports and unapproved generated drafts outside this reusable pack. A pack is personal input data, not another skill that needs installation. Do not commit it to the shared repository. Record which profile/library version was used in the project's working notes.
+
+For first use, inspect the consultant's reports/library and build these resources as part of the work. For subsequent visits, reuse the latest available pack with the visit's Sidecar and recording/transcript. Do not make the consultant rebuild their profile or upload both the shared ZIP and its equivalent portable Markdown. If a profile or library is already available in the conversation or accessible private storage, use it. A Sidecar's embedded library can supply report passages when no separate library was provided; do not overwrite its project edits to synchronise with a newer pack.
+
+At a requested closeout, update the private pack from approved corrections using [library-cycle.md](library-cycle.md). Keep the prior version and carry the new version into the next project. Improve common behaviour in the shared skill separately, without copying personal examples or client facts into it.
+
 ## Onboarding delivery and coverage
 
-Deliver a new `library_user_<author>_<locale>.json`, an `author_profile.md`, a short homogeneity assessment and a coverage summary: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Keep the source version and record the new file’s hash. Validate against the app’s library importer when available. Do not bundle the colleague’s corpus into the reusable skill itself.
+Deliver a private author pack containing the new `library_user_<author>_<locale>.json` and `author-profile.md` with confirmed examples. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Keep the source version and record the new file’s hash. Validate against the app’s library importer when available. Do not bundle the colleague's corpus into the reusable skill itself.
 
 “Complete” means every supplied readable report has been accounted for and its usable recommendations matched or explicitly set aside. It does not mean every generic question has a recommendation or that no future report can add useful material.
+
+
+---
+
+## Embedded resource: references/report-authoring.md
+
+# Write the author's report, ready for substantive review
+
+Read this before drafting any report text, including a first trial. AutoBericht saves time when the consultant reviews the judgment and can use the wording. A technically valid Sidecar that requires a prose rewrite has not met that goal. A rough recording is input to professional writing, not permission to deliver rough report text.
+
+## Establish the authoring contract from available evidence
+
+Use the current user's instructions and corrections first. Then use their confirmed profile and approved examples, their own finished reports in the target language, and the supplied library. Treat unreviewed workstate, generated rewrites and translated bootstrap text as weaker evidence. An assistant's suggestion is not an approved example merely because the conversation continued. Do not assign a percentage of style fidelity or claim a perfect match without a defined evaluation.
+
+Before composing, establish these choices in a short **internal** working note:
+
+- Report locale and the author's voice: impersonal, first-person plural, direct instructions or another evidenced form.
+- Findings: usual attribution, sentence structure, degree of detail and treatment of partial implementation.
+- Recommendations: opening verbs, modality, actors, paragraph structure, explanations and practical examples worth retaining.
+- Output structure: actual chapter/row identities, finding versus recommendation fields, summary/positive conventions, reference placement and requested scope.
+- Explicit dislikes or corrections, with the source that supports each preference.
+
+Do not ask the consultant to fill in that note or choose a paragraph menu. Use the embedded library if a standalone profile is missing; begin with a provisional profile drawn from the supplied authored material. Read several relevant examples rather than treating the first seed paragraph as the author's style. Ask for one missing example only if competing conventions would materially change the result and the available material cannot resolve them. Do not turn optional calibration into a prerequisite for processing the recording.
+
+Preserve each author's choices. French infinitives, “Nous recommandons”, a four-paragraph structure or a particular attribution are not universal defaults. Preserve requested structures when provided; do not force every short finding or recommendation into an invented template.
+
+## Compose from evidence and existing writing
+
+For each report item, settle the supported situation and the intended action before writing. Choose the real destination question/category. Keep the evidence mapping and source locations outside the report.
+
+1. **Keep useful authored wording.** Start with the relevant finding and recommendation passages. Check each claim against the current evidence before keeping it: a library diagnosis is a wording candidate, not evidence that this company has that problem. Adjust scope, attribution, partial implementation, grammatical joins and case-specific details. Remove unsupported claims even if they are central to the generic sentence. Do not paraphrase good text merely to make it look newly generated.
+2. **Assemble the recommendation.** Select the relevant sentences across variants and, where appropriate, neighbouring categories. Keep conditions, useful reasoning, examples, implementation detail and the author's preferred sequence. Remove duplication and irrelevant remedies; do not compress everything into generic “clarify, communicate, monitor” advice.
+3. **Fill only a real gap.** If the library has no suitable wording, write the missing passage using the same actors, verbs, register and level of detail. An empty library entry does not excuse omitting a clear, supportable recommendation. It also does not authorize inventing a technical requirement.
+4. **Keep professional meaning.** Preserve who said what, the extent of the issue and what remains uncertain. Correct speech disfluencies and grammar without copying verbal filler or turning an impression into a proven failure. Keep observations and measures in their respective fields.
+5. **Read the result as the author.** Would this person put the paragraph in a client report without deleting framing, translating abstract wording into concrete language, or restoring useful detail? Revise it now if not. Do not ask the user to diagnose avoidable prose defects.
+
+Use the consultant's reporting perspective when authorized by the supplied observations. “Selon nos discussions…” attributes interview evidence without pretending the model attended the visit. Do not wrap that evidence in “le consultant décrit”, “selon la dictée”, “les échanges dictés montrent” or “the transcript indicates”. Similarly, write the recommendation itself in the author's voice, not “the consultant recommends that…”. An explicit request for third-person reporting takes precedence.
+
+Plain wording is a default when examples do not settle a choice: name the object, actor, action and concrete difference. Do not replace “les personnes interrogées donnent des indications différentes” with an abstract account of “la traduction des résultats en modalités opérationnelles”. Do not add an explanatory final sentence simply to give every paragraph the same shape.
+
+### Example: adapt the supplied voice, not a universal voice
+
+Synthetic input: an inspection register exists, but several overdue actions remain open. The author provides these relevant library sentences:
+
+- Finding: “Les mesures définies ne sont pas systématiquement suivies jusqu'à leur réalisation.”
+- Recommendation: “Définir avec les responsables les délais de réalisation. Examiner les mesures ouvertes lors des séances de secteur.”
+
+The supported finding is: “Un registre des contrôles est disponible. Plusieurs mesures restent ouvertes après les délais convenus.” Overdue actions establish delay; by themselves they do not establish a lack of follow-up. Use the generic finding about follow-up only if the current testimony supports that additional claim. Keep or lightly adapt the supplied recommendation where it fits. Do not invent absence of the register, rewrite the delay as “le consultant relève un déficit de traçabilité”, or add a new reporting system.
+
+If another author's approved recommendation instead says “Nous recommandons de convenir des échéances avec les responsables et de reprendre les actions ouvertes lors des réunions de secteur”, retain that voice. A helper must not mechanically turn every recommendation into infinitives.
+
+## Keep output boundaries explicit
+
+| Destination | Belongs here | Does not belong here |
+|---|---|---|
+| Report fields and clean preview | Finished findings, recommendations, scoped synthesis/positives and relevant technical references | Transcript timestamps, confidence labels, source IDs appended as prose, assistant narration, reviewer instructions, explanation of drafting choices |
+| Working review file | Time-to-row/photo mapping, uncertain transcription, unresolved decisions, wording provenance and checks actually run | A competing version of the client report |
+| System-improvement file | Comments about AutoBericht, tag naming, UI behaviour, import/export, workflow or the skill | Findings about the client's SST practices |
+| Transcript | Faithful recognized speech, language changes and marked recognition uncertainties | Silent replacement with a summary or the polished report |
+
+These boundaries cover `findingText`, `recommendationText`, chapter positives/front matter, summaries, captions and any photo notes that the application may display or export. Photo notes should describe the item when needed; do not use them as a hidden evidence database. Preserve existing unrelated notes and source/customer fields.
+
+A clean preview contains the **same report text** as the Sidecar, with headings appropriate to the actual structure. Do not improve only the Markdown while leaving the rejected wording in JSON. Do not append “Repère de revue”, “Source de la dictée”, “à vérifier sur la photo …” or a mini-audit below each paragraph. The working review file may group these details by row instead.
+
+Substantive uncertainty belongs in natural report language when it is itself a supported finding: for example, “Selon nos échanges, l'attribution du contrôle n'est pas clairement définie.” An unresolved transcription or the assistant's inability to inspect a photo is a processing limitation, not a client failing. If only a question was dictated, put it in the working questions list and leave the corresponding finding/score unchanged. If part of a finding is clear, draft that part and keep the unresolved extension outside it. Do not hide a known limitation by making the report sound certain.
+
+## One delivery after internal preparation and repair
+
+“One shot” means the user should not have to supervise the internal passes. Complete the available work before returning it:
+
+- Reconcile the full transcript, later corrections, withdrawn statements, positive evidence and system comments.
+- Map and assemble the requested scope in the author's voice. A first batch is not an instruction to manufacture a full-company diagnosis or replace an existing management summary; update a summary only when requested or within the agreed report scope.
+- Apply changes to a full Sidecar copy. Validate preservation and actual application behaviour when relevant code is available.
+- Generate the clean preview from the finished fields. `scripts/report_preview.py` can do this for row-based drafts and report possible process-language leakage separately. It does not write prose, render photos, validate facts or certify style.
+- Read **all changed client-facing text**, not only a sample, against the authoring contract and matching authored passages. Check field roles, scope, modality, concrete actors/actions, unnecessary abstraction, duplication, and whether useful detail was lost.
+- Resolve delivery problems found by these checks, regenerate affected outputs, then verify those changes. A clean keyword scan is not a substitute for this semantic/style review.
+
+Stop when the requested material is accounted for, technical/structural checks appropriate to this edit pass, and no identified prose or output-boundary defect remains unresolved. Do not keep rewriting already suitable paragraphs to pursue an invented style score. Do not claim this finite review guarantees error-free transcription or perfect imitation.
+
+Deliver a full draft Sidecar and clean preview, with the transcript and compact working review material separately. Create a separate system-improvement Markdown when such comments occur. Keep detailed coverage/validation records available without making the final response another report. If uncertainty cannot be resolved, name the affected decision in the working file and deliver the supported remainder. `done=false` means substantive review is still needed; it is not permission to leave avoidable prose cleanup to the author.
+
+After user review, add only genuinely approved corrections to their private profile/examples. Record the reusable lesson and its scope; do not copy client facts into the shared skill or infer approval from silence. Use those corrections on the next run so the same editorial work is not requested again.
 
 
 ---
@@ -500,6 +617,20 @@ python3 scripts/sidecar_tool.py validate project_sidecar.json project_sidecar_dr
 ```
 
 The helper rejects stale hashes, unknown rows, changes outside the allowed fields, unknown new tag values, invalid levels and accidental changes to customer/master data. It supports the nested current format. It does not add chapters, add observation categories, migrate flat legacy sidecars or calculate the spider chart. For those tasks, use the current app code or an app-exported migrated file, preserving the source.
+
+## Clean preview and authoring review
+
+After applying and validating the edit plan, generate the preview from the same fields:
+
+```sh
+python3 scripts/report_preview.py project_sidecar_draft.json report_draft.md > preview_checks.json
+```
+
+This copy-only helper includes rows with `includeFinding=true` even when Done is false, respects the recommendation flag and observation/summary order, and preserves their field text. It does not fall back to generic library text if a case field is missing. Identifiers shown in headings are persistent row IDs, not a claim about the final export's display numbering.
+
+Inspect its separate diagnostics before delivery. `reviewCandidates` locates possible process annotations or outside narration; resolve these against the authoring contract, without blindly removing legitimate quotations or an explicitly requested third-person voice. A successful exit means the preview was generated, not that prose or evidence passed review. `chapterTextNotRendered` lists existing chapter positives/front matter: include them through a suitable current-app/template route when in scope; never claim this row preview covers them, photos or Word layout. Review other changed client-facing fields too.
+
+Keep diagnostics and unresolved decisions outside `report_draft.md` and report fields. Apply wording corrections to the Sidecar, then regenerate the preview. See [report-authoring.md](report-authoring.md) for the required semantic/style review; keyword matching cannot perform it.
 
 ## Library additions
 
@@ -876,6 +1007,142 @@ if __name__=='__main__':
 
 ---
 
+## Embedded resource: scripts/report_preview.py
+
+````python
+#!/usr/bin/env python3
+"""Render included draft rows verbatim; emit review diagnostics outside the preview.
+
+No prose generation, style score, photo rendering, or app-export equivalence claim.
+"""
+import argparse
+import json
+import re
+import sys
+from pathlib import Path
+import sidecar_tool as sc
+
+LABELS = {
+    'fr': ('Rapport', 'Constat', 'Recommandation'),
+    'de': ('Bericht', 'Feststellung', 'Empfehlung'),
+    'it': ('Rapporto', 'Constatazione', 'Raccomandazione'),
+    'en': ('Report', 'Finding', 'Recommendation'),
+}
+# Review candidates, not a universal list of forbidden words. Never rewrite text
+# automatically: explicit third-person reporting or a literal quotation can be valid.
+PATTERNS = {
+    'working_annotation': r'rep[eè]re\s+de\s+revue|source\s+de\s+la\s+dict[eé]e|review\s+(?:note|marker)|Pr[uü]fvermerk|nota\s+di\s+revisione',
+    'processing_narration': r'selon\s+la\s+dict[eé]e|[eé]changes\s+dict[eé]s|according\s+to\s+the\s+transcript|laut\s+(?:dem\s+)?Transkript|secondo\s+la\s+trascrizione',
+    'outside_narrator': r'le\s+consultant\s+(?:recommande|d[eé]crit|rel[eè]ve)|the\s+consultant\s+(?:recommends|describes)|der\s+Berater\s+empfiehlt|il\s+consulente\s+raccomanda',
+}
+
+
+def review_candidates(text, chapter_id, row_id, field):
+    return [dict(chapterId=chapter_id, rowId=row_id, field=field,
+                 kind=kind, excerpt=match.group(0))
+            for kind, pattern in PATTERNS.items()
+            for match in re.finditer(pattern, text, re.IGNORECASE)]
+
+
+def heading(value, locale):
+    if isinstance(value, dict):
+        value = value.get(locale) or value.get(locale.split('-')[0]) or next(iter(value.values()), '')
+    return ' '.join(str(value or '').split())
+
+
+def ordered_rows(chapter):
+    rows = chapter['rows']
+    if str(chapter['id']) not in ('0', '4.8'):
+        return rows
+    by_id = {str(r.get('id')): r for r in rows if r.get('kind') != 'section'}
+    result = []
+    seen = set()
+    for rid in chapter.get('meta', {}).get('order', []):
+        rid = str(rid)
+        if rid in by_id and rid not in seen:
+            result.append(by_id[rid])
+            seen.add(rid)
+    result.extend(r for r in rows if str(r.get('id')) not in seen)
+    return result
+
+
+def render(doc):
+    project = sc.project(doc)
+    sc.row_map(doc)  # Reject ambiguous identities before writing a preview.
+    locale = str(project.get('meta', {}).get('locale', ''))
+    language = locale.split('-')[0].lower()
+    if language not in LABELS:
+        raise ValueError('Unsupported/missing report locale; render with the author\'s headings explicitly')
+    title, finding_label, recommendation_label = LABELS[language]
+    parts = ['# ' + title, '']
+    report = {'rowsRendered': [], 'reviewCandidates': [], 'chapterTextNotRendered': [],
+              'validationLevel': 'Row preview and review candidates only; semantic/style review required',
+              'photosRendered': False, 'appExportTested': False}
+    for chapter in project['chapters']:
+        cid = str(chapter['id'])
+        content = []
+        for field in ('positivesText', 'frontMatterText'):
+            text = chapter.get('meta', {}).get(field, '')
+            if text:
+                report['chapterTextNotRendered'].append({'chapterId': cid, 'field': field})
+                report['reviewCandidates'].extend(review_candidates(str(text), cid, None, field))
+        for row in ordered_rows(chapter):
+            if row.get('kind') == 'section':
+                continue
+            sc.check_ws(row)
+            ws = row.get('workstate', {})
+            if ws.get('includeFinding') is not True:
+                continue
+            rid = str(row['id'])
+            # Do not silently replace absent case text with a generic library finding.
+            if not isinstance(ws.get('findingText'), str):
+                raise ValueError(f'Missing case findingText: {cid}/{rid}')
+            finding = ws['findingText']
+            recommendation = ''
+            if ws.get('includeRecommendation', True):
+                if not isinstance(ws.get('recommendationText'), str):
+                    raise ValueError(f'Missing case recommendationText: {cid}/{rid}')
+                recommendation = ws['recommendationText']
+            if not finding.strip() and not recommendation.strip():
+                raise ValueError(f'Included row has no report text: {cid}/{rid}')
+            label = heading(row.get('titleOverride') or row.get('sectionLabel') or row.get('tag'), locale)
+            content.extend(['### ' + rid + (' — ' + label if label else ''), ''])
+            for field, label, text in [('findingText', finding_label, finding),
+                                       ('recommendationText', recommendation_label, recommendation)]:
+                if text.strip():
+                    content.extend(['**' + label + '**', '', text, ''])
+                    report['reviewCandidates'].extend(review_candidates(text, cid, rid, field))
+            report['rowsRendered'].append({'chapterId': cid, 'rowId': rid})
+        if content:
+            label = heading(chapter.get('title'), locale)
+            parts.extend(['## ' + cid + (' — ' + label if label else ''), ''] + content)
+    return '\n'.join(parts), report
+
+
+def main():
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument('sidecar')
+    parser.add_argument('preview')
+    args = parser.parse_args()
+    doc, _ = sc.read(args.sidecar)
+    text, report = render(doc)
+    # Copy-only: never overwrite the Sidecar, an earlier preview or another file.
+    with Path(args.preview).open('x', encoding='utf-8', newline='\n') as output:
+        output.write(text)
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except (ValueError, OSError, TypeError, KeyError) as error:
+        print('ERROR: ' + str(error), file=sys.stderr)
+        sys.exit(1)
+````
+
+
+---
+
 ## Embedded resource: scripts/sidecar_tool.py
 
 ````python
@@ -1112,6 +1379,111 @@ class Helpers(unittest.TestCase):
    self.assertEqual(m['chunks'][0]['sourceStartSeconds'],0);self.assertEqual(m['chunks'][-1]['sourceEndSeconds'],4)
    for a,b in zip(m['chunks'],m['chunks'][1:]):self.assertAlmostEqual(a['sourceEndSeconds']-b['sourceStartSeconds'],0.2)
 if __name__=='__main__':unittest.main(verbosity=2)
+````
+
+
+---
+
+## Embedded resource: scripts/test_report_preview.py
+
+````python
+"""Check draft-field fidelity, output separation, selection and copy-only behaviour."""
+import copy
+import json
+from pathlib import Path
+import subprocess
+import sys
+import tempfile
+import unittest
+import report_preview as preview
+from test_helpers import fixture
+
+
+class ReportPreview(unittest.TestCase):
+    def test_unreviewed_included_text_is_preserved_without_private_context(self):
+        source = fixture()
+        row = source['report']['project']['chapters'][0]['rows'][0]
+        row['workstate'].update(done=False, findingText='Selon nos discussions, les délais ne sont pas suivis.',
+                               recommendationText='Nous recommandons de reprendre les actions ouvertes.\n\nPréserver ce détail utile.',
+                               includeRecommendation=True)
+        row['master']['finding'] = 'Le consultant recommande une formule à ne pas importer.'
+        row['customer']['remark'] = 'Repère de revue : conserver dans les données sources.'
+        source['photos']['photos']['photos/a.jpg']['notes'] = 'Unrelated photo note'
+        snapshot = copy.deepcopy(source)
+        text, report = preview.render(source)
+        self.assertIn(row['workstate']['findingText'], text)
+        self.assertIn(row['workstate']['recommendationText'], text)
+        self.assertNotIn(row['master']['finding'], text)
+        self.assertNotIn(row['customer']['remark'], text)
+        self.assertNotIn('Unrelated photo note', text)
+        self.assertEqual(report['reviewCandidates'], [])
+        self.assertEqual(source, snapshot)
+        self.assertFalse(row['workstate']['done'])
+
+    def test_leakage_is_reported_separately_without_silent_rewriting(self):
+        source = fixture()
+        ws = source['report']['project']['chapters'][0]['rows'][0]['workstate']
+        ws['findingText'] = 'Les échanges dictés montrent un écart.\n\nRepère de revue : 02:00.'
+        ws['recommendationText'] = 'Le consultant recommande un contrôle.'
+        text, report = preview.render(source)
+        self.assertIn(ws['findingText'], text)
+        self.assertIn(ws['recommendationText'], text)
+        self.assertEqual({x['kind'] for x in report['reviewCandidates']},
+                         {'processing_narration', 'working_annotation', 'outside_narrator'})
+        self.assertNotIn('reviewCandidates', text)
+        self.assertNotIn('validationLevel', text)
+
+    def test_disabled_recommendation_and_excluded_rows_do_not_leak(self):
+        source = fixture()
+        ws = source['report']['project']['chapters'][0]['rows'][0]['workstate']
+        ws.update(includeRecommendation=False, recommendationText='Repère de revue : hidden')
+        hidden = source['report']['project']['chapters'][1]['rows'][0]
+        hidden['workstate'].update(findingText='Do not include this observation', includeFinding=False)
+        text, report = preview.render(source)
+        self.assertNotIn('hidden', text)
+        self.assertNotIn('Do not include this observation', text)
+        self.assertEqual(len(report['rowsRendered']), 1)
+        self.assertEqual(report['reviewCandidates'], [])
+
+    def test_observation_order_and_unrendered_chapter_content_are_explicit(self):
+        source = fixture()
+        chapter = source['report']['project']['chapters'][1]
+        first = chapter['rows'][0]
+        first['workstate'].update(includeFinding=True, findingText='Premier constat.', includeRecommendation=False)
+        second = copy.deepcopy(first)
+        second['id'] = '4.8.2'
+        second['workstate']['findingText'] = 'Second constat.'
+        chapter['rows'].append(second)
+        chapter['meta'] = {'order': ['4.8.2', '4.8.1'], 'positivesText': 'Texte de chapitre existant.'}
+        text, report = preview.render(source)
+        self.assertLess(text.index('Second constat.'), text.index('Premier constat.'))
+        self.assertEqual(report['chapterTextNotRendered'], [{'chapterId': '4.8', 'field': 'positivesText'}])
+
+    def test_missing_case_text_fails_instead_of_falling_back_to_seed(self):
+        source = fixture()
+        del source['report']['project']['chapters'][0]['rows'][0]['workstate']['findingText']
+        with self.assertRaisesRegex(ValueError, 'Missing case findingText'):
+            preview.render(source)
+
+    def test_cli_writes_preview_and_separate_diagnostics_without_overwrite(self):
+        with tempfile.TemporaryDirectory() as temp:
+            source = Path(temp) / 'sidecar.json'
+            target = Path(temp) / 'report.md'
+            source.write_text(json.dumps(fixture()))
+            before = source.read_bytes()
+            cmd = [sys.executable, str(Path(preview.__file__)), str(source), str(target)]
+            result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+            self.assertEqual(len(json.loads(result.stdout)['rowsRendered']), 1)
+            self.assertNotIn('validationLevel', target.read_text())
+            self.assertEqual(source.read_bytes(), before)
+            existing = target.read_bytes()
+            repeat = subprocess.run(cmd, capture_output=True, text=True)
+            self.assertNotEqual(repeat.returncode, 0)
+            self.assertEqual(target.read_bytes(), existing)
+
+
+if __name__ == '__main__':
+    unittest.main(verbosity=2)
 ````
 
 

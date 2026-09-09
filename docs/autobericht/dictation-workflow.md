@@ -2,6 +2,18 @@
 
 This package guides you through building your own recommendation library and writing profile, preparing reports from spoken evaluations and local photo references, and enriching your library from reviewed reports. It contains the workflow and file helpers; bring your own reports, library and profile.
 
+## What is shared, personal and specific to a visit?
+
+| Resource | Contents | How it is reused |
+|---|---|---|
+| Shared skill in this repository | Workflow, blank profile template, synthetic examples and file helpers | Everyone uses the same maintained skill; ZIP and portable Markdown are alternative formats |
+| Private author pack | Your style profile with approved examples and your reusable library | Create it from your own work, then carry its latest version into each new visit |
+| Visit files | Current project Sidecar and recording or transcript | Supply them for the report being prepared; photos remain on your computer |
+
+Your personal style does not belong in this shared repository. Keep the author pack in your own private folder, optionally as one ZIP. It is input for the skill, not a separate skill to install. The assistant can use the profile/library as separate files too.
+
+For a first use, provide your own anonymised reports or existing library and ask the assistant to build your author pack. For later reports, use the shared skill with your author pack, Sidecar and recording/transcript. Reuse an installed/available skill; otherwise attach its ZIP or portable Markdown. No need to attach both. If the current Sidecar already contains the library text, the assistant can use it without requesting a duplicate library upload. Approved corrections improve your private pack for the next visit.
+
 ## Start in ChatGPT Work or another capable assistant
 
 After syncing the repository, attach [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
@@ -26,7 +38,9 @@ You can make one long MP3. Say photo filenames when useful and distinguish inter
 
 An interview theme may inform several questions. The assistant gives each destination its own supported angle and avoids repeating the full paragraph or changing every related score.
 
-You receive a complete draft sidecar, a readable preview, coverage/validation results and only the unresolved decisions. Review the substance and mark the completed items Done. The intended result is a nearly final draft; real audio transcription and professional judgment still need this review.
+The assistant establishes your writing conventions from your instructions, confirmed examples and library before drafting. It keeps useful existing wording and practical detail, then checks every changed report passage against those conventions. You do not need to prescribe every sentence or repair unwanted assistant narration.
+
+You receive a complete draft sidecar and a clean preview containing the same report wording. Transcript coverage, source mappings and unresolved decisions stay in separate working material; comments about improving AutoBericht go into their own Markdown. Review the substance and mark the completed items Done. The intended result is usable report prose at the first delivery; real audio transcription and professional judgment still need this review.
 
 ## After review
 

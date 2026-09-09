@@ -1,12 +1,14 @@
 # From rambling to a review-ready report
 
+Apply [report-authoring.md](report-authoring.md) before composing. It governs author-style evidence, minimal adaptation, clean output boundaries and the final semantic/style pass.
+
 ## Capture the judgment before editing the prose
 
 Use the imported self-assessment as the starting point: yes/no, comments, evidence and question groupings. Keep those customer statements intact. The consultant’s visit assessment belongs in the workstate and may contradict the customer’s answer.
 
 Transcribe before drafting in the report language. For Swiss German, a faithful Standard German transcript is acceptable; preserve dialect meaning and uncertainty rather than demanding dialect spelling. Maintain timestamps and stable photo identifiers where available. The author may revisit topics, correct themselves, read a checklist aloud, describe an interview, offer an idea or dictate a decision. Preserve those distinctions. Do not convert a quoted question, a hypothetical “if they do not…” or a future plan into an observed failure.
 
-Correct transcription uncertainties that can be resolved from context, but do not guess critical negations, equipment names, numbers, responsible persons or dates. Mark what remains uncertain. Handle the clear parts without waiting for all uncertainties to be resolved.
+Correct transcription uncertainties that can be resolved from context, but do not guess critical negations, equipment names, numbers, responsible persons or dates. Mark recognition uncertainties in the transcript/working review file; retain substantive interview uncertainty in natural report wording. Handle the clear parts without waiting for all uncertainties to be resolved.
 
 ## Build a topic map that can span chapters
 
@@ -22,7 +24,7 @@ Separate a confirmed theme from potential links. If the consultant reports a bro
 
 Use the closest applicable generic negative finding and change only what the case requires: attribution, scope, partial implementation, frequency and qualification. Examples of attribution include “Selon l’autoévaluation…”, “Selon nos discussions…”, “Selon les entretiens avec les collaborateurs…” and “Lors de la visite…”. Use the author’s language conventions.
 
-Remove unsupported clauses from compound findings. Occasional audits are not no audits. Lack of visible evidence in one photo is not proof an item does not exist elsewhere. Positive observations are legitimate; do not force a negative finding into a fully satisfied question. If no generic wording fits, propose a short case-specific finding and flag it as a wording/mapping exception, without altering the generic library finding.
+Check every factual claim in the selected library wording against the current testimony. Remove unsupported clauses, including the generic sentence's main diagnosis when necessary: overdue measures establish delay, but do not alone establish missing follow-up. Occasional audits are not no audits. Lack of visible evidence in one photo is not proof an item does not exist elsewhere. Positive observations are legitimate; do not force a negative finding into a fully satisfied question. If no generic wording fits, write a short case-specific finding and record any wording/mapping exception in the separate working review file, without altering the generic library finding.
 
 ## Recommendation selection is the assistant’s job
 
@@ -32,9 +34,9 @@ Select useful immediate correction, longer-term organisation, employee involveme
 
 Combine complementary passages into one coherent recommendation. Prefer existing good wording, retain practical explanations and questions, harmonise terminology and grammar, and remove overlap. A `---` separator is a variant boundary in the library, not a requirement to copy the whole block into the report. Preserve conditions and alternatives when extracting a sentence.
 
-The assistant may propose a suitable library measure even when the consultant only described the problem. Present it as a recommendation for their review; do not claim it was agreed with the company. Questions are for facts that change technical applicability or decisions, not for sentence order or equivalent phrasings.
+The assistant may propose a suitable library measure even when the consultant only described the problem. Write it as a recommendation in the author’s voice, leaving Done false for review; do not claim it was agreed with the company. Questions are for facts that change technical applicability or decisions, not for sentence order or equivalent phrasings.
 
-Do not import company names, site details, old dates, headcounts, frequencies or promises. Do not invent obligations or technical specifications. When a missing detail prevents a sound measure, leave that decision visible and continue drafting the rest. New technical claims or links need primary-source verification; stylistic rephrasing of supplied text does not require fresh web research.
+Do not import company names, site details, old dates, headcounts, frequencies or promises. Do not invent obligations or technical specifications. When a missing detail prevents a sound measure, record that decision in the working questions file and continue drafting the supported remainder. New technical claims or links need primary-source verification; stylistic rephrasing of supplied text does not require fresh web research.
 
 ## Natural-language evaluation
 
@@ -62,10 +64,10 @@ Retain only links relevant to the selected sentences. Deduplicate at the end of 
 
 Keep coverage by recording range and by topic, including excluded and unresolved items. A later “correction” applies to earlier material even when it arrives in another audio chunk. Deduplicate overlap by timestamps and meaning; repeated emphasis is not necessarily a new issue. Reading existing report/library text aloud must be distinguished from adopting it for the current company.
 
-Before delivery, sweep the entire transcript for topics never mapped, corrections not applied, conditions dropped and contradictions between yes/no, commentary, level and finding. Prepare a management summary after the topic sweep, based on the current case. Do not treat a large transcript as permission to output only its most salient themes.
+Before delivery, sweep the entire transcript for topics never mapped, corrections not applied, conditions dropped and contradictions between yes/no, commentary, level and finding. When the requested scope includes a management summary, prepare it after the topic sweep from the current case. Do not replace an existing summary or write a full-company diagnosis merely because this is a first photo batch. Do not treat a large transcript as permission to output only its most salient themes.
 
 ## Review and outputs
 
-Provide a complete sidecar copy, readable draft grouped by chapter, a short list of decisions still needed and validation/coverage results. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
+Provide a complete Sidecar copy and a clean draft grouped by chapter, using the same field text. Keep decisions still needed and validation/coverage results in separate working material, and software feedback in a separate system-improvement file. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
 
-The target is that the consultant reviews the substance and mainly checks Done. A complete draft can contain explicit unresolved items; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.
+The target is that the consultant reviews the substance and mainly checks Done. The delivery can include unresolved items in its separate working file; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.

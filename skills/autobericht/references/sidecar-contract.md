@@ -73,6 +73,20 @@ python3 scripts/sidecar_tool.py validate project_sidecar.json project_sidecar_dr
 
 The helper rejects stale hashes, unknown rows, changes outside the allowed fields, unknown new tag values, invalid levels and accidental changes to customer/master data. It supports the nested current format. It does not add chapters, add observation categories, migrate flat legacy sidecars or calculate the spider chart. For those tasks, use the current app code or an app-exported migrated file, preserving the source.
 
+## Clean preview and authoring review
+
+After applying and validating the edit plan, generate the preview from the same fields:
+
+```sh
+python3 scripts/report_preview.py project_sidecar_draft.json report_draft.md > preview_checks.json
+```
+
+This copy-only helper includes rows with `includeFinding=true` even when Done is false, respects the recommendation flag and observation/summary order, and preserves their field text. It does not fall back to generic library text if a case field is missing. Identifiers shown in headings are persistent row IDs, not a claim about the final export's display numbering.
+
+Inspect its separate diagnostics before delivery. `reviewCandidates` locates possible process annotations or outside narration; resolve these against the authoring contract, without blindly removing legitimate quotations or an explicitly requested third-person voice. A successful exit means the preview was generated, not that prose or evidence passed review. `chapterTextNotRendered` lists existing chapter positives/front matter: include them through a suitable current-app/template route when in scope; never claim this row preview covers them, photos or Word layout. Review other changed client-facing fields too.
+
+Keep diagnostics and unresolved decisions outside `report_draft.md` and report fields. Apply wording corrections to the Sidecar, then regenerate the preview. See [report-authoring.md](report-authoring.md) for the required semantic/style review; keyword matching cannot perform it.
+
 ## Library additions
 
 ```json
