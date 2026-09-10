@@ -37,6 +37,14 @@ This is the current folder-first workflow.
    - `PowerPoint Export (Report)`
    - `PowerPoint Export (Training)`
 
+## Photo filenames and dates
+
+Imported copies use `YYYY-MM-DD-HH-MM_abc_0001.jpg`, where `abc` is the three-character source folder. The sequence follows original filename order within that folder; it is separate from the stable `Photo 038` number shown in PhotoSorter. Original files in `photos/raw` retain their names.
+
+For JPEG files, the date/time comes from EXIF `DateTimeOriginal` and retains the camera's recorded local time. The EXIF modification date is not a capture date. If capture metadata is absent, invalid, unreadable or in an unsupported image format, import falls back to the file's modification date and reports the number of affected photos in its completion message. A download/copy can change that fallback date. The current reader handles JPEG EXIF; it does not yet extract capture dates from HEIC or other image containers.
+
+The capture-date fix applies to new imports. Existing resized filenames and Sidecar photo paths are not automatically changed. Reimporting raw files into an already populated resized folder can therefore fail the existing resume check if the corrected names differ. Keep the tagged project intact; repairing existing names needs a coordinated update of file paths and Sidecar references, not an independent bulk rename.
+
 ## Sidecar vs Library
 
 - `project_sidecar.json`: project state and edits for this project.

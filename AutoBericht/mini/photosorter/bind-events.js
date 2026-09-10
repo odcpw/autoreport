@@ -190,6 +190,8 @@
           parts.push(tf("status_imported_photos", "Imported {count} photos", { count: imported }));
           if (skipped > 0) parts.push(tf("status_skipped_photos", "skipped {count} already present", { count: skipped }));
           if (movedVideos > 0) parts.push(tf("status_moved_videos", "moved {count} videos to photos/videos", { count: movedVideos }));
+          const fileDates = Number(result.fileDateCount) || 0;
+          if (fileDates > 0) parts.push(tf("status_photo_file_dates", "{count} with file date (capture time unavailable)", { count: fileDates }));
           setStatus(`${parts.join(", ")}.`);
         } catch (err) {
           setStatus(tf("status_import_failed", "Import failed: {error}", { error: err.message || err }));

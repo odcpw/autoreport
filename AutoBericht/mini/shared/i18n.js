@@ -194,6 +194,7 @@
     "status_imported_photos": "Imported {count} photos",
     "status_skipped_photos": "skipped {count} already present",
     "status_moved_videos": "moved {count} videos to photos/videos",
+    "status_photo_file_dates": "{count} with file date (capture time unavailable)",
     "status_photo_export_module_missing": "Photo export module is not available.",
     "status_photo_folder_missing_scan": "No photo folder found. Import or scan photos first.",
     "status_exported_photos": "Exported {label} to {folder}",

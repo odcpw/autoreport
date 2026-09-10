@@ -59,55 +59,64 @@
     return null;
   };
 
-  const readExifDateFromBuffer = (buffer) => {
+  const readCaptureTimestamp = (view) => {
+    if (view.byteLength < 8) return null;
+    const endian = getAscii(view, 0, 2);
+    if (endian !== "II" && endian !== "MM") return null;
+    const littleEndian = endian === "II";
+    if (view.getUint16(2, littleEndian) !== 42) return null;
+    const ifd0 = view.getUint32(4, littleEndian);
+    const exifIfd = readExifTagOffset(view, ifd0, 0x8769, littleEndian);
+    if (!exifIfd) return null;
+    // DateTimeOriginal is capture time. IFD0 DateTime (0x0132) may instead
+    // describe editing/export, so it must not stand in for a capture date.
+    const dateString = readExifTagString(view, 0, exifIfd, 0x9003, littleEndian);
+    const match = /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2})(?::(\d{2}))?\s*$/.exec(dateString || "");
+    if (!match) return null;
+    const [, y, m, d, hh, mm, ss = "0"] = match;
+    const parts = [y, m, d, hh, mm, ss].map(Number);
+    const [year, month, day, hours, minutes, seconds] = parts;
+    // Keep the camera's wall-clock date/time in the filename; do not convert
+    // an offset to UTC and move a late-evening photo into another day.
+    const date = new Date(Date.UTC(year, month - 1, day, hours, minutes, seconds));
+    const actual = [date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate(),
+      date.getUTCHours(), date.getUTCMinutes(), date.getUTCSeconds()];
+    return parts.every((part, i) => part === actual[i]) ? [y, m, d, hh, mm].join("-") : null;
+  };
+
+  const readExifTimestampFromBuffer = (buffer) => {
     const view = new DataView(buffer);
-    if (view.byteLength < 12) return null;
-    if (view.getUint16(0, false) !== 0xffd8) return null;
+    if (view.byteLength < 4 || view.getUint16(0, false) !== 0xffd8) return null;
     let offset = 2;
-    while (offset + 4 < view.byteLength) {
-      if (view.getUint8(offset) !== 0xff) {
-        offset += 1;
+    while (offset + 4 <= view.byteLength) {
+      if (view.getUint8(offset) !== 0xff) return null;
+      const marker = view.getUint8(offset + 1);
+      if (marker === 0xff) { offset += 1; continue; }
+      if (marker === 0xd9 || marker === 0xda) break;
+      if (marker === 0x01 || (marker >= 0xd0 && marker <= 0xd7)) {
+        offset += 2;
         continue;
       }
-      const marker = view.getUint16(offset, false);
-      if (marker === 0xffe1) {
-        const length = view.getUint16(offset + 2, false);
-        const start = offset + 4;
-        if (start + 6 > view.byteLength) return null;
-        const header = getAscii(view, start, 6);
-        if (header !== "Exif\u0000\u0000") return null;
-        const tiffStart = start + 6;
-        const endian = getAscii(view, tiffStart, 2);
-        const littleEndian = endian === "II";
-        const firstIfdOffset = view.getUint32(tiffStart + 4, littleEndian);
-        const ifd0 = tiffStart + firstIfdOffset;
-        if (ifd0 + 2 > view.byteLength) return null;
-        const exifOffset = readExifTagOffset(view, ifd0, 0x8769, littleEndian);
-        let dateString = null;
-        if (exifOffset !== null) {
-          const exifIfd = tiffStart + Number(exifOffset);
-          dateString = readExifTagString(view, tiffStart, exifIfd, 0x9003, littleEndian);
+      const length = view.getUint16(offset + 2, false);
+      const end = offset + 2 + length;
+      if (length < 2 || end > view.byteLength) return null;
+      const start = offset + 4;
+      // getAscii stops at NUL, so comparing its result with "Exif\0\0"
+      // always rejected valid EXIF. Check the four letters and two bytes.
+      if (marker === 0xe1 && length >= 8
+        && getAscii(view, start, 4) === "Exif"
+        && view.getUint8(start + 4) === 0 && view.getUint8(start + 5) === 0) {
+        try {
+          // TIFF offsets must stay within this APP1 segment, not reach into
+          // image data or a later segment when metadata is malformed.
+          const timestamp = readCaptureTimestamp(new DataView(buffer, start + 6, end - start - 6));
+          if (timestamp) return timestamp;
+        } catch (err) {
+          // A broken EXIF block must not prevent reading a later valid block.
         }
-        if (!dateString) {
-          dateString = readExifTagString(view, tiffStart, ifd0, 0x0132, littleEndian);
-        }
-        if (!dateString) return null;
-        const match = /^(\d{4}):(\d{2}):(\d{2}) (\d{2}):(\d{2})(?::(\d{2}))?/.exec(dateString);
-        if (!match) return null;
-        const [, y, m, d, hh, mm, ss] = match;
-        return new Date(
-          Number(y),
-          Number(m) - 1,
-          Number(d),
-          Number(hh),
-          Number(mm),
-          ss ? Number(ss) : 0,
-        );
       }
-      if (marker === 0xffd9 || marker === 0xffda) break;
-      const size = view.getUint16(offset + 2, false);
-      if (!size) break;
-      offset += 2 + size;
+      // APP1 can hold XMP before EXIF; continue past unrelated metadata.
+      offset = end;
     }
     return null;
   };
@@ -116,21 +125,17 @@
     try {
       const slice = file.slice(0, 256 * 1024);
       const buffer = await slice.arrayBuffer();
-      const exifDate = readExifDateFromBuffer(buffer);
-      if (exifDate) return exifDate;
+      const timestamp = readExifTimestampFromBuffer(buffer);
+      if (timestamp) return { timestamp, source: "capture" };
     } catch (err) {
-      // ignore
+      // Unreadable/unsupported metadata uses the explicitly reported file-date fallback.
     }
-    return new Date(file.lastModified);
-  };
-
-  const formatTimestamp = (date) => {
+    const date = new Date(file.lastModified);
+    if (!Number.isFinite(date.getTime())) throw new Error(`No valid file date for ${file.name}.`);
     const pad = (value) => String(value).padStart(2, "0");
-    return [
-      date.getFullYear(),
-      pad(date.getMonth() + 1),
-      pad(date.getDate()),
-    ].join("-") + `-${pad(date.getHours())}-${pad(date.getMinutes())}`;
+    const timestamp = [date.getFullYear(), pad(date.getMonth() + 1), pad(date.getDate()),
+      pad(date.getHours()), pad(date.getMinutes())].join("-");
+    return { timestamp, source: "file" };
   };
 
   const padSequence = (value) => String(value).padStart(4, "0");
@@ -244,12 +249,13 @@
     const counters = new Map();
     const plan = [];
     for (const task of tasks) {
-      const timestamp = formatTimestamp(await getPhotoTimestamp(task.file));
+      const { timestamp, source } = await getPhotoTimestamp(task.file);
       const counter = (counters.get(task.owner) || 0) + 1;
       counters.set(task.owner, counter);
       plan.push({
         ...task,
         filename: `${timestamp}_${task.owner}_${padSequence(counter)}.jpg`,
+        dateSource: source,
       });
     }
     return plan;
@@ -454,6 +460,7 @@
           count: 0,
           importedCount: 0,
           skippedCount: 0,
+          fileDateCount: 0,
           movedVideoCount,
         };
       }
@@ -512,6 +519,7 @@
       resizedHandle: await resolveResizedHandle(),
       photoRootName: "photos/resized",
       count: importPlan.length,
+      fileDateCount: importPlan.filter((task) => task.dateSource === "file").length,
       importedCount,
       skippedCount,
       movedVideoCount,
