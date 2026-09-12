@@ -1,5 +1,7 @@
 # Build a colleague’s personal library from past work
 
+For a complete author setup, produce the editable Word Masterbericht, personal JSON library and personal style guide from one review of the supplied reports. Follow [master-report.md](master-report.md) for consolidation inside the chosen Word report. If the user requests only some of these outputs, keep that scope. Build the guide from original authored writing and confirmed corrections, not from the assistant's newly generated master.
+
 ## Begin with the reports
 
 A colleague may start by uploading all available anonymised reports in manageable batches. Inventory the whole collection: filenames, type, language, author, whether final/reviewed, duplicates and readable status. Read representative full reports before editing; then process the remainder with a coverage register. Do not claim the whole corpus was covered after sampling it for style.
@@ -55,6 +57,6 @@ After review, retain explicit approved style corrections in a new version of the
 
 ## Onboarding delivery and coverage
 
-Deliver the personal style guide and, when library creation was requested, the new `library_user_<author>_<locale>.json`. Embed useful confirmed examples in the guide rather than requiring another upload. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Preserve source versions. Validate a newly created library against the app's importer when available; the consultant loads it in the application for new projects. Do not bundle their corpus into the reusable skill itself.
+Deliver the personal style guide and, when library creation was requested, the new `library_user_<author>_<locale>.json`; include the native editable Masterbericht for a full setup or requested Word consolidation. Reconcile their coverage against the same source inventory without forcing Word row numbers to serve as JSON IDs. Embed useful confirmed examples in the guide rather than requiring another upload. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Preserve source versions. Validate a newly created library against the app's importer when available; the consultant loads it in the application for new projects. Do not bundle their corpus into the reusable skill itself.
 
 “Complete” means every supplied readable report has been accounted for and its usable recommendations matched or explicitly set aside. It does not mean every generic question has a recommendation or that no future report can add useful material.

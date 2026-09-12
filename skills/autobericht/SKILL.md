@@ -1,6 +1,6 @@
 ---
 name: autobericht
-description: Turn an SST consultant's MP3 recordings, project Sidecar with its embedded library, and personal style guide into a review-ready report in their voice. Also support style-guide/library onboarding from past reports and library updates after review.
+description: Consolidate an SST consultant's past reports into an editable Word Masterbericht, personal AutoBericht library and style guide; turn visit recordings and the project Sidecar into a complete review-ready Sidecar in their voice; retain reviewed improvements for later projects.
 ---
 
 # AutoBericht — from professional judgment to a report
@@ -19,7 +19,14 @@ Before writing report content, read [report-authoring.md](references/report-auth
 
 ## Choose the starting point from the files already available
 
+| Route | Starting material | Requested result |
+|---|---|---|
+| Build the author's reusable material | Anonymised past reports, a chosen Word base and actual app structure when creating JSON | Editable Masterbericht, personal library and personal style guide; produce the requested subset or all three for full setup |
+| Prepare a new visit report | Recording(s), project Sidecar with embedded library, personal guide | Full processed draft Sidecar and matching clean preview, with transcript and working questions separately |
+| Learn from a reviewed visit | Reviewed Sidecar/corrections and current personal library/guide | Enriched reusable library and approved style updates; refresh the Word master when requested |
+
 - **New visit, Sidecar and style guide:** read [dictation-and-writing.md](references/dictation-and-writing.md), the supplied guide, then [sidecar-contract.md](references/sidecar-contract.md). Use the library already embedded in the Sidecar; begin without a separate onboarding exercise.
+- **Masterbericht / Megabericht / Word consolidation:** read [master-report.md](references/master-report.md) and [onboarding.md](references/onboarding.md). Consolidate within a copy of the designated report, preserving its layout and finding/recommendation pairing. For full author setup, also build the library and calibrated guide from the same source review.
 - **Style-guide or library creation from old reports:** read [onboarding.md](references/onboarding.md). This is preparation for an author who needs it, not a repeated prerequisite for each report.
 - **Reviewed report or sidecar returning from a project:** read [library-cycle.md](references/library-cycle.md). Extract useful reusable changes and prepare the next library version.
 - **Questions about recording, uploads or repository access:** read [start-and-capabilities.md](references/start-and-capabilities.md). Check the actual tools available; instructions do not themselves grant audio, file, repository or network access.
@@ -67,4 +74,4 @@ When repository access is available, inspect the relevant current modules and ru
 
 ## Expected delivery
 
-For onboarding: a personal style guide and, when requested, a library built against the actual application structure; keep coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For requested closeout: next library copy and any approved style-guide updates, with a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
+For full author setup: an editable consolidated Word Masterbericht, personal library built against actual application structure and calibrated personal style guide. For a narrower onboarding request, deliver the requested subset. Keep coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated Sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Do not stop at transcription or a proposed mapping when the requested outcome is the processed Sidecar. Ready for review means the supported scope has been drafted, included and checked, with Done left for the consultant; it does not mean silently approving the report. For requested closeout: next library copy and approved style-guide updates, with a concise change list; update the Word master when requested. The user-facing interaction should remain light even when the internal work is thorough.

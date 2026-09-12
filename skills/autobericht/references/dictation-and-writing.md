@@ -4,6 +4,8 @@ Apply [report-authoring.md](report-authoring.md) before composing. It governs au
 
 Begin with the MP3 recording(s), project Sidecar, this skill and the supplied style guide. Use the library already loaded in the Sidecar; a separate library or examples upload is not part of this report workflow.
 
+Own the whole requested conversion: recording → full transcript → reconciled evidence and corrections → existing question/observation mapping → lightly adapted findings and assembled recommendations → assessment/photo assignments → full Sidecar copy → matching preview and validation. A transcript, topic map or prose suggestion is an intermediate result, not completion of a request for a ready Sidecar. Check the actual transcription/file capabilities using [start-and-capabilities.md](start-and-capabilities.md); process the available work and report a material capability gap honestly if execution cannot finish.
+
 ## Capture the judgment before editing the prose
 
 Use the imported self-assessment as the starting point: yes/no, comments, evidence and question groupings. Keep those customer statements intact. The consultant’s visit assessment belongs in the workstate and may contradict the customer’s answer.
@@ -70,6 +72,10 @@ Before delivery, sweep the entire transcript for topics never mapped, correction
 
 ## Review and outputs
 
+Apply the supported decisions to a copy of the actual input through [sidecar-contract.md](sidecar-contract.md), preserving its full structure, customer data, library masters and unrelated fields. Set both Include flags for drafted items and newly assigned observations; leave Done false unless explicitly validated. Respect explicit exclusions and review choices. Resolve spoken photo numbers to existing records and preserve their identities. Do not insert invented row IDs or upload image content to complete the mapping.
+
 Provide a complete Sidecar copy and a clean draft grouped by chapter, using the same field text. Keep decisions still needed and validation/coverage results in separate working material, and software feedback in a separate system-improvement file. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
+
+Before calling the Sidecar ready for review, account for the full recording, apply later corrections, check every changed passage against evidence and personal style, validate JSON and preservation, and run actual app checks when available. Report which checks ran. Isolate genuinely unresolved decisions outside the report rather than leaving avoidable prose cleanup to the consultant. An unread audio interval or incomplete mapping must remain visible as unfinished coverage, even when the supported remainder is delivered.
 
 The target is that the consultant reviews the substance and mainly checks Done. The delivery can include unresolved items in its separate working file; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.

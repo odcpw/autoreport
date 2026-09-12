@@ -9,7 +9,7 @@ Follow this workflow when the user asks. All skill resources are embedded below 
 
 ---
 name: autobericht
-description: Turn an SST consultant's MP3 recordings, project Sidecar with its embedded library, and personal style guide into a review-ready report in their voice. Also support style-guide/library onboarding from past reports and library updates after review.
+description: Consolidate an SST consultant's past reports into an editable Word Masterbericht, personal AutoBericht library and style guide; turn visit recordings and the project Sidecar into a complete review-ready Sidecar in their voice; retain reviewed improvements for later projects.
 ---
 
 # AutoBericht — from professional judgment to a report
@@ -28,7 +28,14 @@ Before writing report content, read [report-authoring.md](references/report-auth
 
 ## Choose the starting point from the files already available
 
+| Route | Starting material | Requested result |
+|---|---|---|
+| Build the author's reusable material | Anonymised past reports, a chosen Word base and actual app structure when creating JSON | Editable Masterbericht, personal library and personal style guide; produce the requested subset or all three for full setup |
+| Prepare a new visit report | Recording(s), project Sidecar with embedded library, personal guide | Full processed draft Sidecar and matching clean preview, with transcript and working questions separately |
+| Learn from a reviewed visit | Reviewed Sidecar/corrections and current personal library/guide | Enriched reusable library and approved style updates; refresh the Word master when requested |
+
 - **New visit, Sidecar and style guide:** read [dictation-and-writing.md](references/dictation-and-writing.md), the supplied guide, then [sidecar-contract.md](references/sidecar-contract.md). Use the library already embedded in the Sidecar; begin without a separate onboarding exercise.
+- **Masterbericht / Megabericht / Word consolidation:** read [master-report.md](references/master-report.md) and [onboarding.md](references/onboarding.md). Consolidate within a copy of the designated report, preserving its layout and finding/recommendation pairing. For full author setup, also build the library and calibrated guide from the same source review.
 - **Style-guide or library creation from old reports:** read [onboarding.md](references/onboarding.md). This is preparation for an author who needs it, not a repeated prerequisite for each report.
 - **Reviewed report or sidecar returning from a project:** read [library-cycle.md](references/library-cycle.md). Extract useful reusable changes and prepare the next library version.
 - **Questions about recording, uploads or repository access:** read [start-and-capabilities.md](references/start-and-capabilities.md). Check the actual tools available; instructions do not themselves grant audio, file, repository or network access.
@@ -76,7 +83,7 @@ When repository access is available, inspect the relevant current modules and ru
 
 ## Expected delivery
 
-For onboarding: a personal style guide and, when requested, a library built against the actual application structure; keep coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Deliver the requested scope without invented findings or an unsolicited full-company synthesis. For requested closeout: next library copy and any approved style-guide updates, with a concise change list. The user-facing interaction should remain light even when the internal work is thorough.
+For full author setup: an editable consolidated Word Masterbericht, personal library built against actual application structure and calibrated personal style guide. For a narrower onboarding request, deliver the requested subset. Keep coverage/gaps and unapproved example candidates in separate working material. For a visit: full updated Sidecar copy and clean preview with identical report wording; transcript and working review/coverage/validation material separately; system-improvement Markdown when needed. Do not stop at transcription or a proposed mapping when the requested outcome is the processed Sidecar. Ready for review means the supported scope has been drafted, included and checked, with Done left for the consultant; it does not mean silently approving the report. For requested closeout: next library copy and approved style-guide updates, with a concise change list; update the Word master when requested. The user-facing interaction should remain light even when the internal work is thorough.
 
 
 ---
@@ -192,6 +199,8 @@ Apply [report-authoring.md](report-authoring.md) before composing. It governs au
 
 Begin with the MP3 recording(s), project Sidecar, this skill and the supplied style guide. Use the library already loaded in the Sidecar; a separate library or examples upload is not part of this report workflow.
 
+Own the whole requested conversion: recording → full transcript → reconciled evidence and corrections → existing question/observation mapping → lightly adapted findings and assembled recommendations → assessment/photo assignments → full Sidecar copy → matching preview and validation. A transcript, topic map or prose suggestion is an intermediate result, not completion of a request for a ready Sidecar. Check the actual transcription/file capabilities using [start-and-capabilities.md](start-and-capabilities.md); process the available work and report a material capability gap honestly if execution cannot finish.
+
 ## Capture the judgment before editing the prose
 
 Use the imported self-assessment as the starting point: yes/no, comments, evidence and question groupings. Keep those customer statements intact. The consultant’s visit assessment belongs in the workstate and may contradict the customer’s answer.
@@ -258,7 +267,11 @@ Before delivery, sweep the entire transcript for topics never mapped, correction
 
 ## Review and outputs
 
+Apply the supported decisions to a copy of the actual input through [sidecar-contract.md](sidecar-contract.md), preserving its full structure, customer data, library masters and unrelated fields. Set both Include flags for drafted items and newly assigned observations; leave Done false unless explicitly validated. Respect explicit exclusions and review choices. Resolve spoken photo numbers to existing records and preserve their identities. Do not insert invented row IDs or upload image content to complete the mapping.
+
 Provide a complete Sidecar copy and a clean draft grouped by chapter, using the same field text. Keep decisions still needed and validation/coverage results in separate working material, and software feedback in a separate system-improvement file. The draft preview should include prepared rows even though the current final exporter requires both `includeFinding=true` and `done=true`. Keep the preview separate; never mark everything Done merely to obtain a complete Word export.
+
+Before calling the Sidecar ready for review, account for the full recording, apply later corrections, check every changed passage against evidence and personal style, validate JSON and preservation, and run actual app checks when available. Report which checks ran. Isolate genuinely unresolved decisions outside the report rather than leaving avoidable prose cleanup to the consultant. An unread audio interval or incomplete mapping must remain visible as unfinished coverage, even when the supported remainder is delivered.
 
 The target is that the consultant reviews the substance and mainly checks Done. The delivery can include unresolved items in its separate working file; a final approved report cannot pretend they were resolved. After review, use the library cycle to keep worthwhile new wording for later projects.
 
@@ -397,9 +410,74 @@ Teach only confirmed style preferences. An accepted case-specific measure is not
 
 ---
 
+## Embedded resource: references/master-report.md
+
+# Consolidate past reports into a usable Masterbericht
+
+Read this when the user requests a Masterbericht, Megabericht, consolidated report or reusable Word report containing material from several past reports. It is a working report the author can shorten, strike through or edit in place for a new visit. Put the reusable content in the report itself, in its normal chapters and finding/recommendation tables. A detached paragraph catalogue, appended dump or numbered collection of “Fallvarianten” does not meet that request unless explicitly requested.
+
+For full author setup, combine this route with [onboarding.md](onboarding.md) for the application library and [style-calibration.md](style-calibration.md) for the personal guide. Use one source inventory and content review for all requested outputs. These outputs serve different purposes: the Word master supports editing in place, the JSON library supplies selectable passages to new Sidecars, and the guide controls the author's voice. None replaces the others.
+
+## Establish the base and read the originals
+
+Start from the report the user designates, such as “consolidate everything into report 4”. Work on a copy. If no base is designated, inspect the available originals and choose the most complete suitable layout; state the choice. Ask only if materially incompatible templates or languages leave the intended result unclear.
+
+Read every supplied readable report, preserving chapter, table, row and cell roles. Follow the input privacy and coverage rules in [onboarding.md](onboarding.md); site photos stay on the work computer, including photos embedded in old reports. Retain existing anonymised text and usable formatting. Inspect the native Word structure and, where available, its rendered layout. Text extraction alone cannot establish which recommendation belongs to which finding or whether table formatting survived.
+
+Keep a private working inventory of source units: chapter/topic, finding, paired recommendations, scope/conditions, applicable references and destination. Distinguish useful additions, repeated wording, complementary detail, context-specific alternatives and contradictions. “Everything” means accounting for all useful authored material, not duplicating repeated text or retaining old company particulars. Record exclusions and reasons outside the report.
+
+Use an available document editing tool or library that preserves native DOCX structures; use `ooxml-cli` when available and suitable, checking its actual help before using commands. The bundled `extract_docx.py` is an extraction aid, not a lossless Word editor. Do not claim the skill itself installs an editor or that writing Markdown produces the requested Word file. If editing is unavailable, complete the content mapping and identify the missing execution capability; do not present that intermediate work as the finished Masterbericht.
+
+## Consolidate by meaning and keep the pairs intact
+
+For each source unit, find its actual topic in the chosen base. Keep existing suitable wording, then integrate useful additions beside it. Correct grammar and smooth joins in the author's style with minimal changes to meaning. Use the original authored reports and confirmed corrections as style evidence; the generated consolidation must not become its own proof of the author's voice.
+
+- Merge repeated statements and genuinely complementary measures into a coherent entry without discarding useful reasoning, practical examples, conditions or links.
+- Keep distinct situations separately editable in the relevant chapter. A manual pallet truck and an electric truck may require different measures even if their topic is related.
+- Preserve an alternative as a concise, clearly scoped normal report entry or paragraph. Do not combine mutually exclusive company situations into one asserted finding or invent a fictional company that has every issue. Use a short descriptive topic/condition where needed, following the template's normal style rather than introducing an elaborate variant numbering system.
+- Keep each finding aligned with the recommendations addressing that finding. If the source has paired columns, add or clone paired rows. If the template uses a different paired structure, preserve that structure. Do not create two independent long lists whose entries stop corresponding as they grow.
+- A new recommendation that fits an existing finding belongs in that recommendation cell. A substantially different finding needs its own paired entry in the appropriate chapter. Review a source cell containing several topics rather than assuming all its paragraphs share one destination.
+- Generalise company-specific facts for reuse while retaining the technical circumstances that make a passage valid. Do not turn a local arrangement or a one-off frequency into a universal requirement. Keep contradictions or unresolved technical scope in the external review notes until they can be resolved.
+
+For introductions, positive observations and management summaries, preserve the base layout and useful reusable language. Do not stitch the histories and achievements of several companies into one factual account. Keep conditional alternatives clearly distinguishable and remove old identities. Include only the functions requested or already within the consolidation's scope.
+
+The reusable library's generic negative findings remain unchanged unless separately requested. Editable findings in the Word master may retain the authored situations and useful alternatives; do not overwrite the application question structure merely to make it resemble the Word layout.
+
+## Preserve the actual Word layout
+
+Use the base document's section settings, headings, table widths, column grid, cell margins, borders, merged-cell relationships, paragraph and character styles, list indentation, numbering and header/footer layout. Clone suitable nearby structural elements for additional entries rather than pasting all content into one cell. When copying content from another DOCX, preserve or correctly remap the styles, numbering and hyperlink relationships it uses; relationship identifiers are local to each package.
+
+Keep finding and recommendation content on the intended sides of each pair. Retain relevant emphasis and working links. Remove old company data from headers, footers and fields in the reusable copy as well as the body. Do not carry restricted source images into an uploaded output. Preserve source files unchanged.
+
+Longer content can create unattractive page breaks. When the user accepts manual pagination cleanup, treat those breaks as cosmetic; do not shorten useful content, shrink all text or change the table structure to hide them. Pairing, readable cell contents and a valid editable document still matter. Distinguish a split row continuing across pages from a finding aligned with the wrong recommendation.
+
+## Check the deliverable, not just the extraction
+
+Before delivery:
+
+1. Reconcile the source inventory: every readable useful unit is retained, merged without meaning loss, kept as a scoped alternative or explicitly set aside. A word count or paragraph count alone cannot prove coverage.
+2. Re-extract the finished DOCX and inspect every changed finding/recommendation pair against its intended destination. Check for orphaned measures, duplicated blocks, lost conditions, wrong chapter placement and accidental loss of base content.
+3. Check DOCX package integrity and internal relationships with available tools. Render or reopen the document when possible and inspect changed tables, headings, long entries and cross-page continuations. If rendering is unavailable, state that the visual layout remains unverified; do not equate XML validity with a visual check.
+4. Read the final prose in the author's voice. Keep source citations, coverage notes, drafting instructions and calibration commentary outside the client-facing report. Retain applicable technical references in the author's convention.
+
+Deliver the editable consolidated DOCX using a stable active name such as `Masterbericht_<author>_<locale>.docx`, or the name the user requested. Preserve the prior version in an archive. Include the personal library and guide when the full setup is requested, with a short external coverage/limitations note. Do not substitute a PDF, review HTML or text catalogue for the requested Word master.
+
+## Connect the master to the next report
+
+Build the library from the same reviewed source units, matched to actual application IDs/categories. Do not assume Word row numbers are library IDs. Preserve the intended coverage across Word and JSON even though their structures differ; do not force every Word passage into an unrelated generic question. Any unmapped useful material stays visible in the working coverage notes for resolution.
+
+The consultant loads the adopted library when creating a new project. The new Sidecar embeds it. A normal recording session then needs the recordings, that Sidecar, the personal guide and this skill; neither the Word master nor a duplicate standalone library is a routine additional upload. Follow [dictation-and-writing.md](dictation-and-writing.md) through to the full updated Sidecar and clean preview.
+
+After the consultant's review, follow [library-cycle.md](library-cycle.md) to preserve useful new wording. Update the Word master too when requested; a library update does not silently rewrite an existing Word master or a live project.
+
+
+---
+
 ## Embedded resource: references/onboarding.md
 
 # Build a colleague’s personal library from past work
+
+For a complete author setup, produce the editable Word Masterbericht, personal JSON library and personal style guide from one review of the supplied reports. Follow [master-report.md](master-report.md) for consolidation inside the chosen Word report. If the user requests only some of these outputs, keep that scope. Build the guide from original authored writing and confirmed corrections, not from the assistant's newly generated master.
 
 ## Begin with the reports
 
@@ -456,7 +534,7 @@ After review, retain explicit approved style corrections in a new version of the
 
 ## Onboarding delivery and coverage
 
-Deliver the personal style guide and, when library creation was requested, the new `library_user_<author>_<locale>.json`. Embed useful confirmed examples in the guide rather than requiring another upload. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Preserve source versions. Validate a newly created library against the app's importer when available; the consultant loads it in the application for new projects. Do not bundle their corpus into the reusable skill itself.
+Deliver the personal style guide and, when library creation was requested, the new `library_user_<author>_<locale>.json`; include the native editable Masterbericht for a full setup or requested Word consolidation. Reconcile their coverage against the same source inventory without forcing Word row numbers to serve as JSON IDs. Embed useful confirmed examples in the guide rather than requiring another upload. Keep the short homogeneity assessment and coverage summary separately: reports read, sections unreadable, paragraphs retained/merged, empty categories, uncertain mappings and bootstrap limitations. Preserve source versions. Validate a newly created library against the app's importer when available; the consultant loads it in the application for new projects. Do not bundle their corpus into the reusable skill itself.
 
 “Complete” means every supplied readable report has been accounted for and its usable recommendations matched or explicitly set aside. It does not mean every generic question has a recommendation or that no future report can add useful material.
 
@@ -746,11 +824,17 @@ For the normal report workflow, provide four inputs:
 
 The Sidecar is the normal source of question structure, library findings/recommendations and photo references. “Empty” means the project-specific assessment is not yet drafted, not that the library or metadata are absent. Do not ask for a standalone library, a separate collection of examples or another package. Use a text-only filename map only if spoken photo identifiers cannot be resolved from the supplied Sidecar.
 
-If the consultant needs a style guide or library created, onboarding can start separately with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). Build the guide from their existing writing without asking them to curate a new example collection. Request an actual application structure only when library mapping requires it; do not repeat onboarding for every visit.
+For author setup, start with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). The full route produces an editable Word Masterbericht, a personal library and a personal style guide; follow [master-report.md](master-report.md) and [onboarding.md](onboarding.md). Use the designated base report for Word consolidation and build the guide from the original writing without asking the colleague to curate an example collection. Request an actual application structure only when library mapping requires it; do not repeat onboarding for every visit.
 
 A sidecar stores photo metadata, not the photo image bytes. Use the consultant’s descriptions as the evidence; do not request images or claim to inspect them. Do not substitute thumbnails, contact sheets, embedded report photos or screen sharing for uploads. Check that an export intended for Work contains no embedded image bytes. Reopen the returned sidecar on the work computer, where the app resolves its existing photo paths. Its embedded library is the starting snapshot for this report. A newer standalone library matters only for an explicitly requested refresh or library update; it is not a fifth report input.
 
 ## Minimal first message from the colleague
+
+For initial author setup:
+
+“Use these anonymised reports to build my reusable material: consolidate their useful content into a copy of the designated base Word report, retaining its formatting and finding/recommendation tables; build my AutoBericht library and a style guide based on my own writing. Keep distinct useful alternatives and remove duplication. Guide me only where essential information is missing.”
+
+For a new visit:
 
 “Use the attached AutoBericht skill, my style guide, the project Sidecar and these MP3s to prepare my report. The library is already in the Sidecar. Choose and assemble the relevant passages and write in my style. The photos stay on my work computer; use my descriptions and the Sidecar's filenames. Keep customer answers and unrelated project data intact. Return the complete draft Sidecar and a clean preview, with working questions and software feedback separately. Leave Done for my review.”
 

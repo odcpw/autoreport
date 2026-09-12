@@ -11,11 +11,17 @@ For the normal report workflow, provide four inputs:
 
 The Sidecar is the normal source of question structure, library findings/recommendations and photo references. “Empty” means the project-specific assessment is not yet drafted, not that the library or metadata are absent. Do not ask for a standalone library, a separate collection of examples or another package. Use a text-only filename map only if spoken photo identifiers cannot be resolved from the supplied Sidecar.
 
-If the consultant needs a style guide or library created, onboarding can start separately with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). Build the guide from their existing writing without asking them to curate a new example collection. Request an actual application structure only when library mapping requires it; do not repeat onboarding for every visit.
+For author setup, start with anonymised past reports (Word preferred; PDF or existing JSON/sidecars also useful). The full route produces an editable Word Masterbericht, a personal library and a personal style guide; follow [master-report.md](master-report.md) and [onboarding.md](onboarding.md). Use the designated base report for Word consolidation and build the guide from the original writing without asking the colleague to curate an example collection. Request an actual application structure only when library mapping requires it; do not repeat onboarding for every visit.
 
 A sidecar stores photo metadata, not the photo image bytes. Use the consultant’s descriptions as the evidence; do not request images or claim to inspect them. Do not substitute thumbnails, contact sheets, embedded report photos or screen sharing for uploads. Check that an export intended for Work contains no embedded image bytes. Reopen the returned sidecar on the work computer, where the app resolves its existing photo paths. Its embedded library is the starting snapshot for this report. A newer standalone library matters only for an explicitly requested refresh or library update; it is not a fifth report input.
 
 ## Minimal first message from the colleague
+
+For initial author setup:
+
+“Use these anonymised reports to build my reusable material: consolidate their useful content into a copy of the designated base Word report, retaining its formatting and finding/recommendation tables; build my AutoBericht library and a style guide based on my own writing. Keep distinct useful alternatives and remove duplication. Guide me only where essential information is missing.”
+
+For a new visit:
 
 “Use the attached AutoBericht skill, my style guide, the project Sidecar and these MP3s to prepare my report. The library is already in the Sidecar. Choose and assemble the relevant passages and write in my style. The photos stay on my work computer; use my descriptions and the Sidecar's filenames. Keep customer answers and unrelated project data intact. Return the complete draft Sidecar and a clean preview, with working questions and software feedback separately. Leave Done for my review.”
 

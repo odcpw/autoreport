@@ -8,6 +8,8 @@ Then say:
 
 For a report, supply the project Sidecar, your style guide and permitted recording or transcript. The Sidecar already contains the library; no duplicate library or examples pack is required. Site photos stay on your work computer. Attaching the package supplies instructions; it does not install a skill, enable transcription or grant repository access. Capabilities depend on the particular ChatGPT/Copilot environment.
 
+For initial author setup, supply anonymised past reports and identify the base Word report if you have a preference. Ask for an editable consolidated Masterbericht, personal library and style guide. The skill also covers returning reviewed Sidecars to enrich the library and guide for later projects. Personal material is supplied separately and is never bundled in this shared package.
+
 ## For maintainers
 
 Edit `skills/autobericht/`, then run from the repository root:
