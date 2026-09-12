@@ -59,7 +59,7 @@ Inventory and authoring contract → full transcript and photo identities → co
 
 Work through a long recording in resumable batches. Keep an external coverage register of processed time ranges and unresolved items. Reconcile topics and corrections across all batches before claiming completeness. Try the supplied recording first when transcription is supported; chunk only when limits or reliability require it. Never silently substitute a summary for the full transcript.
 
-When asked to create a style guide, build it from the author's actual reports and confirmed edits. Use `assets/author-profile-template.md` as a starting structure, not a fixed style. When library reconstruction is requested, use an actual exported library/assessment structure. Remove identifiable untouched AI bootstrap recommendations while retaining authored additions and useful variants; keep ambiguous origin in an internal review list rather than guessing. These onboarding operations are separate from drafting a visit with an already loaded Sidecar and supplied guide.
+When asked to create a style guide, follow [style-calibration.md](references/style-calibration.md) and populate the common numbered [author-profile-template.md](assets/author-profile-template.md). Every colleague receives the same depth of analysis and drafting checks, with personal rules and examples drawn from their actual reports and confirmed edits. The guide structure is shared; sentence forms and report prose remain the author's own. Test the guide on available passages before claiming calibration and label unsupported functions provisional. When library reconstruction is requested, use an actual exported library/assessment structure. Remove identifiable untouched AI bootstrap recommendations while retaining authored additions and useful variants; keep ambiguous origin in an internal review list rather than guessing. These onboarding operations are separate from drafting a visit with an already loaded Sidecar and supplied guide.
 
 ## Supporting tools
 
@@ -95,51 +95,91 @@ interface:
 
 ## Embedded resource: assets/author-profile-template.md
 
-# Author profile
+# Writing guide — author and report locale
 
-Populate from the consultant’s own reports and confirmed feedback. This template sets no personal style by default.
+This is the common structure for each colleague's personal guide. The assistant fills it from that person's reports and confirmed corrections, following `references/style-calibration.md`. Translate headings into the guide's language while retaining the numbered sections. Replace these drafting instructions with usable, author-specific rules and short examples. Keep a section visibly provisional when evidence is missing; never fill it with another colleague's habits. The consultant does not complete this as a questionnaire.
 
-- Author and report locale:
-- Style-guide version/date:
-- Original writing languages; translations and their original-language source:
-- Reports/sections actually examined:
-- Confirmed preferences versus provisional observations:
+Record author, report locale, update date, languages originally written, translations examined and current calibration status. Keep source filenames and the detailed evidence register in private working notes. Use a stable active filename such as `guide_style_<author>_<language>.md`; retain previous copies in archives.
 
-## Output and voice contract
+## Essential instruction
 
-- Report perspective and recommendation form, with an actual example:
-- Required field/paragraph structure and where it applies:
-- Desired detail: explanations, concrete examples and practical steps to retain:
-- Technical reference convention:
-- Evidence for each preference (approved example, explicit instruction, or provisional inference):
+Write a short instruction that can guide a new drafting session: this author's reporting perspective, way of expressing a finding, way of proposing action and useful level of detail. State which rules are confirmed by instructions and which are inferred from finished reports. The purpose is usable report prose with minimal editorial rewriting; professional judgment still requires review.
 
-Use this as a working aid, not a questionnaire the author must complete before a first report. Keep client facts out of reusable examples.
+## 1. Voice and relationship with the reader
 
-## Findings
+Describe the author's actual choices, with representative phrases:
 
-Typical attribution, negative formulation, partial implementation, scope and degree of certainty. Add representative authored examples.
+- Reporting perspective and how the author addresses management, supervisors and employees.
+- Directness, register, restraint and the use of questions or practical examples.
+- How responsibility and participation are expressed when supported by the case.
 
-## Recommendations
+Turn each trait into a writing decision. “Concrete” alone is insufficient: identify what the author names, how the sentence begins and what detail they retain. Do not infer that an actor is responsible merely because their role appears often in old reports.
 
-Typical opening verbs, paragraph length, actors, explanations, questions, concrete examples, modality, alternatives and technical vocabulary. Add representative authored examples and explain when each style is used.
+## 2. Forms according to report function
 
-## Management summary and positives
+### Findings
 
-Expected concision, synthesis, tone and treatment of strengths. Do not assume the detailed recommendation style applies unchanged.
+Specify usual attribution for self-assessment, interviews, documents and site observations; how the generic finding is lightly adapted; and how partial implementation, conflicting accounts and uncertainty are expressed. Give an authored example and explain which parts depend on the current evidence. Keep the fact, interpretation and measure in their proper fields.
 
-## References
+### Recommendations
 
-Preferred language, publisher editions, link format and placement. Distinguish technical references from internal report-source tracking.
+Specify opening verbs, grammatical person, modality, named actors, usual sequence of ideas and when explanations, examples, alternatives or questions belong. Show a short recommendation and a developed one if both occur. Describe the observed structure without turning it into a mandatory paragraph count.
 
-## Avoid
+### Management summary and positives
 
-Document the author’s confirmed dislikes. Correct grammatical mistakes without adopting them as a signature. Preserve technical meaning and useful reasoning.
+Record their distinct perspective, length, balance and degree of synthesis, with a representative example where available. Do not apply the recommendation form automatically to a summary. If this function was absent from the corpus, say so and use a provisional convention only when the function is needed.
 
-## Confirmed corrections
+## 3. Rhythm, length and paragraph structure
 
-Before/after examples the author has actually reviewed, with the precise lesson and scope. Keep generated proposals distinct.
+Describe typical sentence complexity, one idea versus several linked actions, use of lists, transitions and punctuation. Explain when longer passages are useful and when the author stops. Observed lengths may be descriptive evidence; they are not word quotas. Preserve conditions and practical detail when shortening.
 
-For each example, retain the original observation, the author-approved finding/recommendation, and the specific correction. Mark generated alternatives as unapproved. Do not promote them because the author continued to another task. Do not invent a style-match percentage.
+## 4. Vocabulary, locale and translation
+
+Populate a compact table of preferred term, alternative to avoid or use only in context, and scope. Cover recurrent professional roles, equipment, abbreviations and locale-specific spelling. Preserve official reference titles and technical distinctions.
+
+For multilingual authors, identify which language supplies the original meaning and which authored target-language passages establish the voice. Record how modality, actors, examples and incomplete notes are carried across languages. Translated syntax and recognition errors are not personal style rules.
+
+## 5. Examples that teach the style
+
+Embed a small, varied set within this guide so it works without a separate examples upload. For each, give:
+
+- Report function and the facts/meaning the wording must preserve.
+- A short, anonymised authored passage or an explicitly approved correction.
+- The precise writing decision it illustrates and the limit of that rule.
+
+Where an author actually corrected a draft, show before, approved after and the reusable lesson. Label generated dictation-to-report illustrations as proposals; never call reconstructed notes an original transcript. Cover light finding adaptation, a simple measure and a more developed recommendation where the material allows. Include summary/positive examples when those functions are evidenced.
+
+## 6. Habits to avoid
+
+Record the author's confirmed dislikes and observable mismatches with their finished prose: unwanted introductions, abstract substitutions, excessive compression, repetitive conclusions or unsuitable grammar forms. Provide a useful replacement pattern where evidenced. Distinguish these personal preferences from universal requirements to preserve meaning and correct grammar; do not copy typos as a signature.
+
+## 7. Turning oral judgment into this author's writing
+
+Explain how to remove hesitations while retaining uncertainty, later corrections, attribution and useful reasoning. Show how the author's normal finding/recommendation forms absorb informal speech. A theme can inform several report sections only through separately supported aspects. Keep process comments outside report prose.
+
+## 8. Review before delivery
+
+Write concrete checks against this author's rules and examples: perspective, sentence openings, modality, paragraph sequence, practical detail, vocabulary, attribution and reference form. Require a read of every changed client-facing passage. The clean preview must use the same text as the Sidecar.
+
+Record the result of the initial calibration briefly and honestly: what was tried, what mismatches were repaired and what remains provisional. A generated trial is not author approval. Repair known avoidable wording defects before delivery; do not repeatedly rewrite already suitable text or claim a perfect style score.
+
+## 9. Learning from corrections
+
+Keep a concise record of approved before/after changes with their reason and scope. Distinguish a reusable language preference from a case-specific factual correction or measure. Update affected rules and examples together, retire superseded guidance and apply the correction in later reports. Silence, a changed topic and an unexplained Done flag do not establish approval of an inferred style rule.
+
+## 10. Oral assessment and review state
+
+Record the author's expressions for partial implementation and their attribution conventions. Interpret them in context using the current project's levels; do not invent a fixed phrase-to-percentage table. Imported customer answers and comments remain intact. Drafted report items and newly assigned observations are included; Done remains unchecked until substantive review or explicit validation. The shared Sidecar contract determines fields and application behaviour.
+
+## 11. Selecting and joining library paragraphs
+
+Describe how this author typically combines an action, explanation, practical example and applicable technical reference. Use the library embedded in the project Sidecar. Select appropriate sentences across variants, retain complementary detail and remove duplicate or irrelevant parts. Smooth joins into the author's normal prose. Keep a condition with the action it limits and do not transfer old company facts into a new report.
+
+Record the author's reference heading, link presentation and placement. Carry only relevant technical references with the selected passages; source-report citations and drafting notes stay outside report text.
+
+## 12. Author-specific conventions and output layout
+
+Record any additional evidenced conventions: observation category aliases, captions, emphasis or native Word table layout. Keep generic equipment categories distinct from specific equipment when it changes which text applies. For direct Word work, retain the finding/recommendation pairing and the supplied template's styles. For Sidecar work, preserve row identities and field boundaries. Do not add formatting requirements simply to fill this section.
 
 
 ---
@@ -402,11 +442,9 @@ Do not assume every paragraph in a given table cell addresses the same category.
 
 ## Learn the writing profile
 
-Use `assets/author-profile-template.md` and the evidence order in [report-authoring.md](report-authoring.md). Record actionable choices with supporting examples, not only adjectives such as “professional” or “concise”. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
+Follow [style-calibration.md](style-calibration.md) and populate the common numbered [author-profile-template.md](../assets/author-profile-template.md). Give every colleague the same structure and depth of analysis while deriving their rules and examples from their own writing. Use the evidence order in [report-authoring.md](report-authoring.md).
 
-Describe whether differences are functional (summary versus detailed measure), linguistic (translation), chronological or inconsistent editing. Keep typos out of the profile. Distinguish confirmed preferences from working hypotheses. A harmonised experimental copy does not automatically become ground truth for the author’s voice.
-
-Provide a small before/after sample and ask for only the stylistic choices that materially change the profile. Continue building the library while optional preferences are pending. Retain confirmed examples separately from generated proposals. If no style examples are supplied for a new report, follow the library’s wording and use restrained language while stating the profile is provisional.
+Explain meaningful variation, turn observations into actionable rules, and run the internal drafting/comparison trial before calling the guide calibrated. Preserve the difference between authored examples, confirmed corrections and generated proposals. Keep a harmonised experiment separate from the source writing. If evidence is insufficient for a function, mark that part provisional and continue with supported material; do not require the author to fill gaps in a questionnaire.
 
 ## Reuse the style guide with a new project
 
@@ -498,6 +536,7 @@ Substantive uncertainty belongs in natural report language when it is itself a s
 - Apply changes to a full Sidecar copy. Validate preservation and actual application behaviour when relevant code is available.
 - Generate the clean preview from the finished fields. `scripts/report_preview.py` can do this for row-based drafts and report possible process-language leakage separately. It does not write prose, render photos, validate facts or certify style.
 - Read **all changed client-facing text**, not only a sample, against the authoring contract and matching authored passages. Check field roles, scope, modality, concrete actors/actions, unnecessary abstraction, duplication, and whether useful detail was lost.
+- Apply the personal guide's specific rules for each report function and inspect joins between reused and newly written sentences. Then read across the report for unintended shifts of voice. Fix the cause of a recurring mismatch instead of asking the consultant to rewrite each occurrence; retain legitimate differences between findings, recommendations and summaries.
 - Resolve delivery problems found by these checks, regenerate affected outputs, then verify those changes. A clean keyword scan is not a substitute for this semantic/style review.
 
 Stop when the requested material is accounted for, technical/structural checks appropriate to this edit pass, and no identified prose or output-boundary defect remains unresolved. Do not keep rewriting already suitable paragraphs to pursue an invented style score. Do not claim this finite review guarantees error-free transcription or perfect imitation.
@@ -749,6 +788,64 @@ Keep a progress file with source filename/hash, duration, chunks processed, fail
 ## Reuse and sharing
 
 Reuse the shared skill and the consultant's latest style guide with each new project's Sidecar and recordings. The application has already loaded the selected library into that Sidecar. Keep each company's live case separate. Anonymised onboarding examples and generalised reusable language may be shared as authorized; the colleague package itself contains neither a personal corpus nor a client project. Installing in local Codex does not establish installation or synchronization in ChatGPT Work.
+
+
+---
+
+## Embedded resource: references/style-calibration.md
+
+# Give every colleague the same depth of style work
+
+Read this when creating or substantially revising a personal guide. Use the common numbered structure in [author-profile-template.md](../assets/author-profile-template.md). The structure and review standard are shared; the writing rules, vocabulary and examples belong to the individual. A colleague should receive a usable writing guide, not a few flattering adjectives or a renamed copy of another author's profile.
+
+The outcome is prose that needs little editorial rewriting, with substantive review left to the consultant. Instructions alone cannot establish that outcome: check the guide against real writing and learn from actual corrections. For an ordinary visit with an established guide, use [report-authoring.md](report-authoring.md); do not repeat onboarding or require more uploads.
+
+## Establish the evidence and variation
+
+Use the source inventory and reading workflow in [onboarding.md](onboarding.md). Distinguish original authored prose, translations, accepted edits, untouched bootstrap and generated drafts. Sample across report functions and different reports for initial style inference, then account for the full supplied corpus. Repeated copies of one library paragraph are one writing example, not several independent confirmations.
+
+Keep a compact private evidence register as you read: candidate rule, relevant function, supporting passages, contrary examples and status. A current explicit instruction governs; an observed convention stays an inference until confirmed. An author need not personally approve every ordinary inference for useful work to proceed. Keep provenance out of report prose and avoid making this register another required input for future visits.
+
+Explain variations before harmonising them:
+
+- A summary may be more discursive than a recommendation.
+- An interview finding may need different attribution from a direct observation.
+- A technical condition may justify a longer sentence.
+- A translation may preserve foreign syntax without reflecting the author's target-language voice.
+- Later reports or explicit corrections may supersede earlier preferences.
+
+If two incompatible habits remain and the difference materially changes drafting, ask one focused preference question while continuing the clear work. Otherwise retain the context-dependent alternatives. Correct language errors without treating harmless variation as a defect.
+
+## Write rules that can generate text
+
+Populate every numbered section of the common template with applicable evidence, or a short statement that evidence is missing. Keep the same level of attention to findings, recommendations and other requested functions even when one colleague supplies fewer reports. A smaller corpus justifies a more provisional guide, not invented certainty or padded generic advice. Use the author's language for the finished guide.
+
+For each important rule, capture **when it applies → what to write → an authored example → exceptions or limits**. Describe the sentence-level decision, not merely the desired impression. For example, determine whether this author opens a measure with an infinitive, “we recommend”, a named actor or another form; do not choose one for everyone. Distinguish usual sequence from mandatory structure.
+
+Embed a few complementary examples directly in the guide. Use actual authored wording or explicitly approved corrections, anonymised without changing technical meaning. Keep proposed rewrites labelled as proposed. No invented frequencies, actions or diagnoses are justified by the need for a neat example.
+
+Retain useful detail. Shorter is not automatically closer to the author. Equally, an elaborate guide must not cause the assistant to add an explanation, slogan or extra paragraph to every simple measure. The guide should explain when to stop.
+
+## Check that the guide works
+
+Before calling a newly built guide calibrated, perform a small internal trial using available text. This is part of the assistant's work, not a writing exercise assigned to the colleague.
+
+1. Where the corpus permits, set aside passages from a different report or topic before drawing the initial rules. Choose complementary functions: a finding with attribution or partial implementation, a short recommendation, a developed recommendation and a summary or positive if that function is available. If all sources have already influenced the guide or only a small corpus exists, label the trial a reconstruction or limited-coverage check, not an independent test.
+2. Make neutral content briefs from the held-aside passages, retaining every relevant fact, actor, action, condition and qualification. These are reconstructed briefs, not transcripts. Draft from the brief and guide with the original wording set aside; do not merely copy the reference and call that validation. When original passages remain visible in the same context, acknowledge that limitation rather than claiming a blind test.
+3. Compare the result with the authored reference for perspective, attribution, grammatical form, modality, vocabulary, order, rhythm and useful detail. Separately check meaning and unsupported additions. Different valid wording is not automatically a style failure. Classify each mismatch as a style issue, meaning/coverage error, technical uncertainty or acceptable variation; do not collapse them into a made-up percentage.
+4. Tighten the rule that caused a real mismatch and repair the draft. Recheck affected functions; try another unused passage where available if the rule changed materially. Stop when no identified avoidable mismatch remains in the trial. Do not claim that a small trial proves all future prose will match.
+
+Also check one small fresh combination of supported library ideas when suitable passages exist: this tests paragraph assembly rather than reproduction alone. Preserve their conditions, remove overlap and inspect the joins in the author's voice. If no such combination is available, state that assembly was not tested; do not invent a technical scenario to fill a checklist.
+
+Keep the brief comparison and unresolved choices in private working notes. The personal guide needs only a compact calibration status and the useful rules/examples. If a real choice about voice remains, show a short sample to the author and ask about that choice alone. Do not require approval of obvious grammatical repairs or wait for a general endorsement before finishing the rest of the requested work.
+
+## Apply the guide and learn from editing
+
+On each new report, select and assemble the actual library wording before generating missing text. Review every changed passage against the applicable guide rules and examples, including transitions between reused and new sentences. Check the report as a whole for unintended shifts of voice while preserving legitimate differences between functions. Correct the Sidecar and regenerate its preview together.
+
+When the author supplies edits, inspect what they actually changed. Learn a reusable style preference only when the edit or explanation supports that interpretation. A new company fact, technical correction or one-off instruction is not a global writing rule. Explicit reusable corrections take precedence over older inferred habits; update the rule and its example together so the next report does not demand the same rewrite.
+
+Deliver one personal guide with a stable active filename. Keep the shared method, empty template and synthetic examples in the repository; personal reports, populated guides, libraries and correction records remain private. Reformatting an existing good guide should retain its specific rules and examples, not replace detailed work with empty headings. There is no need to rebuild an established profile solely because the shared structure gains a section.
 
 
 ---

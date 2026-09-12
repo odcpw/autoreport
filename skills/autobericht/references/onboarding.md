@@ -41,11 +41,9 @@ Do not assume every paragraph in a given table cell addresses the same category.
 
 ## Learn the writing profile
 
-Use `assets/author-profile-template.md` and the evidence order in [report-authoring.md](report-authoring.md). Record actionable choices with supporting examples, not only adjectives such as “professional” or “concise”. Assess style separately for findings, recommendations, management summary and positive observations. Look at opening verbs, typical sentence length, how the author involves supervisors/employees, modality, useful questions, explanations, terminology and reference formatting. Frequency across several authored reports is stronger evidence than one occurrence.
+Follow [style-calibration.md](style-calibration.md) and populate the common numbered [author-profile-template.md](../assets/author-profile-template.md). Give every colleague the same structure and depth of analysis while deriving their rules and examples from their own writing. Use the evidence order in [report-authoring.md](report-authoring.md).
 
-Describe whether differences are functional (summary versus detailed measure), linguistic (translation), chronological or inconsistent editing. Keep typos out of the profile. Distinguish confirmed preferences from working hypotheses. A harmonised experimental copy does not automatically become ground truth for the author’s voice.
-
-Provide a small before/after sample and ask for only the stylistic choices that materially change the profile. Continue building the library while optional preferences are pending. Retain confirmed examples separately from generated proposals. If no style examples are supplied for a new report, follow the library’s wording and use restrained language while stating the profile is provisional.
+Explain meaningful variation, turn observations into actionable rules, and run the internal drafting/comparison trial before calling the guide calibrated. Preserve the difference between authored examples, confirmed corrections and generated proposals. Keep a harmonised experiment separate from the source writing. If evidence is insufficient for a function, mark that part provisional and continue with supported material; do not require the author to fill gaps in a questionnaire.
 
 ## Reuse the style guide with a new project
 
