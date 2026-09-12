@@ -1,10 +1,10 @@
 {
   "AutoBericht_portable.md": {
-    "bytes": 161840,
-    "sha256": "5814fe148b7d33db0a16fe829ecbda456de80acb46c84625faf1433386b86572"
+    "bytes": 162674,
+    "sha256": "e449e76b3e7ceeca08e69d3171a7b67e8960fefb7a110d147f7e5f2660539c28"
   },
   "autobericht-skill.zip": {
-    "bytes": 69368,
-    "sha256": "bfeea9ac1a0d55acb8e81ef5ef1f235623c7e6b19ce56486d9aa3225334dc940"
+    "bytes": 69634,
+    "sha256": "cfa3fdf4460744286dcf79824131d2150ed3d9b8e5553ffe3b2b47b28bd83f9a"
   }
 }

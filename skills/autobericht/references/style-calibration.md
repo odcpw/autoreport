@@ -8,7 +8,7 @@ The outcome is prose that needs little editorial rewriting, with substantive rev
 
 Use the source inventory and reading workflow in [onboarding.md](onboarding.md). Distinguish original authored prose, translations, accepted edits, untouched bootstrap and generated drafts. Sample across report functions and different reports for initial style inference, then account for the full supplied corpus. Repeated copies of one library paragraph are one writing example, not several independent confirmations.
 
-Keep a compact private evidence register as you read: candidate rule, relevant function, supporting passages, contrary examples and status. A current explicit instruction governs; an observed convention stays an inference until confirmed. An author need not personally approve every ordinary inference for useful work to proceed. Keep provenance out of report prose and avoid making this register another required input for future visits.
+Keep only the private notes needed to support important rules or resolve conflicting examples; reuse the source inventory instead of creating a second register. A current explicit instruction governs; an observed convention stays an inference until confirmed. An author need not personally approve every ordinary inference for useful work to proceed. Keep provenance out of report prose and avoid making these notes another required input for future visits.
 
 Explain variations before harmonising them:
 
@@ -32,16 +32,16 @@ Retain useful detail. Shorter is not automatically closer to the author. Equally
 
 ## Check that the guide works
 
-Before calling a newly built guide calibrated, perform a small internal trial using available text. This is part of the assistant's work, not a writing exercise assigned to the colleague.
+Check a newly built guide on a few representative passages, preferably in the actual draft already being prepared. This is ordinary internal editing, not a separate certification exercise. Use the comparison below when the style is uncertain or a substantial new guide needs a trial; do not manufacture extra tests when the current drafting and review already establish the relevant choices.
 
 1. Where the corpus permits, set aside passages from a different report or topic before drawing the initial rules. Choose complementary functions: a finding with attribution or partial implementation, a short recommendation, a developed recommendation and a summary or positive if that function is available. If all sources have already influenced the guide or only a small corpus exists, label the trial a reconstruction or limited-coverage check, not an independent test.
 2. Make neutral content briefs from the held-aside passages, retaining every relevant fact, actor, action, condition and qualification. These are reconstructed briefs, not transcripts. Draft from the brief and guide with the original wording set aside; do not merely copy the reference and call that validation. When original passages remain visible in the same context, acknowledge that limitation rather than claiming a blind test.
 3. Compare the result with the authored reference for perspective, attribution, grammatical form, modality, vocabulary, order, rhythm and useful detail. Separately check meaning and unsupported additions. Different valid wording is not automatically a style failure. Classify each mismatch as a style issue, meaning/coverage error, technical uncertainty or acceptable variation; do not collapse them into a made-up percentage.
 4. Tighten the rule that caused a real mismatch and repair the draft. Recheck affected functions; try another unused passage where available if the rule changed materially. Stop when no identified avoidable mismatch remains in the trial. Do not claim that a small trial proves all future prose will match.
 
-Also check one small fresh combination of supported library ideas when suitable passages exist: this tests paragraph assembly rather than reproduction alone. Preserve their conditions, remove overlap and inspect the joins in the author's voice. If no such combination is available, state that assembly was not tested; do not invent a technical scenario to fill a checklist.
+Check paragraph assembly where the actual work combines library ideas: preserve their conditions, remove overlap and inspect the joins in the author's voice. Use a small additional example only if it resolves a real doubt; do not invent a technical scenario to fill a checklist.
 
-Keep the brief comparison and unresolved choices in private working notes. The personal guide needs only a compact calibration status and the useful rules/examples. If a real choice about voice remains, show a short sample to the author and ask about that choice alone. Do not require approval of obvious grammatical repairs or wait for a general endorsement before finishing the rest of the requested work.
+Keep any useful comparison and unresolved choices with existing private working notes. The personal guide needs usable rules and examples, plus a brief qualification only where evidence is weak. If a real choice about voice remains, show a short sample to the author and ask about that choice alone. Do not require approval of obvious grammatical repairs or wait for a general endorsement before finishing the rest of the requested work.
 
 ## Apply the guide and learn from editing
 

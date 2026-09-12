@@ -64,7 +64,7 @@ Explain how to remove hesitations while retaining uncertainty, later corrections
 
 Write concrete checks against this author's rules and examples: perspective, sentence openings, modality, paragraph sequence, practical detail, vocabulary, attribution and reference form. Require a read of every changed client-facing passage. The clean preview must use the same text as the Sidecar.
 
-Record the result of the initial calibration briefly and honestly: what was tried, what mismatches were repaired and what remains provisional. A generated trial is not author approval. Repair known avoidable wording defects before delivery; do not repeatedly rewrite already suitable text or claim a perfect style score.
+Keep the checks practical: compare the draft with the author's examples, repair actual mismatches and briefly qualify guidance that remains provisional. A generated trial is not author approval. Do not add a calibration report to the guide, repeatedly rewrite already suitable text or claim a perfect style score.
 
 ## 9. Learning from corrections
 
