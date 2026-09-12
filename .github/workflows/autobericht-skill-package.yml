@@ -1,35 +1,36 @@
-name: AutoBericht skill package
+name: AutoBericht checks
 on:
   pull_request:
-    paths:
-      - 'skills/autobericht/**'
-      - 'dist/autobericht/**'
-      - 'autobericht-skill.zip'
-      - 'docs/autobericht/AutoBericht_portable.md'
-      - '.github/workflows/autobericht-skill-package.yml'
   push:
-    branches: [main]
-    paths:
-      - 'skills/autobericht/**'
-      - 'dist/autobericht/**'
-      - 'autobericht-skill.zip'
-      - 'docs/autobericht/AutoBericht_portable.md'
-      - '.github/workflows/autobericht-skill-package.yml'
+    branches: [main, 'codex/**']
 permissions:
   contents: read
 jobs:
-  check-package:
+  application:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Application and installation checks
+        working-directory: program
+        run: npm test
+  skill-package:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-      - name: Check portable helper behaviour
-        run: python3 -m unittest discover -s skills/autobericht/scripts -p 'test_*.py'
-      - name: Rebuild upload files from editable skill
-        run: python3 skills/autobericht/scripts/build_distribution.py
+      - name: Check portable helpers
+        run: python3 -m unittest discover -s skill/source/scripts -p 'test_*.py'
+      - name: Rebuild upload files
+        run: python3 skill/source/scripts/build_distribution.py
       - name: Reject stale distribution files
         run: |
-          git diff --exit-code -- autobericht-skill.zip dist/autobericht docs/autobericht/AutoBericht_portable.md
-          test -z "$(git ls-files --others --exclude-standard -- autobericht-skill.zip dist/autobericht)"
+          git diff --exit-code -- skill/autobericht-skill.zip skill/AutoBericht_portable.md program/build/skill-manifest.json
+          test -z "$(git ls-files --others --exclude-standard -- skill/autobericht-skill.zip skill/AutoBericht_portable.md program/build/skill-manifest.json)"

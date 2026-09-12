@@ -1,6 +1,6 @@
 # Word Export v1
 
-This document describes the current no-VBA DOCX export contract used by `AutoBericht/mini/shared/word-export.js`.
+This document describes the current no-VBA DOCX export contract used by `program/mini/shared/word-export.js`.
 
 ## Scope
 

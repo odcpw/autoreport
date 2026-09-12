@@ -1,5 +1,7 @@
 # Project Folder Layout
 
+Bundled Office files are in the repository’s root `templates/`; `program/project-setup.json` defines what the app copies. Existing project files are not overwritten.
+
 Current flow: user selects an **empty** project folder, then AutoBericht creates/scaffolds required folders.
 
 ## Created Scaffold

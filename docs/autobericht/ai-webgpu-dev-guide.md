@@ -4,12 +4,12 @@ This guide documents the current AI spike setup, how to run it locally, and what
 
 ## Goals
 - Run Whisper (ASR) and LiquidAI (vision/chat) **locally** in the browser.
-- Keep all runtime assets in a self-contained `AutoBericht/AI/` bundle.
+- Keep all runtime assets in a self-contained `program/AI/` bundle.
 - Avoid external network calls when `Allow remote models` is unchecked.
 
 ## Folder layout (required)
 ```
-AutoBericht/
+program/
 ├── AI/
 │   ├── vendor/
 │   │   ├── transformers.min.js
@@ -30,20 +30,20 @@ AutoBericht/
 ```
 
 Notes:
-- `AutoBericht/AI/` is **gitignored** and is intended to be copied in (or zipped) per machine.
+- `program/AI/` is **gitignored** and is intended to be copied in (or zipped) per machine.
 - The spike uses **relative paths**: `../../AI/vendor/` and `../../AI/models/`.
 
 ## Local server (offline)
-Use the built-in launcher from the `AutoBericht/` folder:
+Use the built-in launcher from the `program/` folder:
 ```
 start-autobericht.cmd
 ```
 This starts a local server bound to **127.0.0.1** and opens the UI.
 
-Important: `AutoBericht/tools/serve-autobericht.ps1` serves `.mjs` and `.wasm` with correct MIME types. This is required for ORT 1.23.2 asyncify.
+Important: `program/tools/serve-autobericht.ps1` serves `.mjs` and `.wasm` with correct MIME types. This is required for ORT 1.23.2 asyncify.
 
 ## Running the spike
-1) Open: `http://127.0.0.1:<port>/AutoBericht/experiments/ai-webgpu-spike/index.html`
+1) Open: `http://127.0.0.1:<port>/program/experiments/ai-webgpu-spike/index.html`
 2) Click **Load library**.
 3) Click **Check WebGPU**.
 4) Click **Load ONNX (WebGPU)**.
@@ -83,7 +83,7 @@ Fix:
 
 ### Error: `... file was not found locally`
 Fix:
-- Verify the file exists under `AutoBericht/AI/models/...`.
+- Verify the file exists under `program/AI/models/...`.
 - Re-check the model id and ONNX filenames.
 
 ### WebGPU `shader-f16=false`
@@ -93,7 +93,7 @@ Fix:
 
 ## What to copy to another machine
 Copy or unzip **only**:
-- `AutoBericht/AI/`
-- `AutoBericht/experiments/`
+- `program/AI/`
+- `program/experiments/`
 
-Then run the local server from `AutoBericht/`.
+Then run the local server from `program/`.

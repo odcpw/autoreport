@@ -1,8 +1,10 @@
 param(
-    [string]$TargetFolder   = (Get-Location).Path,  # where to drop the repo contents
+    [string]$TargetFolder   = $PSScriptRoot,  # install beside this script, regardless of the shell's directory
     [string]$RepoArchiveUrl = "https://github.com/odcpw/autoreport/archive/refs/heads/main.zip",
     [switch]$CleanTarget                       # optional: wipe target folder before copying
 )
+
+$ErrorActionPreference = 'Stop'
 
 function Ensure-Folder([string]$Path) {
     if (-not (Test-Path $Path)) {
@@ -18,7 +20,7 @@ try {
     $ResolvedTarget = (Resolve-Path $TargetFolder).Path
 
     Write-Host "Downloading archive..." -ForegroundColor Cyan
-    Invoke-WebRequest -Uri $RepoArchiveUrl -OutFile $zipPath
+    Invoke-WebRequest -Uri $RepoArchiveUrl -OutFile $zipPath -UseBasicParsing
 
     if (Test-Path $extractRoot) {
         Remove-Item $extractRoot -Recurse -Force
@@ -43,7 +45,7 @@ try {
     Copy-Item -Path (Join-Path $sourceInner '*') -Destination $ResolvedTarget -Recurse -Force
 
     Write-Host "Sync complete. Start AutoBericht with start-autobericht.cmd in $ResolvedTarget." -ForegroundColor Green
-    Write-Host "Tip: run with -CleanTarget to remove files from older versions first." -ForegroundColor Green
+    Write-Host "For a fresh update, keep this sync script and remove the other installation files before running it. Keep project folders separately." -ForegroundColor Green
 }
 catch {
     Write-Error $_

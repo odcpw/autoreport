@@ -38,7 +38,7 @@ changes its path and is treated as a new photo on rescan.
 
 ## Start in ChatGPT Work or another capable assistant
 
-After syncing the repository, attach [autobericht-skill.zip](../../autobericht-skill.zip) from the repository root to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../dist/autobericht/AutoBericht_portable.md) instead. Then say:
+After syncing the repository, attach [autobericht-skill.zip](../../skill/autobericht-skill.zip) from the `skill/` folder to a ChatGPT or Copilot window that can read ZIPs. If ZIP extraction is unavailable, attach the complete [AutoBericht_portable.md](../../skill/AutoBericht_portable.md) instead. Then say:
 
 > Use this AutoBericht skill, my style guide, the project Sidecar and these MP3s to prepare my report. The library is already in the Sidecar. Choose and assemble the relevant passages and write in my style. Return the complete draft Sidecar and a clean preview, with working questions and software feedback separately. Keep imported customer answers intact. Leave Done for my review.
 
@@ -74,14 +74,14 @@ Read [validation.md](dictation-validation.md) for checks completed and the remai
 
 ## Source of truth and distribution
 
-The shared workflow and skill source live in this repository at [skills/autobericht](../../skills/autobericht/SKILL.md). Personal libraries, writing profiles and report collections belong in each consultant's private storage, such as their Drive. Live company photos remain on the work computer. Do not commit personal material to distribute the workflow.
+The shared workflow and skill source live in this repository at [skill/source](../../skill/source/SKILL.md). Personal libraries, writing profiles and report collections belong in each consultant's private storage, such as their Drive. Live company photos remain on the work computer. Do not commit personal material to distribute the workflow.
 
 From the repository root, generate a colleague package with:
 
 ```sh
-python3 skills/autobericht/scripts/build_distribution.py
+python3 skill/source/scripts/build_distribution.py
 ```
 
-The default build writes the ready-to-upload `autobericht-skill.zip` in the repository root, with the complete portable Markdown document and hashes in `dist/autobericht/`. Both `git pull` and the existing Windows sync script bring these files to colleagues without requiring Python on their computers. Update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
+The default build writes the ready-to-upload ZIP and complete portable Markdown document in `skill/`, with hashes in `program/build/skill-manifest.json`. Both `git pull` and the existing Windows sync script bring these files to colleagues without requiring Python on their computers. Update the repository source when improving the common workflow. The skill can also be installed directly from its source directory. Neither workflow requires sending the photo files to ChatGPT.
 
-After changing the skill, run the builder and commit the source and generated files together. The default build also refreshes `docs/autobericht/AutoBericht_portable.md` to preserve its existing download URL. CI rejects stale generated copies. Use `--output <directory>` for a separate handoff build; that option does not update the compatibility copy.
+After changing the skill, run the builder and commit the source and generated files together. The default build also refreshes `skill/AutoBericht_portable.md` to preserve its existing download URL. CI rejects stale generated copies. Use `--output <directory>` for a separate handoff build; that option does not update the compatibility copy.

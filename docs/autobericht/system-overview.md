@@ -11,7 +11,7 @@ Browser-first offline workflow with project-local state and direct Word/PPT expo
 
 ┌──────────────────────┐      writes/reads      ┌────────────────────────┐
 │  Minimal Editor UI   │ ─────────────────────▶ │  project_sidecar.json   │
-│  (AutoBericht/mini)  │ ◀───────────────────── │  (working state)        │
+│  (program/mini)  │ ◀───────────────────── │  (working state)        │
 └──────────────────────┘                        └────────────────────────┘
            │
            │ reads sidecar + templates

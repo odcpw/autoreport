@@ -408,7 +408,7 @@ Seed and library resolution (fresh projects):
 - Load only a user **knowledge base** whose `meta.locale` matches that language
   (e.g., `library_user_XX_fr-CH.json`). If several match, prompt the user to choose one.
 - If no matching user knowledge base exists, load the bundled seed for that exact
-  language from `AutoBericht/data/seed/knowledge_base_*.json`.
+  language from `program/data/seed/knowledge_base_*.json`.
 - Save the initialized sidecar before reporting bootstrap success. A library for a
   different locale is never used as a fallback.
 
@@ -513,8 +513,8 @@ Design goal: keep all customer data local, with explicit user consent for any fi
 - Export to Word/PPT is performed locally in the web app (no cloud services).
 
 ### Frontend module layout
-- `AutoBericht/mini/app.js` is the thin orchestrator (wiring only).
-- Shared modules live in `AutoBericht/mini/shared/`:
+- `program/mini/app.js` is the thin orchestrator (wiring only).
+- Shared modules live in `program/mini/shared/`:
   - `state.js` (default project model + helpers)
   - `normalize.js` (workstate/meta normalization + observation helpers)
   - `seeds.js` (seed + library loading/building)
@@ -524,10 +524,10 @@ Design goal: keep all customer data local, with explicit user consent for any fi
   - `elements.js` (DOM element lookup)
   - `bind-events.js` (event wiring)
 - This keeps the surface area small and makes future localization/feature work safer.
-- PhotoSorter mirrors this layout with modules in `AutoBericht/mini/photosorter/` and a thin `AutoBericht/mini/photosorter.js` orchestrator.
+- PhotoSorter mirrors this layout with modules in `program/mini/photosorter/` and a thin `program/mini/photosorter.js` orchestrator.
 
 ### Checklist data source
-- Checklist lists are JSON files in `AutoBericht/data/checklists/`:
+- Checklist lists are JSON files in `program/data/checklists/`:
   - `checklists_de.json`, `checklists_fr.json`, `checklists_it.json`
 - Loaded at runtime by the editor from `http://` or `https://` context.
 - No JS fallback; checklist overlay requires HTTP hosting.

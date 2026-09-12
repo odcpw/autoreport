@@ -1,0 +1,57 @@
+> Historical redesign notes; current usage is described in the root README and guides/.
+
+# AutoBericht: Current State vs Target
+
+This document tracks the **redesign** direction (2026).
+
+## Operating Constraints
+
+- Offline-only (no CDN, no telemetry, no remote fonts/images).
+- No unsafe browser flags.
+- Locked-down corporate Edge environment.
+- Prefer File System Access API for direct folder writes.
+
+## Current State (Redesign)
+
+- Minimal editor exists in `program/mini/` with sidecar load/save and autosave.
+- Project page is the main control center (project metadata, locale/autosave, tools, spider editor, logo pipeline, and debug log export).
+- No-VBA Word export is available from the Project page (DOCX template markers, logos, spider image, thermo bars, priority values, chapter table payloads).
+- Word export v1 contract is documented in `docs/autobericht/mini/word-export-v1.md`.
+- PhotoSorter uses a single-layout workflow with split filter/tag pills, cumulative AND filtering, clear-filters control, and observation tag add/remove.
+- PhotoSorter hardening pass completed (autosave flush logging, safer defaults, stronger knowledge-base validation, locale-aware sorting).
+- 4.8 Beobachtungen is a special chapter (reorderable rows, tag‑driven cards, photo overlay per tag).
+- Management Summary (Chapter 0) added with 8 placeholder cards.
+- Markdown-lite preview supports bold/italic/bullets/links; tooltip cheatsheet added.
+- I18n scaffold added (markdown tooltip wired; locale set from project meta).
+- Shared debug log exporter is available across UI pages.
+- File System Access + SheetJS spike exists in `program/experiments/`.
+- Seed recommendation guidance locked in `docs/research_recommendations/seed_prompt_template_v4.md` (natural prose, standalone paragraphs).
+- Chapter 1 recommendations generated via Claude (one finding at a time) and written to `docs/research_recommendations/chapter1_recommendations_v5.md`.
+- Chapter 1 recommendations applied to `program/data/seed/knowledge_base_de.json` (library entries 1.1.1–1.5.7 updated).
+- Chapters 2–14 recommendations generated via Claude and applied to `program/data/seed/knowledge_base_de.json` (QA pass enforces 4 paragraphs, 6–9 sentences per paragraph).
+- Chapter 11 recommendations generated in DE and applied to `program/data/seed/knowledge_base_de.json` (4 paragraphs, 6–9 sentences each).
+- FR-CH translation completed and applied to `program/data/seed/knowledge_base_fr.json` (library aligned to DE; 261 entries).
+- IT-CH translation completed and applied to `program/data/seed/knowledge_base_it.json` (library aligned to DE; 261 entries).
+
+## Target End-to-End Flow
+
+1. User opens the minimal editor.
+2. Selects a project folder via File System Access API.
+3. Loads and edits `project_sidecar.json`.
+4. Exports directly to Word (`.docx`) from the browser using the project template placeholders.
+5. Optional: materialize photo folders from tags.
+
+## Immediate Next Steps
+
+- [x] No-VBA Word export (template marker replacement, chapter payload injection, logo insertion, spider image, thermo bars, priority column).
+- [ ] Template hardening and governance (final placeholder map, style locks, and template QA pass).
+- [x] Create FR and IT Word template variants (same placeholder/style contract as DE template).
+- [x] Explicit UI locale policy finalized: UI controls/messages in English; instructional hint text localized by project language.
+- [x] Legacy VBA pipeline removed from repo.
+- [x] No File System Access fallback (removed by design).
+- [x] Seed recommendations expanded for chapters 1–14 in DE/FR/IT libraries.
+
+## Deferred For Now
+
+- Sidecar compatibility matrix/migration testing (single active sidecar project at the moment).
+- Full export regression matrix across all scenarios/locales (still pending execution/documentation).

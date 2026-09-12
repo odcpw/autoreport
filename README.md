@@ -1,71 +1,35 @@
-# AutoBericht System
+# AutoBericht
 
-Offline safety-culture reporting tool with a browser UI (`AutoBericht/mini`) and project-local data (`project_sidecar.json`, library JSON, photo folders).
+Create safety reports with the local browser application and your own reusable library.
 
-## Quick Start
+1. Run **start-autobericht.cmd**.
+2. Choose your project folder in the application. Keep project folders separate from this installation.
+3. For a new project, choose its language; the app creates the folders and copies the templates it needs.
 
-1. Place this repo on local disk.
-2. Run `start-autobericht.cmd` from repo root.
-3. In the UI, click **Open Project Folder** and choose an empty project folder.
-4. On **Project**, choose `Locale` to bootstrap seed content.
-5. Use:
-   - **PhotoSorter** for import/tag/export of photos
-   - **AutoBericht** for findings/recommendations + chapter workflow
-   - **Project** for Word/PPT export + library update/export
+## Find what you need
 
-For onboarding guides, see:
-- `instructions.txt`
-- `docs/onboarding/AutoBericht-Schnellstart-DE.docx`
-- `docs/onboarding/AutoBericht-Guide-Rapide-FR.docx`
-- `docs/onboarding/AutoBericht-Guida-Rapida-IT.docx`
+| Location | Purpose |
+|---|---|
+| [start-autobericht.cmd](start-autobericht.cmd) | Start the application |
+| [sync-autobericht.ps1](sync-autobericht.ps1) | Download the current version beside this script |
+| [skill/](skill/README.md) | Skill ZIP or portable document to attach to a chat |
+| [templates/](templates/README.md) | Word, PowerPoint and Excel templates |
+| [guides/](guides/README.md) | Instructions in German, French and Italian |
+| [program/](program/README.md) | Application files; no manual setup needed inside |
+| [docs/](docs/autobericht/README.md) | Technical documentation and development notes |
 
-## Use the AutoBericht skill in a chat
+## Update
 
-After syncing, drag [autobericht-skill.zip](autobericht-skill.zip) from the repository root into a capable ChatGPT or Copilot window, or use [AutoBericht_portable.md](dist/autobericht/AutoBericht_portable.md) if ZIP attachments are unsupported. The editable source is [skills/autobericht](skills/autobericht/SKILL.md).
+Close the application and its server window. In the **installation folder**, keep `sync-autobericht.ps1` and erase the other installation files, then run the script. Leave your separate project folders and personal libraries in place. The script installs beside itself even when run from another working directory. An explicit `-TargetFolder` still selects a different destination.
 
-## Documentation
+## Use the skill
 
-Primary redesign docs are in `docs/autobericht/`:
-- `docs/autobericht/design-spec.md`
-- `docs/autobericht/system-overview.md`
-- `docs/autobericht/workflow.md`
-- `docs/autobericht/project-template.md`
-- [Dictation to a review-ready sidecar](docs/autobericht/dictation-workflow.md): shared AutoBericht skill, personal-library onboarding, transcription and report drafting while photos stay on the work computer.
+Attach [skill/autobericht-skill.zip](skill/autobericht-skill.zip) to a chat that can read ZIP files. If it cannot, use [skill/AutoBericht_portable.md](skill/AutoBericht_portable.md).
 
-Additional research/docs:
-- `docs/research_recommendations/`
-- `docs/oracle-browser.md`
+For a new visit, supply your recording, project Sidecar and personal style guide. The Sidecar already contains the library. The skill also builds a Masterbericht, library and style guide from past reports. Site photos stay on the work computer.
 
-## Repo Structure
+## Project files
 
-```text
-autoreport/
-├── README.md
-├── instructions.txt
-├── start-autobericht.cmd
-├── AutoBericht/
-│   ├── mini/                 # main web app (AutoBericht + PhotoSorter)
-│   ├── data/                 # seeds, weights, checklists
-│   ├── project-template/     # scaffold copied into new project folders
-│   ├── libs/                 # bundled third-party libs (offline)
-│   ├── tools/
-│   └── experiments/
-├── docs/
-│   ├── autobericht/          # architecture/workflow docs
-│   ├── onboarding/           # DE/FR/IT onboarding guides + screenshots
-│   └── research_recommendations/
-├── sources/
-├── tools/
-└── sync-autobericht.ps1
-```
+`project_sidecar.json` holds the current project's report, assessment and photo metadata. `library_user_*.json` carries reusable wording between projects. Existing project folders and their own `templates/` keep the same structure. Personal material belongs in your private storage, outside the program installation.
 
-## Current Data Contract
-
-- `project_sidecar.json`: project state (chapters, edits, filters, library action per row, photos state)
-- `library_user_*.json`: reusable knowledge library (cross-project text/tag base)
-- Library updates are applied when **Generate / Update Library** is run on Project page.
-
-## Support
-
-- Use **Save debug log** in the UI when troubleshooting.
-- See `STATUS.md` for current state notes.
+For troubleshooting, use **Save debug log** in the application. Development and test instructions are in [program/README.md](program/README.md).

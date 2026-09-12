@@ -21,8 +21,7 @@ Thumbs.db
 .oracle/
 
 # Build / export artifacts (keep directory via .gitkeep)
-output/**
-!output/.gitkeep
+output/
 
 # Local project runtime data
 project_sidecar.json
@@ -39,11 +38,11 @@ sources/
 legacy/artifacts/**
 
 # Large local model binaries (experiments)
-AutoBericht/experiments/models/**/onnx/*.onnx
-AutoBericht/experiments/models/**/onnx/*.onnx_data
+program/experiments/models/**/onnx/*.onnx
+program/experiments/models/**/onnx/*.onnx_data
 
 # Large local model binaries (AI bundle)
-AutoBericht/AI/
+program/AI/
 
 # Internal agent scratch
 .code/

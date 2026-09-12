@@ -2,9 +2,9 @@
 
 ## Authoring workflow — 9 September 2026
 
-- Skill structure passed the skill-creator validator, both from source and from the extracted root ZIP.
+- Skill structure passed the skill-creator validator, both from source and from the extracted skill ZIP.
 - All 12 portable helper tests passed from source and from the extracted ZIP. The six new preview checks cover exact draft wording with Done false, process-language diagnostics kept separately, inclusion flags, observation order and explicit chapter-content omissions, refusal to substitute missing case text with library defaults, and source/output preservation.
-- The distribution builder verified every archived resource against the source. The portable Markdown copies and root ZIP were rebuilt together; their hashes are recorded in `dist/autobericht/package_manifest.json`.
+- The distribution builder verified every archived resource against the source. The portable Markdown document and skill ZIP were rebuilt together; their hashes are recorded in `program/build/skill-manifest.json`.
 - CI now runs the helper tests as well as checking that generated distribution files match the skill source.
 - Two independent synthetic report tasks exercised contrasting confirmed profiles: French first-person recommendations and German impersonal recommendations. Both retained useful library detail, applied later corrections, separated software feedback and unresolved questions, preserved scores/source branches and produced previews matching the Sidecar fields.
 - Review of the first French run caught an unsupported generic diagnosis: overdue actions had become a claim of missing follow-up. The authoring rule and synthetic example were corrected, then the same input was rerun in a fresh context. The new finding stated only the supported delay and kept the positive photo correction without a recommendation. This is a bounded regression exercise, not a percentage of style fidelity.
