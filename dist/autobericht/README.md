@@ -6,7 +6,7 @@ Then say:
 
 > Follow the attached AutoBericht skill. Start with the files I provide and use my writing profile and library. If current application context would help, propose reading or cloning https://github.com/odcpw/autoreport. Keep comments about improving the software separate from the report.
 
-Supply your own sidecar, library/profile and permitted recording or transcript separately. Site photos stay on your work computer. Attaching the package supplies instructions; it does not install a skill, enable transcription or grant repository access. Capabilities depend on the particular ChatGPT/Copilot environment.
+For a report, supply the project Sidecar, your style guide and permitted recording or transcript. The Sidecar already contains the library; no duplicate library or examples pack is required. Site photos stay on your work computer. Attaching the package supplies instructions; it does not install a skill, enable transcription or grant repository access. Capabilities depend on the particular ChatGPT/Copilot environment.
 
 ## For maintainers
 

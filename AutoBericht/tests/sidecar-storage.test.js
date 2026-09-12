@@ -45,6 +45,35 @@ test("the first save creates the sidecar from an empty folder", async () => {
   assert.equal(JSON.parse(dirHandle.read("project_sidecar.json")).report.value, "r0");
 });
 
+test("PhotoSorter's first save retains its library report and includes tagged observations", async () => {
+  const browser = loadBrowserScripts([
+    "mini/shared/sidecar-storage.js", "mini/shared/normalize.js",
+    "mini/photosorter/tags.js", "mini/photosorter/io-sidecar.js",
+  ], { document: { documentElement: { getAttribute: () => "fr-CH" } } });
+  const dir = createMemoryDirectory({});
+  const state = {
+    projectHandle: dir,
+    sidecarDoc: { report: { project: { meta: { locale: "fr-CH" }, chapters: [{ id: "4.8", rows: [] }] } } },
+    projectDoc: {}, photoRootName: "photos/resized",
+    tagOptions: { report: [], observations: [{ value: "Escaliers", label: "Escaliers" }], training: [] },
+  };
+  const io = browser.AutoBerichtPhotoSorterSidecar.init(
+    { state, runtime: { saveQueue: Promise.resolve() }, setStatus() {}, debug: { logLine() {} }, elements: {} },
+    { tagsApi: browser.AutoBerichtPhotoSorterTags, i18n: testI18n,
+      photosApi: { serializePhotos: () => ({ "photos/resized/a.jpg": { tags: { observations: ["Escaliers"] } } }) } },
+  );
+  await io.saveProjectSidecar();
+  const first = JSON.parse(dir.read("project_sidecar.json"));
+  assert.equal(first.report.project.meta.locale, "fr-CH");
+  assert.equal(first.report.project.chapters[0].rows[0].workstate.includeFinding, true);
+  assert.equal(first.report.project.chapters[0].rows[0].workstate.done, false);
+  // Another writer's newer report must win over PhotoSorter's cached report.
+  first.report.project.meta.company = "Updated in report tab";
+  await browser.AutoBerichtSidecarStorage.saveSidecar({ dirHandle: dir, merge: () => first });
+  await io.saveProjectSidecar();
+  assert.equal(JSON.parse(dir.read("project_sidecar.json")).report.project.meta.company, "Updated in report tab");
+});
+
 test("report and photo writers preserve each other's branches", async () => {
   const storage = loadStorage();
   const base = { report: { value: "r0" }, photos: { value: "p0" } };
@@ -88,6 +117,7 @@ test("PhotoSorter keeps saving after AutoBericht saved in another tab", async ()
   // PhotoSorter tab.
   const psContext = loadBrowserScripts([
     "mini/shared/sidecar-storage.js",
+    "mini/shared/normalize.js",
     "mini/photosorter/tags.js",
     "mini/photosorter/io-sidecar.js",
   ], {
@@ -143,6 +173,10 @@ test("PhotoSorter keeps saving after AutoBericht saved in another tab", async ()
 
   psState.photos[0].tags.observations.push("Ordnung");
   await psIo.saveProjectSidecar();
+  const taggedRow = JSON.parse(dir.read("project_sidecar.json")).report.project.chapters.find((c) => c.id === "4.8").rows[0];
+  assert.equal(taggedRow.workstate.includeFinding, true);
+  assert.equal(taggedRow.workstate.includeRecommendation, true);
+  assert.equal(taggedRow.workstate.done, false);
 
   const loaded = await abIo.loadProjectFromFolder();
   assert.equal(loaded.ok, true);
@@ -161,6 +195,42 @@ test("PhotoSorter keeps saving after AutoBericht saved in another tab", async ()
   assert.deepEqual(photo.tags.training, ["Basics"]);
   assert.equal(onDisk.report.project.meta.company, "ACME edited twice");
   assert.equal(onDisk.photos.photoRoot, "photos/resized");
+  assert.equal(onDisk.report.project.chapters.find((c) => c.id === "4.8").rows[0].workstate.includeFinding, true);
+  const localRow = abState.project.chapters.find((c) => c.id === "4.8").rows[0];
+  localRow.workstate.includeFinding = false;
+  localRow.workstate.done = true;
+  await abIo.saveSidecar();
+  psState.photos[0].tags.observations = [];
+  await psIo.saveProjectSidecar();
+  psState.photos.push({ path: "photos/resized/new.jpg", tags: { observations: ["Ordnung"], report: [], training: [] } });
+  await psIo.saveProjectSidecar();
+  // The report tab still has its old unchecked row and must reconcile the
+  // newly tagged photo. A second save must retain that activated draft.
+  await abIo.saveSidecar();
+  await abIo.saveSidecar();
+  const updatedRow = JSON.parse(dir.read("project_sidecar.json")).report.project.chapters.find((c) => c.id === "4.8").rows[0];
+  assert.equal(updatedRow.workstate.includeFinding, true);
+  assert.equal(updatedRow.workstate.done, false);
+});
+
+test("new observation assignments include drafts, but unchanged tags respect manual exclusion", () => {
+  const ctx = loadBrowserScripts(["mini/shared/normalize.js"]);
+  const row = { type: "field_observation", tag: "Regale", titleOverride: "Rayonnages", workstate: { includeFinding: false, includeRecommendation: false, done: true, findingText: "My draft" } };
+  const project = { chapters: [{ id: "4.8", rows: [row] }] };
+  const before = { photos: { photos: { "a.jpg": { tags: { observations: [] } } } } };
+  const after = { photos: { photoTagOptions: { observations: [{ value: "Regale", label: "Rayonnages" }] }, photos: { "a.jpg": { tags: { observations: ["Regale"] } } } } };
+  ctx.AutoBerichtNormalize.includeNewObservationAssignments(project, after, before);
+  assert.equal(row.workstate.includeFinding, true);
+  assert.equal(row.workstate.includeRecommendation, true);
+  assert.equal(row.workstate.done, false);
+  assert.equal(row.workstate.findingText, "My draft");
+  row.workstate.includeFinding = false;
+  row.workstate.done = true;
+  ctx.AutoBerichtNormalize.includeNewObservationAssignments(project, after, after);
+  assert.equal(row.workstate.includeFinding, false);
+  assert.equal(row.workstate.done, true);
+  ctx.AutoBerichtNormalize.includeNewObservationAssignments(project, before, after);
+  assert.equal(row.workstate.includeFinding, false);
 });
 
 // Sidecars written before 24 February 2026 kept the project and the photo map

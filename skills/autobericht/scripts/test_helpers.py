@@ -10,6 +10,17 @@ def fixture():
  return {'report':{'project':{'meta':{'locale':'fr-CH'},'chapters':[{'id':'1','rows':[{'id':'1.1','type':'standard','master':{'finding':'Generic','recommendation':'Base'},'customer':{'answer':1,'items':[{'id':'1.1','comment':'Customer statement','answer':1}]},'workstate':{'selectedLevel':4,'scoreTouched':False,'findingText':'Generic','recommendationText':'Base','done':True,'includeFinding':True,'libraryAction':'append'}}]},{'id':'4.8','rows':[{'id':'4.8.1','type':'field_observation','tag':'Rayonnages','master':{'finding':'Observation','recommendation':'Base observation'},'customer':{},'workstate':{'selectedLevel':1,'done':False}}]}]}},'photos':{'photoRoot':'photos','photoTagOptions':{'observations':[{'value':'Rayonnages','label':'Rayonnages'}],'report':['1.1'],'training':['Training']},'photos':{'photos/a.jpg':{'tags':{'report':['1.1'],'observations':[],'training':['Training']},'notes':'Keep me'}}},'spider':{'unrelated':[1,2]},'unknownFutureField':{'keep':True}}
 
 class Helpers(unittest.TestCase):
+ def test_drafted_text_and_observation_tags_include_without_marking_done(self):
+  source=fixture();ws=source['report']['project']['chapters'][0]['rows'][0]['workstate'];ws.update(includeFinding=False,includeRecommendation=False)
+  plan={'format':'autobericht-editor-patch/1','sourceSha256':'test','rows':[{'chapterId':'1','rowId':'1.1','changes':{'findingText':'According to the interviews, only part is implemented.'}}],'photos':[{'path':'photos/a.jpg','observationsAdd':['Rayonnages']}]}
+  out=sc.apply(source,plan,'test')
+  for row in sc.row_map(out).values():
+   self.assertTrue(row['workstate']['includeFinding']);self.assertTrue(row['workstate']['includeRecommendation']);self.assertFalse(row['workstate']['done'])
+  plan['rows'][0]['changes']['includeFinding']=False
+  self.assertFalse(sc.row_map(sc.apply(source,plan,'test'))[('1','1.1')]['workstate']['includeFinding'])
+  obs=sc.row_map(out)[('4.8','4.8.1')];obs['workstate']['includeFinding']=False;obs['workstate']['done']=True
+  repeated=sc.apply(out,{**plan,'rows':[]},'test')
+  self.assertFalse(sc.row_map(repeated)[('4.8','4.8.1')]['workstate']['includeFinding']);self.assertTrue(sc.row_map(repeated)[('4.8','4.8.1')]['workstate']['done'])
  def test_case_edit_preserves_source_and_review_gate(self):
   source=fixture();source['report']['project']['chapters'][0]['rows'].append({'kind':'section','title':'Section heading without row ID'});snapshot=copy.deepcopy(source)
   plan={'format':'autobericht-editor-patch/1','sourceSha256':'test','rows':[{'chapterId':'1','rowId':'1.1','changes':{'selectedLevel':2,'recommendationText':'A case-specific draft'}}],'photos':[{'path':'photos/a.jpg','observationsAdd':['Rayonnages']}]}

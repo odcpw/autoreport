@@ -204,7 +204,7 @@ Use the application’s four existing levels, whose current display values are 0
 
 ## Photos and inclusion
 
-The consultant views the photos on the work computer; the assistant does not receive or inspect their pixels. Resolve spoken identifiers against the sidecar or a permitted text-only manifest, without needing access to the image files. Preserve paths so the local app can reconnect them after import. Never request images, thumbnails, contact sheets or screen sharing as a workaround. A phrase such as “photo 19” must be resolved from an explicit numbering map; do not guess browser order. Resolve spoken identifiers to the actual file path. Match category labels/aliases against the current library and photo options. A category may have several photos; a photo may support several categories. Keep equipment/site distinctions and existing tags/notes. A category named alone permits classification, not invention of a defect. Text-only interview findings require no fabricated photo.
+The consultant views the photos on the work computer; the assistant does not receive or inspect their pixels. Resolve spoken identifiers against the sidecar or a permitted text-only manifest, without needing access to the image files. Preserve paths so the local app can reconnect them after import. Never request images, thumbnails, contact sheets or screen sharing as a workaround. A phrase such as “photo 19” resolves to the record whose persistent `photoNumber` is 19 in `sidecar.photos.photos`. Preserve that number and its file path. For an older sidecar without these numbers, use an explicit supplied numbering map or request clarification; do not guess browser order or a filtered position. Resolve spoken identifiers to the actual file path. Match category labels/aliases against the current library and photo options. A category may have several photos; a photo may support several categories. Keep equipment/site distinctions and existing tags/notes. A category named alone permits classification, not invention of a defect. Text-only interview findings require no fabricated photo.
 
 Prepare clear described report issues with the adapted finding, assembled recommendation, relevant photos and inclusion flags. Leave `done=false` on new or materially changed drafts, unless the consultant explicitly validates that item. A previously approved row changed by new information needs re-review. Keep explicit “off the record / not in report” material out of the delivered report.
 
@@ -578,6 +578,10 @@ Field observations are normally in chapter 4.8 and have type `field_observation`
 Read the complete JSON programmatically and preserve unknown data. Record its SHA-256. Apply only intended changes. If the source changed while drafting, re-read and reconcile before writing; do not overwrite another editor’s updates. Keep original and output under different names. The supplied helpers refuse to overwrite an existing output.
 
 The draft editor switches the relevant library action to `off` when changing a finding/recommendation so the new project text cannot be queued accidentally for library export. This does not discard the separate closeout library workflow. It sets `scoreTouched` and aligns `autoScoreLevel` for an explicit level edit. Material changes reset Done unless the edit plan explicitly records the consultant’s validation.
+
+Writing nonempty `findingText` or `recommendationText` through `sidecar_tool.py` automatically sets both inclusion flags to true unless the same row edit explicitly supplies a different flag. This applies to standard findings and field observations. Adding an observation tag to a photo also includes the matching existing observation row and clears Done. An explicit row-level include/Done choice in the plan takes precedence. The helper checks that the tag maps to exactly one existing observation row; initialise missing categories through the app before applying the plan.
+
+PhotoSorter's save performs the same activation for newly assigned observation tags, including rows it creates from current tag options. A report tab open at the same time reconciles new photo assignments before saving. Merely having a category in the library, reopening a project, saving an unchanged tag or removing a tag does not activate or exclude rows. Report-section tags and training tags are photo classifications; they do not activate all negative findings in a whole section. Raw JSON written by another tool must explicitly follow these rules; arbitrary external file edits do not run this helper automatically.
 
 ## External edit plan
 
@@ -1249,7 +1253,7 @@ def apply(doc,plan,sha):
  if plan.get('format')!='autobericht-editor-patch/1':fail('Unknown patch format')
  if plan.get('sourceSha256')!=sha:fail('Source hash mismatch; regenerate against the latest sidecar')
  if set(plan)-{'format','sourceSha256','rows','photos'}:fail('Unsupported patch keys')
- out=copy.deepcopy(doc);rows=row_map(out);seen=set()
+ out=copy.deepcopy(doc);rows=row_map(out);seen=set();explicit={}
  for edit in plan.get('rows',[]):
   if set(edit)!={'chapterId','rowId','changes'}:fail('Row edit keys must be chapterId,rowId,changes')
   key=(str(edit['chapterId']),str(edit['rowId']))
@@ -1258,6 +1262,10 @@ def apply(doc,plan,sha):
   if row.get('kind')=='section':fail('Cannot edit section row')
   changes=edit['changes']
   if not isinstance(changes,dict) or set(changes)-WS_FIELDS:fail('Unsupported row edit field')
+  changes=copy.deepcopy(changes);explicit[key]=set(changes)
+  if any(isinstance(changes.get(k),str) and changes[k].strip() for k in ('findingText','recommendationText')):
+   changes.setdefault('includeFinding',True)
+   changes.setdefault('includeRecommendation',True)
   ws=row.setdefault('workstate',{});material=any(ws.get(k)!=v for k,v in changes.items() if k!='done')
   if 'selectedLevel' in changes:
    if row.get('type') in ('field_observation','summary'):fail('No score for observation/summary')
@@ -1285,7 +1293,18 @@ def apply(doc,plan,sha):
    if set(adds)&set(removes):fail('Same tag added and removed')
    if set(adds)-options(doc,g):fail('Unknown tag value in '+g)
    values=[x for x in tags.get(g,[]) if x not in removes]
+   new_adds=set(adds)-set(tags.get(g,[]))
    tags[g]=list(dict.fromkeys(values+adds))
+   if g=='observations':
+    for tag in new_adds:
+     aliases={tag}
+     for option in out.get('photos',{}).get('photoTagOptions',{}).get('observations',[]):
+      if isinstance(option,dict) and option.get('value')==tag:aliases.add(option.get('label',tag))
+     matches=[(key,row) for key,row in rows.items() if row.get('type')=='field_observation' and (row.get('tag') in aliases or row.get('titleOverride') in aliases)]
+     if len(matches)!=1:fail('Observation tag needs one existing report row; initialise/synchronise categories in the app first: '+tag)
+     key,row=matches[0];ws=row.setdefault('workstate',{})
+     for field,value in [('includeFinding',True),('includeRecommendation',True),('done',False)]:
+      if field not in explicit.get(key,set()):ws[field]=value
   if 'notes' in edit:ph['notes']=edit['notes']
  validate(doc,out)
  return out
@@ -1326,6 +1345,17 @@ def fixture():
  return {'report':{'project':{'meta':{'locale':'fr-CH'},'chapters':[{'id':'1','rows':[{'id':'1.1','type':'standard','master':{'finding':'Generic','recommendation':'Base'},'customer':{'answer':1,'items':[{'id':'1.1','comment':'Customer statement','answer':1}]},'workstate':{'selectedLevel':4,'scoreTouched':False,'findingText':'Generic','recommendationText':'Base','done':True,'includeFinding':True,'libraryAction':'append'}}]},{'id':'4.8','rows':[{'id':'4.8.1','type':'field_observation','tag':'Rayonnages','master':{'finding':'Observation','recommendation':'Base observation'},'customer':{},'workstate':{'selectedLevel':1,'done':False}}]}]}},'photos':{'photoRoot':'photos','photoTagOptions':{'observations':[{'value':'Rayonnages','label':'Rayonnages'}],'report':['1.1'],'training':['Training']},'photos':{'photos/a.jpg':{'tags':{'report':['1.1'],'observations':[],'training':['Training']},'notes':'Keep me'}}},'spider':{'unrelated':[1,2]},'unknownFutureField':{'keep':True}}
 
 class Helpers(unittest.TestCase):
+ def test_drafted_text_and_observation_tags_include_without_marking_done(self):
+  source=fixture();ws=source['report']['project']['chapters'][0]['rows'][0]['workstate'];ws.update(includeFinding=False,includeRecommendation=False)
+  plan={'format':'autobericht-editor-patch/1','sourceSha256':'test','rows':[{'chapterId':'1','rowId':'1.1','changes':{'findingText':'According to the interviews, only part is implemented.'}}],'photos':[{'path':'photos/a.jpg','observationsAdd':['Rayonnages']}]}
+  out=sc.apply(source,plan,'test')
+  for row in sc.row_map(out).values():
+   self.assertTrue(row['workstate']['includeFinding']);self.assertTrue(row['workstate']['includeRecommendation']);self.assertFalse(row['workstate']['done'])
+  plan['rows'][0]['changes']['includeFinding']=False
+  self.assertFalse(sc.row_map(sc.apply(source,plan,'test'))[('1','1.1')]['workstate']['includeFinding'])
+  obs=sc.row_map(out)[('4.8','4.8.1')];obs['workstate']['includeFinding']=False;obs['workstate']['done']=True
+  repeated=sc.apply(out,{**plan,'rows':[]},'test')
+  self.assertFalse(sc.row_map(repeated)[('4.8','4.8.1')]['workstate']['includeFinding']);self.assertTrue(sc.row_map(repeated)[('4.8','4.8.1')]['workstate']['done'])
  def test_case_edit_preserves_source_and_review_gate(self):
   source=fixture();source['report']['project']['chapters'][0]['rows'].append({'kind':'section','title':'Section heading without row ID'});snapshot=copy.deepcopy(source)
   plan={'format':'autobericht-editor-patch/1','sourceSha256':'test','rows':[{'chapterId':'1','rowId':'1.1','changes':{'selectedLevel':2,'recommendationText':'A case-specific draft'}}],'photos':[{'path':'photos/a.jpg','observationsAdd':['Rayonnages']}]}

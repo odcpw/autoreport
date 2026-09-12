@@ -99,7 +99,7 @@ def apply(doc,plan,sha):
  if plan.get('format')!='autobericht-editor-patch/1':fail('Unknown patch format')
  if plan.get('sourceSha256')!=sha:fail('Source hash mismatch; regenerate against the latest sidecar')
  if set(plan)-{'format','sourceSha256','rows','photos'}:fail('Unsupported patch keys')
- out=copy.deepcopy(doc);rows=row_map(out);seen=set()
+ out=copy.deepcopy(doc);rows=row_map(out);seen=set();explicit={}
  for edit in plan.get('rows',[]):
   if set(edit)!={'chapterId','rowId','changes'}:fail('Row edit keys must be chapterId,rowId,changes')
   key=(str(edit['chapterId']),str(edit['rowId']))
@@ -108,6 +108,10 @@ def apply(doc,plan,sha):
   if row.get('kind')=='section':fail('Cannot edit section row')
   changes=edit['changes']
   if not isinstance(changes,dict) or set(changes)-WS_FIELDS:fail('Unsupported row edit field')
+  changes=copy.deepcopy(changes);explicit[key]=set(changes)
+  if any(isinstance(changes.get(k),str) and changes[k].strip() for k in ('findingText','recommendationText')):
+   changes.setdefault('includeFinding',True)
+   changes.setdefault('includeRecommendation',True)
   ws=row.setdefault('workstate',{});material=any(ws.get(k)!=v for k,v in changes.items() if k!='done')
   if 'selectedLevel' in changes:
    if row.get('type') in ('field_observation','summary'):fail('No score for observation/summary')
@@ -135,7 +139,18 @@ def apply(doc,plan,sha):
    if set(adds)&set(removes):fail('Same tag added and removed')
    if set(adds)-options(doc,g):fail('Unknown tag value in '+g)
    values=[x for x in tags.get(g,[]) if x not in removes]
+   new_adds=set(adds)-set(tags.get(g,[]))
    tags[g]=list(dict.fromkeys(values+adds))
+   if g=='observations':
+    for tag in new_adds:
+     aliases={tag}
+     for option in out.get('photos',{}).get('photoTagOptions',{}).get('observations',[]):
+      if isinstance(option,dict) and option.get('value')==tag:aliases.add(option.get('label',tag))
+     matches=[(key,row) for key,row in rows.items() if row.get('type')=='field_observation' and (row.get('tag') in aliases or row.get('titleOverride') in aliases)]
+     if len(matches)!=1:fail('Observation tag needs one existing report row; initialise/synchronise categories in the app first: '+tag)
+     key,row=matches[0];ws=row.setdefault('workstate',{})
+     for field,value in [('includeFinding',True),('includeRecommendation',True),('done',False)]:
+      if field not in explicit.get(key,set()):ws[field]=value
   if 'notes' in edit:ph['notes']=edit['notes']
  validate(doc,out)
  return out

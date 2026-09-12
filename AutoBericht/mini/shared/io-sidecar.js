@@ -70,6 +70,10 @@
       const merged = source && typeof source === "object" ? structuredClone(source) : {};
       if (!merged.meta) merged.meta = {};
       merged.meta.updatedAt = new Date().toISOString();
+      // PhotoSorter may have added evidence since this report tab was loaded.
+      // Reconcile that assignment into our draft before replacing the report.
+      normalizeHelpers.syncObservationChapterRows?.(project, merged);
+      normalizeHelpers.includeNewObservationAssignments?.(project, merged, runtime.sidecarDoc);
       const projectCopy = structuredClone(project);
       reorderChapterRows(projectCopy, "0");
       reorderChapterRows(projectCopy, "4.8");

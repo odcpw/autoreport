@@ -501,6 +501,34 @@
     chapter.rows = nextRows;
   };
 
+  // Only a new photo assignment activates a row. Reopening the project or
+  // removing a tag must not undo the consultant's explicit Include decision.
+  const includeNewObservationAssignments = (project, doc, previousDoc) => {
+    const previous = previousDoc?.photos?.photos
+      || (previousDoc?.photoTagOptions ? previousDoc.photos : null) || {};
+    const added = new Set();
+    Object.entries(doc?.photos?.photos || {}).forEach(([path, photo]) => {
+      const oldTags = new Set(previous[path]?.tags?.observations || []);
+      (photo?.tags?.observations || []).forEach((tag) => {
+        if (!oldTags.has(tag)) added.add(String(tag).trim());
+      });
+    });
+    const aliases = new Set(added);
+    getObservationTagOptionsFromSidecar(doc).forEach((option) => {
+      if (added.has(option.value)) aliases.add(option.label);
+    });
+    (project?.chapters || []).forEach((chapter) => {
+      (chapter.rows || []).forEach((row) => {
+        if (row.type !== "field_observation" || row.kind === "section") return;
+        if (!aliases.has(row.tag) && !aliases.has(row.titleOverride)) return;
+        const ws = row.workstate || (row.workstate = {});
+        ws.includeFinding = true;
+        ws.includeRecommendation = true;
+        ws.done = false;
+      });
+    });
+  };
+
   const orderObservationRows = (chapter) => {
     const rows = (chapter.rows || []).filter((row) => row.kind !== "section");
     const order = chapter.meta?.order;
@@ -543,6 +571,7 @@
     getObservationTagsFromSidecar,
     buildObservationRow,
     syncObservationChapterRows,
+    includeNewObservationAssignments,
     orderObservationRows,
     moveObservationRow,
   };

@@ -33,6 +33,10 @@ Read the complete JSON programmatically and preserve unknown data. Record its SH
 
 The draft editor switches the relevant library action to `off` when changing a finding/recommendation so the new project text cannot be queued accidentally for library export. This does not discard the separate closeout library workflow. It sets `scoreTouched` and aligns `autoScoreLevel` for an explicit level edit. Material changes reset Done unless the edit plan explicitly records the consultant’s validation.
 
+Writing nonempty `findingText` or `recommendationText` through `sidecar_tool.py` automatically sets both inclusion flags to true unless the same row edit explicitly supplies a different flag. This applies to standard findings and field observations. Adding an observation tag to a photo also includes the matching existing observation row and clears Done. An explicit row-level include/Done choice in the plan takes precedence. The helper checks that the tag maps to exactly one existing observation row; initialise missing categories through the app before applying the plan.
+
+PhotoSorter's save performs the same activation for newly assigned observation tags, including rows it creates from current tag options. A report tab open at the same time reconciles new photo assignments before saving. Merely having a category in the library, reopening a project, saving an unchanged tag or removing a tag does not activate or exclude rows. Report-section tags and training tags are photo classifications; they do not activate all negative findings in a whole section. Raw JSON written by another tool must explicitly follow these rules; arbitrary external file edits do not run this helper automatically.
+
 ## External edit plan
 
 This is a helper format only. Do not insert it into `project_sidecar.json` or represent it as the app’s native patch API.

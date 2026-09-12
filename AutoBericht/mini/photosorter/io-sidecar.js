@@ -367,6 +367,8 @@
         throw new Error("Safe sidecar storage module is unavailable.");
       }
       const projectHandle = state.projectHandle;
+      const initialReport = state.sidecarDoc?.report
+        ? structuredClone(state.sidecarDoc.report) : null;
       const payload = normalizePhotoDoc(state.projectDoc);
       payload.photos = photosApi.serializePhotos();
       payload.photoTagOptions = structuredClone(state.tagOptions);
@@ -379,7 +381,15 @@
           dirHandle: projectHandle,
           merge: (latest) => {
             const next = isPlainObject(latest) ? structuredClone(latest) : {};
+            // A new PhotoSorter project already has library-derived report rows
+            // in memory. Keep them on its first save; an existing file wins.
+            if (!latest && initialReport) next.report = initialReport;
             next.photos = payload;
+            const project = next.report?.project || (next.chapters ? next : null);
+            if (project) {
+              normalizeHelpers.syncObservationChapterRows?.(project, next);
+              normalizeHelpers.includeNewObservationAssignments?.(project, next, latest);
+            }
             delete next.photoRoot;
             delete next.photoTagOptions;
             // A flat legacy file also carried the report at the root; AutoBericht
